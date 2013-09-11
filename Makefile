@@ -46,6 +46,13 @@ test: yo/Gruntfile.js
 .PHONY: test
 
 
+# run static analysis
+
+lint: yo/Gruntfile.js
+	cd yo && grunt jshint
+.PHONY: lint
+
+
 # run grunt server
 
 server: yo/Gruntfile.js
