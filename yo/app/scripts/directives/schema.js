@@ -19,4 +19,28 @@ angular.module('dmpApp')
         $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
       });
+  }])
+  .directive('schema', ['$compile', function ($compile) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/schema.html',
+        controller: 'SchemaCtrl',
+        compile: function (tElement, tAttrs) {
+            var contents = tElement.contents().remove()
+                , compiledContents
+                , isInternal = angular.isDefined(tAttrs.internal);
+
+            return function (scope, iElement) {
+                if (!compiledContents) {
+                    compiledContents = $compile(contents);
+                }
+
+                compiledContents(scope, function (clone) {
+                    iElement.append(clone);
+                });
+            };
+        }
+    };
   }]);
+
