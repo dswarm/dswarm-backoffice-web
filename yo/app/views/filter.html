@@ -17,8 +17,12 @@
                         </li>
                     </ul>
 
-                    <div class="box" id="sourceData" ui-view="sourceData"></div>
-
+                    <div class="box" ng-repeat="sourceData in sourceDatas">
+                        <div class="filterMatch" ng-class="{ filterNoMatch : sourceData.filterNoMatch }">
+                            no match
+                        </div>
+                        <tree data="sourceData"></tree>
+                    </div>
 
                 </div>
 
