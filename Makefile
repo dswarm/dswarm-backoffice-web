@@ -60,7 +60,7 @@ lint: yo/Gruntfile.js
 
 # build live version
 
-dist: yo/Gruntfile.js install update
+dist: yo/Gruntfile.js install
 	cd yo && grunt build
 
 
