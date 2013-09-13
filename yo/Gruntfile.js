@@ -343,7 +343,7 @@ module.exports = function (grunt) {
         reporters: ['dots', 'junit', 'coverage'],
         coverageReporter: {
           type: 'cobertura',
-          file: 'test_out/coverage/'
+          dir: 'test_out/coverage/'
         },
         browsers: ['PhantomJS'],
         autoWatch: false
