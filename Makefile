@@ -30,13 +30,18 @@ ui-utils: yo/app/components/angular-ui-utils/components/angular-ui-docs/build/ui
 
 install: env-install ui-bootstrap ui-utils
 .PHONY: install
-# update all
 
+# update all
 update-files:
 	cd yo && bower update
 
 update: update-files ui-bootstrap ui-utils
 .PHONY: update-files update
+
+
+# upgrade installation base
+upgrade:
+	git pull
 
 
 # run tests
@@ -53,7 +58,13 @@ lint: yo/Gruntfile.js
 .PHONY: lint
 
 
-# run grunt server
+# build live version
+
+dist: yo/Gruntfile.js install update
+	cd yo && grunt build
+
+
+# run grunt server (dev)
 
 server: yo/Gruntfile.js
 	(cd yo; grunt server &)
