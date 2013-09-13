@@ -340,6 +340,7 @@ module.exports = function (grunt) {
     karma: {
       ci: {
         configFile: 'karma.conf.js',
+        colors: false,
         singleRun: true,
         reporters: ['dots', 'junit'],
         browsers: ['PhantomJS'],

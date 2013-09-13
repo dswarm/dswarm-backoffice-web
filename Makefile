@@ -52,7 +52,7 @@ test: yo/Gruntfile.js
 .PHONY: test
 
 jenkins: yo/Gruntfile.js
-	cd yo && grunt jenkins
+	cd yo && grunt --no-color jenkins
 .PHONY: jenkins
 
 
