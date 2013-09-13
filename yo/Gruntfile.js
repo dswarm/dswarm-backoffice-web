@@ -4,8 +4,8 @@
 // "configuration" here ...
 
 var SERVER_PORT = 9999;
-var API_DEV = 'http://127.0.0.1:8087/';
-var API_LIVE = '/_api/';
+var API_DEV = 'http://127.0.0.1:8087/dmp/';
+var API_LIVE = '/dmp/';
 
 
 // proceed with caution!
@@ -142,7 +142,8 @@ module.exports = function (grunt) {
     },
     jshint: {
       options: {
-        jshintrc: '.jshintrc'
+        jshintrc: '.jshintrc',
+        reporter: 'checkstyle'
       },
       all: [
         'Gruntfile.js',

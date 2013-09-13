@@ -73,7 +73,7 @@ angular.module('dmpApp')
     function sendTransformations(transformations) {
       var url = $window['dmp']['jsRoutes']['api']
         , p = $http.post(
-        url + 'dmp/transformations', transformations);
+        url + 'transformations', transformations);
 
       p.then(function (resp) {
         console.log(resp);
