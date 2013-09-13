@@ -15,7 +15,7 @@ yo/app/components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js: yo/app/compon
 	cd yo/app/components/angular-ui-bootstrap && npm install
 	cd yo/app/components/angular-ui-bootstrap && grunt build
 
-yo/app/components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js: yo/app/components/angular-ui-utils/package.json yo/app/components/angular-ui-utils/Gruntfile.js
+yo/app/components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js: yo/app/components/angular-ui-utils/package.json yo/app/components/angular-ui-utils/gruntFile.js
 	cd yo/app/components/angular-ui-utils && npm install
 	cd yo/app/components/angular-ui-utils && grunt build
 
