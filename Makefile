@@ -71,7 +71,7 @@ yo/publish:
 
 dist: yo/Gruntfile.js install | yo/publish
 	cd yo && grunt build
-	rsync --delete yo/dist yo/publish
+	rsync --delete --recursive yo/dist/ yo/publish
 .PHONY: dist
 
 
