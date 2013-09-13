@@ -141,14 +141,30 @@ module.exports = function (grunt) {
       server: '.tmp'
     },
     jshint: {
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: 'checkstyle'
+      ci: {
+        options: {
+          '-W015': true,
+          jshintrc: '.jshintrc',
+          reporter: 'checkstyle',
+          force: true,
+          reporterOutput: '<%= yeoman.app %>/test_out/jshint.xml'
+        },
+        files: {
+          src: ['<%= yeoman.app %>/scripts/{,*/}*.js']
+        }
       },
-      all: [
-        'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js'
-      ]
+      jshint: {
+        options: {
+          '-W015': true,
+          jshintrc: '.jshintrc'
+        },
+        files: {
+          src: [
+            'Gruntfile.js',
+            '<%= yeoman.app %>/scripts/{,*/}*.js'
+          ]
+        }
+      }
     },
     coffee: {
       dist: {
@@ -340,6 +356,16 @@ module.exports = function (grunt) {
         autoWatch: false
       }
     },
+    plato: {
+      options: {
+        jshint: grunt.file.readJSON('.jshintrc')
+      },
+      metrics: {
+        files: {
+          '<%= yeoman.app %>/test_out/metrics': ['<%= yeoman.app %>/scripts/{,*/}*.js']
+        }
+      }
+    },
     cdnify: {
       dist: {
         html: ['<%= yeoman.dist %>/*.html']
@@ -410,8 +436,14 @@ module.exports = function (grunt) {
     'usemin'
   ]);
 
+  grunt.registerTask('jenkins', [
+    'jshint:ci',
+    'plato',
+    'test:ci'
+  ]);
+
   grunt.registerTask('default', [
-    'jshint',
+    'jshint:jshint',
     'test',
     'build'
   ]);

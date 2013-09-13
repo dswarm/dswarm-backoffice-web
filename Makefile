@@ -42,6 +42,7 @@ update: update-files ui-bootstrap ui-utils
 # upgrade installation base
 upgrade:
 	git pull
+.PHONY: upgrade
 
 
 # run tests
@@ -49,6 +50,10 @@ upgrade:
 test: yo/Gruntfile.js
 	cd yo && grunt test:ci
 .PHONY: test
+
+jenkins: yo/Gruntfile.js
+	cd yo && grunt jenkins
+.PHONY: jenkins
 
 
 # run static analysis
@@ -62,4 +67,12 @@ lint: yo/Gruntfile.js
 
 dist: yo/Gruntfile.js install
 	cd yo && grunt build
+.PHONY: dist
 
+
+# clean
+
+clean:
+	rm -rf yo/app/components
+	rm -rf yo/node_modules
+.PHONY: clean
