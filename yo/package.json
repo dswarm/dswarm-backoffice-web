@@ -41,7 +41,8 @@
     "grunt-ngmin": "~0.0.2",
     "karma-ng-html2js-preprocessor": "~0.1",
     "karma-junit-reporter": "~0.1.0",
-    "grunt-docular": "~0.1.1"
+    "grunt-docular": "~0.1.1",
+    "grunt-template": "~0.2.0"
   },
   "engines": {
     "node": ">=0.8.0"

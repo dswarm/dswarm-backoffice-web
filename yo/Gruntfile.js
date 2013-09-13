@@ -1,5 +1,15 @@
 // Generated on 2013-08-12 using generator-angular 0.3.1
 'use strict';
+
+// "configuration" here ...
+
+var SERVER_PORT = 9999;
+var API_DEV = 'http://127.0.0.1:8087/';
+var API_LIVE = '/_api/';
+
+
+// proceed with caution!
+
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var mountFolder = function (connect, dir) {
@@ -53,9 +63,31 @@ module.exports = function (grunt) {
         ]
       }
     },
+    'template': {
+      'api-server': {
+        'options': {
+          'data': {
+            'endpoint': API_DEV
+          }
+        },
+        'files': {
+          '<%= yeoman.app %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
+        }
+      },
+      'api-server-dist': {
+        'options': {
+          'data': {
+            'endpoint': API_LIVE
+          }
+        },
+        'files': {
+          '<%= yeoman.dist %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
+        }
+      }
+    },
     connect: {
       options: {
-        port: 9999,
+        port: SERVER_PORT,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost'
       },
@@ -258,7 +290,11 @@ module.exports = function (grunt) {
             '.htaccess',
             'components/**/*',
             'images/{,*/}*.{gif,webp}',
-            'styles/fonts/*'
+            'styles/fonts/*',
+            'views/**/*',
+            'data/*',
+            'template/**/*',
+            'fonts/**/*'
           ]
         }, {
           expand: true,
@@ -329,6 +365,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'template:api-server',
       'coffee:dist',
       'less:server',
       'concurrent:server',
@@ -354,6 +391,7 @@ module.exports = function (grunt) {
     'less:dist',
     'concat',
     'copy',
+    'template:api-server-dist',
     'cdnify',
     'ngmin',
     'cssmin',
