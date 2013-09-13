@@ -65,8 +65,13 @@ lint: yo/Gruntfile.js
 
 # build live version
 
-dist: yo/Gruntfile.js install
+yo/publish:
+	mkdir yo/publish
+
+
+dist: yo/Gruntfile.js install | yo/publish
 	cd yo && grunt build
+	rsync --delete yo/dist yo/publish
 .PHONY: dist
 
 
