@@ -10,13 +10,14 @@ module.exports = function(config) {
           'components/angular/angular.js',
           'components/angular-mocks/angular-mocks.js',
           'components/angular-ui-bootstrap/misc/test-lib/angular-mocks.js',
+          'components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js',
           'components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js',
           'components/angular-resource/angular-resource.js',
           'components/angular-cookies/angular-cookies.js',
           'components/angular-sanitize/angular-sanitize.js',
           'components/angular-ui-router/release/angular-ui-router.js',
           'components/jquery/jquery.js',
-          'components/jsPlumb/dist/js/jquery.jsPlumb-1.5.1.js',
+          'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
           'scripts/*.js',
           'scripts/**/*.js',
 
@@ -39,7 +40,7 @@ module.exports = function(config) {
 
         // cli runner port
         //runnerPort : 9100,
-        
+
         // enable / disable colors in the output (reporters and logs)
         colors : true,
 

@@ -47,7 +47,7 @@ upgrade:
 # run tests
 
 test: yo/Gruntfile.js
-	cd yo && grunt karma:unit
+	cd yo && grunt test:ci
 .PHONY: test
 
 
@@ -63,14 +63,3 @@ lint: yo/Gruntfile.js
 dist: yo/Gruntfile.js install
 	cd yo && grunt build
 
-
-# run grunt server (dev)
-
-server: yo/Gruntfile.js
-	(cd yo; grunt server &)
-.PHONY: server
-
-
-stop-server: yo/Gruntfile.js
-	@@lsof -i :$(PORT) | grep LISTEN | awk '{print $$2}' | xargs kill
-.PHONY: stop-server

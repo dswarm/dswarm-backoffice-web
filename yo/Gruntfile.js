@@ -322,6 +322,13 @@ module.exports = function (grunt) {
       ]
     },
     karma: {
+      ci: {
+        configFile: 'karma.conf.js',
+        singleRun: true,
+        reporters: ['dots', 'junit'],
+        browsers: ['PhantomJS'],
+        autoWatch: false
+      },
       continuous: {
         configFile: 'karma.conf.js',
         singleRun: false,
@@ -376,14 +383,16 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'coffee',
-    'less',
-    'concurrent:test',
-    'connect:test',
-    'karma:unit'
-  ]);
+  grunt.registerTask('test', function (target) {
+    grunt.task.run([
+      'clean:server',
+      'coffee',
+      'less',
+      'concurrent:test',
+      'connect:test',
+      'karma:' + ((target === 'ci')? 'ci' : 'unit')
+    ]);
+  });
 
   grunt.registerTask('build', [
     'clean:dist',
