@@ -20,26 +20,11 @@ angular.module('dmpApp')
         $scope.functions.children = result['functions'];
       });
   }])
-  .directive('components', ['$compile', function ($compile) {
+  .directive('components', [ function () {
     return {
         restrict: 'E',
         replace: true,
         templateUrl: 'views/directives/components.html',
-        controller: 'ComponentsCtrl',
-        compile: function (tElement, tAttrs) {
-            var contents = tElement.contents().remove()
-                , compiledContents
-                , isInternal = angular.isDefined(tAttrs.internal);
-
-            return function (scope, iElement) {
-                if (!compiledContents) {
-                    compiledContents = $compile(contents);
-                }
-
-                compiledContents(scope, function (clone) {
-                    iElement.append(clone);
-                });
-            };
-        }
+        controller: 'ComponentsCtrl'
     };
   }]);

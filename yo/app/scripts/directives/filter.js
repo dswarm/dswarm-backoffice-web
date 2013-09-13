@@ -25,7 +25,7 @@ angular.module('dmpApp')
                 , dataResult = result[1]['data'];
 
             $scope.result = result[0]['data'];
-            
+
             $scope.sourceDatas.push(
                 schemaParser.parseAny(
                     dataResult[schemaResult['title']], schemaResult['title'], schemaResult)
@@ -84,6 +84,7 @@ angular.module('dmpApp')
         };
 
         $scope.addFilter = function () {
+
             if(!$scope.component.filters) {
                 $scope.component.filters = [];
             }
@@ -111,26 +112,11 @@ angular.module('dmpApp')
         };
 
     }])
-    .directive('filter', ['$compile', function ($compile) {
+    .directive('filter', [ function ($scope) {
         return {
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/filter.html',
-            controller: 'FilterCtrl',
-            compile: function (tElement, tAttrs) {
-                var contents = tElement.contents().remove()
-                    , compiledContents
-                    , isInternal = angular.isDefined(tAttrs.internal);
-
-                return function (scope, iElement) {
-                    if (!compiledContents) {
-                        compiledContents = $compile(contents);
-                    }
-
-                    compiledContents(scope, function (clone) {
-                        iElement.append(clone);
-                    });
-                };
-            }
+            controller: 'FilterCtrl'
         };
     }]);

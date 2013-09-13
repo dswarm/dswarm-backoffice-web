@@ -25,27 +25,12 @@ angular.module('dmpApp')
     });
 
   }])
-  .directive('targetdata', ['$compile', function ($compile) {
+  .directive('targetdata', [ function () {
     return {
         restrict: 'E',
         replace: true,
         templateUrl: 'views/directives/target-data.html',
-        controller: 'TargetDataCtrl',
-        compile: function (tElement, tAttrs) {
-            var contents = tElement.contents().remove()
-                , compiledContents
-                , isInternal = angular.isDefined(tAttrs.internal);
-
-            return function (scope, iElement) {
-                if (!compiledContents) {
-                    compiledContents = $compile(contents);
-                }
-
-                compiledContents(scope, function (clone) {
-                    iElement.append(clone);
-                });
-            };
-        }
+        controller: 'TargetDataCtrl'
     };
   }]);
 
