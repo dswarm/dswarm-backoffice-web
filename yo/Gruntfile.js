@@ -143,7 +143,6 @@ module.exports = function (grunt) {
     jshint: {
       ci: {
         options: {
-          '-W015': true,
           jshintrc: '.jshintrc',
           reporter: 'checkstyle',
           force: true,
@@ -155,7 +154,6 @@ module.exports = function (grunt) {
       },
       jshint: {
         options: {
-          '-W015': true,
           jshintrc: '.jshintrc'
         },
         files: {
@@ -342,7 +340,11 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         colors: false,
         singleRun: true,
-        reporters: ['dots', 'junit'],
+        reporters: ['dots', 'junit', 'coverage'],
+        coverageReporter: {
+          type: 'cobertura',
+          file: 'test_out/coverage/'
+        },
         browsers: ['PhantomJS'],
         autoWatch: false
       },

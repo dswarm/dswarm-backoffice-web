@@ -76,7 +76,8 @@ module.exports = function(config) {
         frameworks : ["jasmine"],
 
         preprocessors : {
-            '**/*.html': ['ng-html2js']
+            '**/*.html': ['ng-html2js'],
+            'scripts/{,*/}*.js': 'coverage'
         }
 
     })

@@ -43,7 +43,8 @@
     "karma-junit-reporter": "~0.1.0",
     "grunt-docular": "~0.1.1",
     "grunt-template": "~0.2.0",
-    "grunt-plato": "~0.2.1"
+    "grunt-plato": "~0.2.1",
+    "karma-coverage": "~0.1.0"
   },
   "engines": {
     "node": ">=0.8.0"
