@@ -1,11 +1,11 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en" ng-app="dmpApp"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en" ng-app="dmpApp"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" ng-app="dmpApp"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" ng-app="dmpApp"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <title>DMP 2000</title>
+    <title ng-bind="(viewTitle? (viewTitle + ' - ') : '') + projectName"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -18,6 +18,7 @@
         <!-- build:css({.tmp,app}) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="components/jquery-ui/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="components/ngprogress/ngProgress.css">
         <!-- endbuild -->
 
   </head>
@@ -47,9 +48,15 @@
 
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><!--suppress HtmlUnknownTarget --><a href="#/">Home</a></li>
-            <li class=""><!--suppress HtmlUnknownTarget --><a href="#/">Data</a></li>
-            <li class=""><!--suppress HtmlUnknownTarget --><a href="#/model">Modelling</a></li>
+            <li ng-class="{active: activeTarget === 'import'}">
+              <!--suppress HtmlUnknownTarget --><a href="#/import">Import</a>
+            </li>
+            <li ng-class="{active: activeTarget === 'data'}">
+              <!--suppress HtmlUnknownTarget --><a href="#/data/">Data</a>
+            </li>
+            <li ng-class="{active: activeTarget === 'model'}">
+              <!--suppress HtmlUnknownTarget --><a href="#/model">Modelling</a>
+            </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="https://intranet.slub-dresden.de:8443/x/c4U_AQ"
@@ -84,11 +91,11 @@
         <!-- endbuild -->
 
         <!-- build:js scripts/modules.js -->
+        <script src="components/angular-route/angular-route.js"></script>
         <script src="components/angular-resource/angular-resource.js"></script>
         <script src="components/angular-cookies/angular-cookies.js"></script>
         <script src="components/angular-sanitize/angular-sanitize.js"></script>
         <script src="components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js"></script>
-        <script src="components/angular-ui-router/build/angular-ui-router.js"></script>
         <script src="components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js"></script>
         <script src="components/bootstrap/js/transition.js"></script>
         <script src="components/bootstrap/js/collapse.js"></script>

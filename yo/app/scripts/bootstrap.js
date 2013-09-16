@@ -1,41 +1,39 @@
 'use strict';
 
 angular.module('dmpApp')
-  .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+  .config(['$routeProvider', function ($routeProvider) {
+    $routeProvider
+      .when('/data/', {
+        title: 'Data Perspective',
+        slug: 'data',
+        templateUrl: 'views/perspectives/data-list.html',
+        controller: 'DataListCtrl'
+      })
+      .when('/data/:id', {
+        title: 'Choose Dataset',
+        slug: 'data',
+        templateUrl: 'views/perspectives/data-object.html',
+        controller: 'DataObjectCtrl'
+      })
+      .when('/import', {
+        title: 'Import Perspective',
+        slug: 'import',
+        templateUrl: 'views/perspectives/import.html',
+        controller: 'ImportCtrl'
+      })
+      .when('/model', {
+        title: 'Modelling Perspective',
+        slug: 'model',
+        templateUrl: 'views/perspectives/model.html',
+        controller: 'ModelCtrl'
+      })
 
-    $stateProvider
-      .state('main', {
-        url: '/',
-        views: {
-          'sourceData': {
-            templateUrl: 'views/source-data.html',
-            controller: 'SourceDataCtrl'
-          },
-          'schema': {
-            templateUrl: 'views/schema.html',
-            controller: 'SchemaCtrl'
-          },
-          'targetData': {
-            templateUrl: 'views/target-data.html',
-            controller: 'TargetDataCtrl'
-          },
-          'configuration': {
-            templateUrl: 'views/configuration.html',
-            controller: 'ConfigurationCtrl'
-          },
-          'transformation': {
-            templateUrl: 'views/transformation.html',
-            controller: 'TransformationCtrl'
-          },
-          'components': {
-            templateUrl: 'views/components.html',
-            controller: 'ComponentsCtrl'
-          },
-          'filter': {
-            templateUrl: 'views/filter.html',
-            controller: 'FilterCtrl'
-          }
-        }
-      });
+      .otherwise({redirectTo: '/data/'});
+  }])
+  .run(['$rootScope', function($rootScope) {
+    $rootScope.projectName = 'DMP 2000';
+    $rootScope.$on('$routeChangeSuccess', function(event, current) {
+      $rootScope.viewTitle = current.title;
+      $rootScope.activeTarget = current.slug;
+    })
   }]);
