@@ -1,0 +1,32 @@
+<form role="form" name="uploadForm" ng-submit="submitForm()">
+  <div class="form-group"
+       ng-class="{'has-error': uploadForm.file.$invalid, 'has-success': uploadForm.file.$valid}">
+    <label for="dataUpload">Upload file</label>
+    <input type="file" id="dataUpload" name="file" required="required"
+           ng-required="true" dmp-file-upload>
+
+    <p class="help-block">
+      <span>Upload a file from your computer &hellip;</span><br>
+      <span ng-show="meta.type">{{ meta.type }}</span>
+      <span ng-show="meta.size">{{ meta.size|filesize }}</span>
+    </p>
+
+  </div>
+  <div class="form-group"
+       ng-class="{'has-error': uploadForm.name.$invalid, 'has-success': uploadForm.name.$valid}">
+    <label for="dataName">Name</label>
+    <input type="text" class="form-control" id="dataName" name="name"
+           ng-model="data.name" required="required"
+           ng-required="true" placeholder="Name of dataset">
+  </div>
+  <div class="form-group"
+       ng-class="{'has-error': uploadForm.description.$invalid, 'has-success': uploadForm.description.$valid}">
+    <label for="dataDescription">Description</label>
+    <textarea class="form-control" id="dataDescription" name="description"
+              ng-model="data.description" required="required"
+              ng-required="true"
+              placeholder="Description for this dataset"></textarea>
+  </div>
+  <button type="submit" class="btn btn-default"
+          ng-disabled="uploadForm.$invalid">Submit</button>
+</form>
