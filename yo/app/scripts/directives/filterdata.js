@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterdataCtrl', ['$scope', function ($scope) {
+    .controller('FilterDataCtrl', ['$scope', function ($scope) {
 
     }])
-    .directive('filterdata', [ function () {
+    .directive('filterData', [ function () {
         return {
             restrict: 'E',
             replace: true,
             scope: true,
             templateUrl: 'views/directives/filter-data.html',
-            controller: 'FilterdataCtrl'
+            controller: 'FilterDataCtrl'
         };
     }]);

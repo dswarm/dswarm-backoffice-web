@@ -25,7 +25,7 @@ angular.module('dmpApp')
     });
 
   }])
-  .directive('targetdata', [ function () {
+  .directive('targetData', [ function () {
     return {
         restrict: 'E',
         replace: true,
