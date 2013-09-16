@@ -5,11 +5,10 @@ angular.module('dmpApp')
 
         $scope.internalName = 'Filter Widget';
 
+        $scope.sourceDatas = [];
         $scope.component = null;
         $scope.filterShouldBeOpen = false;
         $scope.result = {};
-
-        $scope.sourceDatas = [];
 
         var schemaPromise = $http.get('/data/schema.json')
             , dataPromise = $http.get('/data/record.json')
@@ -112,11 +111,18 @@ angular.module('dmpApp')
         };
 
     }])
-    .directive('filter', [ function ($scope) {
+    .directive('filter', function () {
+
         return {
             restrict: 'E',
             replace: true,
+            scope: true,
+            link : function(scope, element, attrs) {
+
+                console.log(scope);
+
+            },
             templateUrl: 'views/directives/filter.html',
             controller: 'FilterCtrl'
         };
-    }]);
+    });

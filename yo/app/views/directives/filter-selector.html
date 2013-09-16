@@ -1,0 +1,14 @@
+
+<div class="tabbable col-md-3" ng-repeat="filter in component.filters">
+
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a>{{filter.name}}</a>
+        </li>
+    </ul>
+
+    <div class="box">
+        <tree data="filter.filter"></tree>
+    </div>
+
+</div>
