@@ -24,4 +24,13 @@ angular.module('dmpApp')
       deferred.resolve(data);
     });
 
+  }])
+  .directive('targetdata', [ function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/target-data.html',
+        controller: 'TargetDataCtrl'
+    };
   }]);
+

@@ -191,4 +191,12 @@ angular.module('dmpApp')
       PubSub.broadcast('handleEditFilter', component);
     };
 
+  }])
+  .directive('transformation', [ function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/transformation.html',
+        controller: 'TransformationCtrl'
+    };
   }]);

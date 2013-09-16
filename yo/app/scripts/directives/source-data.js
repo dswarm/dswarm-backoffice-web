@@ -18,4 +18,12 @@ angular.module('dmpApp')
         dataResult[schemaResult['title']], schemaResult['title'], schemaResult);
 
     });
-  }]);
+  }])
+  .directive('sourcedata', [ function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/source-data.html',
+        controller: 'SourceDataCtrl'
+  };
+}]);

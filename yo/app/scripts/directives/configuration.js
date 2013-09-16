@@ -26,4 +26,12 @@ angular.module('dmpApp')
       $scope.component = null;
     };
 
+  }])
+  .directive('configuration', [ function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/configuration.html',
+        controller: 'ConfigurationCtrl'
+    };
   }]);

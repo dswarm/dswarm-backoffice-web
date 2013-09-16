@@ -169,21 +169,128 @@ angular.module('dmpApp').
     /**
      * takes input data object and returns title data as array
      * @param data {*}
-     * @returns {Array}
+     * @returns {*}
      */
-    function getData(data) {
+    function getData(data, path, returnData) {
       if(data.children) {
-        var returnData = [];
+
+        if(!returnData) returnData = [];
+
         angular.forEach(data.children,function(child) {
-          var tempData = getData(child);
-          if(tempData.length > 0) {
+
+          var tempData,
+              subpath = path;
+
+          if(child.children) {
+
+            if(subpath.length > 0) {
+                subpath = subpath + ".";
+            }
+
+            subpath = subpath + data.name;
+
+          }
+
+          tempData = getData(child,subpath,returnData);
+
+          if(tempData && tempData.title) {
+            tempData.path += '.' + data.name + '.' + tempData.name;
+
             returnData.push(tempData);
           }
         });
-        return returnData;
+
+        if(returnData.length > 0) {
+            return returnData;
+        }
       } else {
-        return (data.title) ? data.title : '';
+
+          if(data.title) {
+              return { 'title' : data.title, 'name' : data.name, 'path' : path };
+          }
+          else return ''
       }
+    }
+
+    /**
+     *
+     * @param data
+     * @param filters
+     * @returns {*}
+     */
+    function filterData(data, filters) {
+
+        var matchCount = 0;
+
+        angular.forEach(filters, function(filter) {
+            matchCount += matchFilter(data, filter);
+        });
+
+        if(matchCount != filters.length) {
+            data.filterNoMatch = true;
+        } else {
+            data.filterNoMatch = false;
+        }
+
+         return data;
+
+    }
+
+    /**
+     *
+     * @param data
+     * @param filter
+     * @returns {number}
+     */
+    function matchFilter(data, filter) {
+        return matchPath(data,filter.path, filter.title);
+    }
+
+    /**
+     *
+     * @param data
+     * @param path
+     * @param matchdata
+     * @returns {number}
+     */
+    function matchPath(data, path, matchdata) {
+
+        var pathArray = path.split(".");
+
+        if(data.name == pathArray[0]) {
+            pathArray.shift();
+
+            if(data.children) {
+
+                var childData = 0;
+
+                angular.forEach(data.children, function(child) {
+
+                    childData += matchPath(child, pathArray.join("."), matchdata);
+
+                });
+
+                return childData;
+
+
+            } else {
+                if(data.title == matchdata) {
+
+                    data.leafmatchedFilter = true;
+                    return 1;
+
+                } else {
+                    data.leafmatchedFilter = false;
+                    return 0
+                }
+
+            }
+
+        } else {
+            return 0;
+        }
+
+
     }
 
     return {
@@ -195,5 +302,6 @@ angular.module('dmpApp').
     , parseEnum: parseEnum
     , parseAny: parseAny
     , getData: getData
+    , filterData : filterData
     };
   });

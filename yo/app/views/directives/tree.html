@@ -1,7 +1,7 @@
-<div>
+<div ng-class="{ isFiltered : data.isFiltered }">
   <span ng-click="expandCollapse(data)"
         ng-mousedown="handleClick($event, data)"
-        ng-class="{'tree-leaf':isLeaf(data)}"
+        ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}"
         dmp-endpoint source="isSource && isLeaf(data)" js-plumb-source-options="jspSourceOptions"
         target="isTarget && isLeaf(data)" js-plumb-target-options="jspTargetOptions">
     <i class="glyphicon" ng-class="chevron(data)"></i>

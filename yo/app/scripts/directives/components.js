@@ -19,4 +19,12 @@ angular.module('dmpApp')
       .success(function (result) {
         $scope.functions.children = result['functions'];
       });
+  }])
+  .directive('components', [ function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/components.html',
+        controller: 'ComponentsCtrl'
+    };
   }]);

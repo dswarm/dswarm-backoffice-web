@@ -48,6 +48,8 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><!--suppress HtmlUnknownTarget --><a href="#/">Home</a></li>
+            <li class=""><!--suppress HtmlUnknownTarget --><a href="#/">Data</a></li>
+            <li class=""><!--suppress HtmlUnknownTarget --><a href="#/model">Modelling</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="https://intranet.slub-dresden.de:8443/x/c4U_AQ"
@@ -59,16 +61,7 @@
       </nav>
 
       <div id="content">
-        <div class="row row-2" id="top-row">
-          <div class="col-md-3 box" id="sourceData" ui-view="sourceData"></div>
-          <div class="col-md-6 box" id="schema" ui-view="schema"></div>
-          <div class="col-md-3 box" id="targetData" ui-view="targetData"></div>
-        </div>
-        <div class="row row-1" id="bottom-row">
-          <div class="col-md-3 box" id="configuration" ui-view="configuration"></div>
-          <div class="col-md-6 box" id="transformation" ui-view="transformation"></div>
-          <div class="col-md-3 box" id="components" ui-view="components"></div>
-        </div>
+          <div ng-view></div>
       </div>
 
     </div>
@@ -78,8 +71,6 @@
         <p class="text-muted credit">&copy; Avantgarde Labs / SLUB 2013</p>
       </div>
     </div>
-
-    <div id="filter" ui-view="filter"></div>
 
     <script src="api.js"></script>
 
@@ -97,7 +88,7 @@
         <script src="components/angular-cookies/angular-cookies.js"></script>
         <script src="components/angular-sanitize/angular-sanitize.js"></script>
         <script src="components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js"></script>
-        <script src="components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="components/angular-ui-router/build/angular-ui-router.js"></script>
         <script src="components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js"></script>
         <script src="components/bootstrap/js/transition.js"></script>
         <script src="components/bootstrap/js/collapse.js"></script>
@@ -112,13 +103,15 @@
         <script src="scripts/directives/dmp-endpoint.js"></script>
         <script src="scripts/directives/sortable.js"></script>
         <script src="scripts/directives/connectible.js"></script>
-        <script src="scripts/controllers/source-data.js"></script>
-        <script src="scripts/controllers/schema.js"></script>
-        <script src="scripts/controllers/target-data.js"></script>
-        <script src="scripts/controllers/configuration.js"></script>
-        <script src="scripts/controllers/transformation.js"></script>
-        <script src="scripts/controllers/components.js"></script>
-        <script src="scripts/controllers/filter.js"></script>
+        <script src="scripts/directives/source-data.js"></script>
+        <script src="scripts/directives/schema.js"></script>
+        <script src="scripts/directives/target-data.js"></script>
+        <script src="scripts/directives/configuration.js"></script>
+        <script src="scripts/directives/transformation.js"></script>
+        <script src="scripts/directives/components.js"></script>
+        <script src="scripts/directives/filter.js"></script>
+        <script src="scripts/controllers/model.js"></script>
+        <script src="scripts/controllers/data.js"></script>
         <script src="scripts/bootstrap.js"></script>
         <!-- endbuild -->
 </body>

@@ -19,4 +19,13 @@ angular.module('dmpApp')
         $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
       });
+  }])
+  .directive('schema', [ function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'views/directives/schema.html',
+        controller: 'SchemaCtrl'
+    };
   }]);
+
