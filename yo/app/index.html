@@ -47,9 +47,8 @@
 
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><!--suppress HtmlUnknownTarget --><a href="#/">Home</a></li>
-            <li class=""><!--suppress HtmlUnknownTarget --><a href="#/">Data</a></li>
-            <li class=""><!--suppress HtmlUnknownTarget --><a href="#/model">Modelling</a></li>
+            <li ng-class="{active: activetab == '/'}"><!--suppress HtmlUnknownTarget --><a href="#/">Data</a></li>
+            <li ng-class="{active: activetab == '/model'}"><!--suppress HtmlUnknownTarget --><a href="#/model">Modelling</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="https://intranet.slub-dresden.de:8443/x/c4U_AQ"
