@@ -5,6 +5,6 @@
     'api': '<%= endpoint %>'
   };
 
-  window['dmp'] = dmp;
+  win['dmp'] = dmp;
 })(window);
 
