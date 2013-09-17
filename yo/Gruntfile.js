@@ -1,5 +1,15 @@
 // Generated on 2013-08-12 using generator-angular 0.3.1
 'use strict';
+
+// "configuration" here ...
+
+var SERVER_PORT = 9999;
+var API_DEV = 'http://127.0.0.1:8087/dmp/';
+var API_LIVE = '/dmp/';
+
+
+// proceed with caution!
+
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var mountFolder = function (connect, dir) {
@@ -37,10 +47,6 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.coffee'],
         tasks: ['coffee:test']
       },
-      compass: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['compass:server']
-      },
       less: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
         tasks: ['less:server']
@@ -57,9 +63,31 @@ module.exports = function (grunt) {
         ]
       }
     },
+    'template': {
+      'api-server': {
+        'options': {
+          'data': {
+            'endpoint': API_DEV
+          }
+        },
+        'files': {
+          '<%= yeoman.app %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
+        }
+      },
+      'api-server-dist': {
+        'options': {
+          'data': {
+            'endpoint': API_LIVE
+          }
+        },
+        'files': {
+          '<%= yeoman.dist %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
+        }
+      }
+    },
     connect: {
       options: {
-        port: 9999,
+        port: SERVER_PORT,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost'
       },
@@ -113,13 +141,28 @@ module.exports = function (grunt) {
       server: '.tmp'
     },
     jshint: {
-      options: {
-        jshintrc: '.jshintrc'
+      ci: {
+        options: {
+          jshintrc: '.jshintrc',
+          reporter: 'checkstyle',
+          force: true,
+          reporterOutput: '<%= yeoman.app %>/test_out/jshint.xml'
+        },
+        files: {
+          src: ['<%= yeoman.app %>/scripts/{,*/}*.js']
+        }
       },
-      all: [
-        'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js'
-      ]
+      jshint: {
+        options: {
+          jshintrc: '.jshintrc'
+        },
+        files: {
+          src: [
+            'Gruntfile.js',
+            '<%= yeoman.app %>/scripts/{,*/}*.js'
+          ]
+        }
+      }
     },
     coffee: {
       dist: {
@@ -139,27 +182,6 @@ module.exports = function (grunt) {
           dest: '.tmp/spec',
           ext: '.js'
         }]
-      }
-    },
-    compass: {
-      options: {
-        sassDir: '<%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
-        generatedImagesDir: '.tmp/images/generated',
-        imagesDir: '<%= yeoman.app %>/images',
-        javascriptsDir: '<%= yeoman.app %>/scripts',
-        fontsDir: '<%= yeoman.app %>/styles/fonts',
-        importPath: '<%= yeoman.app %>/components',
-        httpImagesPath: '/images',
-        httpGeneratedImagesPath: '/images/generated',
-        httpFontsPath: '/styles/fonts',
-        relativeAssets: false
-      },
-      dist: {},
-      server: {
-        options: {
-          debugInfo: true
-        }
       }
     },
     less: {
@@ -283,7 +305,11 @@ module.exports = function (grunt) {
             '.htaccess',
             'components/**/*',
             'images/{,*/}*.{gif,webp}',
-            'styles/fonts/*'
+            'styles/fonts/*',
+            'views/**/*',
+            'data/*',
+            'template/**/*',
+            'fonts/**/*'
           ]
         }, {
           expand: true,
@@ -297,22 +323,31 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
-        'coffee:dist',
-        'compass:server'
+        'coffee:dist'
       ],
       test: [
-        'coffee',
-        'compass'
+        'coffee'
       ],
       dist: [
         'coffee',
-        'compass:dist',
         'imagemin',
         'svgmin',
         'htmlmin'
       ]
     },
     karma: {
+      ci: {
+        configFile: 'karma.conf.js',
+        colors: false,
+        singleRun: true,
+        reporters: ['dots', 'junit', 'coverage'],
+        coverageReporter: {
+          type: 'cobertura',
+          dir: 'test_out/coverage/'
+        },
+        browsers: ['PhantomJS'],
+        autoWatch: false
+      },
       continuous: {
         configFile: 'karma.conf.js',
         singleRun: false,
@@ -322,6 +357,16 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true,
         autoWatch: false
+      }
+    },
+    plato: {
+      options: {
+        jshint: grunt.file.readJSON('.jshintrc')
+      },
+      metrics: {
+        files: {
+          '<%= yeoman.app %>/test_out/metrics': ['<%= yeoman.app %>/scripts/{,*/}*.js']
+        }
       }
     },
     cdnify: {
@@ -357,6 +402,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'template:api-server',
       'coffee:dist',
       'less:server',
       'concurrent:server',
@@ -366,14 +412,16 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'coffee',
-    'less',
-    'concurrent:test',
-    'connect:test',
-    'karma:unit'
-  ]);
+  grunt.registerTask('test', function (target) {
+    grunt.task.run([
+      'clean:server',
+      'coffee',
+      'less',
+      'concurrent:test',
+      'connect:test',
+      'karma:' + ((target === 'ci')? 'ci' : 'unit')
+    ]);
+  });
 
   grunt.registerTask('build', [
     'clean:dist',
@@ -382,6 +430,7 @@ module.exports = function (grunt) {
     'less:dist',
     'concat',
     'copy',
+    'template:api-server-dist',
     'cdnify',
     'ngmin',
     'cssmin',
@@ -390,8 +439,14 @@ module.exports = function (grunt) {
     'usemin'
   ]);
 
+  grunt.registerTask('jenkins', [
+    'jshint:ci',
+    'plato',
+    'test:ci'
+  ]);
+
   grunt.registerTask('default', [
-    'jshint',
+    'jshint:jshint',
     'test',
     'build'
   ]);

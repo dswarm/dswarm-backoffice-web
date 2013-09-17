@@ -1,39 +1,40 @@
 'use strict';
 
-beforeEach(module('dmpApp', 'mockedFunctions'));
-
 describe('Controller: ComponentsCtrl', function () {
+  var $httpBackend, $rootScope, scope, componentsCtrl;
 
-  var componentsCtrl,
-    scope,
-    $httpBackend;
+  beforeEach(module('dmpApp', 'mockedFunctions'));
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, _$httpBackend_, $rootScope, mockFunctionsJSON) {
-      scope = $rootScope.$new();
-      $httpBackend = _$httpBackend_;
-      $httpBackend.whenGET('/data/functions.json').respond(mockFunctionsJSON);
+  beforeEach(inject(function ($injector) {
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
 
-      componentsCtrl = function() {
-        return $controller('ComponentsCtrl', {
-          '$scope': scope
-        });
-      };
-    }
-  ));
+    scope = $rootScope.$new();
 
-  afterEach(inject(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    $httpBackend.when('GET', '/data/functions.json').respond($injector.get('mockFunctionsJSON'));
+
+    var $controller = $injector.get('$controller');
+
+    componentsCtrl = function () {
+      return $controller('ComponentsCtrl', {
+        '$scope': scope
+      });
+    };
   }));
 
-  it('should have loaded function data', inject(function () {
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should have loaded function data', function () {
       $httpBackend.expectGET('/data/functions.json');
       componentsCtrl();
+      $rootScope.$digest();
       $httpBackend.flush();
 
       expect(scope.functions.children.length).toBe(23);
 
     }
-  ));
+  );
 });

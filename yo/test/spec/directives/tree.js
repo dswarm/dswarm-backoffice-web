@@ -1,27 +1,24 @@
 'use strict';
 
-beforeEach(module('dmpApp', 'mockedSchemaParsed'));
-
 describe('Directive: tree', function() {
+    var $rootScope, element, scope;
 
-    var element,
-        scope;
+    beforeEach(module('dmpApp', 'mockedSchemaParsed', 'views/directives/tree.html'));
 
-    beforeEach(module('views/directives/tree.html'));
-
-    beforeEach(inject(function($rootScope, $compile, mockSchemaParsedJSON) {
+    beforeEach(inject(function($injector) {
         element = angular.element('<tree data="data"></tree>');
 
-        scope = $rootScope;
+        $rootScope = $injector.get('$rootScope');
+        scope = $rootScope.$new();
 
-        scope.data = mockSchemaParsedJSON;
-
-        $compile(element)(scope);
-        scope.$digest();
+        scope.data = $injector.get('mockSchemaParsedJSON');
     }));
 
-    it("should have the correct amount of tree nodes", function() {
-        var list = element.find('tree');
+    it("should have the correct amount of tree nodes", inject(function($injector) {
+        $injector.get('$compile')(element)(scope);
+        $rootScope.$digest();
+
+        var list = element.find('div');
         expect(list.length).toBe(33);
-    });
+    }));
 });

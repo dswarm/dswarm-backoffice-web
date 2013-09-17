@@ -1,3 +1,0 @@
-function DataCtrl($scope) {
-
-}

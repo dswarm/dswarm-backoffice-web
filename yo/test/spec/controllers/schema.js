@@ -1,27 +1,29 @@
 'use strict';
 
-beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema'));
-
 describe('Controller: SchemaCtrl', function () {
+  var $httpBackend, $rootScope, scope, schemaCtrl;
 
-  var schemaCtrl,
-    scope,
-    $httpBackend;
+  beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema'));
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, _$httpBackend_, $rootScope, mockSchemaJSON, mockTargetSchemaJSON) {
-      scope = $rootScope.$new();
-      $httpBackend = _$httpBackend_;
-      $httpBackend.whenGET('/data/schema.json').respond(mockSchemaJSON);
-      $httpBackend.whenGET('/data/targetschema.json').respond(mockTargetSchemaJSON);
+  beforeEach(inject(function ($injector) {
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
 
-      schemaCtrl = function() {
-        return $controller('SchemaCtrl', {
-          '$scope': scope
-        });
-      };
-    }
-  ));
+    scope = $rootScope.$new();
+
+    $httpBackend.whenGET('/data/schema.json').respond($injector.get('mockSchemaJSON'));
+    $httpBackend.whenGET('/data/targetschema.json').respond($injector.get('mockTargetSchemaJSON'));
+
+    var $controller = $injector.get('$controller');
+
+    schemaCtrl = function () {
+      return $controller('SchemaCtrl', {
+        '$scope': scope
+      });
+    };
+
+  }));
 
   afterEach(inject(function () {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -30,6 +32,7 @@ describe('Controller: SchemaCtrl', function () {
 
   it('should have a SchemaCtrl controller', function() {
       var SchemaCtrl = schemaCtrl();
+      $rootScope.$digest();
       $httpBackend.flush();
       expect(SchemaCtrl).not.toBe(null);
   });
@@ -37,6 +40,7 @@ describe('Controller: SchemaCtrl', function () {
   it('should have loaded source schema data', inject(function () {
       $httpBackend.expectGET('/data/schema.json');
       schemaCtrl();
+      $rootScope.$digest();
       $httpBackend.flush();
 
       expect(scope.sourceSchema.name).toBe('OAI-PMH');
@@ -48,6 +52,7 @@ describe('Controller: SchemaCtrl', function () {
   it('should have loaded source schema data', inject(function () {
       $httpBackend.expectGET('/data/targetschema.json');
       schemaCtrl();
+      $rootScope.$digest();
       $httpBackend.flush();
 
       expect(scope.targetSchema.name).toBe('OAI-PMH');

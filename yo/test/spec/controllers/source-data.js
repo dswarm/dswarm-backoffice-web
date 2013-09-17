@@ -1,21 +1,21 @@
 'use strict';
 
-beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord'));
-
 describe('Controller: SourceDataCtrl', function () {
+    var $httpBackend, $rootScope, scope, sourceDataCtrl;
 
-    var sourceDataCtrl,
-        scope,
-        $httpBackend;
+    beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord'));
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($controller, _$httpBackend_, $rootScope, mockSchemaJSON, mockRecordJSON) {
+    beforeEach(inject(function ($injector) {
+        $httpBackend = $injector.get('$httpBackend');
+        $rootScope = $injector.get('$rootScope');
+
         scope = $rootScope.$new();
-        $httpBackend = _$httpBackend_;
 
-        $httpBackend.whenGET('/data/schema.json').respond(mockSchemaJSON);
-        $httpBackend.whenGET('/data/record.json').respond(mockRecordJSON);
+        $httpBackend.whenGET('/data/schema.json').respond($injector.get('mockSchemaJSON'));
+        $httpBackend.whenGET('/data/record.json').respond($injector.get('mockRecordJSON'));
 
+        var $controller = $injector.get('$controller');
         sourceDataCtrl = function () {
           return $controller('SourceDataCtrl', {
             $scope: scope
@@ -31,6 +31,7 @@ describe('Controller: SourceDataCtrl', function () {
 
     it('should have a SchemaCtrl controller', function() {
         var SourceDataCtrl = sourceDataCtrl();
+        $rootScope.$digest();
         $httpBackend.flush();
         expect(SourceDataCtrl).not.toBe(null);
     });
@@ -38,6 +39,7 @@ describe('Controller: SourceDataCtrl', function () {
     it('should have loaded schema data', function () {
         $httpBackend.expectGET('/data/schema.json');
         sourceDataCtrl();
+        $rootScope.$digest();
         $httpBackend.flush();
 
         expect(scope.data.name).toBe('OAI-PMH');
@@ -49,6 +51,7 @@ describe('Controller: SourceDataCtrl', function () {
     it('should have loaded record data', function () {
         $httpBackend.expectGET('/data/record.json');
         sourceDataCtrl();
+        $rootScope.$digest();
         $httpBackend.flush();
 
         expect(scope.data.children[0].children[0].children[0].children[0].title).toBe('urn:nbn:de:bsz:14-ds-1229427875176-76287');

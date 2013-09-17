@@ -19,7 +19,7 @@ angular.module('dmpApp')
 
     });
   }])
-  .directive('sourcedata', [ function () {
+  .directive('sourceData', [ function () {
     return {
         restrict: 'E',
         replace: true,
