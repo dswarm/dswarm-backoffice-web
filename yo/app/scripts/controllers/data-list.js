@@ -1,5 +1,5 @@
 angular.module('dmpApp')
-  .controller('DataListCtrl', ['$scope', '$routeParams', 'FileResource', function ($scope, $routeParams, FileResource) {
+  .controller('DataListCtrl', ['$scope', 'FileResource', function ($scope, FileResource) {
 
     $scope.files = FileResource.query();
   }]);

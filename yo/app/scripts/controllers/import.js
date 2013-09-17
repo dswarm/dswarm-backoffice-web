@@ -4,7 +4,7 @@ angular.module('dmpApp')
       return $window.humanize.filesize(text);
     }
   }])
-  .controller('ImportCtrl', ['$scope', '$location', 'ngProgress', function ($scope, $location, ngProgress) {
+  .controller('ImportCtrl', ['$scope', '$location', '$window', 'ngProgress', function ($scope, $location, $window, ngProgress) {
 
     $scope.data = {};
     $scope.meta = {};
@@ -47,8 +47,10 @@ angular.module('dmpApp')
           data.append('name', name);
           data.append('description', description);
 
-          xhr.open('POST', dmp['jsRoutes']['api'] + 'resources', true);
-//          xhr.open('POST', 'http://httpbin.org/post', true);
+          var url = $window['dmp']['jsRoutes']['api'] + 'resources';
+//          var url = 'http://httpbin.org/post';
+
+          xhr.open('POST', url, true);
           xhr.send(data);
         })(f, $scope.data.name, $scope.data.description);
       }

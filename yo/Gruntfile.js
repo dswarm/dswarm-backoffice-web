@@ -348,6 +348,17 @@ module.exports = function (grunt) {
         browsers: ['PhantomJS'],
         autoWatch: false
       },
+      localci: {
+        configFile: 'karma.conf.js',
+        colors: false,
+        singleRun: true,
+        reporters: ['dots', 'junit', 'coverage'],
+        coverageReporter: {
+          type: 'html',
+          dir: 'test_out/coverage/'
+        },
+        autoWatch: false
+      },
       continuous: {
         configFile: 'karma.conf.js',
         singleRun: false,
