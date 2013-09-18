@@ -39,7 +39,21 @@ describe('Controller: Import', function () {
 
     data = scope.data = {
       file: (function(){
-        var x = new Blob(["a,b,c\n"], {"type": "text/csv"});
+        var x;
+        try {
+          x = new Blob(["a,b,c\n"], {"type": "text/csv"})
+        } catch (error) {
+          // phantomJS (Jenkins) doesn't know about Blob as constructor
+          // https://code.google.com/p/phantomjs/issues/detail?id=1013
+          if (error.name == 'TypeError') {
+            var blobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder
+              , builder = new blobBuilder();
+
+            builder.append('a,b,c\n');
+
+            x = builder.getBlob("text/csv");
+          }
+        }
         x.name = 'the_filename';
         return x;
       })(),
