@@ -59,6 +59,22 @@ def trigger():
     return "Upgrade running\n"
 
 
+@app.route("/web", methods=['POST'])
+def trigger_web():
+    updates_web.appendleft(True)
+    update_web()
+
+    return "Web reload initiated\n"
+
+
+@app.route("/api", methods=['POST'])
+def trigger_api():
+    updates_api.appendleft(True)
+    update_api()
+
+    return "API reload initiated\n"
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 

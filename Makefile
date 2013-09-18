@@ -41,6 +41,7 @@ update: update-files ui-bootstrap ui-utils
 
 # upgrade installation base
 upgrade:
+	git fetch origin
 	git pull
 .PHONY: upgrade
 

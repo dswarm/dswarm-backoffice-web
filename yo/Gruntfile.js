@@ -462,6 +462,7 @@ module.exports = function (grunt) {
     'concat',
     'copy',
     'template:api-server-dist',
+    'revision',
     'cdnify',
     'ngmin',
     'cssmin',
