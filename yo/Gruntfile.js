@@ -37,6 +37,7 @@ module.exports = function (grunt) {
   } catch (e) {}
 
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     yeoman: yeomanConfig,
     watch: {
       coffee: {
@@ -63,7 +64,7 @@ module.exports = function (grunt) {
         ]
       }
     },
-    'template': {
+    template: {
       'api-server': {
         'options': {
           'data': {
@@ -84,6 +85,12 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
         }
       }
+    },
+    'git-describe': {
+      _opts: {
+        output: '<%= yeoman.app %>/data/version.json'
+      },
+      build: {}
     },
     connect: {
       options: {
@@ -404,6 +411,19 @@ module.exports = function (grunt) {
         }
       }
     }
+  });
+
+  grunt.registerTask('revision', function() {
+    grunt.event.once('git-describe', function (rev) {
+      grunt.file.write(grunt.config('git-describe._opts.output'), JSON.stringify({
+        "build_info": {
+          version: grunt.config('pkg.version'),
+          revision: rev[0],
+          date: grunt.template.today()
+        }
+      }));
+    });
+    grunt.task.run('git-describe:build');
   });
 
   grunt.registerTask('server', function (target) {
