@@ -5,13 +5,10 @@ describe('Controller: Import', function () {
 
   beforeEach(module('dmpApp'));
 
-  beforeEach(module(function($provide) {
-//    spyOn(XMLHttpRequest.prototype, 'onloadstart').andCallThrough();
-//    spyOn(XMLHttpRequest.prototype, 'onerror').andCallThrough();
-//    spyOn(XMLHttpRequest.prototype, 'onreadystatechange').andCallThrough();
+  beforeEach(function() {
     spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
     spyOn(XMLHttpRequest.prototype, 'send');
-  }));
+  });
 
   beforeEach(inject(function ($injector) {
     $rootScope = $injector.get('$rootScope');
