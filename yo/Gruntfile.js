@@ -96,7 +96,13 @@ module.exports = function (grunt) {
           cwd: '.'
         }
       },
-      parent: {
+      parentdist: {
+        options: {
+          info_key: 'api',
+          cwd: '../../datamanagement-platform'
+        }
+      },
+      parentlocal: {
         options: {
           info_key: 'api',
           cwd: '../..'
@@ -424,9 +430,13 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('revision', function() {
+  grunt.registerTask('revision', function(target) {
     var buildInfo = {}
-      , repoCount = 2
+      , tasks = [
+        'git-describe:build',
+        'git-describe:parent' + ((target === 'dist') ? 'dist' : 'local')
+      ]
+      , repoCount = tasks.length
       , describedRepos = 0;
 
     grunt.event.many('git-describe', repoCount, function (rev, opts) {
@@ -442,7 +452,7 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.task.run('git-describe');
+    grunt.task.run(tasks);
   });
 
   grunt.registerTask('server', function (target) {
@@ -478,7 +488,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'less:dist',
-    'revision',
+    'revision:dist',
     'concat',
     'copy',
     'template:api-server-dist',
