@@ -103,7 +103,6 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'handleEditFilter', function(args) {
             $scope.filterShouldBeOpen = true;
             $scope.component = args['payload'];
-
         });
 
         $scope.onSaveClick = function() {
@@ -118,8 +117,6 @@ angular.module('dmpApp')
             replace: true,
             scope: true,
             link : function(scope, element, attrs) {
-
-                console.log(scope);
 
             },
             templateUrl: 'views/directives/filter.html',

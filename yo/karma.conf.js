@@ -8,6 +8,7 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files : [
           'components/angular/angular.js',
+          'components/angular-route/angular-route.js/',
           'components/angular-mocks/angular-mocks.js',
           'components/angular-ui-bootstrap/misc/test-lib/angular-mocks.js',
           'components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js',
@@ -15,8 +16,9 @@ module.exports = function(config) {
           'components/angular-resource/angular-resource.js',
           'components/angular-cookies/angular-cookies.js',
           'components/angular-sanitize/angular-sanitize.js',
-          'components/angular-ui-router/release/angular-ui-router.js',
           'components/jquery/jquery.js',
+          'components/humanize/humanize.js',
+          'components/ngprogress/build/ngProgress.js',
           'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
           'scripts/*.js',
           'scripts/**/*.js',
