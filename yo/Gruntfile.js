@@ -90,7 +90,18 @@ module.exports = function (grunt) {
       _opts: {
         output: '<%= yeoman.app %>/data/version.json'
       },
-      build: {}
+      build: {
+        options: {
+          info_key: 'web',
+          cwd: '.'
+        }
+      },
+      parent: {
+        options: {
+          info_key: 'api',
+          cwd: '../..'
+        }
+      }
     },
     connect: {
       options: {
@@ -414,16 +425,24 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('revision', function() {
-    grunt.event.once('git-describe', function (rev) {
-      grunt.file.write(grunt.config('git-describe._opts.output'), JSON.stringify({
-        "build_info": {
-          version: grunt.config('pkg.version'),
-          revision: rev[0],
-          date: grunt.template.today()
-        }
-      }));
+    var buildInfo = {}
+      , repoCount = 2
+      , describedRepos = 0;
+
+    grunt.event.many('git-describe', repoCount, function (rev, opts) {
+      describedRepos += 1;
+      buildInfo[opts.info_key] = {
+        version: grunt.config('pkg.version'),
+        revision: rev[0],
+        date: grunt.template.today()
+      };
+
+      if (describedRepos >= repoCount) {
+        grunt.file.write(grunt.config('git-describe._opts.output'), JSON.stringify(buildInfo));
+      }
     });
-    grunt.task.run('git-describe:build');
+
+    grunt.task.run('git-describe');
   });
 
   grunt.registerTask('server', function (target) {
