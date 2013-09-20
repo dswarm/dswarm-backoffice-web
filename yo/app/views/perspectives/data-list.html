@@ -1,8 +1,6 @@
 <h1>Data</h1>
-<h3><a href="#/data-config/new">Neue Konfiguration</a></h3>
-<h3><a href="#/data-config/1">Konfiguration bearbeiten</a></h3>
 <ul>
   <li ng-repeat="file in files">
-    <a ng-href="#/data/{{ file.id }}" ng-bind-template="{{ file.name }}"></a>
+    <a ng-href="#/data/{{ file.id }}" ng-bind-template="{{ file.name }}"></a> - <a href="#/data-config/{{ file.id }}">Konfiguration bearbeiten</a>
   </li>
 </ul>

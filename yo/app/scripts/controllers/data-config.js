@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCtrl', ['$scope', '$routeParams', 'DataConfigResource', 'PubSub', function ($scope, $routeParams, DataConfigResource, PubSub) {
+    .controller('DataConfigCtrl', ['$scope', '$routeParams', '$window', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $window, DataConfigResource, FileResource, PubSub) {
 
-        var allFields = ['config.name', 'config.description', 'config.fileFormat', 'config.encodings', 'config.rowSeperator', 'config.fieldSeparator', 'config.escape', 'config.textEnclosure', 'config.columnNames', 'config.ignoreLines', 'config.parseLines', 'config.discardRows', 'config.atMostRows'];
+        var savedConfigurations,
+            allFields = ['config.name', 'config.description', 'config.parameters.fileFormat', 'config.parameters.encodings', 'config.parameters.rowSeperator', 'config.parameters.fieldSeparator', 'config.parameters.escape', 'config.parameters.textEnclosure', 'config.parameters.columnNames', 'config.parameters.ignoreLines', 'config.parameters.parseLines', 'config.parameters.discardRows', 'config.parameters.atMostRows'];
 
         $scope.config = {};
 
@@ -23,47 +24,55 @@ angular.module('dmpApp')
                 { name : 'Unicode' },
                 { name : 'Windows1252' }
             ],
-            fieldSeparator : ';',
-            escape : '\\',
-            textEnclosure : '"',
-            columnNames : 'columnN'
+
+            parameters : {
+                fieldSeparator : ';',
+                escape : '\\',
+                textEnclosure : '"',
+                columnNames : 'columnN'
+            }
 
         }
 
-        angular.forEach(allFields, function(value) {
-            var field = value.split('.');
-            $scope.config[field[1]] = '';
+        // TEMP
+        $scope.config.id = 1;
+
+        $scope.config.parameters = $scope.presets.parameters;
+
+        savedConfigurations = DataConfigResource.get({resourceId: $routeParams.resourceId}).query({}, function() {
+
+            angular.forEach(savedConfigurations, function(value, key) {
+
+                $scope.config.name = value.name;
+                $scope.config.description = value.description;
+                $scope.config.id = value.id;
+                $scope.config.parameters = value.parameters;
+
+            });
+
         });
 
-        if($routeParams.dataConfigId !== 'new') {
-            // If not create new, load data
-            $scope.config = DataConfigService.query({
-                dataConfigId : $routeParams.dataConfigId
-            });
-        } else {
-            // laod default values
-            $scope.config.fieldSeparator = $scope.presets.fieldSeparator;
-            $scope.config.escape = $scope.presets.escape;
-            $scope.config.textEnclosure = $scope.presets.textEnclosure;
-            $scope.config.columnNames = $scope.presets.columnNames;
-        }
-
         $scope.onSaveClick = function() {
-            DataConfigService.save($scope.config);
+            DataConfigResource.put({resourceId: $routeParams.resourceId, configuration: $scope.config});
         }
 
         // When file fornat changes, update default rowseperator
         $scope.onFileFormatChanged = function() {
-            if($scope.config.fileformat.rowSeperator) {
-                $scope.config.rowSeperator = $scope.config.fileformat.rowSeperator;
+            if($scope.config.parameters.fileFormat && $scope.config.parameters.fileFormat.rowSeperator) {
+                $scope.config.parameters.rowSeperator = $scope.config.parameters.fileFormat.rowSeperator;
             }
         }
 
         // On any field change send broadcast that there was a change
         $scope.$watchCollection('['+allFields.join(',')+']', function() {
+            $scope.onFieldChanged();
+        });
+
+        $scope.onFieldChanged = function() {
             PubSub.broadcast('dataConfigUpdated', {
                 config : $scope.config
             });
-        });
+
+        }
 
     }]);
