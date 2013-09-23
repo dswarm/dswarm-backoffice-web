@@ -1,0 +1,106 @@
+<h1>Data Config</h1>
+
+<div class="row">
+
+    <div class="col-md-3 box">
+    </div>
+
+    <div class="col-md-9 box">
+
+        <div class="row" style="margin:0;">
+            <div class="col-md-9">
+                <!-- preview here -->
+            </div>
+        </div>
+        <div class="row" style="margin:0;">
+
+            <div class="col-md-12 box">
+
+
+                <form role="form" ng-submit="onSaveClick()" ng-changed="onFormChanged()">
+
+                    <fieldset>
+
+                        <div class="col-md-3">
+
+                            <label>Name</label>
+                            <input type="text" ng-model="config.name" ng-model-onblur class="form-control">
+
+                            <label>Description</label>
+                            <textarea ng-model="config.description" class="form-control"></textarea>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label>Choose file format</label>
+                            <select
+                                    ng-model="config.parameters.fileFormat"
+                                    ng-options="f.name as f.name for f in presets.fileFormat" class="form-control"
+                                    ng-change="onFileFormatChanged()">
+                                <option value="">-- chose --</option>
+                            </select>
+
+                            <label>Encodings</label>
+                            <select
+                                    ng-model="config.parameters.encodings"
+                                    ng-options="e.name as e.name for e in presets.encodings" class="form-control">
+                                <option value="">-- chose --</option>
+                            </select>
+
+                            <label>Field separator character</label>
+                            <input type="text" ng-model="config.parameters.fieldSeparator" ng-model-onblur class="form-control">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label>Escape character</label>
+                            <input type="text" ng-model="config.parameters.escape" ng-model-onblur class="form-control">
+
+                            <label>Text enclosure character</label>
+                            <input type="text" ng-model="config.parameters.textEnclosure" ng-model-onblur class="form-control">
+
+                            <label>define column names</label>
+                            <input type="text" ng-model="config.parameters.columnNames" ng-model-onblur class="form-control">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <span class="label-inline">
+                                <input type="checkbox" ng-model-onblur ng-model="ignoreLinesActivate">
+                                Ignore first
+                                <input type="text" ng-model="config.parameters.ignoreLines" style="width: 50px" class="form-control form-control-inline" ng-disabled="!ignoreLinesActivate">
+                                line(s) at beginning of file
+                            </span>
+
+                            <span class="label-inline">
+                                <input type="checkbox" ng-model-onblur ng-model="discardRowsActivate">
+                                Discard initial
+                                <input type="text" ng-model-onblur ng-model="config.parameters.discardRows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!discardRowsActivate">
+                                row(s) of data
+                            </span>
+
+                            <span class="label-inline">
+                                <input type="checkbox" ng-model-onblur ng-model="atMostRowsActivate">
+                                Load at most
+                                <input type="text" ng-model-onblur ng-model="config.parameters.atMostRows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!atMostRowsActivate">
+                                row(s) of data
+                            </span>
+
+                            <button type="submit" class="btn btn-default">Save</button>
+
+                        </div>
+
+                    </fieldset>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

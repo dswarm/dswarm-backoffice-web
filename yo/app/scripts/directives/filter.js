@@ -17,7 +17,7 @@ angular.module('dmpApp')
         $http.get('/data/schema.json')
             .success(function (result) {
                 $scope.result = result;
-            });
+        });
 
         allPromise.then(function (result) {
             var schemaResult = result[0]['data']
@@ -43,19 +43,19 @@ angular.module('dmpApp')
                 inputfilterCollection = inputfilterCollection.concat(filter.inputfilters);
 
                 if(filter.inputfilters) {
-                    filter.name = "";
+                    filter.name = '';
                 }
 
                 var countInputfilter = 0;
                 angular.forEach(filter.inputfilters, function(inputfilter) {
                     if(filter.name.length > 0) {
-                        filter.name += ", ";
+                        filter.name += ', ';
                     }
                     filter.name += inputfilter.title ;
 
                     countInputfilter++;
                 });
-                if(countInputfilter == 0) { filter.name = "new filter" };
+                if(countInputfilter === 0) { filter.name = 'new filter' }
 
             });
 
@@ -74,7 +74,7 @@ angular.module('dmpApp')
             });
 
             return true;
-        }
+        };
 
         $scope.opts = {
             backdropFade: true,
@@ -94,7 +94,7 @@ angular.module('dmpApp')
                 name : 'new filter'
             });
 
-        }
+        };
 
         $scope.close = function () {
             $scope.filterShouldBeOpen = false;
@@ -103,7 +103,6 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'handleEditFilter', function(args) {
             $scope.filterShouldBeOpen = true;
             $scope.component = args['payload'];
-
         });
 
         $scope.onSaveClick = function() {
@@ -118,8 +117,6 @@ angular.module('dmpApp')
             replace: true,
             scope: true,
             link : function(scope, element, attrs) {
-
-                console.log(scope);
 
             },
             templateUrl: 'views/directives/filter.html',

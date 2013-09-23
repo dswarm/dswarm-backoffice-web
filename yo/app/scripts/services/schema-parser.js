@@ -169,9 +169,12 @@ angular.module('dmpApp').
     /**
      * takes input data object and returns title data as array
      * @param data {*}
+     * @param path {*}
+     * @param returnData {*}
      * @returns {*}
      */
     function getData(data, path, returnData) {
+
       if(data.children) {
 
         if(!returnData) returnData = [];
@@ -184,7 +187,7 @@ angular.module('dmpApp').
           if(child.children) {
 
             if(subpath.length > 0) {
-                subpath = subpath + ".";
+                subpath = subpath + '.';
             }
 
             subpath = subpath + data.name;
@@ -206,9 +209,10 @@ angular.module('dmpApp').
       } else {
 
           if(data.title) {
+
               return { 'title' : data.title, 'name' : data.name, 'path' : path };
           }
-          else return ''
+          else return '';
       }
     }
 
@@ -226,11 +230,7 @@ angular.module('dmpApp').
             matchCount += matchFilter(data, filter);
         });
 
-        if(matchCount != filters.length) {
-            data.filterNoMatch = true;
-        } else {
-            data.filterNoMatch = false;
-        }
+        data.filterNoMatch = (matchCount !== filters.length);
 
          return data;
 
@@ -255,7 +255,7 @@ angular.module('dmpApp').
      */
     function matchPath(data, path, matchdata) {
 
-        var pathArray = path.split(".");
+        var pathArray = path.split('.');
 
         if(data.name == pathArray[0]) {
             pathArray.shift();
@@ -266,7 +266,7 @@ angular.module('dmpApp').
 
                 angular.forEach(data.children, function(child) {
 
-                    childData += matchPath(child, pathArray.join("."), matchdata);
+                    childData += matchPath(child, pathArray.join('.'), matchdata);
 
                 });
 
@@ -281,7 +281,7 @@ angular.module('dmpApp').
 
                 } else {
                     data.leafmatchedFilter = false;
-                    return 0
+                    return 0;
                 }
 
             }
