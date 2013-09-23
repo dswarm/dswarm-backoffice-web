@@ -48,6 +48,16 @@ angular.module('dmpApp')
                 $scope.config.id = value.id;
                 $scope.config.parameters = value.parameters;
 
+                if($scope.config.parameters.ignoreLines > 0) {
+                    $scope.ignoreLinesActivate = true;
+                }
+                if($scope.config.parameters.discardRows > 0) {
+                    $scope.discardRowsActivate = true;
+                }
+                if($scope.config.parameters.atMostRows > 0) {
+                    $scope.atMostRowsActivate = true;
+                }
+
             });
 
         });
