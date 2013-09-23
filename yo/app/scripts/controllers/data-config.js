@@ -54,8 +54,6 @@ angular.module('dmpApp')
 
         $scope.onSaveClick = function() {
 
-            var data = new FormData();
-
             DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
                 $location.path('/data/');
             });
@@ -78,7 +76,6 @@ angular.module('dmpApp')
             PubSub.broadcast('dataConfigUpdated', {
                 config : $scope.config
             });
-
-        }
+        };
 
     }]);
