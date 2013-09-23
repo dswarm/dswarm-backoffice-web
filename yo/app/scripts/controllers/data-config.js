@@ -41,7 +41,7 @@ angular.module('dmpApp')
 
         savedConfigurations = DataConfigResource.query({ resourceId: $routeParams.resourceId }, function() {
 
-            angular.forEach(savedConfigurations, function(value, key) {
+            angular.forEach(savedConfigurations, function(value) {
 
                 $scope.config.name = value.name;
                 $scope.config.description = value.description;

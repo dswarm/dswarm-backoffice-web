@@ -55,7 +55,7 @@ angular.module('dmpApp')
 
                     countInputfilter++;
                 });
-                if(countInputfilter === 0) { filter.name = 'new filter' }
+                if(countInputfilter === 0) { filter.name = 'new filter'; }
 
             });
 
@@ -116,9 +116,6 @@ angular.module('dmpApp')
             restrict: 'E',
             replace: true,
             scope: true,
-            link : function(scope, element, attrs) {
-
-            },
             templateUrl: 'views/directives/filter.html',
             controller: 'FilterCtrl'
         };

@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('dmpApp')
   .controller('DataObjectCtrl', ['$scope', '$routeParams', 'FileResource', function ($scope, $routeParams, FileResource) {
 
