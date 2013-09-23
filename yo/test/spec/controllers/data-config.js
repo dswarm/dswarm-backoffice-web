@@ -5,6 +5,11 @@ describe('Controller: DataConfig', function () {
 
     beforeEach(module('dmpApp'));
 
+    beforeEach(function() {
+        spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
+        spyOn(XMLHttpRequest.prototype, 'send');
+    });
+
     beforeEach(inject(function ($injector) {
         $rootScope = $injector.get('$rootScope');
 
@@ -34,7 +39,6 @@ describe('Controller: DataConfig', function () {
             });
         };
     }));
-
 
     it('should emit event on form object change', function () {
 
