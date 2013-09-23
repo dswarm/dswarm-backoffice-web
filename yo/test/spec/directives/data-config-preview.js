@@ -39,7 +39,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
         $httpBackend.flush();
 
         expect(scope.previewResult.length).toBe(5);
-        expect(scope.gridOptions.columnDefs.length).toBe(2);
+        expect(scope.previewOptions.columnDefs.length).toBe(2);
 
     });
 });
