@@ -1,8 +1,10 @@
+'use strict';
+
 angular.module('dmpApp')
   .filter('filesize', ['$window', function($window) {
     return function(text) {
       return $window.humanize.filesize(text);
-    }
+    };
   }])
   .controller('ImportCtrl', ['$scope', '$location', '$window', 'ngProgress', function ($scope, $location, $window, ngProgress) {
 

@@ -5,11 +5,6 @@ describe('Controller: DataConfig', function () {
 
     beforeEach(module('dmpApp'));
 
-    beforeEach(function() {
-        spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
-        spyOn(XMLHttpRequest.prototype, 'send');
-    });
-
     beforeEach(inject(function ($injector) {
         $rootScope = $injector.get('$rootScope');
 
@@ -40,22 +35,6 @@ describe('Controller: DataConfig', function () {
         };
     }));
 
-    it('should save the form objects', function () {
-        var formData = new FormData()
-            , ctrl = dataConfigCtrl(), config;
-
-        config = scope.config = {
-            name: 'configname',
-            description: 'configdescription'
-        };
-
-        formData.append('name', config.name);
-        formData.append('description', config.description);
-
-        scope.onSaveClick();
-
-        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledWith(JSON.stringify(scope.config));
-    })
 
     it('should emit event on form object change', function () {
 
