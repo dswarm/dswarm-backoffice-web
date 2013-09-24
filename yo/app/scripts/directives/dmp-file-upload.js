@@ -7,7 +7,7 @@ angular.module('dmpApp')
         var file = event.target.files[0];
         scope.$apply(function() {
           scope.data.file = file;
-        })
-      })
+        });
+      });
     };
   });

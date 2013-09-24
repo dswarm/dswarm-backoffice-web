@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterDataCtrl', ['$scope', function ($scope) {
+    .controller('FilterDataCtrl', [function () {
 
     }])
     .directive('filterData', [ function () {

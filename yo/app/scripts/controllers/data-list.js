@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('dmpApp')
   .controller('DataListCtrl', ['$scope', 'FileResource', function ($scope, FileResource) {
 

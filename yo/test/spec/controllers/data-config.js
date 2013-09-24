@@ -40,23 +40,6 @@ describe('Controller: DataConfig', function () {
         };
     }));
 
-    it('should save the form objects', function () {
-        var formData = new FormData()
-            , ctrl = dataConfigCtrl(), config;
-
-        config = scope.config = {
-            name: 'configname',
-            description: 'configdescription'
-        };
-
-        formData.append('name', config.name);
-        formData.append('description', config.description);
-
-        scope.onSaveClick();
-
-        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledWith(JSON.stringify(scope.config));
-    })
-
     it('should emit event on form object change', function () {
 
         var ctrl = dataConfigCtrl();

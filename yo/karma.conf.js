@@ -20,6 +20,7 @@ module.exports = function(config) {
           'components/humanize/humanize.js',
           'components/ngprogress/build/ngProgress.js',
           'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
+          'components/angular-grid/ng-grid-2.0.7.min.js',
           'scripts/*.js',
           'scripts/**/*.js',
 
