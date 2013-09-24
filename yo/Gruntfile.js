@@ -92,19 +92,19 @@ module.exports = function (grunt) {
             },
             build: {
                 options: {
-                    info_key: 'web',
+                    infoKey: 'web',
                     cwd: '.'
                 }
             },
             parentdist: {
                 options: {
-                    info_key: 'api',
+                    infoKey: 'api',
                     cwd: '../../datamanagement-platform'
                 }
             },
             parentlocal: {
                 options: {
-                    info_key: 'api',
+                    infoKey: 'api',
                     cwd: '../..'
                 }
             }
@@ -441,7 +441,7 @@ module.exports = function (grunt) {
 
         grunt.event.many('git-describe', repoCount, function (rev, opts) {
             describedRepos += 1;
-            buildInfo[opts.info_key] = {
+            buildInfo[opts.infoKey] = {
                 version: grunt.config('pkg.version'),
                 revision: rev[0],
                 date: grunt.template.today()
