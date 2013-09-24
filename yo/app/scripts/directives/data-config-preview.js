@@ -3,7 +3,7 @@
 angular.module('dmpApp')
     .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, PubSub, DataConfigPreviewResource) {
 
-        $scope.previewResult = [],
+        $scope.previewResult = [];
 
         $scope.previewOptions = {
             data: 'previewResult',

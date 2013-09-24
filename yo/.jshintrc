@@ -8,7 +8,7 @@
   "eqeqeq": true,
   "globalstrict": true,
   "immed": true,
-  "indent": 2,
+  "indent": 4,
   "latedef": true,
   "laxcomma": true,
   "newcap": true,

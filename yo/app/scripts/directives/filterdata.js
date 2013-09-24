@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterDataCtrl', [function () {
-
-    }])
+    .controller('FilterDataCtrl', [function () { }])
     .directive('filterData', [ function () {
         return {
             restrict: 'E',

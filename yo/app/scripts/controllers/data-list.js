@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('DataListCtrl', ['$scope', 'FileResource', function ($scope, FileResource) {
+    .controller('DataListCtrl', ['$scope', '$routeParams', 'FileResource', function ($scope, $routeParams, FileResource) {
 
-    $scope.files = FileResource.query();
-  }]);
+        $scope.files = FileResource.query();
+    }]);

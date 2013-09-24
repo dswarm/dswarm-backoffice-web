@@ -1,36 +1,36 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('TargetDataCtrl', ['$scope', '$http', '$q', 'schemaParser', 'PubSub', function ($scope, $http, $q, schemaParser, PubSub) {
-    $scope.internalName = 'Target Data Widget';
+    .controller('TargetDataCtrl', ['$scope', '$http', '$q', 'schemaParser', 'PubSub', function ($scope, $http, $q, schemaParser, PubSub) {
+        $scope.internalName = 'Target Data Widget';
 
-    $scope.data = {};
+        $scope.data = {};
 
-    var schemaPromise = $http.get('/data/targetschema.json');
+        var schemaPromise = $http.get('/data/targetschema.json');
 
-    PubSub.subscribe($scope, 'transformationFinished', function(data) {
-      var deferred = $q.defer()
-        , all = $q.all([schemaPromise, deferred.promise]);
+        PubSub.subscribe($scope, 'transformationFinished', function(data) {
+            var deferred = $q.defer()
+                , all = $q.all([schemaPromise, deferred.promise]);
 
-      all.then(function(results) {
-        var schema = results[0].data
-          , transformation = results[1];
+            all.then(function(results) {
+                var schema = results[0].data
+                    , transformation = results[1];
 
-        if (transformation && transformation[schema['title']]) {
-          $scope.data = schemaParser.parseAny(transformation[schema['title']], schema['title'], schema);
-        }
-      });
+                if (transformation && transformation[schema['title']]) {
+                    $scope.data = schemaParser.parseAny(transformation[schema['title']], schema['title'], schema);
+                }
+            });
 
-      deferred.resolve(data);
-    });
+            deferred.resolve(data);
+        });
 
-  }])
-  .directive('targetData', [ function () {
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: 'views/directives/target-data.html',
-        controller: 'TargetDataCtrl'
-    };
-  }]);
+    }])
+    .directive('targetData', [ function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'views/directives/target-data.html',
+            controller: 'TargetDataCtrl'
+        };
+    }]);
 
