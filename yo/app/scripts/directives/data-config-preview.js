@@ -4,29 +4,35 @@ angular.module('dmpApp')
     .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, PubSub, DataConfigPreviewResource) {
 
         $scope.previewResult = [];
+        $scope.configError = "";
 
         $scope.previewOptions = {
             data: 'previewResult',
-            columnDefs: [],
-            enableColumnResize: false
+            enableColumnResize: false,
+            enableRowSelection: false
         };
 
         $scope.dataConfigUpdatedSave = function(result) {
 
-            $scope.previewResult = result['data'];
-            $scope.previewOptions.columnDefs = result['columnDefs'];
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
+            var csvObject = $.csv.toObjects(result);
+            $scope.previewResult = csvObject;
 
         };
 
         $scope.dataConfigUpdated = function(config) {
 
-            DataConfigPreviewResource.save({ resourceId: $routeParams.resourceId }, config, function(result) {
-                $scope.dataConfigUpdatedSave(result);
-            });
+            //var testConfig = {"id":1,"name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}};
+
+            DataConfigPreviewResource.getPreview(
+                { resourceId: $routeParams.resourceId },
+                config,
+                function(result) {
+                    $scope.dataConfigUpdatedSave(result);
+                },
+                function(error) {
+                    $scope.configError = error;
+                });
+
         };
 
         PubSub.subscribe($scope, 'dataConfigUpdated', function(args) {

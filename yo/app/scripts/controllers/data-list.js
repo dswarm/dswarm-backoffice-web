@@ -6,7 +6,7 @@ angular.module('dmpApp')
         $scope.files = FileResource.query();
         $scope.selectedSet = [];
 
-        $scope.dataListOptions ={
+        $scope.dataListOptions = {
             data: 'files',
             "columnDefs": [
                 {field:'name', displayName:'Name'},
