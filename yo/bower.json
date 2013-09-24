@@ -17,7 +17,8 @@
         "angular-cookies": "~1.2.0",
         "angular-sanitize": "~1.2.0",
         "humanize": "~0.0.8",
-        "ngprogress": "~1.0.3"
+        "ngprogress": "~1.0.3",
+        "jquery-csv": ""
     },
     "devDependencies": {
         "angular-mocks": "~1.2.0",

@@ -34,34 +34,34 @@
 
                             <label>Choose file format</label>
                             <select
-                                    ng-model="config.parameters.fileFormat"
-                                    ng-options="f.name as f.name for f in presets.fileFormat" class="form-control"
+                                    ng-model="config.parameters.row_delimiter"
+                                    ng-options="f.row_delimiter as f.name for f in presets.fileFormat" class="form-control"
                                     ng-change="onFileFormatChanged()">
                                 <option value="">-- chose --</option>
                             </select>
 
                             <label>Encodings</label>
                             <select
-                                    ng-model="config.parameters.encodings"
-                                    ng-options="e.name as e.name for e in presets.encodings" class="form-control">
+                                    ng-model="config.parameters.encoding"
+                                    ng-options="e.name as e.name for e in presets.encoding" class="form-control">
                                 <option value="">-- chose --</option>
                             </select>
 
                             <label>Field separator character</label>
-                            <input type="text" ng-model="config.parameters.fieldSeparator" ng-model-onblur class="form-control">
+                            <input type="text" ng-model="config.parameters.column_delimiter" ng-model-onblur class="form-control">
 
                         </div>
 
                         <div class="col-md-3">
 
                             <label>Escape character</label>
-                            <input type="text" ng-model="config.parameters.escape" ng-model-onblur class="form-control">
+                            <input type="text" ng-model="config.parameters.escape_character" ng-model-onblur class="form-control">
 
                             <label>Text enclosure character</label>
-                            <input type="text" ng-model="config.parameters.textEnclosure" ng-model-onblur class="form-control">
+                            <input type="text" ng-model="config.parameters.quote_character" ng-model-onblur class="form-control">
 
                             <label>define column names</label>
-                            <input type="text" ng-model="config.parameters.columnNames" ng-model-onblur class="form-control">
+                            <input type="text" ng-model="config.parameters.column_names" ng-model-onblur class="form-control">
 
                         </div>
 
@@ -70,21 +70,21 @@
                             <span class="label-inline">
                                 <input type="checkbox" ng-model-onblur ng-model="ignoreLinesActivate">
                                 Ignore first
-                                <input type="text" ng-model="config.parameters.ignoreLines" style="width: 50px" class="form-control form-control-inline" ng-disabled="!ignoreLinesActivate">
+                                <input type="text" ng-model="config.parameters.ignore_lines" style="width: 50px" class="form-control form-control-inline" ng-disabled="!ignoreLinesActivate">
                                 line(s) at beginning of file
                             </span>
 
                             <span class="label-inline">
                                 <input type="checkbox" ng-model-onblur ng-model="discardRowsActivate">
                                 Discard initial
-                                <input type="text" ng-model-onblur ng-model="config.parameters.discardRows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!discardRowsActivate">
+                                <input type="text" ng-model-onblur ng-model="config.parameters.discard_rows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!discardRowsActivate">
                                 row(s) of data
                             </span>
 
                             <span class="label-inline">
                                 <input type="checkbox" ng-model-onblur ng-model="atMostRowsActivate">
                                 Load at most
-                                <input type="text" ng-model-onblur ng-model="config.parameters.atMostRows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!atMostRowsActivate">
+                                <input type="text" ng-model-onblur ng-model="config.parameters.at_most_rows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!atMostRowsActivate">
                                 row(s) of data
                             </span>
 

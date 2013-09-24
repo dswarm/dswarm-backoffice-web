@@ -4,16 +4,16 @@ angular.module('dmpApp')
     .controller('DataConfigCtrl', ['$scope', '$routeParams', '$window', '$location', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $window, $location, DataConfigResource, FileResource, PubSub) {
 
         var savedConfigurations,
-            allFields = ['config.name', 'config.description', 'config.parameters.fileFormat', 'config.parameters.encodings', 'config.parameters.rowSeperator', 'config.parameters.fieldSeparator', 'config.parameters.escape', 'config.parameters.textEnclosure', 'config.parameters.columnNames', 'config.parameters.ignoreLines', 'config.parameters.parseLines', 'config.parameters.discardRows', 'config.parameters.atMostRows'];
+            allFields = ['config.name', 'config.description', 'config.parameters.row_delimiter', 'config.parameters.encoding', 'config.parameters.rowSeperator', 'config.parameters.column_delimiter', 'config.parameters.escape_character', 'config.parameters.quote_character', 'config.parameters.column_names', 'config.parameters.ignore_lines', 'config.parameters.parse_lines', 'config.parameters.discard_rows', 'config.parameters.at_most_rows'];
 
         $scope.config = {};
 
         $scope.presets = {
             fileFormat : [
-                { name : 'Windows', rowseperator : '\\r\\n' },
-                { name : 'Linux' , rowseperator : '\\n' }
+                { name : 'Windows', row_delimiter : '\\r\\n' },
+                { name : 'Linux' , row_delimiter : '\\n' }
             ],
-            encodings : [
+            encoding : [
                 { name : 'ISO8859-1' },
                 { name : 'ISO8859-15' },
                 { name : 'ASCII' },
@@ -26,10 +26,10 @@ angular.module('dmpApp')
             ],
 
             parameters : {
-                fieldSeparator : ';',
-                escape : '\\',
-                textEnclosure : '"',
-                columnNames : 'columnN'
+                column_delimiter : ',',
+                escape_character : '\\\\',
+                quote_character : '\\"',
+                column_names : 'columnN'
             }
 
         };
@@ -48,13 +48,13 @@ angular.module('dmpApp')
                 $scope.config.id = value.id;
                 $scope.config.parameters = value.parameters;
 
-                if($scope.config.parameters.ignoreLines > 0) {
+                if($scope.config.parameters.ignore_lines > 0) {
                     $scope.ignoreLinesActivate = true;
                 }
-                if($scope.config.parameters.discardRows > 0) {
+                if($scope.config.parameters.discard_rows > 0) {
                     $scope.discardRowsActivate = true;
                 }
-                if($scope.config.parameters.atMostRows > 0) {
+                if($scope.config.parameters.at_most_rows > 0) {
                     $scope.atMostRowsActivate = true;
                 }
 

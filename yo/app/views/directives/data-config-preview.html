@@ -1,1 +1,4 @@
-<div class="gridStyle" ng-grid="previewOptions"></div>
+<div>
+    <div class="previewOptionsError" ng-if="configError.length">{{configError}}</div>
+    <div class="gridStyle" ng-grid="previewOptions"></div>
+</div>
