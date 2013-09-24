@@ -37,6 +37,7 @@ module.exports = function (grunt) {
     } catch (e) {}
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         yeoman: yeomanConfig,
         watch: {
             coffee: {
@@ -63,7 +64,7 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        'template': {
+        template: {
             'api-server': {
                 'options': {
                     'data': {
@@ -82,6 +83,29 @@ module.exports = function (grunt) {
                 },
                 'files': {
                     '<%= yeoman.dist %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
+                }
+            }
+        },
+        'git-describe': {
+            _opts: {
+                output: '<%= yeoman.app %>/data/version.json'
+            },
+            build: {
+                options: {
+                    info_key: 'web',
+                    cwd: '.'
+                }
+            },
+            parentdist: {
+                options: {
+                    info_key: 'api',
+                    cwd: '../../datamanagement-platform'
+                }
+            },
+            parentlocal: {
+                options: {
+                    info_key: 'api',
+                    cwd: '../..'
                 }
             }
         },
@@ -348,6 +372,17 @@ module.exports = function (grunt) {
                 browsers: ['PhantomJS'],
                 autoWatch: false
             },
+            localci: {
+                configFile: 'karma.conf.js',
+                colors: false,
+                singleRun: true,
+                reporters: ['dots', 'junit', 'coverage'],
+                coverageReporter: {
+                    type: 'html',
+                    dir: 'test_out/coverage/'
+                },
+                autoWatch: false
+            },
             continuous: {
                 configFile: 'karma.conf.js',
                 singleRun: false,
@@ -395,6 +430,31 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('revision', function (target) {
+        var buildInfo = {}
+            , tasks = [
+                'git-describe:build',
+                'git-describe:parent' + ((target === 'dist') ? 'dist' : 'local')
+            ]
+            , repoCount = tasks.length
+            , describedRepos = 0;
+
+        grunt.event.many('git-describe', repoCount, function (rev, opts) {
+            describedRepos += 1;
+            buildInfo[opts.info_key] = {
+                version: grunt.config('pkg.version'),
+                revision: rev[0],
+                date: grunt.template.today()
+            };
+
+            if (describedRepos >= repoCount) {
+                grunt.file.write(grunt.config('git-describe._opts.output'), JSON.stringify(buildInfo));
+            }
+        });
+
+        grunt.task.run(tasks);
+    });
+
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
@@ -428,6 +488,7 @@ module.exports = function (grunt) {
         'useminPrepare',
         'concurrent:dist',
         'less:dist',
+        'revision:dist',
         'concat',
         'copy',
         'template:api-server-dist',
