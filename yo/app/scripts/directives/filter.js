@@ -17,7 +17,7 @@ angular.module('dmpApp')
         $http.get('/data/schema.json')
             .success(function (result) {
                 $scope.result = result;
-        });
+            });
 
         allPromise.then(function (result) {
             var schemaResult = result[0]['data']

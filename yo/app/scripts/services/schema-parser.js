@@ -1,24 +1,24 @@
 'use strict';
 
 angular.module('dmpApp').
-  /**
-   * A service that parses json-schema into an internal tree model [1]. It also
-   *   provides functionality to transform an XML2JSON model [2] into the
-   *   aforementioned tree model, using the same json-schema definition.
-   *
-   *   [1] The internal tree model is defined in directives/tree.js
-   *   [2] Based on the unmodified results of https://github.com/hay/xml2json
-   *
-   *   Due to the nature of representing a tree structure, most of these
-   *   methods are utilizing either plain recursion or trampoline recursion.
-   *
-   *   Normally only mapData and getData would be needed to be used.
-   *
-   * * mapData returns the parsed data from the schema
-   * * getData returns all title data. most useful in combination
-   *           with with the editableTitle flag
-   */
-  factory('schemaParser', function () {
+/**
+ * A service that parses json-schema into an internal tree model [1]. It also
+ *   provides functionality to transform an XML2JSON model [2] into the
+ *   aforementioned tree model, using the same json-schema definition.
+ *
+ *   [1] The internal tree model is defined in directives/tree.js
+ *   [2] Based on the unmodified results of https://github.com/hay/xml2json
+ *
+ *   Due to the nature of representing a tree structure, most of these
+ *   methods are utilizing either plain recursion or trampoline recursion.
+ *
+ *   Normally only mapData and getData would be needed to be used.
+ *
+ * * mapData returns the parsed data from the schema
+ * * getData returns all title data. most useful in combination
+ *           with with the editableTitle flag
+ */
+factory('schemaParser', function () {
     /**
      * Maps from json-schema to the internal tree model.  Since json-schema
      *   already is very tree-ish, there is nothing much to do but renaming
@@ -33,18 +33,18 @@ angular.module('dmpApp').
      * @returns {{name: String, show: boolean}}
      */
     function mapData(name, container, editableTitle) {
-      var data = {'name': name, 'show': true, 'editableTitle': editableTitle};
-      if (container['properties']) {
-        var children = [];
-        angular.forEach(container['properties'], function (val, key) {
-          children.push(mapData(key, val, editableTitle));
-        });
-        data['children'] = children;
-      }
+        var data = {'name': name, 'show': true, 'editableTitle': editableTitle};
+        if (container['properties']) {
+            var children = [];
+            angular.forEach(container['properties'], function (val, key) {
+                children.push(mapData(key, val, editableTitle));
+            });
+            data['children'] = children;
+        }
 
-      data.hasChildren = (data['children'] && data['children'].length > 0);
+        data.hasChildren = (data['children'] && data['children'].length > 0);
 
-      return data;
+        return data;
     }
 
     /**
@@ -56,14 +56,14 @@ angular.module('dmpApp').
      * @returns {*}
      */
     function makeItem(name, children, title, extra) {
-      var item = {'name': name, 'show': true};
-      if (children && children.length) {
-        item['children'] = children;
-      }
-      if (title) {
-        item['title'] = title;
-      }
-      return angular.extend(extra || {}, item);
+        var item = {'name': name, 'show': true};
+        if (children && children.length) {
+            item['children'] = children;
+        }
+        if (title) {
+            item['title'] = title;
+        }
+        return angular.extend(extra || {}, item);
     }
 
     /**
@@ -74,16 +74,16 @@ angular.module('dmpApp').
      * @returns {*}
      */
     function parseObject(container, name, properties) {
-      var ary = [];
-      angular.forEach(properties, function (val, key) {
-        if (container[key]) {
-          var it = parseAny(container[key], key, val);
-          if (it) {
-            ary.push(it);
-          }
-        }
-      });
-      return makeItem(name, ary);
+        var ary = [];
+        angular.forEach(properties, function (val, key) {
+            if (container[key]) {
+                var it = parseAny(container[key], key, val);
+                if (it) {
+                    ary.push(it);
+                }
+            }
+        });
+        return makeItem(name, ary);
     }
 
     /**
@@ -94,14 +94,14 @@ angular.module('dmpApp').
      * @returns {*}
      */
     function parseArray(container, name, properties) {
-      var ary = [];
-      angular.forEach(container, function (item) {
-        var it = parseAny(item, name, properties);
-        if (it) {
-          ary.push(it);
-        }
-      });
-      return makeItem(name, ary);
+        var ary = [];
+        angular.forEach(container, function (item) {
+            var it = parseAny(item, name, properties);
+            if (it) {
+                ary.push(it);
+            }
+        });
+        return makeItem(name, ary);
     }
 
     /**
@@ -111,24 +111,24 @@ angular.module('dmpApp').
      * @returns {*}
      */
     function parseString(container, name) {
-      if (angular.isString(container)) {
-        return makeItem(name, null, container.trim(), {leaf: true});
-      }
+        if (angular.isString(container)) {
+            return makeItem(name, null, container.trim(), {leaf: true});
+        }
 
-      if (container['#text'] && container['#text'].trim()) {
-        return makeItem(name, null, container['#text'].trim(), {leaf: true});
-      }
+        if (container['#text'] && container['#text'].trim()) {
+            return makeItem(name, null, container['#text'].trim(), {leaf: true});
+        }
 
-      if (angular.isArray(container)) {
-        var ary = [];
-        angular.forEach(container, function (item) {
-          var it = parseString(item, name);
-          if (it) {
-            ary.push(it);
-          }
-        });
-        return makeItem(name, ary);
-      }
+        if (angular.isArray(container)) {
+            var ary = [];
+            angular.forEach(container, function (item) {
+                var it = parseString(item, name);
+                if (it) {
+                    ary.push(it);
+                }
+            });
+            return makeItem(name, ary);
+        }
     }
 
     /**
@@ -139,9 +139,9 @@ angular.module('dmpApp').
      * @returns {*}
      */
     function parseEnum(container, name, enumeration) {
-      if (enumeration.indexOf(container) !== -1) {
-        return makeItem(name, null, container);
-      }
+        if (enumeration.indexOf(container) !== -1) {
+            return makeItem(name, null, container);
+        }
     }
 
     /**
@@ -152,18 +152,18 @@ angular.module('dmpApp').
      * @returns {*}
      */
     function parseAny(container, name, obj) {
-      if (obj['type'] === 'object') {
-        return parseObject(container, name, obj['properties']);
-      }
-      if (obj['type'] === 'array') {
-        return parseArray(container, name, obj['items']);
-      }
-      if (obj['type'] === 'string') {
-        return parseString(container, name);
-      }
-      if (obj['enum']) {
-        return parseEnum(container, name, obj['enum']);
-      }
+        if (obj['type'] === 'object') {
+            return parseObject(container, name, obj['properties']);
+        }
+        if (obj['type'] === 'array') {
+            return parseArray(container, name, obj['items']);
+        }
+        if (obj['type'] === 'string') {
+            return parseString(container, name);
+        }
+        if (obj['enum']) {
+            return parseEnum(container, name, obj['enum']);
+        }
     }
 
     /**
@@ -175,45 +175,48 @@ angular.module('dmpApp').
      */
     function getData(data, path, returnData) {
 
-      if(data.children) {
+        if(data.children) {
 
-        if(!returnData) returnData = [];
-
-        angular.forEach(data.children,function(child) {
-
-          var tempData,
-              subpath = path;
-
-          if(child.children) {
-
-            if(subpath.length > 0) {
-                subpath = subpath + '.';
+            if(!returnData) {
+                returnData = [];
             }
 
-            subpath = subpath + data.name;
+            angular.forEach(data.children,function(child) {
 
-          }
+                var tempData,
+                    subpath = path;
 
-          tempData = getData(child,subpath,returnData);
+                if(child.children) {
 
-          if(tempData && tempData.title) {
-            tempData.path += '.' + data.name + '.' + tempData.name;
+                    if(subpath.length > 0) {
+                        subpath = subpath + '.';
+                    }
 
-            returnData.push(tempData);
-          }
-        });
+                    subpath = subpath + data.name;
 
-        if(returnData.length > 0) {
-            return returnData;
+                }
+
+                tempData = getData(child,subpath,returnData);
+
+                if(tempData && tempData.title) {
+                    tempData.path += '.' + data.name + '.' + tempData.name;
+
+                    returnData.push(tempData);
+                }
+            });
+
+            if(returnData.length > 0) {
+                return returnData;
+            }
+        } else {
+
+            if(data.title) {
+                return { 'title' : data.title, 'name' : data.name, 'path' : path };
+            }
+            else {
+                return '';
+            }
         }
-      } else {
-
-          if(data.title) {
-
-              return { 'title' : data.title, 'name' : data.name, 'path' : path };
-          }
-          else return '';
-      }
     }
 
     /**
@@ -232,7 +235,7 @@ angular.module('dmpApp').
 
         data.filterNoMatch = (matchCount !== filters.length);
 
-         return data;
+        return data;
 
     }
 
@@ -257,7 +260,7 @@ angular.module('dmpApp').
 
         var pathArray = path.split('.');
 
-        if(data.name == pathArray[0]) {
+        if(data.name === pathArray[0]) {
             pathArray.shift();
 
             if(data.children) {
@@ -274,7 +277,7 @@ angular.module('dmpApp').
 
 
             } else {
-                if(data.title == matchdata) {
+                if(data.title === matchdata) {
 
                     data.leafmatchedFilter = true;
                     return 1;
@@ -294,14 +297,14 @@ angular.module('dmpApp').
     }
 
     return {
-      mapData: mapData
-    , makeItem: makeItem
-    , parseObject: parseObject
-    , parseArray: parseArray
-    , parseString: parseString
-    , parseEnum: parseEnum
-    , parseAny: parseAny
-    , getData: getData
-    , filterData : filterData
+        mapData: mapData
+      , makeItem: makeItem
+      , parseObject: parseObject
+      , parseArray: parseArray
+      , parseString: parseString
+      , parseEnum: parseEnum
+      , parseAny: parseAny
+      , getData: getData
+      , filterData : filterData
     };
-  });
+});

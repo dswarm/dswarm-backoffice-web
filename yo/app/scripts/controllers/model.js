@@ -1,5 +1,4 @@
 'use strict';
 
 angular.module('dmpApp')
-  .controller('ModelCtrl', [function() {
-    }]);
+    .controller('ModelCtrl', [function() { }]);
