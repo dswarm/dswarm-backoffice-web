@@ -1,6 +1,10 @@
 <h1>Data</h1>
-<ul>
-  <li ng-repeat="file in files">
-    <a ng-href="#/data/{{ file.id }}" ng-bind-template="{{ file.name }}"></a> - <a href="#/data-config/{{ file.id }}">Konfiguration bearbeiten</a>
-  </li>
-</ul>
+
+<div class="gridStyle" ng-grid="dataListOptions"></div>
+
+<span ng-if="selectedSet.length" class="selected-set-options">
+    Selected data set ({{ selectedSet.0.name }}):
+    <a ng-href="#/data/{{ selectedSet.0.id }}"><button class="btn btn-default">Show details</button></a>
+    <a href="#/data-config/{{ selectedSet.0.id }}"><button class="btn btn-default">Edit configuration</button></a>
+    <a href="#/model/{{ selectedSet.0.id }}"><button class="btn btn-default">Load for modelling</button></a>
+</span>
