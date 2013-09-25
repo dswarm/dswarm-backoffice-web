@@ -1,3 +1,4 @@
+/*global $:false */
 'use strict';
 
 angular.module('dmpApp')
@@ -19,7 +20,7 @@ angular.module('dmpApp')
             }).success(function(response){
                     callback($.csv.toObjects(response.data, { separator:';' }));
                 })
-                .error(function(data, status, headers, config) {
+                .error(function(data /*, status, headers, config*/) {
                     callbackError(data.error);
                 });
 

@@ -1,10 +1,11 @@
+/*global $:false */
 'use strict';
 
 angular.module('dmpApp')
     .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, PubSub, DataConfigPreviewResource) {
 
         $scope.previewResult = [];
-        $scope.configError = "";
+        $scope.configError = '';
 
         $scope.previewOptions = {
             data: 'previewResult',

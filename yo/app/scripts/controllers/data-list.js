@@ -8,7 +8,7 @@ angular.module('dmpApp')
 
         $scope.dataListOptions = {
             data: 'files',
-            "columnDefs": [
+            'columnDefs': [
                 {field:'name', displayName:'Name'},
                 {field:'description', displayName:'Description '},
                 {field:'storageType', displayName:'Data Storage Type '}
