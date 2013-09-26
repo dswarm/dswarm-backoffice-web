@@ -1,80 +1,61 @@
-from collections import deque
-import multiprocessing
-import subprocess
+from subprocess import CalledProcessError, check_output, STDOUT
+from flask import Flask, request
 
-from flask import Flask
 app = Flask(__name__)
 
-UPDATES_WEB = False
-updates_web = deque()
 
-UPDATES_API = False
-updates_api = deque()
+def _update(tag, cmds, **kwargs):
+    git = [
+        ["git", "fetch"],
+        ["git", "checkout", tag]
+    ]
 
+    kws = dict(stderr=STDOUT, **kwargs)
 
-def update_web():
-    if UPDATES_WEB:
-        updates_web.appendleft(True)
+    returncode = 0
+    output = ''
 
-    else:
+    try:
+        for cmd in git + [cmds]:
+            output += check_output(cmd, **kws)
+    except CalledProcessError as e:
+        output = e.message + '\n\n' + e.output
+        returncode = e.returncode
 
-        try:
-            t = updates_web.pop()
-            if t is True:
-                multiprocessing.Process(
-                    target=subprocess.call,
-                    args=(["make", "upgrade", "dist"],),
-                    kwargs={"cwd": "/home/dmp/dmp-backoffice-web"}).start()
-
-        except IndexError:
-            pass
+    return returncode, output
 
 
-def update_api():
-    if UPDATES_API:
-        updates_api.appendleft(True)
+def _update_to_response(updater):
+    returncode, output = updater()
+    if returncode != 0:
+        return output, 400, {'X-Returncode': returncode}
 
-    else:
-
-        try:
-            t = updates_api.pop()
-            if t is True:
-                multiprocessing.Process(
-                    target=subprocess.call,
-                    args=(["bash", "restart.sh"],),
-                    kwargs={"cwd": "/home/dmp/datamanagement-platform"}).start()
-
-        except IndexError:
-            pass
+    return output, 200
 
 
-@app.route("/unstable", methods=['POST'])
-def trigger():
-    updates_web.appendleft(True)
-    update_web()
+def update_web(tag):
+    return _update(tag,
+                   ["make", "dist"],
+                   cwd="/home/dmp/dmp-backoffice-web")
 
-    updates_api.appendleft(True)
-    update_api()
 
-    return "Upgrade running\n"
+def update_api(tag):
+    return _update(tag,
+                   ["bash", "restart.sh"],
+                   cwd="/home/dmp/datamanagement-platform")
 
 
 @app.route("/web", methods=['POST'])
 def trigger_web():
-    updates_web.appendleft(True)
-    update_web()
-
-    return "Web reload initiated\n"
+    return _update_to_response(lambda: update_web(
+        request.args.get('tag', 'HEAD')))
 
 
 @app.route("/api", methods=['POST'])
 def trigger_api():
-    updates_api.appendleft(True)
-    update_api()
-
-    return "API reload initiated\n"
+    return _update_to_response(lambda: update_api(
+        request.args.get('tag', 'HEAD')))
 
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
-
