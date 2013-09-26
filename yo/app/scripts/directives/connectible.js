@@ -54,7 +54,7 @@ angular.module('dmpApp')
     .directive('dmpConnectible', ['$timeout', 'jsP', function ($timeout, jsP) {
         return {
             restrict: 'A',
-            scope: false,
+            scope: true,
             controller: ['$scope', '$element', function($scope, $element) {
                 $scope.$element = $element;
             }],
