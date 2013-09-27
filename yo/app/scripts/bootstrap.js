@@ -16,7 +16,9 @@ angular.module('dmpApp')
                 controller: 'DataObjectCtrl'
             })
             .when('/data-config/:resourceId/:configType', {
+                title: 'Choose Dataset configuration',
                 templateUrl: 'views/perspectives/data-config.html',
+                slug: 'data',
                 controller: 'DataConfigCtrl'
             })
             .when('/import', {
