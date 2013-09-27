@@ -72,8 +72,8 @@ angular.module('dmpApp')
         };
 
         $scope.onCancelClick = function() {
-            $location.path( "#/data/" );
-        }
+            $location.path( '#/data/' );
+        };
 
         // When file fornat changes, update default rowseperator
         $scope.onFileFormatChanged = function() {
