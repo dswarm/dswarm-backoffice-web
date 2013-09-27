@@ -1,7 +1,7 @@
 'use strict';
 
-describe('Controller: DataConfig', function () {
-    var $rootScope, scope, dataConfigCtrl;
+describe('Controller: DataConfigCsvCtrl', function () {
+    var $rootScope, scope, dataConfigCsvCtrl;
 
     beforeEach(module('dmpApp'));
 
@@ -30,9 +30,9 @@ describe('Controller: DataConfig', function () {
 
         var $controller = $injector.get('$controller');
 
-        dataConfigCtrl = function () {
+        dataConfigCsvCtrl = function () {
 
-            return $controller('DataConfigCtrl', {
+            return $controller('DataConfigCsvCtrl', {
                 '$scope': scope,
                 '$window' : win,
                 'FileResource': fileResource
@@ -42,7 +42,7 @@ describe('Controller: DataConfig', function () {
 
     it('should emit event on form object change', function () {
 
-        var ctrl = dataConfigCtrl();
+        var ctrl = dataConfigCsvCtrl();
 
         scope.config.name = 'configname';
 
