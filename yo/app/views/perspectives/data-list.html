@@ -5,6 +5,20 @@
 <span ng-if="selectedSet.length" class="selected-set-options">
     Selected data set ({{ selectedSet.0.name }}):
     <a ng-href="#/data/{{ selectedSet.0.id }}"><button class="btn btn-default">Show details</button></a>
-    <a href="#/data-config/{{ selectedSet.0.id }}"><button class="btn btn-default">Edit configuration</button></a>
+
+    <span class="dropdown">
+
+        <a class="dropdown-toggle"><button class="btn btn-default">Edit configuration</button></a>
+
+        <ul class="dropdown-menu">
+            <li>
+                <a href="#/data-config/{{ selectedSet.0.id }}/csv">... as CSV</a>
+                <a href="#/data-config/{{ selectedSet.0.id }}/xml">... as XML</a>
+                <a href="#/data-config/{{ selectedSet.0.id }}/schema">... as Schema</a>
+            </li>
+        </ul>
+
+    </span>
+
     <a href="#/model/{{ selectedSet.0.id }}"><button class="btn btn-default">Load for modelling</button></a>
 </span>

@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', ['$scope', '$routeParams', 'FileResource', function ($scope, $routeParams, FileResource) {
+    .controller('SchemaListCtrl', ['$scope', 'FileResource', function ($scope, FileResource) {
 
+        $scope.files = [];
 
         FileResource.query(function(result) {
 
@@ -19,11 +20,9 @@ angular.module('dmpApp')
 
         });
 
-        $scope.selectedSet = [];
-
-        $scope.dataListOptions = {
+        $scope.schemaListOptions = {
             data: 'files',
-            'columnDefs': [
+            columnDefs: [
                 {field:'name', displayName:'Name'},
                 {field:'description', displayName:'Description '},
                 {field:'storage_type', displayName:'Configured Data Storage Type '}
@@ -33,4 +32,14 @@ angular.module('dmpApp')
             multiSelect: false
         };
 
+
+    }])
+    .directive('schemalist', [ function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: true,
+            templateUrl: 'views/directives/schema-list.html',
+            controller: 'SchemaListCtrl'
+        };
     }]);
