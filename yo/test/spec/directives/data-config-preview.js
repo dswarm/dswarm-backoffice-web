@@ -12,7 +12,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
         scope = $rootScope.$new();
 
-        $httpBackend.whenPOST('resources/configurationPreview').respond($injector.get('mockDataConfigPreviewJSON'));
+        $httpBackend.whenPOST('resources/1/configurationpreview').respond($injector.get('mockDataConfigPreviewJSON'));
 
         var $controller = $injector.get('$controller');
         dataConfigPreviewCtrl = function () {
@@ -33,13 +33,12 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
         dataConfigPreviewCtrl();
 
-        scope.dataConfigUpdated({});
+        scope.dataConfigUpdated({"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}});
 
         $rootScope.$digest();
         $httpBackend.flush();
 
         expect(scope.previewResult.length).toBe(5);
-        expect(scope.previewOptions.columnDefs.length).toBe(2);
 
     });
 });

@@ -9,8 +9,6 @@ angular.module('mockedDataConfigPreview', [])
             {name: "Nephi", age: 29},
             {name: "Enos", age: 34}
         ],
-        "columnDefs": [
-            {field:'name', displayName:'Name'},
-            {field:'age', displayName:'Age'}
-        ]
-    });
+        "schema": ["name", "age"]
+    })
+    .value('mockDataConfigPreview', 'foo;bar;noobar'+"\n"+'1;2;3'+"\n"+'4,5,6');

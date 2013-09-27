@@ -4,7 +4,7 @@ angular.module('dmpApp')
     .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, PubSub, DataConfigPreviewResource) {
 
         $scope.previewResult = [];
-        $scope.configError = "";
+        $scope.configError = '';
 
         $scope.previewOptions = {
             data: 'previewResult',
@@ -14,23 +14,28 @@ angular.module('dmpApp')
 
         $scope.dataConfigUpdatedSave = function(result) {
 
-            var csvObject = $.csv.toObjects(result);
-            $scope.previewResult = csvObject;
+            $scope.previewResult = result.data;
 
         };
 
         $scope.dataConfigUpdated = function(config) {
 
-            //var testConfig = {"id":1,"name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}};
+            var resourceId = $routeParams.resourceId;
 
-            DataConfigPreviewResource.getPreview(
-                { resourceId: $routeParams.resourceId },
+            if(config.resourceId) {
+                resourceId = config.resourceId;
+            }
+
+            DataConfigPreviewResource.save(
+                { resourceId: resourceId },
                 config,
                 function(result) {
+                    $scope.configError = '';
                     $scope.dataConfigUpdatedSave(result);
                 },
                 function(error) {
-                    $scope.configError = error;
+                    $scope.previewResult = [];
+                    $scope.configError = error.data.error;
                 });
 
         };

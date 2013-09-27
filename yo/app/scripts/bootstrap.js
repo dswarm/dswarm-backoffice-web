@@ -15,7 +15,7 @@ angular.module('dmpApp')
                 templateUrl: 'views/perspectives/data-object.html',
                 controller: 'DataObjectCtrl'
             })
-            .when('/data-config/:resourceId', {
+            .when('/data-config/:resourceId/:configType', {
                 templateUrl: 'views/perspectives/data-config.html',
                 controller: 'DataConfigCtrl'
             })
