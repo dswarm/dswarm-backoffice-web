@@ -27,6 +27,7 @@ angular.module('dmpApp')
     }])
     .directive('targetData', [ function () {
         return {
+            scope: true,
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/target-data.html',

@@ -70,10 +70,11 @@ angular.module('dmpApp')
             };
         }
 
-        function sendTransformations(transformations) {
-            var url = $window['dmp']['jsRoutes']['api']
-                , p = $http.post(
-                    url + 'transformations', transformations);
+        function sendTransformations(transformations, singleTransformation) {
+            var url = $window['dmp']['jsRoutes']['api'],
+                p = $http.post(
+                    url + (singleTransformation? 'transformations' : 'jobs'),
+                    transformations);
 
             p.then(function (resp) {
                 console.log(resp);
@@ -86,11 +87,9 @@ angular.module('dmpApp')
 
         $scope.sendTransformation = function (tab) {
             if (activeComponentId === tab.id) {
-                var transformations = {
-                    'transformations': [generatePayload(tab)]
-                };
+                var transformation = generatePayload(tab);
 
-                sendTransformations(transformations);
+                sendTransformations(transformation, true);
             }
         };
 

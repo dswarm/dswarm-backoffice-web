@@ -22,6 +22,7 @@ angular.module('dmpApp')
     }])
     .directive('schema', [ function () {
         return {
+            scope: true,
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/schema.html',

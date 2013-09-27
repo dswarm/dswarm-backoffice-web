@@ -152,6 +152,7 @@ angular.module('dmpApp')
         });
 
         return {
+            scope: true,
             restrict: 'A',
             replace: true,
             compile: function (tElement, tAttrs) {

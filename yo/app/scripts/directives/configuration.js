@@ -29,6 +29,7 @@ angular.module('dmpApp')
     }])
     .directive('configuration', [ function () {
         return {
+            scope: true,
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/configuration.html',

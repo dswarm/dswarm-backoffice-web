@@ -36,7 +36,7 @@ angular.module('dmpApp')
 
         return {
             restrict: 'C',
-            scope: false,
+            scope: true,
             compile: function(tElement) {
                 if (!angular.isFunction(tElement[functionSortableFnName])) {
                     throw new Error('The "' + functionSortableFnName + '" function does not exist, you need to load jQuery-UI');
@@ -65,7 +65,7 @@ angular.module('dmpApp')
 
         return {
             restrict: 'C',
-            scope: false,
+            scope: true,
             compile: function (tElement) {
                 if (!angular.isFunction(tElement[componentDraggableFnName])) {
                     throw new Error('The "' + componentDraggableFnName + '" function does not exist, you need to load jQuery-UI');
