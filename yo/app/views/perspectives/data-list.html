@@ -20,5 +20,15 @@
 
     </span>
 
-    <a href="#/model/{{ selectedSet.0.id }}"><button class="btn btn-default">Load for modelling</button></a>
+    <span class="dropdown">
+
+        <a class="dropdown-toggle"><button class="btn btn-default">Load for modelling</button></a>
+
+        <ul class="dropdown-menu">
+            <li ng-repeat="conf in selectedSet.0.configurations">
+                <a href="#/model/{{ selectedSet.0.id }}/{{ conf.id }}">{{ conf.id }}</a>
+            </li>
+        </ul>
+
+    </span>
 </span>

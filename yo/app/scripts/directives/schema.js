@@ -1,19 +1,62 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', function ($scope, $http, schemaParser, $q) {
+    .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', 'SchemaDataResource', function ($scope, $http, schemaParser, $q, SchemaDataResource) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sourceSchema = {};
         $scope.targetSchema = {};
 
-        var sourceSchema = $http.get('/data/schema.json')
-            , targetSchema = $http.get('/data/targetschema.json')
-            , allPromise = $q.all([sourceSchema, targetSchema]);
+
+        var sourcePromise, targetPromise,
+            sourceTransformer, targetTransformer;
+
+        if (angular.isDefined($scope.resourceId) && angular.isDefined($scope.configId)) {
+            sourcePromise = SchemaDataResource.get({
+                id: $scope.resourceId,
+                cid: $scope.configId,
+                kind: 'schema'
+            }).$promise;
+
+            sourceTransformer = function(res) {
+                var result = {
+                    'title': 'CSV',
+                    'type': 'object',
+                    'properties': {
+                    }
+                };
+                angular.forEach(res['schema'], function(item) {
+                    result.properties[item] = {
+                        type: 'string'
+                    };
+                });
+
+                return result;
+            };
+
+            targetPromise = $http.get('/data/targetschema.json');
+            targetTransformer = function(res) {
+                return res['data'];
+            };
+
+        } else {
+            sourcePromise = $http.get('/data/schema.json');
+            targetPromise = $http.get('/data/targetschema.json');
+
+            sourceTransformer = function(res) {
+                return res['data'];
+            };
+
+            targetTransformer = function(res) {
+                return res['data'];
+            };
+        }
+
+        var allPromise = $q.all([sourcePromise, targetPromise]);
 
         allPromise.then(function (result) {
-            var sourceSchema = result[0]['data']
-                , targetSchema = result[1]['data'];
+            var sourceSchema = sourceTransformer(result[0])
+                , targetSchema = targetTransformer(result[1]);
 
             $scope.sourceSchema = schemaParser.mapData(sourceSchema['title'], sourceSchema);
             $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);

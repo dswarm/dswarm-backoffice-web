@@ -1,4 +1,9 @@
 <div>
     <h5>Source Data</h5>
-    <tree data="data"></tree>
+    <tabset ng-if="records">
+        <tab ng-repeat="record in records" heading="{{ record.id }}" active="$first">
+            <tree data="record.data"></tree>
+        </tab>
+    </tabset>
+    <tree ng-if="data" data="data"></tree>
 </div>
