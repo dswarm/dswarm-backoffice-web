@@ -343,6 +343,17 @@ module.exports = function (grunt) {
                         'generated/*'
                     ]
                 }]
+            },
+            rev: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.dist %>',
+                    src: [
+                        'data/version.json'
+                    ]
+                }]
             }
         },
         concurrent: {
@@ -455,6 +466,11 @@ module.exports = function (grunt) {
         grunt.task.run(tasks);
     });
 
+    grunt.registerTask('updateRevision', [
+        'revision:dist',
+        'copy:rev'
+    ]);
+
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
@@ -490,7 +506,7 @@ module.exports = function (grunt) {
         'less:dist',
         'revision:dist',
         'concat',
-        'copy',
+        'copy:dist',
         'template:api-server-dist',
         'cdnify',
         'ngmin',
