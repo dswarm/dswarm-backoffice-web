@@ -11,44 +11,29 @@ angular.module('dmpApp')
             scopeSetter;
 
         if ($scope.resourceId && $scope.configId) {
-            schemaPromise = SchemaDataResource.get({
+            schemaPromise = SchemaDataResource.schema({
                 id: $scope.resourceId,
-                cid: $scope.configId,
-                kind: 'schema'
+                cid: $scope.configId
             }).$promise;
 
             schemaTransformer = function(res) {
-                var result = {
-                    'title': 'CSV',
-                    'type': 'object',
-                    'properties': {
-                    }
-                };
-                angular.forEach(res['schema'], function(item) {
-                    result.properties[item] = {
-                        type: 'string'
-                    };
-                });
-
-                return result;
+                return res['data'];
             };
 
-            dataPromise = SchemaDataResource.get({
+            dataPromise = SchemaDataResource.data({
                 id: $scope.resourceId,
                 cid: $scope.configId,
-                kind: 'data'
+                atMost: 3
             }).$promise;
 
-            dataTransformer = function(res) {
-                return res['records'];
-            };
+            dataTransformer = angular.identity;
 
             scopeSetter = function(schemaResult, dataResult) {
                 var records = [];
                 angular.forEach(dataResult, function(record) {
                     records.push({
                         id: record.recordId,
-                        data: schemaParser.parseAny(record, record.recordId, schemaResult)
+                        data: schemaParser.parseAny(record, schemaResult['title'], schemaResult)
                     });
                 });
 
@@ -58,14 +43,6 @@ angular.module('dmpApp')
         } else {
             schemaPromise = $http.get('/data/schema.json');
             dataPromise = $http.get('/data/record.json');
-
-            schemaTransformer = function(res) {
-                return res['data'];
-            };
-
-            dataTransformer = function(res) {
-                return res['data'];
-            };
 
             scopeSetter = function(schemaResult, dataResult) {
                 $scope.data = schemaParser.parseAny(

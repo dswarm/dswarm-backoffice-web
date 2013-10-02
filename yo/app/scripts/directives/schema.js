@@ -12,26 +12,13 @@ angular.module('dmpApp')
             sourceTransformer, targetTransformer;
 
         if (angular.isDefined($scope.resourceId) && angular.isDefined($scope.configId)) {
-            sourcePromise = SchemaDataResource.get({
+            sourcePromise = SchemaDataResource.schema({
                 id: $scope.resourceId,
-                cid: $scope.configId,
-                kind: 'schema'
+                cid: $scope.configId
             }).$promise;
 
             sourceTransformer = function(res) {
-                var result = {
-                    'title': 'CSV',
-                    'type': 'object',
-                    'properties': {
-                    }
-                };
-                angular.forEach(res['schema'], function(item) {
-                    result.properties[item] = {
-                        type: 'string'
-                    };
-                });
-
-                return result;
+                return res['data'];
             };
 
             targetPromise = $http.get('/data/targetschema.json');
