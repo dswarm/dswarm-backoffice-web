@@ -44,6 +44,14 @@ angular.module('dmpApp')
             schemaPromise = $http.get('/data/schema.json');
             dataPromise = $http.get('/data/record.json');
 
+            schemaTransformer = function(res) {
+                return res['data'];
+            };
+
+            dataTransformer = function(res) {
+                return res['data'];
+            };
+
             scopeSetter = function(schemaResult, dataResult) {
                 $scope.data = schemaParser.parseAny(
                     dataResult[schemaResult['title']], schemaResult['title'], schemaResult);

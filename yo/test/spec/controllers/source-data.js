@@ -5,6 +5,21 @@ describe('Controller: SourceDataCtrl', function () {
 
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord'));
 
+
+    var win = {
+        dmp: {
+            jsRoutes: {
+                api: '/dmp/'
+            }
+        }
+    };
+
+    beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema'));
+
+    beforeEach(module(function($provide) {
+        $provide.value('$window', win);
+    }));
+
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($injector) {
         $httpBackend = $injector.get('$httpBackend');
@@ -17,16 +32,16 @@ describe('Controller: SourceDataCtrl', function () {
 
         var $controller = $injector.get('$controller');
         sourceDataCtrl = function () {
-          return $controller('SourceDataCtrl', {
-            $scope: scope
-          });
+            return $controller('SourceDataCtrl', {
+                $scope: scope
+            });
         };
 
     }));
 
     afterEach(inject(function () {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     }));
 
     it('should have a SchemaCtrl controller', function() {
