@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, PubSub, DataConfigPreviewResource) {
+    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, $timeout, PubSub, DataConfigPreviewResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -12,14 +12,14 @@ angular.module('dmpApp')
         $scope.runningUpdate = {};
         $scope.nextUpdate = {};
 
-        $scope.gridInclude = function() {
-            return $scope.showGrid ? 'previewgrid' : '';
-        };
-
         $scope.previewOptions = {
             data: 'previewResult',
             colDefs : 'colDefs',
             enableRowSelection: false
+        };
+
+        $scope.gridInclude = function() {
+            return $scope.showGrid ? 'previewgrid' : '';
         };
 
         $scope.dataConfigUpdatedSave = function(result) {
@@ -34,7 +34,7 @@ angular.module('dmpApp')
             if(Object.keys($scope.nextUpdate).length > 0) {
 
                 // Multiple too fast config previews are tripping the response handling.
-                setTimeout(function() {
+                $timeout(function() {
 
                     $scope.dataConfigUpdated($scope.nextUpdate);
                     $scope.nextUpdate = {};
