@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 def _update(tag, cmds, **kwargs):
     git = [
-        ["git", "fetch"],
+        ["git", "fetch", "origin"],
+        ["git", "fetch", "--tags", "origin"],
         ["git", "checkout", tag]
     ]
 
