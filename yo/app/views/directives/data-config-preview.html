@@ -1,4 +1,9 @@
 <div>
     <div class="previewOptionsError" ng-if="configError.length">{{configError}}</div>
-    <div class="gridStyle" ng-grid="previewOptions"></div>
+    <div class="gridOuter">
+        <div ng-include src="gridInclude()"></div>
+    </div>
+    <script type="text/ng-template" id="previewgrid">
+        <div class="gridStyle" ng-grid="previewOptions"></div>
+    </script>
 </div>
