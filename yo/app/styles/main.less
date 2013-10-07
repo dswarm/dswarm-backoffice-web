@@ -8,6 +8,30 @@
   margin: 20px 0;
 }
 
+.status-circle {
+  width: @line-height-computed - 2;
+  height: @line-height-computed - 2;
+  display: inline-block;
+  border-radius: 50%;
+  vertical-align: sub;
+
+  &.red {
+    background: darken(#ff0000, 5%);
+  }
+
+  &.yellow {
+    background: darken(#ffff00, 5%);
+  }
+
+  &.green {
+    background: darken(#00ff00, 5%);
+  }
+
+  &.disabled {
+    background: @gray-light;
+  }
+}
+
 .box {
   outline:    2px dashed @gray;
   padding:    @padding-base-vertical;

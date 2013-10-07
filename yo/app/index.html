@@ -60,6 +60,10 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <li><a>Api Status:
+                <div class="status-circle"
+                     heartbeat interval="5000" endpoint="'_ping'"
+                     expected="'pong'"></div></a></li>
             <li><a href="https://intranet.slub-dresden.de:8443/x/c4U_AQ"
                    target="_blank">About</a></li>
             <li><a href="https://jira.slub-dresden.de/browse/DD"
@@ -121,6 +125,7 @@
         <script src="scripts/directives/tree.js"></script>
         <script src="scripts/directives/dmp-endpoint.js"></script>
         <script src="scripts/directives/dmp-file-upload.js"></script>
+        <script src="scripts/directives/heartbeat.js"></script>
         <script src="scripts/directives/sortable.js"></script>
         <script src="scripts/directives/connectible.js"></script>
         <script src="scripts/directives/source-data.js"></script>
