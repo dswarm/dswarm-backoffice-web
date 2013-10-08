@@ -38,7 +38,7 @@ angular.module('dmpApp')
                 });
 
                 $scope.records = records;
-            }
+            };
 
         } else {
             schemaPromise = $http.get('/data/schema.json');
@@ -55,7 +55,7 @@ angular.module('dmpApp')
             scopeSetter = function(schemaResult, dataResult) {
                 $scope.data = schemaParser.parseAny(
                     dataResult[schemaResult['title']], schemaResult['title'], schemaResult);
-            }
+            };
         }
 
         var allPromise = $q.all([schemaPromise, dataPromise]);

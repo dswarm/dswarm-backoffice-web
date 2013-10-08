@@ -11,7 +11,7 @@ angular.module('dmpApp')
             angular.forEach(result, function(value) {
 
                 if(value.configurations) {
-                    value.storage_type = value.configurations[value.configurations.length-1].parameters.storage_type;
+                    value['storage_type'] = value.configurations[value.configurations.length-1].parameters['storage_type'];
                 }
 
                 $scope.files.push(value);
@@ -24,9 +24,9 @@ angular.module('dmpApp')
         $scope.dataListOptions = {
             data: 'files',
             'columnDefs': [
-                {field:'name', displayName:'Name'},
-                {field:'description', displayName:'Description '},
-                {field:'storage_type', displayName:'Configured Data Storage Type '}
+                { field: 'name', displayName: 'Name' },
+                { field: 'description', displayName: 'Description ' },
+                { field: 'storage_type', displayName: 'Configured Data Storage Type ' }
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedSet,

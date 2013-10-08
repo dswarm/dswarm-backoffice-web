@@ -12,7 +12,7 @@ angular.module('dmpApp')
             angular.forEach(result, function(value) {
 
                 if(value.configurations) {
-                    value.storage_type = value.configurations[value.configurations.length-1].parameters.storage_type;
+                    value['storage_type'] = value.configurations[value.configurations.length-1].parameters['storage_type'];
                 }
 
                 $scope.files.push(value);

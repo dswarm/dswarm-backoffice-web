@@ -9,7 +9,7 @@ angular.module('dmpApp')
             name : 'xml',
             description : 'xml with id ' + $routeParams.resourceId,
             parameters : {
-                storage_type : 'xml'
+                'storage_type' : 'xml'
             }
         };
 
@@ -18,13 +18,13 @@ angular.module('dmpApp')
 
         DataConfigResource.query({ resourceId: $routeParams.resourceId }, function(result) {
 
-            $scope.selectedSet.push(result[result.length-1].parameters.schema_file);
+            $scope.selectedSet.push(result[result.length-1].parameters['schema_file']);
 
         });
 
         $scope.onSaveClick = function() {
 
-            $scope.config.parameters.schema_file = $scope.selectedSet[0];
+            $scope.config.parameters['schema_file'] = $scope.selectedSet[0];
 
             DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
                 $location.path('/data/');

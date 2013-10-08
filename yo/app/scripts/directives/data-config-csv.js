@@ -10,8 +10,8 @@ angular.module('dmpApp')
 
         $scope.presets = {
             fileFormat : [
-                { name : 'Windows', row_delimiter : '\\r\\n' },
-                { name : 'Linux' , row_delimiter : '\\n' }
+                { name : 'Windows', 'row_delimiter' : '\\r\\n' },
+                { name : 'Linux' , 'row_delimiter' : '\\n' }
             ],
             encoding : [
                 { name : 'ISO8859-1' },
@@ -26,11 +26,11 @@ angular.module('dmpApp')
             ],
 
             parameters : {
-                column_delimiter : ',',
-                escape_character : '\\\\',
-                quote_character : '\\"',
-                column_names : 'columnN',
-                storage_type : 'csv'
+                'column_delimiter' : ',',
+                'escape_character' : '\\\\',
+                'quote_character' : '\\"',
+                'column_names' : 'columnN',
+                'storage_type' : 'csv'
             }
 
         };
@@ -49,13 +49,13 @@ angular.module('dmpApp')
                 $scope.config.id = value.id;
                 $scope.config.parameters = value.parameters;
 
-                if($scope.config.parameters.ignore_lines > 0) {
+                if($scope.config.parameters['ignore_lines'] > 0) {
                     $scope.ignoreLinesActivate = true;
                 }
-                if($scope.config.parameters.discard_rows > 0) {
+                if($scope.config.parameters['discard_rows'] > 0) {
                     $scope.discardRowsActivate = true;
                 }
-                if($scope.config.parameters.at_most_rows > 0) {
+                if($scope.config.parameters['at_most_rows'] > 0) {
                     $scope.atMostRowsActivate = true;
                 }
 
