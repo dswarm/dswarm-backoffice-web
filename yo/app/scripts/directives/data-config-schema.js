@@ -7,7 +7,7 @@ angular.module('dmpApp')
             name : 'schema',
             description : 'schema with id ' + $routeParams.resourceId,
             parameters : {
-                storage_type : 'schema'
+                'storage_type' : 'schema'
             }
         };
 

@@ -52,5 +52,5 @@ angular.module('dmpApp')
             });
 
             toggleAlive(alive);
-        }
+        };
     }]);
