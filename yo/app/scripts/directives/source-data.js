@@ -6,6 +6,12 @@ angular.module('dmpApp')
 
         $scope.data = {};
 
+        $scope.showData = false;
+
+        $scope.dataInclude = function() {
+            return $scope.showData ? 'sourcedata' : '';
+        };
+
         var schemaPromise, dataPromise,
             schemaTransformer, dataTransformer,
             scopeSetter;
@@ -29,6 +35,7 @@ angular.module('dmpApp')
             dataTransformer = angular.identity;
 
             scopeSetter = function(schemaResult, dataResult) {
+
                 var records = [];
                 angular.forEach(dataResult, function(record) {
                     records.push({
@@ -38,6 +45,9 @@ angular.module('dmpApp')
                 });
 
                 $scope.records = records;
+
+                $scope.showData = true;
+
             };
 
         } else {
@@ -55,6 +65,9 @@ angular.module('dmpApp')
             scopeSetter = function(schemaResult, dataResult) {
                 $scope.data = schemaParser.parseAny(
                     dataResult[schemaResult['title']], schemaResult['title'], schemaResult);
+
+                $scope.showData = true;
+
             };
         }
 

@@ -1,9 +1,19 @@
 <div>
     <h5>Source Data</h5>
-    <tabset ng-if="records">
-        <tab ng-repeat="record in records" heading="{{ record.id }}" active="$first">
-            <tree data="record.data"></tree>
-        </tab>
-    </tabset>
-    <tree ng-if="data" data="data"></tree>
+
+    <div class="dataOuter">
+        <div ng-include src="dataInclude()"></div>
+    </div>
+
+    <script type="text/ng-template" id="sourcedata">
+
+        <tabset ng-if="records">
+            <tab ng-repeat="record in records" heading="{{ record.id }}" active="$first">
+                <tree data="record.data"></tree>
+            </tab>
+        </tabset>
+        <tree ng-if="data" data="data"></tree>
+
+    </script>
+
 </div>
