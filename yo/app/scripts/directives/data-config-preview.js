@@ -23,8 +23,23 @@ angular.module('dmpApp')
         };
 
         $scope.dataConfigUpdatedSave = function(result) {
-            $scope.previewResult = result.data;
-            $scope.colDefs = result.schema;
+
+            angular.forEach(result.data, function(element) {
+
+                var currentResultElement = {};
+
+                angular.forEach(element, function(value, key) {
+                    currentResultElement[key.replace(/[ ,;]/g,'')] = value;
+                });
+
+                $scope.previewResult.push(currentResultElement);
+                
+            });
+
+            angular.forEach(result.schema, function(value) {
+                $scope.colDefs.push(value.replace(/[ ,;]/g,''));
+            });
+
         };
 
         $scope.checkNextConfigUpdate = function() {
