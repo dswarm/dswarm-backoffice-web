@@ -42,21 +42,29 @@ angular.module('dmpApp')
 
         savedConfigurations = DataConfigResource.query({ resourceId: $routeParams.resourceId }, function() {
 
+            var latestId = 0;
+
             angular.forEach(savedConfigurations, function(value) {
 
-                $scope.config.name = value.name;
-                $scope.config.description = value.description;
-                $scope.config.id = value.id;
-                $scope.config.parameters = value.parameters;
+                if(value.id >= latestId) {
 
-                if($scope.config.parameters['ignore_lines'] > 0) {
-                    $scope.ignoreLinesActivate = true;
-                }
-                if($scope.config.parameters['discard_rows'] > 0) {
-                    $scope.discardRowsActivate = true;
-                }
-                if($scope.config.parameters['at_most_rows'] > 0) {
-                    $scope.atMostRowsActivate = true;
+                    latestId = value.id;
+
+                    $scope.config.name = value.name;
+                    $scope.config.description = value.description;
+                    $scope.config.id = value.id;
+                    $scope.config.parameters = value.parameters;
+
+                    if($scope.config.parameters['ignore_lines'] > 0) {
+                        $scope.ignoreLinesActivate = true;
+                    }
+                    if($scope.config.parameters['discard_rows'] > 0) {
+                        $scope.discardRowsActivate = true;
+                    }
+                    if($scope.config.parameters['at_most_rows'] > 0) {
+                        $scope.atMostRowsActivate = true;
+                    }
+
                 }
 
             });
