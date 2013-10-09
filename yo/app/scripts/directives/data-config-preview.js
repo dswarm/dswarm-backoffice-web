@@ -14,7 +14,7 @@ angular.module('dmpApp')
 
         $scope.previewOptions = {
             data: 'previewResult',
-            colDefs : 'colDefs',
+            columnDefs : 'colDefs',
             enableRowSelection: false
         };
 
@@ -29,15 +29,21 @@ angular.module('dmpApp')
                 var currentResultElement = {};
 
                 angular.forEach(element, function(value, key) {
-                    currentResultElement[key.replace(/[ ,;]/g,'')] = value;
+                    currentResultElement[key.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi,'')] = value;
                 });
 
                 $scope.previewResult.push(currentResultElement);
-                
+
             });
 
             angular.forEach(result.schema, function(value) {
-                $scope.colDefs.push(value.replace(/[ ,;]/g,''));
+
+                var currentColDefElement = {};
+
+                currentColDefElement.field = value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi,'');
+                currentColDefElement.displayName = value;
+
+                $scope.colDefs.push(currentColDefElement);
             });
 
         };
@@ -88,10 +94,10 @@ angular.module('dmpApp')
 
                         $scope.checkNextConfigUpdate();
 
-                        $scope.showGrid = true;
-
                         $scope.configError = '';
                         $scope.dataConfigUpdatedSave(result);
+
+                        $scope.showGrid = true;
                     },
                     function(error) {
 
