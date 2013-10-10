@@ -27,8 +27,8 @@ angular.module('dmpApp')
 
             parameters : {
                 'column_delimiter' : ',',
-                'escape_character' : '\\\\',
-                'quote_character' : '\\"',
+                'escape_character' : '\\',
+                'quote_character' : '"',
                 'column_names' : 'columnN',
                 'storage_type' : 'csv'
             }
