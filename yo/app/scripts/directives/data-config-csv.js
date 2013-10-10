@@ -3,7 +3,12 @@
 angular.module('dmpApp')
     .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$window', '$location', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $window, $location, DataConfigResource, FileResource, PubSub) {
 
-        var allFields = ['config.name', 'config.description', 'config.parameters.row_delimiter', 'config.parameters.encoding', 'config.parameters.rowSeperator', 'config.parameters.column_delimiter', 'config.parameters.escape_character', 'config.parameters.quote_character', 'config.parameters.column_names', 'config.parameters.ignore_lines', 'config.parameters.parse_lines', 'config.parameters.discard_rows', 'config.parameters.at_most_rows'];
+        var allFields = ['config.name', 'config.description', 'config.parameters.row_delimiter', 'config.parameters.encoding', 'config.parameters.rowSeperator', 'config.parameters.column_delimiter', 'config.parameters.escape_character', 'config.parameters.quote_character', 'config.parameters.column_names', 'config.parameters.ignore_lines', 'config.parameters.parse_lines', 'config.parameters.discard_rows', 'config.parameters.at_most_rows'],
+            allTickableFields = {
+                'parameters.ignore_lines': 'ignoreLinesActivate',
+                'parameters.discard_rows': 'discardRowsActivate',
+                'parameters.at_most_rows': 'atMostRowsActivate'
+            };
 
         $scope.config = {};
 
@@ -99,9 +104,26 @@ angular.module('dmpApp')
             $scope.onFieldChanged();
         });
 
+        function unsetPath(path, $in) {
+            var segments = path.split(".");
+
+            if (segments.length === 1) {
+                delete $in[segments[0]];
+            } else {
+                unsetPath(segments.slice(1).join("."), $in[segments[0]]);
+            }
+        }
+
         $scope.onFieldChanged = function() {
+            var config = angular.copy($scope.config);
+            angular.forEach(allTickableFields, function(trigger, field) {
+                if ($scope[trigger] === false) {
+                    unsetPath(field, config);
+                }
+            });
+
             PubSub.broadcast('dataConfigUpdated', {
-                config : $scope.config
+                config : config
             });
         };
 
