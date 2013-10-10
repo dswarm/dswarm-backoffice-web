@@ -3,7 +3,7 @@
 angular.module('dmpApp')
     .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$window', '$location', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $window, $location, DataConfigResource, FileResource, PubSub) {
 
-        var allFields = ['config.name', 'config.description', 'config.parameters.row_delimiter', 'config.parameters.encoding', 'config.parameters.rowSeperator', 'config.parameters.column_delimiter', 'config.parameters.escape_character', 'config.parameters.quote_character', 'config.parameters.column_names', 'config.parameters.ignore_lines', 'config.parameters.parse_lines', 'config.parameters.discard_rows', 'config.parameters.at_most_rows'],
+        var allFields = 'config.parameters',
             allTickableFields = {
                 'parameters.ignore_lines': 'ignoreLinesActivate',
                 'parameters.discard_rows': 'discardRowsActivate',
@@ -99,11 +99,6 @@ angular.module('dmpApp')
             }
         };
 
-        // On any field change send broadcast that there was a change
-        $scope.$watchCollection('['+allFields.join(',')+']', function() {
-            $scope.onFieldChanged();
-        });
-
         function unsetPath(path, $in) {
             var segments = path.split('.');
 
@@ -114,7 +109,8 @@ angular.module('dmpApp')
             }
         }
 
-        $scope.onFieldChanged = function() {
+        // do not preview more often that, say, every 200 msecs
+        var fieldChanged = _.debounce(function() {
             var config = angular.copy($scope.config);
             angular.forEach(allTickableFields, function(trigger, field) {
                 if ($scope[trigger] === false) {
@@ -125,7 +121,11 @@ angular.module('dmpApp')
             PubSub.broadcast('dataConfigUpdated', {
                 config : config
             });
-        };
+        }, 200);
+
+        $scope.onFieldChanged = fieldChanged;
+
+        $scope.$watch(allFields, fieldChanged, true);
 
     }])
     .directive('dataconfigcsv', [ function () {
