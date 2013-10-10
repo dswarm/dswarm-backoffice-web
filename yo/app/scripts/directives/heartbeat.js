@@ -10,7 +10,7 @@ angular.module('dmpApp')
                 config = {
                     method: 'GET',
                     url: api + endpoint,
-                    timeout: 50
+                    timeout: 1000
                 },
 
                 alive = true,
