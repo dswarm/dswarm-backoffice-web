@@ -105,12 +105,12 @@ angular.module('dmpApp')
         });
 
         function unsetPath(path, $in) {
-            var segments = path.split(".");
+            var segments = path.split('.');
 
             if (segments.length === 1) {
                 delete $in[segments[0]];
             } else {
-                unsetPath(segments.slice(1).join("."), $in[segments[0]]);
+                unsetPath(segments.slice(1).join('.'), $in[segments[0]]);
             }
         }
 
