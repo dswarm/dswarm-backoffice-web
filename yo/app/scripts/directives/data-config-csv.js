@@ -13,21 +13,21 @@ angular.module('dmpApp')
                 { name : 'Linux' , 'row_delimiter' : '\\n' }
             ],
             encoding : [
-                { name : 'ISO8859-1' },
-                { name : 'ISO8859-15' },
-                { name : 'ASCII' },
+                { name : 'ISO-8859-1' },
+                { name : 'ISO-8859-15' },
+                { name : 'US-ASCII' },
                 { name : 'UTF-8' },
                 { name : 'UTF-16' },
-                { name : 'little Endian' },
-                { name : 'big Endian' },
+                { name : 'UTF-16LE' },
+                { name : 'UTF-16BE' },
                 { name : 'Unicode' },
-                { name : 'Windows1252' }
+                { name : 'Windows-1252' }
             ],
 
             parameters : {
                 'column_delimiter' : ',',
-                'escape_character' : '\\\\',
-                'quote_character' : '\\"',
+                'escape_character' : '\\',
+                'quote_character' : '"',
                 'column_names' : 'columnN',
                 'storage_type' : 'csv'
             }
