@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Controller: DataConfigCsvCtrl', function () {
-    var $rootScope, scope, dataConfigCsvCtrl;
+    var $httpBackend, $rootScope, scope, dataConfigCsvCtrl;
 
-    beforeEach(module('dmpApp'));
+    beforeEach(module('dmpApp', 'mockedDataConfig'));
 
     beforeEach(function() {
         spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
@@ -11,6 +11,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     beforeEach(inject(function ($injector) {
+        $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
 
         var $resource = $injector.get('$resource')
@@ -40,9 +41,14 @@ describe('Controller: DataConfigCsvCtrl', function () {
         };
     }));
 
+    afterEach(inject(function () {
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+    }));
+
     it('should emit event on form object change', function () {
 
-        var ctrl = dataConfigCsvCtrl();
+        dataConfigCsvCtrl();
 
         scope.config.name = 'configname';
 

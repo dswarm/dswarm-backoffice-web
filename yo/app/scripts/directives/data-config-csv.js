@@ -3,8 +3,7 @@
 angular.module('dmpApp')
     .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$window', '$location', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $window, $location, DataConfigResource, FileResource, PubSub) {
 
-        var savedConfigurations,
-            allFields = ['config.name', 'config.description', 'config.parameters.row_delimiter', 'config.parameters.encoding', 'config.parameters.rowSeperator', 'config.parameters.column_delimiter', 'config.parameters.escape_character', 'config.parameters.quote_character', 'config.parameters.column_names', 'config.parameters.ignore_lines', 'config.parameters.parse_lines', 'config.parameters.discard_rows', 'config.parameters.at_most_rows'];
+        var allFields = ['config.name', 'config.description', 'config.parameters.row_delimiter', 'config.parameters.encoding', 'config.parameters.rowSeperator', 'config.parameters.column_delimiter', 'config.parameters.escape_character', 'config.parameters.quote_character', 'config.parameters.column_names', 'config.parameters.ignore_lines', 'config.parameters.parse_lines', 'config.parameters.discard_rows', 'config.parameters.at_most_rows'];
 
         $scope.config = {};
 
@@ -38,13 +37,18 @@ angular.module('dmpApp')
         // TEMP
         $scope.config.id = 1;
 
+        $scope.resourceId = 1;
+        if($routeParams.resourceId >= 0) {
+            $scope.resourceId = $routeParams.resourceId;
+        }
+
         $scope.config.parameters = $scope.presets.parameters;
 
-        savedConfigurations = DataConfigResource.query({ resourceId: $routeParams.resourceId }, function() {
+        DataConfigResource.query({ resourceId: $scope.resourceId }, function(result) {
 
             var latestId = 0;
 
-            angular.forEach(savedConfigurations, function(value) {
+            angular.forEach(result, function(value) {
 
                 if(value.id >= latestId) {
 
@@ -73,8 +77,8 @@ angular.module('dmpApp')
 
         $scope.onSaveClick = function() {
 
-            DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
-                $location.path('/data/');
+            DataConfigResource.save({ resourceId: $scope.resourceId }, $scope.config, function() {
+                $location.path('#/data/');
             });
 
         };
