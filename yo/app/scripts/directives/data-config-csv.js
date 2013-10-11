@@ -110,7 +110,7 @@ angular.module('dmpApp')
         }
 
         // do not preview more often that, say, every 200 msecs
-        var fieldChanged = _.debounce(function() {
+        var fieldChanged = $window['_'].debounce(function() {
             var config = angular.copy($scope.config);
             angular.forEach(allTickableFields, function(trigger, field) {
                 if ($scope[trigger] === false) {

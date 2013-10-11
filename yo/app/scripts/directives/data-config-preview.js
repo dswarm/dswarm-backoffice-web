@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, PubSub, DataConfigPreviewResource, FileResource) {
+    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', '$window', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, $window, PubSub, DataConfigPreviewResource, FileResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -105,17 +105,19 @@ angular.module('dmpApp')
 
                         FileResource.lines({
                             id: resourceId,
-                            atMost: config.parameters.at_most_rows || 50,
-                            encoding: config.parameters.encoding || "UTF-8"
+                            atMost: config.parameters['at_most_rows'] || 50,
+                            encoding: config.parameters.encoding || 'UTF-8'
                         }, function(lines) {
+
+                            var map = $window['_'].map;
 
                             $scope.colDefs = [{
                                 field: 'line',
                                 displayName: lines['name'] + ' (' + lines['description'] + ')'
                             }];
 
-                            $scope.previewResult = _.map(lines['lines'], function(line) {
-                                return { line: line }
+                            $scope.previewResult = map(lines['lines'], function(line) {
+                                return { line: line };
                             });
 
                             $scope.showGrid = true;
