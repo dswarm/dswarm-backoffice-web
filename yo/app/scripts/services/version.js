@@ -11,7 +11,7 @@ angular.module('dmpApp')
 
         return promise;
     }])
-    .directive('appVersion', ['buildInfo', function (version) {
+    .directive('appVersion', ['buildInfo', '$window', function (version, $window) {
         return function(scope, iElement) {
             version.get(function(infoWeb, infoApi) {
                 var text = [
@@ -20,8 +20,14 @@ angular.module('dmpApp')
                     'API:', infoApi.revision,
                     'at',
                     infoWeb.date
-                ];
-                iElement.text(text.join(' '));
+                    ],
+                    version = text.join(' ');
+
+                var dmp = $window['dmp'] || {};
+                dmp['version'] = version;
+                $window['dmp'] = dmp;
+
+                iElement.text(version);
             });
 
         };
