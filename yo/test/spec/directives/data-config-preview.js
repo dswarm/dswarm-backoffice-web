@@ -3,7 +3,26 @@
 describe('Controller: DataConfigPreviewCtrl', function () {
     var $httpBackend, $rootScope, scope, dataConfigPreviewCtrl, $timeout, $jsonResponse;
 
+    var win = {
+        _: {
+            debounce: function(fn, timout) {
+                return function() {
+                    fn();
+                }
+            }
+        },
+        dmp: {
+            jsRoutes: {
+                api: ''
+            }
+        }
+    };
+
     beforeEach(module('dmpApp', 'mockedDataConfigPreview'));
+
+    beforeEach(module(function($provide) {
+        $provide.value('$window', win);
+    }));
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($injector) {

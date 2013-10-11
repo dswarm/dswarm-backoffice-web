@@ -3,7 +3,26 @@
 describe('Controller: DataConfigCsvCtrl', function () {
     var $httpBackend, $rootScope, $location, scope, dataConfigCsvCtrl, $jsonResponse, $jsonResponseGet;
 
+    var win = {
+        _: {
+            debounce: function(fn, timout) {
+                return function() {
+                    fn();
+                }
+            }
+        },
+        dmp: {
+            jsRoutes: {
+                api: ''
+            }
+        }
+    };
+
     beforeEach(module('dmpApp', 'mockedDataConfig'));
+
+    beforeEach(module(function($provide) {
+        $provide.value('$window', win);
+    }));
 
     beforeEach(function() {
         spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
@@ -15,8 +34,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
         $rootScope = $injector.get('$rootScope');
         $location = $injector.get('$location');
 
-        var $resource = $injector.get('$resource')
-            , fileResource = $resource('/dmp/resources/:id');
+        var $resource = $injector.get('$resource');
 
         $jsonResponse = $injector.get('mockDataConfigSaveJSON');
         $jsonResponseGet = $injector.get('mockDataConfigGetJSON');
@@ -26,22 +44,12 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         scope = $rootScope.$new();
 
-        var win = {
-            dmp: {
-                jsRoutes: {
-                    api: '/dmp/'
-                }
-            }
-        };
-
         var $controller = $injector.get('$controller');
 
         dataConfigCsvCtrl = function () {
 
             return $controller('DataConfigCsvCtrl', {
-                '$scope': scope,
-                '$window' : win,
-                'FileResource': fileResource
+                '$scope': scope
             });
         };
     }));
