@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', 'SchemaDataResource', function ($scope, $http, schemaParser, $q, SchemaDataResource) {
+    .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', 'SchemaDataResource', 'PubSub', function ($scope, $http, schemaParser, $q, SchemaDataResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sourceSchema = {};
@@ -49,6 +49,31 @@ angular.module('dmpApp')
             $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
         });
+
+        $scope.onTargetSchemaSelectorClick = function() {
+            PubSub.broadcast('handleOpenTargetSchemaSelector', {});
+        };
+
+        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(args) {
+            var latestConfigurationId = 0;
+
+            angular.forEach(args.configurations, function(configuration) {
+
+                if(configuration.id >= latestConfigurationId) {
+                    latestConfigurationId = configuration.id;
+                }
+
+            });
+
+            SchemaDataResource.schema({
+                id: args.id,
+                cid: latestConfigurationId
+            }, function(result) {
+                $scope.targetSchema = schemaParser.mapData(result.data['title'], result.data);
+            });
+
+        });
+
     }])
     .directive('schema', [ function () {
         return {
