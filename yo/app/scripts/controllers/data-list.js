@@ -3,18 +3,30 @@
 angular.module('dmpApp')
     .controller('DataListCtrl', ['$scope', '$routeParams', 'FileResource', function ($scope, $routeParams, FileResource) {
 
-
-        FileResource.query(function(result) {
+        FileResource.query(function(results) {
 
             $scope.files = [];
 
-            angular.forEach(result, function(value) {
+            angular.forEach(results, function(result) {
 
-                if(value.configurations) {
-                    value['storage_type'] = value.configurations[value.configurations.length-1].parameters['storage_type'];
+                if(result.configurations) {
+
+                    var latestConfigurationId = 0;
+
+                    angular.forEach(result.configurations, function(configuration) {
+
+                        if(configuration.id >= latestConfigurationId) {
+
+                            latestConfigurationId = configuration.id;
+                            result['storage_type'] = configuration.parameters['storage_type'];
+
+                        }
+
+                    });
+
                 }
 
-                $scope.files.push(value);
+                $scope.files.push(result);
             });
 
         });
