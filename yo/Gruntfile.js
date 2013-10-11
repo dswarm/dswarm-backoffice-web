@@ -105,7 +105,7 @@ module.exports = function (grunt) {
             parentlocal: {
                 options: {
                     infoKey: 'api',
-                    cwd: '../..'
+                    cwd: '../../data-management-platform'
                 }
             }
         },

@@ -28,6 +28,7 @@ angular.module('dmpApp')
                 $window['dmp'] = dmp;
 
                 iElement.text(version);
+                iElement.attr('id', 'footer-build-information');
             });
 
         };
