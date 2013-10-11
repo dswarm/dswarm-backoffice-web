@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'PubSub', 'DataConfigPreviewResource', function ($scope, $routeParams, $timeout, PubSub, DataConfigPreviewResource) {
+    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, PubSub, DataConfigPreviewResource, FileResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -101,12 +101,27 @@ angular.module('dmpApp')
                     },
                     function(error) {
 
-                        $scope.checkNextConfigUpdate();
-
-                        $scope.showGrid = true;
-
-                        $scope.previewResult = [];
                         $scope.configError = error.data.error;
+
+                        FileResource.lines({
+                            id: resourceId,
+                            atMost: config.parameters.at_most_rows || 50,
+                            encoding: config.parameters.encoding || "UTF-8"
+                        }, function(lines) {
+
+                            $scope.colDefs = [{
+                                field: 'line',
+                                displayName: lines['name'] + ' (' + lines['description'] + ')'
+                            }];
+
+                            $scope.previewResult = _.map(lines['lines'], function(line) {
+                                return { line: line }
+                            });
+
+                            $scope.showGrid = true;
+
+                            $scope.checkNextConfigUpdate();
+                        });
                     }
                 );
 
