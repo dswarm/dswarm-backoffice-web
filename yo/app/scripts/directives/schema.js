@@ -7,6 +7,9 @@ angular.module('dmpApp')
         $scope.sourceSchema = {};
         $scope.targetSchema = {};
 
+        $scope.isLoading = true;
+        $scope.loadError = '';
+
 
         var sourcePromise, targetPromise,
             sourceTransformer, targetTransformer;
@@ -48,6 +51,8 @@ angular.module('dmpApp')
             $scope.sourceSchema = schemaParser.mapData(sourceSchema['title'], sourceSchema);
             $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
 
+            $scope.isLoading = false;
+
         });
 
         $scope.onTargetSchemaSelectorClick = function() {
@@ -56,6 +61,9 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(args) {
             var latestConfigurationId = 0;
+
+            $scope.isLoading = true;
+            $scope.loadError = '';
 
             angular.forEach(args.configurations, function(configuration) {
 
@@ -70,6 +78,19 @@ angular.module('dmpApp')
                 cid: latestConfigurationId
             }, function(result) {
                 $scope.targetSchema = schemaParser.mapData(result.data['title'], result.data);
+
+                $scope.isLoading = false;
+                $scope.loadError = '';
+            }, function(error) {
+
+                if(error && error.status === 404) {
+                    $scope.loadError = 'please choose a configured schema';
+                } else {
+                    $scope.loadError = 'error laoding chosen schema';
+                }
+
+                $scope.isLoading = false;
+
             });
 
         });
