@@ -5,11 +5,12 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
     var win = {
         _: {
-            debounce: function(fn, timout) {
+            debounce: function(fn, timeout) {
                 return function() {
                     fn();
                 }
-            }
+            },
+            max: _.max
         },
         dmp: {
             jsRoutes: {

@@ -39,6 +39,16 @@ angular.module('dmpApp')
 
         };
 
+        function getConfig() {
+            var config = angular.copy($scope.config);
+            angular.forEach(allTickableFields, function(trigger, field) {
+                if ($scope[trigger] === false) {
+                    unsetPath(field, config);
+                }
+            });
+            return config;
+        }
+
         // TEMP
         $scope.config.id = 1;
 
@@ -51,38 +61,29 @@ angular.module('dmpApp')
 
         DataConfigResource.query({ resourceId: $scope.resourceId }, function(result) {
 
-            var latestId = 0;
+            var latestConfig = $window['_'].max(result, 'id');
 
-            angular.forEach(result, function(value) {
+            if (angular.isObject(latestConfig)) {
 
-                if(value.id >= latestId) {
+                $scope.config.name = latestConfig.name;
+                $scope.config.description = latestConfig.description;
+                $scope.config.id = latestConfig.id;
 
-                    latestId = value.id;
-
-                    $scope.config.name = value.name;
-                    $scope.config.description = value.description;
-                    $scope.config.id = value.id;
-                    $scope.config.parameters = value.parameters;
-
-                    if($scope.config.parameters['ignore_lines'] > 0) {
-                        $scope.ignoreLinesActivate = true;
+                angular.forEach(allTickableFields, function(ticker, param) {
+                    var varName = param.substring(param.lastIndexOf('.') + 1);
+                    if (angular.isDefined(latestConfig.parameters[varName]) && +latestConfig.parameters[varName] > 0) {
+                        $scope[ticker] = true;
                     }
-                    if($scope.config.parameters['discard_rows'] > 0) {
-                        $scope.discardRowsActivate = true;
-                    }
-                    if($scope.config.parameters['at_most_rows'] > 0) {
-                        $scope.atMostRowsActivate = true;
-                    }
+                });
 
-                }
-
-            });
+                $scope.config.parameters = latestConfig.parameters;
+            }
 
         });
 
         $scope.onSaveClick = function() {
 
-            DataConfigResource.save({ resourceId: $scope.resourceId }, $scope.config, function() {
+            DataConfigResource.save({ resourceId: $scope.resourceId }, getConfig(), function() {
                 $location.path('#/data/');
             });
 
@@ -111,12 +112,7 @@ angular.module('dmpApp')
 
         // do not preview more often that, say, every 200 msecs
         var fieldChanged = $window['_'].debounce(function() {
-            var config = angular.copy($scope.config);
-            angular.forEach(allTickableFields, function(trigger, field) {
-                if ($scope[trigger] === false) {
-                    unsetPath(field, config);
-                }
-            });
+            var config = getConfig();
 
             PubSub.broadcast('dataConfigUpdated', {
                 config : config

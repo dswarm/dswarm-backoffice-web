@@ -20,7 +20,7 @@ angular.module('dmpApp')
                     'API:', infoApi.revision,
                     'at',
                     infoWeb.date
-                    ],
+                ],
                     version = text.join(' ');
 
                 var dmp = $window['dmp'] || {};

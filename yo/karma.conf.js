@@ -17,6 +17,7 @@ module.exports = function(config) {
           'components/angular-cookies/angular-cookies.js',
           'components/angular-sanitize/angular-sanitize.js',
           'components/jquery/jquery.js',
+          'components/lodash/lodash.js',
           'components/humanize/humanize.js',
           'components/ngprogress/build/ngProgress.js',
           'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
