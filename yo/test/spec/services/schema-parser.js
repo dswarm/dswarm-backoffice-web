@@ -19,8 +19,14 @@ describe('schemaParser tests', function (){
         expect(angular.isFunction(schemaParser.mapData)).toBe(true);
     });
 
-    it('should return mapped data with mapData', function () {
+    it('should return mapped data from object with object properties using mapData', function () {
         var result = schemaParser.mapData('bar', { 'properties' : { 'foo' : {}}});
+        expect(result['name']).toBe('bar');
+        expect(result['children'].length).toBe(1);
+    });
+
+    it('should return mapped data from object with array elements using mapData', function () {
+        var result = schemaParser.mapData('bar', { 'items' : { 'foo' : {}}});
         expect(result['name']).toBe('bar');
         expect(result['children'].length).toBe(1);
     });

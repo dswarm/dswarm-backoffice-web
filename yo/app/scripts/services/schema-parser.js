@@ -33,12 +33,21 @@ factory('schemaParser', function () {
      * @returns {{name: String, show: boolean}}
      */
     function mapData(name, container, editableTitle) {
-        var data = {'name': name, 'show': true, 'editableTitle': editableTitle};
-        if (container['properties']) {
+
+        var data = {'name': name, 'show': true, 'editableTitle': editableTitle},
+            itemsSetName = 'properties';
+
+        if(!container['properties'] && container['items']) {
+            itemsSetName = 'items';
+        }
+
+        if (container[itemsSetName]) {
             var children = [];
-            angular.forEach(container['properties'], function (val, key) {
+
+            angular.forEach(container[itemsSetName], function (val, key) {
                 children.push(mapData(key, val, editableTitle));
             });
+
             data['children'] = children;
         }
 
@@ -152,6 +161,7 @@ factory('schemaParser', function () {
      * @returns {*}
      */
     function parseAny(container, name, obj) {
+
         if (obj['type'] === 'object') {
             return parseObject(container, name, obj['properties']);
         }
