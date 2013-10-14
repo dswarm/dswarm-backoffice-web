@@ -6,6 +6,19 @@
   <div class="col-md-5 col-md-offset-2 box">
       <h5>Target Schema</h5>
       <button class="btn btn-default open-target-schema-selector" type="button" ng-click="onTargetSchemaSelectorClick()">Select target schema</button>
-      <tree data="targetSchema" as-target></tree>
+
+      <div ng-if="isLoading && !loadError">
+          <img src="../../images/ajax-loader.gif">
+      </div>
+
+      <div ng-if="loadError">
+          <div class="loadError">
+              {{loadError}}
+          </div>
+      </div>
+
+      <div ng-if="!isLoading && !loadError">
+        <tree data="targetSchema" as-target></tree>
+      </div>
   </div>
 </div>
