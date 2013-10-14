@@ -15,7 +15,8 @@ angular.module('dmpApp')
         $scope.previewOptions = {
             data: 'previewResult',
             columnDefs : 'colDefs',
-            enableRowSelection: false
+            enableRowSelection: false,
+            enableColumnResize: true
         };
 
         $scope.gridInclude = function() {
