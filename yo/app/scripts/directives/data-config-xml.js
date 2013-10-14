@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', ['$scope', '$location', '$routeParams', 'DataConfigResource', function ($scope, $location, $routeParams, DataConfigResource) {
+    .controller('DataConfigXmlCtrl', ['$scope', '$location', '$routeParams', 'DataConfigResource', 'Util', function ($scope, $location, $routeParams, DataConfigResource, Util) {
 
         $scope.selectedSet = [];
 
@@ -18,7 +18,10 @@ angular.module('dmpApp')
 
         DataConfigResource.query({ resourceId: $routeParams.resourceId }, function(result) {
 
-            $scope.selectedSet.push(result[result.length-1].parameters['schema_file']);
+            var latestConfig = Util.latestBy(result);
+
+            $scope.selectedSet.push(latestConfig.parameters['schema_file']);
+            $scope.config.parameters = latestConfig.parameters;
 
         });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', ['$scope', 'FileResource', function ($scope, FileResource) {
+    .controller('SchemaListCtrl', ['$scope', 'FileResource', 'Util', function ($scope, FileResource, Util) {
 
         $scope.files = [];
 
@@ -12,7 +12,9 @@ angular.module('dmpApp')
             angular.forEach(result, function(value) {
 
                 if(value.configurations) {
-                    value['storage_type'] = value.configurations[value.configurations.length-1].parameters['storage_type'];
+
+                    var latestConfig = Util.latestBy(value.configurations);
+                    value['storage_type'] = latestConfig.parameters['storage_type'];
                 }
 
                 $scope.files.push(value);
