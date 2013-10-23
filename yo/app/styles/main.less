@@ -38,7 +38,7 @@
   height:     100%;
   background: @gray-lighter;
   border:     @padding-base-vertical solid @body-bg;
-  overflow:   scroll;
+  overflow:   auto;
 }
 
 .tree-list {
@@ -188,13 +188,11 @@ span.label-inline {
   top: 0;
 }
 
-button.open-target-schema-selector {
-  position: absolute;
-  right: 5px;
-  top: 5px;
+button.open-schema-col-selector {
+  margin: 0 0 15px;
 }
 
-.target-schema-selector-modal {
+.target-schema-selector-modal, .data-selector-modal {
   background: #ffffff;
   margin: 10% 0 0 0;
   padding: 20px;
@@ -202,5 +200,27 @@ button.open-target-schema-selector {
   width: 80%;
   margin-left: 50%;
   left: -40%;
+}
 
+.data-head {
+  position: relative;
+}
+
+.source-selected .data-head .icons .glyphicon {
+  color: @brand-success;
+}
+
+.data-head .icons .glyphicon-download {
+  -moz-transform:rotate(90deg);
+  -webkit-transform:rotate(90deg);
+  -o-transform:rotate(90deg);
+  -ms-transform:rotate(90deg);
+  transform:rotate(90deg);
+}
+
+.data-head .icons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
 }
