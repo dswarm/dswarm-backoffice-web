@@ -44,7 +44,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
         dataConfigCsvCtrl = function () {
 
             return $controller('DataConfigCsvCtrl', {
-                '$scope': scope,
+                '$scope': scope
             });
         };
     }));

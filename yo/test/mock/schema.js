@@ -1,6 +1,29 @@
 'use strict';
 
 angular.module('mockedSchema', [])
+    .value('mockSchemaSimpleJSON', {
+        data : {
+            "title": "Adressdatei",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "recordId": {
+                    "type": "string"
+                },
+                "Email": {
+                    "type": "string"
+                },
+                "ID": {
+                    "type": "string"
+                },
+                "Vorname": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    })
     .value('mockSchemaJSON', {
         "title": "OAI-PMH",
         "type": "object",

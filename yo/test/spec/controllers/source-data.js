@@ -3,7 +3,7 @@
 describe('Controller: SourceDataCtrl', function () {
     var $httpBackend, $rootScope, scope, sourceDataCtrl;
 
-    beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord'));
+    beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord', 'mockedData'));
 
 
     var win = {
@@ -13,8 +13,6 @@ describe('Controller: SourceDataCtrl', function () {
             }
         }
     };
-
-    beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema'));
 
     beforeEach(module(function($provide) {
         $provide.value('$window', win);
@@ -27,8 +25,8 @@ describe('Controller: SourceDataCtrl', function () {
 
         scope = $rootScope.$new();
 
-        $httpBackend.whenGET('/data/schema.json').respond($injector.get('mockSchemaJSON'));
-        $httpBackend.whenGET('/data/record.json').respond($injector.get('mockRecordJSON'));
+        $httpBackend.whenGET('/dmp/resources/configurations/schema').respond($injector.get('mockSchemaSimpleJSON'));
+        $httpBackend.whenGET('/dmp/resources/configurations/data?atMost=3').respond($injector.get('mockDataJSON'));
 
         var $controller = $injector.get('$controller');
         sourceDataCtrl = function () {
@@ -48,5 +46,33 @@ describe('Controller: SourceDataCtrl', function () {
         var SourceDataCtrl = sourceDataCtrl();
         expect(SourceDataCtrl).not.toBe(null);
     });
+
+    it('should have a SchemaCtrl controller', function() {
+        var dataInclude;
+
+        sourceDataCtrl();
+
+        scope.showData = true;
+        dataInclude = scope.dataInclude();
+
+        expect(dataInclude).toBe('sourcedata');
+
+    });
+
+    it('should load data from server', function() {
+
+        sourceDataCtrl();
+
+        scope.loadData(1, 1, 'foo');
+
+        $rootScope.$digest();
+        $httpBackend.flush();
+
+        expect(scope.showData).toBe(true);
+        expect(scope.records.length).toBe(3);
+        expect(scope.resourceName).toBe('foo');
+
+    });
+
 
 });

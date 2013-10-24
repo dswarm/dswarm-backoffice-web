@@ -26,7 +26,7 @@ angular.module('dmpApp')
 
         $scope.removeSource = function(source) {
 
-            var index=$scope.sources.indexOf(source)
+            var index = $scope.sources.indexOf(source);
             $scope.sources.splice(index,1);
 
             $scope.currentSource = {};
@@ -92,10 +92,6 @@ angular.module('dmpApp')
 
             $scope.currentSource = source;
             $scope.currentSource.selected = true;
-        };
-
-        $scope.loadSourcePreview = function(source) {
-            $scope.selectSource(source);
         };
 
         $scope.addSource = function(schema, resourceId, configId, collpased, selected, name) {
