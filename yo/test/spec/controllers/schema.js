@@ -44,32 +44,7 @@ describe('Controller: SchemaCtrl', function () {
 
     it('should have a SchemaCtrl controller', function() {
         var SchemaCtrl = schemaCtrl();
-        $rootScope.$digest();
-        $httpBackend.flush();
         expect(SchemaCtrl).not.toBe(null);
     });
 
-    it('should have loaded source schema data', inject(function () {
-            $httpBackend.expectGET('/data/schema.json');
-            schemaCtrl();
-            $rootScope.$digest();
-            $httpBackend.flush();
-
-            expect(scope.sourceSchema.name).toBe('OAI-PMH');
-            expect(scope.sourceSchema.children.length).toBe(3);
-
-        }
-    ));
-
-    it('should have loaded source schema data', inject(function () {
-            $httpBackend.expectGET('/data/targetschema.json');
-            schemaCtrl();
-            $rootScope.$digest();
-            $httpBackend.flush();
-
-            expect(scope.targetSchema.name).toBe('OAI-PMH');
-            expect(scope.targetSchema.children.length).toBe(15);
-
-        }
-    ));
 });
