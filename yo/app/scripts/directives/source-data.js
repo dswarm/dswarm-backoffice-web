@@ -5,6 +5,7 @@ angular.module('dmpApp')
         $scope.internalName = 'Source Data Widget';
 
         $scope.data = {};
+        $scope.records = [];
 
         $scope.showData = false;
 
@@ -35,6 +36,7 @@ angular.module('dmpApp')
             $scope.resourceName = resourceName;
 
             if (resourceId && configId) {
+
                 schemaPromise = SchemaDataResource.schema({
                     id: $scope.resourceId,
                     cid: $scope.configId
@@ -73,6 +75,7 @@ angular.module('dmpApp')
             var allPromise = $q.all([schemaPromise, dataPromise]);
 
             allPromise.then(function (result) {
+
                 var schemaResult = schemaTransformer(result[0])
                     , dataResult = dataTransformer(result[1]);
 
