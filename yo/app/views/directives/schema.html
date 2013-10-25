@@ -33,7 +33,26 @@
 
   </div>
 
-  <div class="col-md-5 col-md-offset-2">
+  <div class="col-md-2" ng-controller="JoinCtrl">
+      <div class="dropdown text-center">
+          <a class="dropdown-toggle btn btn-info">Join</a>
+          <ul class="dropdown-menu">
+              <li ng-repeat="choice in joinItems">
+                  <a ng-click="joinItem(choice.action)">{{choice.name}}</a>
+              </li>
+          </ul>
+      </div>
+      <div ng-if="hasMappingComponents">
+          <span>Hey, Ho</span>
+          <ul class="list-unstyled">
+              <li ng-repeat="component in mappingComponents">
+                  <mapping-component options="component"></mapping-component>
+              </li>
+          </ul>
+      </div>
+  </div>
+
+  <div class="col-md-5">
 
       <button class="btn btn-default open-schema-col-selector" type="button" ng-click="onTargetSchemaSelectorClick()">Select target schema</button>
 
