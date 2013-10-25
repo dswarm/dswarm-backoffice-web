@@ -38,8 +38,8 @@ angular.module('dmpApp')
             if (resourceId && configId) {
 
                 schemaPromise = SchemaDataResource.schema({
-                    id: $scope.resourceId,
-                    cid: $scope.configId
+                    id: resourceId,
+                    cid: configId
                 }).$promise;
 
                 schemaTransformer = function(res) {
@@ -47,8 +47,8 @@ angular.module('dmpApp')
                 };
 
                 dataPromise = SchemaDataResource.data({
-                    id: $scope.resourceId,
-                    cid: $scope.configId,
+                    id: resourceId,
+                    cid: configId,
                     atMost: 3
                 }).$promise;
 
