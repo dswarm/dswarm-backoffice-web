@@ -6,7 +6,7 @@
 
     <div ng-repeat="source in sources">
 
-        <div class="box" ng-class="{'source-selected': source.selected}">
+        <div class="box jsPanchor" ng-class="{'source-selected': source.selected}">
 
             <div class="data-head">
                 <h5 ng-click="collapse(source)">{{source.name}}</h5>
@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div ng-if="!source.collapsed">
+            <div ng-show="!source.collapsed">
                 <tree data="source.schema" as-source></tree>
             </div>
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TreeCtrl', ['$scope', function ($scope) {
+    .controller('TreeCtrl', ['$scope', '$timeout', 'PubSub', function ($scope, $timeout, PubSub) {
         $scope.isSource = $scope.$parent && $scope.$parent.isSource;
         $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 
@@ -73,6 +73,10 @@ angular.module('dmpApp')
 
         $scope.expandCollapse = function (data) {
             data.show = !$scope.isLeaf(data) && !data.show;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 0);
         };
 
         $scope.isLeaf = function (data) {
