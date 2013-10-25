@@ -25,8 +25,8 @@ describe('Controller: SourceDataCtrl', function () {
 
         scope = $rootScope.$new();
 
-        $httpBackend.whenGET('/dmp/resources/configurations/schema').respond($injector.get('mockSchemaSimpleJSON'));
-        $httpBackend.whenGET('/dmp/resources/configurations/data?atMost=3').respond($injector.get('mockDataJSON'));
+        $httpBackend.whenGET('/dmp/resources/1/configurations/1/schema').respond($injector.get('mockSchemaSimpleJSON'));
+        $httpBackend.whenGET('/dmp/resources/1/configurations/1/data?atMost=3').respond($injector.get('mockDataJSON'));
 
         var $controller = $injector.get('$controller');
         sourceDataCtrl = function () {
