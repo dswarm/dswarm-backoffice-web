@@ -15,7 +15,21 @@ angular.module('dmpApp')
             return $scope.showData ? 'sourcedata' : '';
         };
 
+        function loadSampleData(name) {
+            $q.all([$http.get('/data/schema.json'), $http.get('/data/record.json')]).then(function (result) {
+                var schemaResult = result[0]['data']
+                    , dataResult = result[1]['data'];
+
+                $scope.data = schemaParser.parseAny(
+                    dataResult[schemaResult['title']], schemaResult['title'], schemaResult);
+                $scope.showData = true;
+                $scope.resourceName = name;
+            });
+        }
+
         PubSub.subscribe($scope, 'handleLoadData', function(args) {
+
+            if (args.resourceId === null && args.configId === null) { return loadSampleData(args.resourceName); }
 
             if(args && args.resourceId) {
                 $scope.loadData(args.resourceId, args.configId, args.resourceName);

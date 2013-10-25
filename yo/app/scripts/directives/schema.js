@@ -20,6 +20,19 @@ angular.module('dmpApp')
             PubSub.broadcast('handleOpenDataSelector', {});
         };
 
+        $scope.loadSampleData = function () {
+            $q.all([$http.get('/data/schema.json'), $http.get('/data/targetschema.json')]).then(function (result) {
+                var sourceSchema = result[0]['data']
+                  , targetSchema = result[1]['data'];
+
+                $scope.addSource(
+                    schemaParser.mapData(sourceSchema['title'], sourceSchema),
+                    null, null, false, true, 'Sample');
+
+                $scope.targetSchema = schemaParser.mapData(targetSchema['title'], targetSchema);
+            });
+        };
+
         $scope.collapse = function(schema) {
             schema.collapsed = (schema.collapsed) ? false : true;
         };
