@@ -1,4 +1,4 @@
-<div ng-class="{ isFiltered : data.isFiltered }">
+<div class="jsPanchor" ng-class="{ isFiltered : data.isFiltered }">
   <span ng-click="expandCollapse(data)"
         ng-mousedown="handleClick($event, data)"
         ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}"
@@ -11,7 +11,7 @@
     <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
 
   </span>
-  <ul ng-show="data.show" class="tree-list">
+  <ul ng-show="data.show" class="tree-list jsPanchor">
     <li ng-repeat="child in data.children">
       <tree data="child" internal></tree>
     </li>

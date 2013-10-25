@@ -132,6 +132,26 @@ angular.module('dmpApp')
             }
         });
 
+        PubSub.subscribe($rootScope, 'schemaCanvasUpdated', function () {
+
+            var pool = components.pool;
+
+            angular.forEach(pool, function(connection) {
+
+                if(!$(connection.source).is(':visible') ) {
+                    connection.setVisible(false);
+
+                } else {
+                    connection.setVisible(true);
+                }
+
+                $rootScope.$digest();
+                jsP.repaintEverything();
+
+            });
+
+        });
+
 
         PubSub.subscribe($rootScope, 'connectionSwitched', function (data) {
             var pool = components.pool

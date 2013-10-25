@@ -211,6 +211,15 @@ angular.module('dmpApp')
             jsPlumb.bind(event, callback);
         }
 
+        /**
+         * Repaints an element and its connections. This method gets new sizes for the elements before painting anything.
+         * @see http://jsplumbtoolkit.com/apidocs/jsPlumbInstance.html
+         * @param el {String | Element | Selector} The element in question.
+         */
+        function repaintEverything() {
+            jsPlumb.repaintEverything();
+        }
+
         return {
             on: on,
             connect:connect,
@@ -219,6 +228,7 @@ angular.module('dmpApp')
             makeSource: makeSource,
             makeTarget: makeTarget,
             unmakeSource: unmakeSource,
-            unmakeTarget: unmakeTarget
+            unmakeTarget: unmakeTarget,
+            repaintEverything : repaintEverything
         };
     }]);
