@@ -113,7 +113,50 @@ angular.module('dmpApp')
  * Provide the js-plumb service that is meant to be used by the application.
  * Code that deals with the jsPlumb specifics should go in here.
  */
-    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', function(jsPlumbOptions, jsPlumb) {
+    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', '$timeout', function(jsPlumbOptions, jsPlumb, $timeout) {
+
+
+        /**
+         * Random parts for GUID
+         * @returns {string} guid part
+         */
+        function s4(){
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+
+        /**
+         * Create a GUID
+         * @returns {string} the guid
+         */
+       function guid() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+        }
+
+        // Save original getCachedData for later use
+        jsPlumb.__getCachedData = jsPlumb.getCachedData;
+
+        /**
+         * Overwrite original jsP getCachedData
+         * @param elId {string} an element id
+         * @returns {*} chaed position data
+         */
+        jsPlumb.getCachedData = function(elId) {
+
+            if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).hasClass('tree-leaf')) {
+
+                $('#'+elId).closest('.jsPanchor:visible').attr('id', guid());
+                elId = $('#'+elId).closest('.jsPanchor:visible').attr('id');
+
+            }
+
+            return jsPlumb.__getCachedData(elId);
+
+        }
+
+
         /**
          * Create a new connection between two nodes, that is, it draws an arrow
          * unless configured otherwise. connection is directed from source to target

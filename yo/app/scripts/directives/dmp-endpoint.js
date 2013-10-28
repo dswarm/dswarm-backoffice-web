@@ -138,13 +138,6 @@ angular.module('dmpApp')
 
             angular.forEach(pool, function(connection) {
 
-                if(!$(connection.source).is(':visible') ) {
-                    connection.setVisible(false);
-
-                } else {
-                    connection.setVisible(true);
-                }
-
                 $rootScope.$digest();
                 jsP.repaintEverything();
 
