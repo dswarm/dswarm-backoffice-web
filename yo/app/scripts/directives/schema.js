@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$http', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub', function ($scope, $http, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$http', '$timeout', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub', function ($scope, $http, $timeout, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
@@ -35,6 +35,11 @@ angular.module('dmpApp')
 
         $scope.collapse = function(schema) {
             schema.collapsed = !schema.collapsed;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 0);
+
         };
 
         $scope.removeSource = function(source) {
