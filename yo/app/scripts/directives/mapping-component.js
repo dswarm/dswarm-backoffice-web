@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('dmpApp')
     .directive('mappingComponent', function() {
 
@@ -8,7 +10,7 @@ angular.module('dmpApp')
             },
             replace: true,
             templateUrl: 'views/directives/mapping-component.html',
-            link: function(scope, elem, attr) {
+            link: function(scope) {
                 angular.extend(scope, scope.options);
                 scope.name = scope.name || '(Unknown)';
 
@@ -62,6 +64,6 @@ angular.module('dmpApp')
                 };
             }
 
-        }
+        };
 
-    })
+    });

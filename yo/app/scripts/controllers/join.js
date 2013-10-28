@@ -1,14 +1,16 @@
+'use strict';
+
 angular.module('dmpApp')
     .controller('JoinCtrl', ['$scope', function($scope) {
 
         $scope.joinItems = [
-            {name:'Insert Mapper',action:'mapper'}
+            {name: 'Insert Mapper', action: 'mapper'}
         ];
 
         $scope.mappingComponents = [];
 
 
-        var MappingComponentFactory = (function() {
+        var mappingComponentFactory = (function() {
             var globalCounter = {};
 
             function getId(name) {
@@ -20,32 +22,27 @@ angular.module('dmpApp')
              */
             function MappingComponentFactory(name) {
                 switch (name) {
-                    case 'mapper':
-                        var nextId = getId(name);
-                        return {
-                            description: 'a fine Join Mapper',
-                            name: 'Join Mapper ' + (nextId + 1),
-                            id: name = '-' + nextId
-                        };
-                        break;
-                    default:
-                        return null;
-                        break;
+                case 'mapper':
+                    var nextId = getId(name);
+                    return {
+                        description: 'a fine Join Mapper',
+                        name: 'Join Mapper ' + (nextId + 1),
+                        id: name + '-' + nextId
+                    };
+                default:
+                    return null;
                 }
             }
             return MappingComponentFactory;
         })();
 
 
-
         $scope.joinItem = function (action) {
-            var component = MappingComponentFactory(action);
+            var component = mappingComponentFactory(action);
             if (component) {
                 $scope.mappingComponents.push(component);
                 $scope.hasMappingComponents = true;
             }
         };
-
-//        $scope.joinItem('mapper');
 
     }]);
