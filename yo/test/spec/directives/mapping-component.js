@@ -47,7 +47,7 @@ describe('Directive: MappingComponent', function() {
         expect(elm[0].tagName).toBe('DIV');
     }));
 
-    it('should have at least (Unkown) as name', inject(function($compile) {
+    it('should have at least (Unknown) as name', inject(function($compile) {
         scope.component = {};
         $compile(elm)(scope);
         scope.$digest();

@@ -23,11 +23,15 @@ angular.module('dmpApp')
             function MappingComponentFactory(name) {
                 switch (name) {
                 case 'mapper':
-                    var nextId = getId(name);
+                    var nextId = getId(name)
+                      , componentId = name + '-' + nextId;
                     return {
                         description: 'a fine Join Mapper',
                         name: 'Join Mapper ' + (nextId + 1),
-                        id: name + '-' + nextId
+                        id: componentId,
+                        data: {
+                            name: 'mapper.' + componentId
+                        }
                     };
                 default:
                     return null;

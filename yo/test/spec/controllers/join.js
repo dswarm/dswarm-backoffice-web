@@ -43,6 +43,7 @@ describe('Controller: JoinCtrl', function () {
         expect(scope.mappingComponents[0].description).toBe('a fine Join Mapper');
         expect(scope.mappingComponents[0].name).toBe('Join Mapper 1');
         expect(scope.mappingComponents[0].id).toBe('mapper-0');
+        expect(scope.mappingComponents[0].data.name).toBe('mapper.mapper-0');
     });
 
     it('should create a new join item with auto inc. ID', function() {
