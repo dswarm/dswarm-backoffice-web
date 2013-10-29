@@ -21,7 +21,7 @@ angular.module('dmpApp')
         };
 
         $scope.collapse = function(schema) {
-            schema.collapsed = (schema.collapsed) ? false : true;
+            schema.collapsed = !schema.collapsed;
 
             $timeout(function() {
                 PubSub.broadcast('schemaCanvasUpdated', {});
