@@ -134,21 +134,13 @@ angular.module('dmpApp')
 
         PubSub.subscribe($rootScope, 'schemaCanvasUpdated', function () {
 
-            var pool = components.pool;
+            $rootScope.$digest();
+            jsP.repaintEverything();
 
-            angular.forEach(pool, function(connection) {
-
-                if(!$(connection.source).is(':visible') ) {
-                    connection.setVisible(false);
-
-                } else {
-                    connection.setVisible(true);
-                }
-
-                $rootScope.$digest();
-                jsP.repaintEverything();
-
-            });
+            // Second run needed because jsPlumb
+            // sometimes not recognizing elements
+            // to rerender *sigh*
+            jsP.repaintEverything();
 
         });
 
