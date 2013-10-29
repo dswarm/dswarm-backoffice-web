@@ -137,6 +137,11 @@ angular.module('dmpApp')
             $rootScope.$digest();
             jsP.repaintEverything();
 
+            // Second run needed because jsPlumb
+            // sometimes not recognizing elements
+            // to rerender *sigh*
+            jsP.repaintEverything();
+
         });
 
 
