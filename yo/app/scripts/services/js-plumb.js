@@ -113,7 +113,7 @@ angular.module('dmpApp')
  * Provide the js-plumb service that is meant to be used by the application.
  * Code that deals with the jsPlumb specifics should go in here.
  */
-    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', '$timeout', function(jsPlumbOptions, jsPlumb, $timeout) {
+    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', function(jsPlumbOptions, jsPlumb) {
 
 
         /**
@@ -130,7 +130,7 @@ angular.module('dmpApp')
          * Create a GUID
          * @returns {string} the guid
          */
-       function guid() {
+        function guid() {
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                 s4() + '-' + s4() + s4() + s4();
         }
@@ -154,7 +154,7 @@ angular.module('dmpApp')
 
             return jsPlumb.__getCachedData(elId);
 
-        }
+        };
 
 
         /**

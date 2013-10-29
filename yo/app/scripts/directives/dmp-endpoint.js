@@ -134,14 +134,8 @@ angular.module('dmpApp')
 
         PubSub.subscribe($rootScope, 'schemaCanvasUpdated', function () {
 
-            var pool = components.pool;
-
-            angular.forEach(pool, function(connection) {
-
-                $rootScope.$digest();
-                jsP.repaintEverything();
-
-            });
+            $rootScope.$digest();
+            jsP.repaintEverything();
 
         });
 
