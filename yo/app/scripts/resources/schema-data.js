@@ -33,6 +33,18 @@ angular.module('dmpApp')
                     cid: '@cid',
                     atMost: '@atMost'
                 },
+                transformResponse: function (data, headers) {
+                    if (angular.lowercase(headers('content-type')) === 'application/json') {
+                        var parsedData = JSON.parse(data),
+                            transformed = [];
+                        angular.forEach(parsedData, function(blob, rid) {
+                            blob.recordId = rid;
+                            transformed.push(blob);
+                        });
+                        data = transformed;
+                    }
+                    return data;
+                },
                 cache: true
             }
         });
