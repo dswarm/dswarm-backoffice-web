@@ -83,15 +83,33 @@ factory('schemaParser', function () {
      * @returns {*}
      */
     function parseObject(container, name, properties) {
-        var ary = [];
+        if (angular.isArray(container)) {
+            return parseArray(container, name, {
+                type: 'object',
+                properties: properties
+            });
+        }
+        var ary = [],
+            hasText = false;
+
         angular.forEach(properties, function (val, key) {
             if (container[key]) {
                 var it = parseAny(container[key], key, val);
                 if (it) {
                     ary.push(it);
+                    if (key == '#text') {
+                        hasText = true;
+                    }
                 }
             }
         });
+        if (!hasText && container['#text']) {
+            var itString = parseString(container['#text'], name);
+            if (itString) {
+                ary.push(itString);
+            }
+
+        }
         return makeItem(name, ary);
     }
 
