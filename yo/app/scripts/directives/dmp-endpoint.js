@@ -47,6 +47,16 @@ angular.module('dmpApp')
             return realPath([currentSegment].concat(segments), scp.$parent);
         }
 
+        function getData(c) {
+            var scp = angular.element(c).scope(),
+                data = scp.data;
+
+            data.path = realPath([], scp);
+            data.resourceId = scp.resId;
+            data.configurationId = scp.confId;
+            return data;
+        }
+
         function activate(connection, dontFire) {
             if (components.pool.indexOf(connection) === -1) {
                 components.pool.push(connection);
@@ -54,14 +64,6 @@ angular.module('dmpApp')
             components.active = connection;
             deSelectAll();
             doSelect(connection);
-
-            function getData(c) {
-                var scp = angular.element(c).scope()
-                    , data = scp.data;
-
-                data.path = realPath([], scp);
-                return data;
-            }
 
             var label = connection.getLabel()
                 , id = connection.id;

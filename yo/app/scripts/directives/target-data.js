@@ -1,12 +1,29 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl', ['$scope', '$http', '$q', 'schemaParser', 'PubSub', function ($scope, $http, $q, schemaParser, PubSub) {
+    .controller('TargetDataCtrl', ['$scope', '$http', '$q', '$window', 'schemaParser', 'PubSub', 'SchemaDataResource', function ($scope, $http, $q, $window, schemaParser, PubSub, SchemaDataResource) {
         $scope.internalName = 'Target Data Widget';
 
-        $scope.data = {};
+        var schemaPromise;
 
-        var schemaPromise = $http.get('/data/targetschema.json');
+        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(args) {
+
+            var latestConfig = $window['_'].max(args.configurations, 'id').id;
+
+            schemaPromise = SchemaDataResource.schema({
+                id: args.id,
+                cid: latestConfig
+            }).$promise;
+        });
+
+        function mapToSchema(result, schema) {
+            var returnValue = {};
+            if (result && result[schema['title']]) {
+                returnValue = schemaParser.parseAny(result[schema['title']], schema['title'], schema);
+            }
+
+            return returnValue;
+        }
 
         PubSub.subscribe($scope, 'transformationFinished', function(data) {
             var deferred = $q.defer()
@@ -16,8 +33,15 @@ angular.module('dmpApp')
                 var schema = results[0].data
                     , transformation = results[1];
 
-                if (transformation && transformation[schema['title']]) {
-                    $scope.data = schemaParser.parseAny(transformation[schema['title']], schema['title'], schema);
+                if (angular.isArray(transformation)) {
+                    $scope.records = $window['_'].map(transformation, function(t) {
+                        return {
+                            id: t['record_id'],
+                            data: mapToSchema(t['record_data'], schema)
+                        };
+                    });
+                } else {
+                    $scope.data = mapToSchema(transformation, schema);
                 }
             });
 

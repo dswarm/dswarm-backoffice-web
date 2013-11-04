@@ -66,7 +66,9 @@ angular.module('dmpApp')
                 'name': tab.title,
                 'components': angular.copy(scp.components),
                 'source': angular.copy(scp.source),
-                'target': angular.copy(scp.target)
+                'target': angular.copy(scp.target),
+                'resource_id': scp.source.payload.resourceId,
+                'configuration_id': scp.source.payload.configurationId
             };
         }
 
