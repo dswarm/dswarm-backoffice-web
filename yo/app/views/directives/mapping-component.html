@@ -1,6 +1,12 @@
 <div class="well" dmp-endpoint
      target="true" js-plumb-target-options="jspTargetOptions"
-     source="true" js-plumb-source-options="jspSourceOptions">
+     source="true" js-plumb-source-options="jspSourceOptions"
+     id="{{ id }}">
+
+    <div class="icons">
+        <i class="glyphicon glyphicon-edit" ng-click="onEditClicked()"></i>
+    </div>
+
     <h4>{{ name }}<small>{{ id }}</small></h4>
     {{ description }}
 </div>

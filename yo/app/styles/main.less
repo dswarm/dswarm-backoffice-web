@@ -192,7 +192,9 @@ button.open-schema-col-selector {
   margin: 0 0 15px;
 }
 
-.target-schema-selector-modal, .data-selector-modal {
+.target-schema-selector-modal,
+.data-selector-modal,
+.mapping-component-config-modal {
   background: #ffffff;
   margin: 10% 0 0 0;
   padding: 20px;
@@ -202,7 +204,8 @@ button.open-schema-col-selector {
   left: -40%;
 }
 
-.data-head {
+.data-head,
+.well {
   position: relative;
 }
 
@@ -218,9 +221,16 @@ button.open-schema-col-selector {
   transform:rotate(90deg);
 }
 
-.data-head .icons {
+.data-head .icons,
+.well .icons {
   position: absolute;
   top: 0;
   right: 0;
   cursor: pointer;
 }
+
+.well .icons {
+  top: 10px;
+  right: 10px;
+}
+
