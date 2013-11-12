@@ -1,6 +1,30 @@
 'use strict';
 
 angular.module('dmpApp')
+    .controller('MappingComponentController', ['$scope', 'PubSub', function($scope, PubSub) {
+
+        var incomingPool = {},
+            outgoingPool = {};
+
+        $scope.onEditClicked = function() {
+
+            PubSub.broadcast('handleOpenMappingComponentConfig', [incomingPool, outgoingPool]);
+
+        };
+
+        PubSub.subscribe($scope, 'connectionSelected', function(data) {
+
+            if($(data.targetData).attr('id') === $scope.id) {
+                incomingPool[data.id] = data;
+            }
+
+            if($(data.sourceData).attr('id') === $scope.id) {
+                outgoingPool[data.id] = data;
+            }
+
+        });
+
+    }])
     .directive('mappingComponent', function() {
 
         return {
@@ -9,6 +33,7 @@ angular.module('dmpApp')
                 options: '='
             },
             replace: true,
+            controller: 'MappingComponentController',
             templateUrl: 'views/directives/mapping-component.html',
             link: function(scope) {
                 angular.extend(scope, scope.options);

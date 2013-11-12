@@ -5,6 +5,12 @@ angular.module('dmpApp')
         $scope.isSource = $scope.$parent && $scope.$parent.isSource;
         $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 
+        if($scope.$parent && $scope.$parent.name) {
+            $scope.parentName = $scope.$parent.name;
+        } else {
+            $scope.parentName = $scope.name;
+        }
+
         $scope.update = $scope.$parent && $scope.$parent.update;
 
         $scope.jspSourceOptions = {
@@ -90,6 +96,7 @@ angular.module('dmpApp')
             scope: {
                 data: '=',
                 onLeafClick: '&',
+                name: '=',
                 resId: '@',
                 confId: '@'
             },
@@ -116,6 +123,7 @@ angular.module('dmpApp')
 
                         scope.isSource = angular.isDefined(tAttrs.asSource);
                         scope.isTarget = angular.isDefined(tAttrs.asTarget);
+
                     }
 
                     compiledContents(scope, function (clone) {

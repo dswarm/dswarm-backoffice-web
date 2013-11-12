@@ -65,6 +65,25 @@ angular.module('dmpApp')
             deSelectAll();
             doSelect(connection);
 
+            function getData(c) {
+
+                var scp = angular.element(c).scope()
+                    , data = scp.data
+                    , parentName = scp.parentName;
+
+                if(data) {
+                    data.path = realPath([], scp);
+                } else {
+                    data = c;
+                }
+
+                if(parentName) {
+                    data.parentName = parentName;
+                }
+
+                return data;
+            }
+
             var label = connection.getLabel()
                 , id = connection.id;
 

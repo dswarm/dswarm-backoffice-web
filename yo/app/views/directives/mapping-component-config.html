@@ -1,0 +1,46 @@
+<div class="foo">
+
+    <div modal="mappingComponentConfigShouldBeOpen" close="close()" options="opts">
+
+        <div class="mapping-component-config-modal">
+
+            <div class="row">
+                <div class="col-md-4">
+
+                    <div class="box" ng-repeat="(key, sources) in incomingPool">
+                        {{sources.0.parentName}}
+
+                        <div class="box" ng-repeat="source in sources track by $id(source)">
+
+                            {{source.path}}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3 box">
+
+                </div>
+
+                <div class="col-md-4 box">
+
+                    <div ng-repeat="outgoing in outgoingPool">
+                        
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <span class="selected-set-options">
+                    <button type="button" ng-click="close()" class="btn btn-default">Cancel</button>
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
