@@ -13,7 +13,7 @@
   </span>
   <ul ng-show="data.show" class="tree-list jsPanchor">
     <li ng-repeat="child in data.children">
-      <tree data="child" name="name" internal></tree>
+      <tree data="child" name="name" internal res-id="{{ resId }}" conf-id="{{ confId }}"></tree>
     </li>
   </ul>
 </div>

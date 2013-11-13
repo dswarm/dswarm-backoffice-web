@@ -10,28 +10,6 @@ angular.module('dmpApp')
         $scope.filterShouldBeOpen = false;
         $scope.result = {};
 
-        var schemaPromise = $http.get('/data/schema.json')
-            , dataPromise = $http.get('/data/record.json')
-            , allPromise = $q.all([schemaPromise, dataPromise]);
-
-        $http.get('/data/schema.json')
-            .success(function (result) {
-                $scope.result = result;
-            });
-
-        allPromise.then(function (result) {
-            var schemaResult = result[0]['data']
-                , dataResult = result[1]['data'];
-
-            $scope.result = result[0]['data'];
-
-            $scope.sourceDatas.push(
-                schemaParser.parseAny(
-                    dataResult[schemaResult['title']], schemaResult['title'], schemaResult)
-            );
-
-        });
-
         $scope.update = function() {
 
             var inputfilterCollection = [];

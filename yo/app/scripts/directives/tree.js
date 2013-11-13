@@ -96,7 +96,9 @@ angular.module('dmpApp')
             scope: {
                 data: '=',
                 onLeafClick: '&',
-                name: '='
+                name: '=',
+                resId: '@',
+                confId: '@'
             },
             replace: true,
             templateUrl: 'views/directives/tree.html',
