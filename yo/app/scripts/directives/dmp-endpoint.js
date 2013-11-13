@@ -49,9 +49,19 @@ angular.module('dmpApp')
 
         function getData(c) {
             var scp = angular.element(c).scope(),
-                data = scp.data;
+                data = scp.data,
+                parentName = scp.parentName;
 
-            data.path = realPath([], scp);
+            if(data) {
+                data.path = realPath([], scp);
+            } else {
+                data = c;
+            }
+
+            if(parentName) {
+                data.parentName = parentName;
+            }
+
             data.resourceId = scp.resId;
             data.configurationId = scp.confId;
             return data;
@@ -64,25 +74,6 @@ angular.module('dmpApp')
             components.active = connection;
             deSelectAll();
             doSelect(connection);
-
-            function getData(c) {
-
-                var scp = angular.element(c).scope()
-                    , data = scp.data
-                    , parentName = scp.parentName;
-
-                if(data) {
-                    data.path = realPath([], scp);
-                } else {
-                    data = c;
-                }
-
-                if(parentName) {
-                    data.parentName = parentName;
-                }
-
-                return data;
-            }
 
             var label = connection.getLabel()
                 , id = connection.id;
