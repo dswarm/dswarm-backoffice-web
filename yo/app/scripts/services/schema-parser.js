@@ -18,7 +18,9 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-factory('schemaParser', function () {
+factory('schemaParser', ['$window', function ($window) {
+    var lod = $window['_'];
+
     /**
      * Maps from json-schema to the internal tree model.  Since json-schema
      *   already is very tree-ish, there is nothing much to do but renaming
@@ -90,19 +92,23 @@ factory('schemaParser', function () {
             });
         }
         var ary = [],
-            hasText = false;
+            hasText = false,
+            hasMatch = false;
 
         angular.forEach(properties, function (val, key) {
             if (container[key]) {
+                hasMatch = true;
                 var it = parseAny(container[key], key, val);
                 if (it) {
                     ary.push(it);
-                    if (key == '#text') {
+                    if (key === '#text') {
                         hasText = true;
                     }
                 }
             }
         });
+
+        // make #text optional
         if (!hasText && container['#text']) {
             var itString = parseString(container['#text'], name);
             if (itString) {
@@ -110,6 +116,17 @@ factory('schemaParser', function () {
             }
 
         }
+
+        // no properties found? try to be forgiving
+        if (!hasMatch && lod.keys(properties).length === 1) {
+            angular.forEach(properties, function(val, key) {
+                var it = parseAny(container, key, val);
+                if (it) {
+                    ary.push(it);
+                }
+            });
+        }
+
         return makeItem(name, ary);
     }
 
@@ -117,12 +134,18 @@ factory('schemaParser', function () {
      * creates leafs from array type
      * @param container {*}
      * @param name {String}
-     * @param properties {Array}
+     * @param properties {Object}
      * @returns {*}
      */
     function parseArray(container, name, properties) {
         var ary = [];
         angular.forEach(container, function (item) {
+            // nested properties may be due to xsd parsing
+            // if there is only one children equally named as the current container, traverse into it
+            while (lod.isEqual(lod.keys(properties), [name])) {
+                properties = properties[name];
+            }
+
             var it = parseAny(item, name, properties);
             if (it) {
                 ary.push(it);
@@ -184,7 +207,11 @@ factory('schemaParser', function () {
             return parseObject(container, name, obj['properties']);
         }
         if (obj['type'] === 'array') {
-            return parseArray(container, name, obj['items']);
+            if (angular.isArray(container)) {
+                return parseArray(container, name, obj['items']);
+            } else {
+                return parseObject(container, name, obj['items']);
+            }
         }
         if (obj['type'] === 'string') {
             return parseString(container, name);
@@ -335,4 +362,4 @@ factory('schemaParser', function () {
       , getData: getData
       , filterData : filterData
     };
-});
+}]);
