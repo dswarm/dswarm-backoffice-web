@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('FileResource', ['$resource', '$window', function($resource, $window) {
-        var baseUrl = $window['dmp']['jsRoutes']['api']
-            , endpoint = 'resources/:id';
+    .factory('FileResource', ['$resource', 'Util', function($resource, Util) {
+
+        var baseUrl = Util.apiEndpoint,
+            endpoint = 'resources/:id';
 
         return $resource(baseUrl + endpoint, {
             id: '@id'
