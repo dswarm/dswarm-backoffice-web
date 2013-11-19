@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataConfigPreviewResource', ['$resource', '$window', function($resource, $window) {
+    .factory('DataConfigPreviewResource', ['$resource', 'Util', function($resource, Util) {
 
-        var baseUrl = ($window && $window['dmp']) ? $window['dmp']['jsRoutes']['api'] : ''
-            , endpoint = 'resources/:resourceId/configurationpreview';
+        var baseUrl =  Util.apiEndpoint,
+            endpoint = 'resources/:resourceId/configurationpreview';
 
         return $resource(baseUrl + endpoint);
 

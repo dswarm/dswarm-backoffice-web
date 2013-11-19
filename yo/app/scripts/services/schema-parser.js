@@ -112,19 +112,24 @@ factory('schemaParser', ['$window', function ($window) {
         if (!hasText && container['#text']) {
             var itString = parseString(container['#text'], name);
             if (itString) {
+                hasText = true;
                 ary.push(itString);
             }
 
         }
 
         // no properties found? try to be forgiving
-        if (!hasMatch && lod.keys(properties).length === 1) {
+        if (!hasMatch && !hasText && lod.keys(properties).length === 1) {
             angular.forEach(properties, function(val, key) {
                 var it = parseAny(container, key, val);
                 if (it) {
                     ary.push(it);
                 }
             });
+        }
+
+        if (ary.length === 1 && ary[0].name === name) {
+            return ary[0];
         }
 
         return makeItem(name, ary);

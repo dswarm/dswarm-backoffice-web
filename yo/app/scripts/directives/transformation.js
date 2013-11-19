@@ -1,8 +1,7 @@
-/* global _ */
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', '$window', function ($scope, $http, PubSub, $window) {
+    .controller('TransformationCtrl', ['$scope', 'PubSub', '$window', 'TransformationResource', function ($scope, PubSub, $window, TransformationResource) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
@@ -73,12 +72,7 @@ angular.module('dmpApp')
         }
 
         function sendTransformations(transformations, singleTransformation) {
-            var url = $window['dmp']['jsRoutes']['api'],
-                p = $http.post(
-                    url + (singleTransformation? 'transformations' : 'jobs'),
-                    transformations);
-
-            p.then(function (resp) {
+            TransformationResource[singleTransformation? 'one' : 'all'](transformations, function (resp) {
                 console.log(resp);
                 PubSub.broadcast('transformationFinished', resp.data);
             }, function (resp) {
@@ -96,7 +90,7 @@ angular.module('dmpApp')
         };
 
         $scope.sendTransformations = function () {
-            var payloads = _($scope.tabs).map(generatePayload).filter(function (payload) {
+            var payloads = $window['_']($scope.tabs).map(generatePayload).filter(function (payload) {
                 return payload !== null;
             }).valueOf();
 
