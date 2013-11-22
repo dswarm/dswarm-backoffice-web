@@ -5,42 +5,19 @@ angular.module('dmpApp')
 
         $scope.internalName = 'Filter Widget';
 
-        var component = { payload : {}};
+        $scope.filterSource = {
+            datas : [],
+            component : $scope.component.payload
+        };
 
-        console.log($scope);
-
-        $scope.sourceDatas = [];
-        $scope.componentPayload = component.payload;
         $scope.filterShouldBeOpen = false;
         $scope.result = {};
-
-        var schemaPromise = $http.get('/data/schema.json')
-            , dataPromise = $http.get('/data/record.json')
-            , allPromise = $q.all([schemaPromise, dataPromise]);
-
-        $http.get('/data/schema.json')
-            .success(function (result) {
-                $scope.result = result;
-            });
-
-        allPromise.then(function (result) {
-            var schemaResult = result[0]['data']
-                , dataResult = result[1]['data'];
-
-            $scope.result = result[0]['data'];
-
-            $scope.sourceDatas.push(
-                schemaParser.parseAny(
-                    dataResult[schemaResult['title']], schemaResult['title'], schemaResult)
-            );
-
-        });
 
         $scope.update = function() {
 
             var inputfilterCollection = [];
 
-            angular.forEach($scope.componentPayload.filters, function(filter){
+            angular.forEach($scope.filterSource.component.filters, function(filter){
 
                 filter.inputfilters = schemaParser.getData(filter.filter,'');
 
@@ -63,7 +40,7 @@ angular.module('dmpApp')
 
             });
 
-            angular.forEach($scope.sourceDatas, function(sourceData){
+            angular.forEach($scope.filterSource.datas, function(sourceData){
 
                 if(inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
 
@@ -82,11 +59,11 @@ angular.module('dmpApp')
 
         $scope.addFilter = function () {
 
-            if(!$scope.componentPayload.filters) {
-                $scope.componentPayload.filters = [];
+            if(!$scope.filterSource.component.filters) {
+                $scope.filterSource.component.filters = [];
             }
 
-            $scope.componentPayload.filters.push({
+            $scope.filterSource.component.filters.push({
                 filter : schemaParser.mapData($scope.result['title'], $scope.result, true),
                 inputfilters : [],
                 name : 'new filter'

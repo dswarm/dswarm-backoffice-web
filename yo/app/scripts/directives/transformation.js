@@ -190,9 +190,15 @@ angular.module('dmpApp')
 
         $scope.onFilterClick = function(component) {
 
+            var childScope = $scope.$new();
+            childScope.component = component;
+
+            $scope.currentComponent = component;
+
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/filter.html',
-                controller: 'FilterCtrl'
+                controller: 'FilterCtrl',
+                scope: childScope
             });
 
             modalInstance.result.then(function (selectedItem) {
