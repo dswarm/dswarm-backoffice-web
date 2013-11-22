@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: FilterCtrl', function () {
-    var $httpBackend, $rootScope, scope, component, filterCtrl;
+    var $httpBackend, $rootScope, $modal, modalInstance, scope, component, filterCtrl;
 
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord', 'mockedComponent'));
 
@@ -10,17 +10,27 @@ describe('Controller: FilterCtrl', function () {
         $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
 
+        $modal = $injector.get('$modal');
         scope = $rootScope.$new();
+
+        component = $injector.get('mockComponentJSON');
+
+        modalInstance = $modal.open({
+            templateUrl: 'views/directives/filter.html',
+            controller: 'FilterCtrl'
+        });
 
         $httpBackend.whenGET('/data/schema.json').respond($injector.get('mockSchemaJSON'));
         $httpBackend.whenGET('/data/record.json').respond($injector.get('mockRecordJSON'));
 
-        component = $injector.get('mockComponentJSON');
+        $httpBackend.whenGET('views/directives/filter.html').respond('<div>Modal Content</div>');
 
         var $controller = $injector.get('$controller');
         filterCtrl = function () {
             return $controller('FilterCtrl', {
-                $scope: scope
+                '$scope': scope,
+                '$modalInstance': modalInstance,
+                'component': {}
             });
         };
 
@@ -33,8 +43,6 @@ describe('Controller: FilterCtrl', function () {
 
     it('should have a FilterCtrl controller', function() {
         var FilterCtrl = filterCtrl();
-        $rootScope.$digest();
-        $httpBackend.flush();
         expect(FilterCtrl).not.toBe(null);
     });
 
@@ -51,6 +59,7 @@ describe('Controller: FilterCtrl', function () {
     it('should have loaded record data', function () {
         $httpBackend.expectGET('/data/record.json');
         filterCtrl();
+
         $rootScope.$digest();
         $httpBackend.flush();
 
@@ -69,8 +78,8 @@ describe('Controller: FilterCtrl', function () {
         $rootScope.$digest();
         $httpBackend.flush();
 
-        scope.component = component;
-        scope.component.filters = filters;
+        scope.componentPayload = component;
+        scope.componentPayload.filters = filters;
 
         scope.update();
 
@@ -86,8 +95,8 @@ describe('Controller: FilterCtrl', function () {
         $rootScope.$digest();
         $httpBackend.flush();
 
-        scope.component = component;
-        scope.component.filters = filters;
+        scope.componentPayload = component;
+        scope.componentPayload.filters = filters;
 
         scope.update();
 

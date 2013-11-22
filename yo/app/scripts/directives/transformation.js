@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$http', 'PubSub', '$window', function ($scope, $http, PubSub, $window) {
+    .controller('TransformationCtrl', ['$scope', '$http', '$window', '$filter', '$modal', 'PubSub', function ($scope, $http, $window, $filter, $modal, PubSub) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
@@ -189,7 +189,16 @@ angular.module('dmpApp')
         };
 
         $scope.onFilterClick = function(component) {
-            PubSub.broadcast('handleEditFilter', component);
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/filter.html',
+                controller: 'FilterCtrl'
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.handleTargetSchemaSelected(selectedItem);
+            });
+
         };
 
     }])

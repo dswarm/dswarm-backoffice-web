@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$http', '$timeout', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub', function ($scope, $http, $timeout, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$http', '$timeout', '$modal', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub', function ($scope, $http, $timeout, $modal, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
@@ -13,7 +13,16 @@ angular.module('dmpApp')
         $scope.loadTargetError = '';
 
         $scope.onTargetSchemaSelectorClick = function() {
-            PubSub.broadcast('handleOpenTargetSchemaSelector', {});
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/target-schema-selector.html',
+                controller: 'TargetSchemaSelectorCtrl'
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.handleTargetSchemaSelected(selectedItem);
+            });
+
         };
 
         $scope.onAddDataClick = function() {
@@ -117,28 +126,7 @@ angular.module('dmpApp')
 
         };
 
-        PubSub.subscribe($scope, 'handleDataSelected', function(args) {
-
-            var latestConfigurationId = 0;
-
-            if(args.configurations) {
-
-                angular.forEach(args.configurations, function(configuration) {
-
-                    if(configuration.id >= latestConfigurationId) {
-
-                        latestConfigurationId = configuration.id;
-
-                    }
-
-                });
-
-            }
-
-            $scope.loadSourceData(args.id, latestConfigurationId);
-        });
-
-        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(args) {
+        $scope.handleTargetSchemaSelected = function(args) {
             var latestConfigurationId = 0;
 
             $scope.isTargetLoading = true;
@@ -172,6 +160,27 @@ angular.module('dmpApp')
 
             });
 
+        };
+
+        PubSub.subscribe($scope, 'handleDataSelected', function(args) {
+
+            var latestConfigurationId = 0;
+
+            if(args.configurations) {
+
+                angular.forEach(args.configurations, function(configuration) {
+
+                    if(configuration.id >= latestConfigurationId) {
+
+                        latestConfigurationId = configuration.id;
+
+                    }
+
+                });
+
+            }
+
+            $scope.loadSourceData(args.id, latestConfigurationId);
         });
 
         $scope.loadSourceData($scope.resourceId, $scope.configId);

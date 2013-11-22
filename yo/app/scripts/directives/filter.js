@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', ['$scope','$http', '$q', 'schemaParser', 'PubSub', function ($scope, $http, $q, schemaParser, PubSub) {
+    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', 'PubSub', function ($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
 
         $scope.internalName = 'Filter Widget';
 
+        var component = { payload : {}};
+
+        console.log($scope);
+
         $scope.sourceDatas = [];
-        $scope.component = null;
+        $scope.componentPayload = component.payload;
         $scope.filterShouldBeOpen = false;
         $scope.result = {};
 
@@ -32,12 +36,11 @@ angular.module('dmpApp')
 
         });
 
-
         $scope.update = function() {
 
             var inputfilterCollection = [];
 
-            angular.forEach($scope.component.filters, function(filter){
+            angular.forEach($scope.componentPayload.filters, function(filter){
 
                 filter.inputfilters = schemaParser.getData(filter.filter,'');
 
@@ -77,19 +80,13 @@ angular.module('dmpApp')
             return true;
         };
 
-        $scope.opts = {
-            backdropFade: true,
-            dialogFade:true,
-            triggerClass: 'really in'
-        };
-
         $scope.addFilter = function () {
 
-            if(!$scope.component.filters) {
-                $scope.component.filters = [];
+            if(!$scope.componentPayload.filters) {
+                $scope.componentPayload.filters = [];
             }
 
-            $scope.component.filters.push({
+            $scope.componentPayload.filters.push({
                 filter : schemaParser.mapData($scope.result['title'], $scope.result, true),
                 inputfilters : [],
                 name : 'new filter'
@@ -98,26 +95,11 @@ angular.module('dmpApp')
         };
 
         $scope.close = function () {
-            $scope.filterShouldBeOpen = false;
+            $modalInstance.dismiss('cancel');
         };
-
-        PubSub.subscribe($scope, 'handleEditFilter', function(args) {
-            $scope.filterShouldBeOpen = true;
-            $scope.component = args['payload'];
-        });
 
         $scope.onSaveClick = function() {
-            $scope.component = null;
+            $modalInstance.close();
         };
 
-    }])
-    .directive('filter', function () {
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: true,
-            templateUrl: 'views/directives/filter.html',
-            controller: 'FilterCtrl'
-        };
-    });
+    }]);

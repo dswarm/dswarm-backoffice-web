@@ -54,15 +54,6 @@ describe('Controller: SchemaCtrl', function () {
         expect(SchemaCtrl).not.toBe(null);
     });
 
-    it('should broadcast handleOpenTargetSchemaSelector', function() {
-
-        schemaCtrl();
-
-        scope.onTargetSchemaSelectorClick();
-
-        expect($rootScope.$broadcast).toHaveBeenCalledWith("handleOpenTargetSchemaSelector",{ });
-    });
-
     it('should broadcast handleOpenDataSelector', function() {
 
         schemaCtrl();
