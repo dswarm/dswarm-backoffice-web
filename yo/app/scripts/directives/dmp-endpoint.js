@@ -156,7 +156,7 @@ angular.module('dmpApp')
             baseComponent.additionalInput.push(newInputComponent);
 
             // Overwrite currently used
-            newInputComponent = baseComponent;
+            //newInputComponent = baseComponent;
 
 
         }
@@ -205,20 +205,70 @@ angular.module('dmpApp')
 
         }
 
+        function removeFromPool(connection) {
+
+            var workPool = [];
+
+            angular.forEach(components.pool, function(pool_entry) {
+
+                if(connection !== pool_entry) {
+                    workPool.push(pool_entry);
+                }
+
+            });
+
+            components.pool = workPool;
+
+        }
+
 
         jsP.on('beforeDrop', function(component) {
 
             if(isTargetInPool(component)) {
 
-                targetInPool(component);
-
                 var modalInstance = $modal.open({
-                    templateUrl: 'dmp-endpoint-selector.html',
-                    controller: ModalInstanceCtrl,
-                    resolve: {
+                    templateUrl: 'views/directives/dmp-endpoint-selector.html',
+                    controller: 'DmpEndpointSelectorCtrl'
+                });
+
+                modalInstance.result.then(function (target) {
+
+                    if(target === null) {
+
+                        var newConnection = jsP.connect($('#'+component.sourceId), $('#'+component.targetId));
+                        newConnection.setLabel(' ');
+
+                        component.connection = newConnection;
+
+                        reLabel(component.connection);
+
+                        activate(component.connection, true);
+
+
+                    } else {
+
+                        var targetConnection = getTargetConnectionFromPool(component);
+
+                        var newConnection = jsP.connect($('#'+component.sourceId), $('#'+component.targetId));
+                        newConnection.setLabel(' ');
+
+                        removeFromPool(newConnection);
+
+                        component.connection = newConnection;
+
+                        addInputToComponent(component, targetConnection);
+
+                        activate(targetConnection);
 
                     }
+
+                }, function () {
+
+                    return false;
+
                 });
+
+                return false;
 
             } else {
 
@@ -267,7 +317,7 @@ angular.module('dmpApp')
 
         PubSub.subscribe($rootScope, 'schemaCanvasUpdated', function () {
 
-            $rootScope.$digest();
+            //$rootScope.$digest();
             jsP.repaintEverything();
 
             // Second run needed because jsPlumb
@@ -339,7 +389,4 @@ angular.module('dmpApp')
                 };
             }
         };
-    }])
-    .controller('TargetSchemaSelectorCtrl', ['$scope','$modalInstance', function ($scope, $modalInstance) {
-
     }]);
