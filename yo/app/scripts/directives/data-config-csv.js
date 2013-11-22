@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$window', '$location', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $window, $location, DataConfigResource, FileResource, PubSub) {
+    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'Util', 'Lo-Dash', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $location, Util, loDash, DataConfigResource, FileResource, PubSub) {
 
         var allFields = 'config.parameters',
             allTickableFields = {
@@ -61,7 +61,7 @@ angular.module('dmpApp')
 
         DataConfigResource.query({ resourceId: $scope.resourceId }, function(result) {
 
-            var latestConfig = $window['_'].max(result, 'id');
+            var latestConfig = Util.latestBy(result, 'id');
 
             if (angular.isObject(latestConfig)) {
 
@@ -111,7 +111,7 @@ angular.module('dmpApp')
         }
 
         // do not preview more often that, say, every 200 msecs
-        var fieldChanged = $window['_'].debounce(function() {
+        var fieldChanged = loDash.debounce(function() {
             var config = getConfig();
 
             PubSub.broadcast('dataConfigUpdated', {

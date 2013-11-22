@@ -113,27 +113,7 @@ angular.module('dmpApp')
  * Provide the js-plumb service that is meant to be used by the application.
  * Code that deals with the jsPlumb specifics should go in here.
  */
-    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', function(jsPlumbOptions, jsPlumb) {
-
-
-        /**
-         * Random parts for GUID
-         * @returns {string} guid part
-         */
-        function s4(){
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-
-        /**
-         * Create a GUID
-         * @returns {string} the guid
-         */
-        function guid() {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                s4() + '-' + s4() + s4() + s4();
-        }
+    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', 'GUID', function(jsPlumbOptions, jsPlumb, GUID) {
 
         // Save original getCachedData for later use
         jsPlumb.__getCachedData = jsPlumb.getCachedData;
@@ -147,7 +127,7 @@ angular.module('dmpApp')
 
             if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).hasClass('tree-leaf')) {
 
-                $('#'+elId).closest('.jsPanchor:visible').attr('id', guid());
+                $('#'+elId).closest('.jsPanchor:visible').attr('id', GUID.uuid4());
                 elId = $('#'+elId).closest('.jsPanchor:visible').attr('id');
 
             }

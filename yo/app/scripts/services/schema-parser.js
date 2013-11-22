@@ -18,8 +18,7 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-factory('schemaParser', ['$window', function ($window) {
-    var lod = $window['_'];
+factory('schemaParser', ['Lo-Dash', function (loDash) {
 
     /**
      * Maps from json-schema to the internal tree model.  Since json-schema
@@ -119,7 +118,7 @@ factory('schemaParser', ['$window', function ($window) {
         }
 
         // no properties found? try to be forgiving
-        if (!hasMatch && !hasText && lod.keys(properties).length === 1) {
+        if (!hasMatch && !hasText && loDash.keys(properties).length === 1) {
             angular.forEach(properties, function(val, key) {
                 var it = parseAny(container, key, val);
                 if (it) {
@@ -147,7 +146,7 @@ factory('schemaParser', ['$window', function ($window) {
         angular.forEach(container, function (item) {
             // nested properties may be due to xsd parsing
             // if there is only one children equally named as the current container, traverse into it
-            while (lod.isEqual(lod.keys(properties), [name])) {
+            while (loDash.isEqual(loDash.keys(properties), [name])) {
                 properties = properties[name];
             }
 

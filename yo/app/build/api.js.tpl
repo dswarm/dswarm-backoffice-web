@@ -1,6 +1,6 @@
 'use strict';
 (function(win) {
-  var dmp = dmp || {};
+  var dmp = win['dmp'] || {};
   dmp['jsRoutes'] = {
     'api': '<%= endpoint %>'
   };

@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl', ['$scope', '$http', '$q', '$window', 'schemaParser', 'PubSub', 'SchemaDataResource', function ($scope, $http, $q, $window, schemaParser, PubSub, SchemaDataResource) {
+    .controller('TargetDataCtrl', ['$scope', '$http', '$q', 'Util', 'Lo-Dash', 'schemaParser', 'PubSub', 'SchemaDataResource', function ($scope, $http, $q, Util, loDash, schemaParser, PubSub, SchemaDataResource) {
         $scope.internalName = 'Target Data Widget';
 
         var schemaPromise;
 
         PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(args) {
 
-            var latestConfig = $window['_'].max(args.configurations, 'id').id;
+            var latestConfig = Util.latestBy(args.configurations, 'id').id;
 
             schemaPromise = SchemaDataResource.schema({
                 id: args.id,
@@ -34,7 +34,7 @@ angular.module('dmpApp')
                     , transformation = results[1];
 
                 if (angular.isArray(transformation)) {
-                    $scope.records = $window['_'].map(transformation, function(t) {
+                    $scope.records = loDash.map(transformation, function(t) {
                         return {
                             id: t['record_id'],
                             data: mapToSchema(t['record_data'], schema)
