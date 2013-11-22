@@ -36,7 +36,7 @@ angular.module('dmpApp')
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === XMLHttpRequest.DONE) {
                             ngProgress.complete();
-                            if (xhr.status === 201) {
+                            if (Math.floor(xhr.status / 100) === 2) {
                                 var resp = JSON.parse(xhr.responseText),
                                     respId = resp['id'];
 
