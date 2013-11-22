@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "dependencies": {
         "angular": "~1.2.0",
-        "angular-ui-bootstrap": "https://github.com/chrode/bootstrap/archive/0.5.1.tar.gz",
+        "angular-ui-bootstrap": "https://github.com/chrode/bootstrap/archive/0.6.1.tar.gz",
         "angular-ui-utils": "~0.0.4",
         "angular-grid": "~2.0.7",
         "json3": "~3.2.4",
