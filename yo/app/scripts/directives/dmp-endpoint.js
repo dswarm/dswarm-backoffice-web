@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', 'jsP', 'PubSub', function ($compile, $window, $rootScope, jsP, PubSub) {
+    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, PubSub) {
         var components = {
             active: null,
             pool: []
@@ -14,11 +14,21 @@ angular.module('dmpApp')
 
         function deSelect(connection) {
             setColor(connection, 'black');
+
+            angular.forEach(connection.additionalInput, function(additional_input_entry) {
+                setColor(additional_input_entry.connection, 'black');
+            });
+
             connection.getLabelOverlay().removeClass('mapping-active');
             connection.getConnector().removeClass('mapping-active');
         }
         function doSelect(connection) {
             setColor(connection, 'red');
+
+            angular.forEach(connection.additionalInput, function(additional_input_entry) {
+                setColor(additional_input_entry.connection, 'red');
+            });
+
             connection.getLabelOverlay().addClass('mapping-active');
             connection.getConnector().addClass('mapping-active');
         }
@@ -67,25 +77,52 @@ angular.module('dmpApp')
             return data;
         }
 
+        function isConnectionAdditionalInput(connection) {
+
+            var connectionIsAdditionalInput = false;
+
+            angular.forEach(components.pool, function(pool_entry) {
+                if(pool_entry.additionalInput) {
+                    angular.forEach(pool_entry.additionalInput, function(additional_input_entry) {
+                        if(connection === additional_input_entry.connection) {
+                            connectionIsAdditionalInput = true;
+                        }
+                    });
+
+                }
+            });
+
+            return connectionIsAdditionalInput;
+        }
+
         function activate(connection, dontFire) {
-            if (components.pool.indexOf(connection) === -1) {
-                components.pool.push(connection);
-            }
-            components.active = connection;
-            deSelectAll();
-            doSelect(connection);
 
-            var label = connection.getLabel()
-                , id = connection.id;
+            if(isConnectionAdditionalInput(connection)) {
+                activate(getTargetConnectionFromPool(connection));
+            } else {
 
-            if (!dontFire) {
-                PubSub.broadcast('connectionSelected', {
-                    id: id,
-                    label: label,
-                    sourceData: getData(connection.source),
-                    targetData: getData(connection.target)
-                });
+                if (components.pool.indexOf(connection) === -1) {
+                    components.pool.push(connection);
+                }
+
+                components.active = connection;
+                deSelectAll();
+                doSelect(connection);
+
+                var label = connection.getLabel()
+                    , id = connection.id;
+
+                if (!dontFire) {
+                    PubSub.broadcast('connectionSelected', {
+                        id: id,
+                        label: label,
+                        sourceData: getData(connection.source),
+                        targetData: getData(connection.target)
+                    });
+                }
+
             }
+
         }
 
         function reLabel(connection, callback, promptText) {
@@ -106,17 +143,101 @@ angular.module('dmpApp')
             return valid;
         }
 
-        jsP.on('beforeDrop', function(component) {
-            if (component.scope === 'schema') {
-                return reLabel(component.connection);
-            } else {
-                return true;
+        function addInputToComponent(newInputComponent, baseComponent) {
+
+            newInputComponent.connection.setLabel("");
+            var labelOverlay = newInputComponent.connection.getLabelOverlay();
+            labelOverlay.addClass('mapping-label');
+
+            if(!baseComponent.additionalInput) {
+                baseComponent.additionalInput = [];
             }
+
+            baseComponent.additionalInput.push(newInputComponent);
+
+            // Overwrite currently used
+            newInputComponent = baseComponent;
+
+
+        }
+
+        function isTargetInPool(component) {
+
+            var targetIsInPool = false;
+
+            angular.forEach(components.pool, function(pool_entry) {
+
+                if(component.targetId === pool_entry.targetId) {
+                    targetIsInPool = true;
+                }
+
+            });
+
+            return targetIsInPool;
+
+        }
+
+        function getTargetConnectionFromPool(component) {
+
+            var tempReturn = null;
+
+            angular.forEach(components.pool, function(pool_entry) {
+
+                if(component.targetId === pool_entry.targetId) {
+                    tempReturn = pool_entry;
+                }
+
+            });
+
+            return tempReturn;
+
+        }
+
+        function targetInPool(component) {
+
+            angular.forEach(components.pool, function(pool_entry) {
+
+                if(component.targetId === pool_entry.targetId) {
+                    addInputToComponent(component, pool_entry);
+                }
+
+            });
+
+        }
+
+
+        jsP.on('beforeDrop', function(component) {
+
+            if(isTargetInPool(component)) {
+
+                targetInPool(component);
+
+                var modalInstance = $modal.open({
+                    templateUrl: 'dmp-endpoint-selector.html',
+                    controller: ModalInstanceCtrl,
+                    resolve: {
+
+                    }
+                });
+
+            } else {
+
+                if (component.scope === 'schema') {
+                    return reLabel(component.connection);
+                }
+
+            }
+
+            return true;
+
         });
         jsP.on('connection', function(component) {
+
             if (component.scope === 'schema' || component.connection.scope === 'schema') {
                 activate(component.connection);
             }
+
+
         });
         jsP.on('click', function(component, event) {
             if (component.scope === 'schema') {
@@ -218,4 +339,7 @@ angular.module('dmpApp')
                 };
             }
         };
+    }])
+    .controller('TargetSchemaSelectorCtrl', ['$scope','$modalInstance', function ($scope, $modalInstance) {
+
     }]);
