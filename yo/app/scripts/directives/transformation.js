@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', 'PubSub', '$window', 'TransformationResource', function ($scope, PubSub, $window, TransformationResource) {
+    .controller('TransformationCtrl', ['$scope', '$window', 'PubSub', 'Lo-Dash', 'TransformationResource', 'DataModelGen', function ($scope, $window, PubSub, loDash, TransformationResource, DataModelGen) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
@@ -14,6 +14,13 @@ angular.module('dmpApp')
                     return [activeComponentId, 'fun_' + _id].join(':');
                 };
             })();
+
+        var dump = function(o) {
+            console.log(o);
+            console.log(JSON.stringify(o, null, 2));
+        };
+
+        var dmg = new DataModelGen(allComponents);
 
         $scope.showSortable = false;
         $scope.sourceComponent = null;
@@ -85,14 +92,18 @@ angular.module('dmpApp')
             if (activeComponentId === tab.id) {
                 var transformation = generatePayload(tab);
 
+                dump(dmg.genJob([tab]));
+
                 sendTransformations(transformation, true);
             }
         };
 
         $scope.sendTransformations = function () {
-            var payloads = $window['_']($scope.tabs).map(generatePayload).filter(function (payload) {
+            var payloads = loDash($scope.tabs).map(generatePayload).filter(function (payload) {
                 return payload !== null;
             }).valueOf();
+
+            dump(dmg.genJob($scope.tabs));
 
             var transformations = {
                 'transformations': payloads
