@@ -15,8 +15,8 @@ angular.module('dmpApp')
         function deSelect(connection) {
             setColor(connection, 'black');
 
-            angular.forEach(connection.additionalInput, function(additional_input_entry) {
-                setColor(additional_input_entry.connection, 'black');
+            angular.forEach(connection.additionalInput, function(additionalInputEntry) {
+                setColor(additionalInputEntry.connection, 'black');
             });
 
             connection.getLabelOverlay().removeClass('mapping-active');
@@ -25,8 +25,8 @@ angular.module('dmpApp')
         function doSelect(connection) {
             setColor(connection, 'red');
 
-            angular.forEach(connection.additionalInput, function(additional_input_entry) {
-                setColor(additional_input_entry.connection, 'red');
+            angular.forEach(connection.additionalInput, function(additionalInputEntry) {
+                setColor(additionalInputEntry.connection, 'red');
             });
 
             connection.getLabelOverlay().addClass('mapping-active');
@@ -81,10 +81,10 @@ angular.module('dmpApp')
 
             var connectionIsAdditionalInput = false;
 
-            angular.forEach(components.pool, function(pool_entry) {
-                if(pool_entry.additionalInput) {
-                    angular.forEach(pool_entry.additionalInput, function(additional_input_entry) {
-                        if(connection === additional_input_entry.connection) {
+            angular.forEach(components.pool, function(poolEntry) {
+                if(poolEntry.additionalInput) {
+                    angular.forEach(poolEntry.additionalInput, function(additionalInputEntry) {
+                        if(connection === additionalInputEntry.connection) {
                             connectionIsAdditionalInput = true;
                         }
                     });
@@ -145,7 +145,7 @@ angular.module('dmpApp')
 
         function addInputToComponent(newInputComponent, baseComponent) {
 
-            newInputComponent.connection.setLabel("");
+            newInputComponent.connection.setLabel('');
             var labelOverlay = newInputComponent.connection.getLabelOverlay();
             labelOverlay.addClass('mapping-label');
 
@@ -165,9 +165,9 @@ angular.module('dmpApp')
 
             var targetIsInPool = false;
 
-            angular.forEach(components.pool, function(pool_entry) {
+            angular.forEach(components.pool, function(poolEntry) {
 
-                if(component.targetId === pool_entry.targetId) {
+                if(component.targetId === poolEntry.targetId) {
                     targetIsInPool = true;
                 }
 
@@ -181,10 +181,10 @@ angular.module('dmpApp')
 
             var tempReturn = null;
 
-            angular.forEach(components.pool, function(pool_entry) {
+            angular.forEach(components.pool, function(poolEntry) {
 
-                if(component.targetId === pool_entry.targetId) {
-                    tempReturn = pool_entry;
+                if(component.targetId === poolEntry.targetId) {
+                    tempReturn = poolEntry;
                 }
 
             });
@@ -193,26 +193,14 @@ angular.module('dmpApp')
 
         }
 
-        function targetInPool(component) {
-
-            angular.forEach(components.pool, function(pool_entry) {
-
-                if(component.targetId === pool_entry.targetId) {
-                    addInputToComponent(component, pool_entry);
-                }
-
-            });
-
-        }
-
         function removeFromPool(connection) {
 
             var workPool = [];
 
-            angular.forEach(components.pool, function(pool_entry) {
+            angular.forEach(components.pool, function(poolEntry) {
 
-                if(connection !== pool_entry) {
-                    workPool.push(pool_entry);
+                if(connection !== poolEntry) {
+                    workPool.push(poolEntry);
                 }
 
             });
@@ -233,9 +221,11 @@ angular.module('dmpApp')
 
                 modalInstance.result.then(function (target) {
 
+                    var newConnection = null;
+
                     if(target === null) {
 
-                        var newConnection = jsP.connect($('#'+component.sourceId), $('#'+component.targetId));
+                        newConnection = jsP.connect($('#'+component.sourceId), $('#'+component.targetId));
                         newConnection.setLabel(' ');
 
                         component.connection = newConnection;
@@ -249,7 +239,7 @@ angular.module('dmpApp')
 
                         var targetConnection = getTargetConnectionFromPool(component);
 
-                        var newConnection = jsP.connect($('#'+component.sourceId), $('#'+component.targetId));
+                        newConnection = jsP.connect($('#'+component.sourceId), $('#'+component.targetId));
                         newConnection.setLabel(' ');
 
                         removeFromPool(newConnection);

@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', 'PubSub', function ($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
+    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', function ($scope, $http, $q, $modalInstance, schemaParser) {
 
         $scope.internalName = 'Filter Widget';
 
         $scope.filterSource = {
             datas : [],
-            component : $scope.component.payload
+            component : $scope.component ? $scope.component.payload : { filters : {} }
         };
 
         $scope.filterShouldBeOpen = false;
