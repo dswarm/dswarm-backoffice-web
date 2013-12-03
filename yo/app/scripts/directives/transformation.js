@@ -140,7 +140,9 @@ angular.module('dmpApp')
                     activate(id, true, true);
                 }
             }
-            $scope.$digest();
+            if($scope.$$phase != '$digest') {
+                $scope.$digest();
+            }
         });
 
         var lastPayload;

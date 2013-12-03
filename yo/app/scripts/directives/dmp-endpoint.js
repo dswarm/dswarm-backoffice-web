@@ -19,9 +19,12 @@ angular.module('dmpApp')
                 setColor(additionalInputEntry.connection, 'black');
             });
 
-            connection.getLabelOverlay().removeClass('mapping-active');
+            if(connection.getLabelOverlay()) {
+                connection.getLabelOverlay().removeClass('mapping-active');
+            }
             connection.getConnector().removeClass('mapping-active');
         }
+
         function doSelect(connection) {
             setColor(connection, 'red');
 
@@ -29,7 +32,9 @@ angular.module('dmpApp')
                 setColor(additionalInputEntry.connection, 'red');
             });
 
-            connection.getLabelOverlay().addClass('mapping-active');
+            if(connection.getLabelOverlay()) {
+                connection.getLabelOverlay().addClass('mapping-active');
+            }
             connection.getConnector().addClass('mapping-active');
         }
 
@@ -55,6 +60,18 @@ angular.module('dmpApp')
             }
 
             return realPath([currentSegment].concat(segments), scp.$parent);
+        }
+
+        function getDatas(c) {
+
+            var outDatas = [];
+
+            angular.forEach(c, function(data){
+                outDatas.push(getData(data.connection.source));
+            });
+
+            return outDatas;
+
         }
 
         function getData(c) {
@@ -88,7 +105,6 @@ angular.module('dmpApp')
                             connectionIsAdditionalInput = true;
                         }
                     });
-
                 }
             });
 
@@ -96,6 +112,10 @@ angular.module('dmpApp')
         }
 
         function activate(connection, dontFire) {
+
+            if(connection.getLabel() === null) {
+                return true;
+            }
 
             if(isConnectionAdditionalInput(connection)) {
                 activate(getTargetConnectionFromPool(connection));
@@ -117,7 +137,8 @@ angular.module('dmpApp')
                         id: id,
                         label: label,
                         sourceData: getData(connection.source),
-                        targetData: getData(connection.target)
+                        targetData: getData(connection.target),
+                        additionalInput : getDatas(connection.additionalInput)
                     });
                 }
 
@@ -145,7 +166,7 @@ angular.module('dmpApp')
 
         function addInputToComponent(newInputComponent, baseComponent) {
 
-            newInputComponent.connection.setLabel('');
+            newInputComponent.connection.setLabel(' ');
             var labelOverlay = newInputComponent.connection.getLabelOverlay();
             labelOverlay.addClass('mapping-label');
 
@@ -154,10 +175,6 @@ angular.module('dmpApp')
             }
 
             baseComponent.additionalInput.push(newInputComponent);
-
-            // Overwrite currently used
-            //newInputComponent = baseComponent;
-
 
         }
 

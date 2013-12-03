@@ -1,23 +1,34 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', function ($scope, $http, $q, $modalInstance, schemaParser) {
+    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', 'PubSub', function ($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
 
         $scope.internalName = 'Filter Widget';
 
-        $scope.filterSource = {
-            datas : [],
-            component : $scope.component ? $scope.component.payload : { filters : {} }
-        };
+        if(!$scope.component.filters) {
+            $scope.component.filters = [  ];
+        }
 
-        $scope.filterShouldBeOpen = false;
-        $scope.result = {};
+        $scope.dataSource = {};
+        $scope.dataSchema = {};
+        $scope.dataLoaded = false;
+
+
+        PubSub.subscribe($scope, 'returnLoadData', function(args) {
+
+            $scope.dataSource = args.record.data;
+            $scope.dataSchema = args.schema;
+            $scope.dataLoaded = true;
+
+        });
+
+        PubSub.broadcast('getLoadData', {});
 
         $scope.update = function() {
 
             var inputfilterCollection = [];
 
-            angular.forEach($scope.filterSource.component.filters, function(filter){
+            angular.forEach($scope.component.filters, function(filter){
 
                 filter.inputfilters = schemaParser.getData(filter.filter,'');
 
@@ -40,31 +51,22 @@ angular.module('dmpApp')
 
             });
 
-            angular.forEach($scope.filterSource.datas, function(sourceData){
+            if(inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
+                $scope.dataSource.isFiltered = true;
+                $scope.dataSource = schemaParser.filterData($scope.dataSource, inputfilterCollection);
 
-                if(inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
-
-                    sourceData.isFiltered = true;
-                    sourceData = schemaParser.filterData(sourceData, inputfilterCollection);
-
-                } else {
-                    sourceData.isFiltered = false;
-                    sourceData.filterNoMatch = false;
-                }
-
-            });
+            } else {
+                $scope.dataSource.isFiltered = false;
+                $scope.dataSource.filterNoMatch = false;
+            }
 
             return true;
         };
 
         $scope.addFilter = function () {
 
-            if(!$scope.filterSource.component.filters) {
-                $scope.filterSource.component.filters = [];
-            }
-
-            $scope.filterSource.component.filters.push({
-                filter : schemaParser.mapData($scope.result['title'], $scope.result, true),
+            $scope.component.filters.push({
+                filter : schemaParser.mapData($scope.dataSchema['title'], $scope.dataSchema, true),
                 inputfilters : [],
                 name : 'new filter'
             });

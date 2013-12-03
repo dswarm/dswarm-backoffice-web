@@ -254,7 +254,7 @@ factory('schemaParser', ['$window', function ($window) {
                 tempData = getData(child,subpath,returnData);
 
                 if(tempData && tempData.title) {
-                    tempData.path += '.' + data.name + '.' + tempData.name;
+                    tempData.path +=  '.' + data.name + '.' + tempData.name;
 
                     returnData.push(tempData);
                 }
@@ -315,7 +315,11 @@ factory('schemaParser', ['$window', function ($window) {
 
         var pathArray = path.split('.');
 
-        if(data.name === pathArray[0]) {
+        if(data.name === null) {
+            data.name = '';
+        }
+
+        if(data.name.toString === pathArray[0].toString) {
             pathArray.shift();
 
             if(data.children) {

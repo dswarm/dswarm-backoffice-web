@@ -1,8 +1,8 @@
 <div class="filters modal-dialog">
-  <div class="modal-content">
+  <div class="modal-content" ng-if="dataLoaded">
 
     <div class="modal-header">
-        <h3>filters for {{filterSource.component.name}}</h3>
+        <h3>filters for {{component.payload.name}}</h3>
         <button class="btn btn-warning cancel" ng-click="addFilter()">add filter</button>
     </div>
     <div class="modal-body">
@@ -16,11 +16,11 @@
                     </li>
                 </ul>
 
-                <filter-data />
+                <filter-data data="dataSource"/>
 
             </div>
 
-            <filter-selector />
+            <filter-selector filters="component.filters" update="update" />
 
         </div>
     </div>

@@ -1,9 +1,7 @@
 
-
-<div class="box" ng-repeat="sourceData in source.datas">
-    <div class="filterMatch" ng-class="{ filterNoMatch : sourceData.filterNoMatch }">
+<div class="box">
+    <div class="filterMatch" ng-class="{ filterNoMatch : data.filterNoMatch }">
         no match
     </div>
-    <tree data="sourceData"></tree>
+    <tree data="data"></tree>
 </div>
-
