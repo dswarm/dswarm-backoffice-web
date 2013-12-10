@@ -140,7 +140,7 @@ angular.module('dmpApp')
                     activate(id, true, true);
                 }
             }
-            if($scope.$$phase != '$digest') {
+            if($scope.$$phase !== '$digest') {
                 $scope.$digest();
             }
         });

@@ -9,6 +9,7 @@ angular.module('dmpApp')
         $scope.targetSchema = {};
 
         $scope.isTargetLoading = false;
+        $scope.isTargetLoaded = false;
         $scope.isSourceLoading = true;
         $scope.loadTargetError = '';
 
@@ -79,7 +80,7 @@ angular.module('dmpApp')
                         schemaParser.mapData(sourceSchema['title'], sourceSchema),
                         resourceId,
                         configId,
-                        true,
+                        false,
                         true,
                         resourceData.name
                     );
@@ -131,6 +132,7 @@ angular.module('dmpApp')
 
             $scope.isTargetLoading = true;
             $scope.loadTargetError = '';
+            $scope.isTargetLoaded = false;
 
             angular.forEach(args.configurations, function(configuration) {
 
@@ -148,12 +150,13 @@ angular.module('dmpApp')
 
                 $scope.isTargetLoading = false;
                 $scope.loadTargetError = '';
+                $scope.isTargetLoaded = true;
             }, function(error) {
 
                 if(error && error.status === 404) {
                     $scope.loadTargetError = 'please choose a configured schema';
                 } else {
-                    $scope.loadTargetError = 'error laoding chosen schema';
+                    $scope.loadTargetError = 'error loading chosen schema';
                 }
 
                 $scope.isTargetLoading = false;

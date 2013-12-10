@@ -16,9 +16,13 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'returnLoadData', function(args) {
 
-            $scope.dataSource = args.record.data;
-            $scope.dataSchema = args.schema;
-            $scope.dataLoaded = true;
+            if(args.record) {
+
+                $scope.dataSource = args.record.data;
+                $scope.dataSchema = args.schema;
+                $scope.dataLoaded = true;
+
+            }
 
         });
 
