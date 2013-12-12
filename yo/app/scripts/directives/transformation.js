@@ -1,11 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-<<<<<<< HEAD
-    .controller('TransformationCtrl', ['$scope', 'PubSub', '$window', 'TransformationResource', function ($scope, PubSub, $window, TransformationResource) {
-=======
     .controller('TransformationCtrl', ['$scope', '$http', '$window', '$filter', '$modal', 'PubSub', function ($scope, $http, $window, $filter, $modal, PubSub) {
->>>>>>> sprint-6/dd-201
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
