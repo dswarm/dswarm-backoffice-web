@@ -171,6 +171,10 @@ angular.module('dmpApp')
                 target: target
             }, jsPlumbOptions, opts || {}));
 
+            if(!source.data) {
+                source = $(source);
+            }
+
             source.data('_outbound', connection);
 
             return connection;
@@ -263,6 +267,26 @@ angular.module('dmpApp')
             jsPlumb.repaintEverything();
         }
 
+        /**
+         * Convert element to endpoint to be used by connect
+         * @param el {jqLite|jQuery} DOM element
+         * @param params {object} Set of parameters
+         * @param referenceParams {object} Set of parameters
+         * @returns {*}
+         */
+        function addEndpoint(el, params, referenceParams) {
+            return jsPlumb.addEndpoint(el, params, referenceParams);
+        }
+
+        /**
+         * Removes all current set endpoints
+         * @param el {jqLite|jQuery} connection element
+         * @param recurse {boolean} Reursive?
+         */
+        function removeAllEndpoints(el, recurse) {
+            jsPlumb.removeAllEndpoints(el, recurse);
+        }
+
         return {
             on: on,
             connect:connect,
@@ -272,6 +296,9 @@ angular.module('dmpApp')
             makeTarget: makeTarget,
             unmakeSource: unmakeSource,
             unmakeTarget: unmakeTarget,
-            repaintEverything : repaintEverything
+            repaintEverything : repaintEverything,
+            addEndpoint : addEndpoint,
+            removeAllEndpoints : removeAllEndpoints,
+            guid : guid
         };
     }]);

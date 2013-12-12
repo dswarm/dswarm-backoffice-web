@@ -2,14 +2,11 @@
     <div ng-class="layerClass()">
       <div class="tree-child" ng-click="expandCollapse(data)"
             ng-mousedown="handleClick($event, data)"
-            ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}"
-            target="isTarget && isLeaf(data)" js-plumb-target-options="jspTargetOptions"
-            source="isSource && isLeaf(data)" js-plumb-source-options="jspSourceOptions">
+            ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}">
         <i class="glyphicon" ng-class="chevron(data)"></i>
 
         <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
            ng-if="(isTarget && isLeaf(data)) || (isTarget && !isExpanded(data))"
-           target="isTarget && isLeaf(data)"
            dmp-endpoint
            js-plumb-target-options="jspTargetOptions" />
 
@@ -18,7 +15,10 @@
 
         <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
 
-        <i class="glyphicon glyphicon-unchecked jsPanchorIcon" ng-if="(isSource && isLeaf(data)) || (isSource && !isExpanded(data))" dmp-endpoint source="isSource && isLeaf(data)" js-plumb-source-options="jspSourceOptions"/>
+        <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
+           ng-if="(isSource && isLeaf(data)) || (isSource && !isExpanded(data))"
+           dmp-endpoint
+           js-plumb-source-options="jspSourceOptions"/>
 
       </div>
       <div ng-show="data.show" class="tree-list jsPanchor">

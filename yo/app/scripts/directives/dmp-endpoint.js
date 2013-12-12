@@ -3,9 +3,122 @@
 angular.module('dmpApp')
     .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, PubSub) {
         var components = {
-            active: null,
-            pool: []
-        };
+                active: null,
+                pool: []
+            },
+            sourceEndpoint = null;
+
+
+        function addTarget(scope) {
+
+            var targetDone = false;
+
+            PubSub.subscribe($rootScope, 'returnDmpSource', function(payload) {
+
+                if(!targetDone) {
+
+                    var component = {
+                            dropEndpoint : null,
+                            scope : 'schema',
+                            sourceId : payload.source.guid,
+                            targetId : scope.guid
+                        };
+
+                    if(isTargetInPool(component)) {
+
+                        var modalInstance = $modal.open({
+                            templateUrl: 'views/directives/dmp-endpoint-selector.html',
+                            controller: 'DmpEndpointSelectorCtrl',
+
+                            resolve: {
+                                endpointSet: function () {
+                                    return getTargetPoolComponents(component);
+                                }
+                            }
+                        });
+
+
+                        modalInstance.result.then(function (target) {
+
+                            if(target === null) {
+
+                                connectComponent(component, payload.source, scope.guid, scope.jspSourceOptions, scope.jspTargetOptions, false, false);
+
+                            } else {
+
+                                var newConnection = connectComponent(component, payload.source, scope.guid, scope.jspSourceOptions, scope.jspTargetOptions, true, true);
+
+                                var targetConnection = getTargetConnectionFromPool(component);
+
+                                var targetConnection = getPoolEntrybyId(target[0].id);
+
+                                removeFromPool(newConnection);
+                                addInputToComponent(component, targetConnection);
+
+                                activate(newConnection);
+
+                            }
+
+                        });
+
+                    } else {
+                        connectComponent(component, payload.source, scope.guid, scope.jspSourceOptions, scope.jspTargetOptions, false, false);
+                    }
+
+
+
+                    targetDone = true;
+                    sourceEndpoint = null;
+
+                }
+
+            });
+
+            PubSub.broadcast('getDmpSource');
+
+        }
+
+        function connectComponent(component, sourceId, targetId, sourceOptions, targetOptions, noActivate, noReLabel) {
+
+            var targetEndpoint = null,
+                newConnection = null,
+                newConnection = null;
+
+
+            //create endpoint
+            sourceEndpoint = jsP.addEndpoint($('#'+ sourceId), sourceOptions);
+            targetEndpoint = jsP.addEndpoint($('#'+ targetId), targetOptions);
+
+            //link it
+            newConnection = jsP.connect(sourceEndpoint, targetEndpoint );
+
+            newConnection.setLabel(' ');
+            component.connection = newConnection;
+
+            if(!noReLabel) {
+                reLabel(component.connection);
+            }
+
+            if(!noActivate) {
+                activate(component.connection);
+            }
+
+            return newConnection;
+
+        }
+
+        function addSource(scope) {
+            sourceEndpoint = scope.guid;
+        }
+
+        PubSub.subscribe($rootScope, 'getDmpSource', function() {
+
+            PubSub.broadcast('returnDmpSource', {
+                source : sourceEndpoint
+            });
+
+        });
+
 
         function setColor(connection, color) {
             connection.endpoints[0].setPaintStyle({fillStyle: color});
@@ -36,6 +149,7 @@ angular.module('dmpApp')
                 connection.getLabelOverlay().addClass('mapping-active');
             }
             connection.getConnector().addClass('mapping-active');
+
         }
 
         function deSelectAll() {
@@ -194,6 +308,45 @@ angular.module('dmpApp')
 
         }
 
+        function getPoolEntrybyId(id) {
+
+            var returnPoolEntry = null;
+
+            angular.forEach(components.pool, function(poolEntry) {
+
+                if(id === poolEntry.id) {
+                    returnPoolEntry = poolEntry;
+                }
+
+            });
+
+            return returnPoolEntry;
+
+        }
+
+        function getTargetPoolComponents(component) {
+
+            var poolComponents = [];
+
+            angular.forEach(components.pool, function(poolEntry) {
+
+                if(component.targetId === poolEntry.targetId) {
+
+                    var targetScope = angular.element(poolEntry.target).scope();
+
+                    poolComponents.push({
+                        id : poolEntry.id,
+                        targetName : targetScope.data.name,
+                        targetData : targetScope.data
+                    });
+                }
+
+            });
+
+            return poolComponents;
+
+        }
+
         function getTargetConnectionFromPool(component) {
 
             var tempReturn = null;
@@ -297,6 +450,7 @@ angular.module('dmpApp')
 
         });
         jsP.on('click', function(component, event) {
+
             if (component.scope === 'schema') {
                 switch (event.target.tagName) {
 
@@ -378,6 +532,25 @@ angular.module('dmpApp')
                 return function(scope, iElement, iAttrs) {
                     var sourceOpts = jspSourceOptsWatch(scope) || {}
                         , targetOpts = jspTargetOptsWatch(scope) || {};
+
+                    scope.guid = jsP.guid();
+                    $(iElement).attr('id', scope.guid);
+
+                    if(jspSourceOptsWatch(scope)) {
+
+                        iElement.bind('click', function() {
+                            addSource(angular.element(iElement).scope());
+                        });
+
+                    }
+
+                    if(jspTargetOptsWatch(scope)) {
+
+                        iElement.bind('click', function() {
+                            addTarget(angular.element(iElement).scope());
+                        });
+
+                    }
 
                     scope.$watch(asSourceWatch, function (isSource) {
                         if (isSource) {
