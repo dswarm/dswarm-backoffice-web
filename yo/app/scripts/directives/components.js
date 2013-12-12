@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ComponentsCtrl', ['$scope', '$http', function ($scope, $http) {
+    .controller('ComponentsCtrl', ['$scope', 'Lo-Dash', 'FunctionResource',
+        function ($scope, Lodash, FunctionResource) {
         $scope.internalName = 'Function List Widget';
 
         /**
@@ -15,10 +16,9 @@ angular.module('dmpApp')
             'children': []
         };
 
-        $http.get('/data/functions.json')
-            .success(function (result) {
-                $scope.functions.children = result['functions'];
-            });
+        FunctionResource.query(function(funs) {
+            $scope.functions.children = Lodash.pluck(funs, 'function_description');
+        });
     }])
     .directive('components', [ function () {
         return {

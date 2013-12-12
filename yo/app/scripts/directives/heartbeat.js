@@ -6,7 +6,7 @@ angular.module('dmpApp')
             var intervalTime = +scope.$eval(attrs.interval) || 1000,
                 endpoint = scope.$eval(attrs.endpoint),
                 expected = scope.$eval(attrs.expected),
-                api = Util.api,
+                api = Util.apiEndpoint,
                 config = {
                     method: 'GET',
                     url: api + endpoint,
