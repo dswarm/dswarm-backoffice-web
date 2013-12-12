@@ -6,6 +6,7 @@ angular.module('dmpApp')
 
         $scope.data = {};
         $scope.records = [];
+        $scope.schema = {};
 
         $scope.showData = false;
 
@@ -24,6 +25,15 @@ angular.module('dmpApp')
                 $scope.showData = false;
                 $scope.resourceName = '';
             }
+
+        });
+
+        PubSub.subscribe($scope, 'getLoadData', function() {
+
+            PubSub.broadcast('returnLoadData', {
+                record : $scope.records[0],
+                schema : $scope.schema
+            });
 
         });
 
@@ -64,6 +74,8 @@ angular.module('dmpApp')
                         });
                     });
 
+                    $scope.schema = schemaResult;
+
                     $scope.records = records;
 
                     $scope.showData = true;
@@ -81,6 +93,7 @@ angular.module('dmpApp')
 
                 scopeSetter(schemaResult, dataResult);
             });
+
 
         };
 

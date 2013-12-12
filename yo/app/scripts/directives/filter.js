@@ -1,37 +1,32 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', ['$scope','$http', '$q', 'schemaParser', 'PubSub', function ($scope, $http, $q, schemaParser, PubSub) {
+    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', 'PubSub', function ($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
 
         $scope.internalName = 'Filter Widget';
 
-        $scope.sourceDatas = [];
-        $scope.component = null;
-        $scope.filterShouldBeOpen = false;
-        $scope.result = {};
+        if(!$scope.component.filters) {
+            $scope.component.filters = [  ];
+        }
 
-        var schemaPromise = $http.get('/data/schema.json')
-            , dataPromise = $http.get('/data/record.json')
-            , allPromise = $q.all([schemaPromise, dataPromise]);
+        $scope.dataSource = {};
+        $scope.dataSchema = {};
+        $scope.dataLoaded = false;
 
-        $http.get('/data/schema.json')
-            .success(function (result) {
-                $scope.result = result;
-            });
 
-        allPromise.then(function (result) {
-            var schemaResult = result[0]['data']
-                , dataResult = result[1]['data'];
+        PubSub.subscribe($scope, 'returnLoadData', function(args) {
 
-            $scope.result = result[0]['data'];
+            if(args.record) {
 
-            $scope.sourceDatas.push(
-                schemaParser.parseAny(
-                    dataResult[schemaResult['title']], schemaResult['title'], schemaResult)
-            );
+                $scope.dataSource = args.record.data;
+                $scope.dataSchema = args.schema;
+                $scope.dataLoaded = true;
+
+            }
 
         });
 
+        PubSub.broadcast('getLoadData', {});
 
         $scope.update = function() {
 
@@ -60,37 +55,22 @@ angular.module('dmpApp')
 
             });
 
-            angular.forEach($scope.sourceDatas, function(sourceData){
+            if(inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
+                $scope.dataSource.isFiltered = true;
+                $scope.dataSource = schemaParser.filterData($scope.dataSource, inputfilterCollection);
 
-                if(inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
-
-                    sourceData.isFiltered = true;
-                    sourceData = schemaParser.filterData(sourceData, inputfilterCollection);
-
-                } else {
-                    sourceData.isFiltered = false;
-                    sourceData.filterNoMatch = false;
-                }
-
-            });
+            } else {
+                $scope.dataSource.isFiltered = false;
+                $scope.dataSource.filterNoMatch = false;
+            }
 
             return true;
         };
 
-        $scope.opts = {
-            backdropFade: true,
-            dialogFade:true,
-            triggerClass: 'really in'
-        };
-
         $scope.addFilter = function () {
 
-            if(!$scope.component.filters) {
-                $scope.component.filters = [];
-            }
-
             $scope.component.filters.push({
-                filter : schemaParser.mapData($scope.result['title'], $scope.result, true),
+                filter : schemaParser.mapData($scope.dataSchema['title'], $scope.dataSchema, true),
                 inputfilters : [],
                 name : 'new filter'
             });
@@ -98,26 +78,11 @@ angular.module('dmpApp')
         };
 
         $scope.close = function () {
-            $scope.filterShouldBeOpen = false;
+            $modalInstance.dismiss('cancel');
         };
-
-        PubSub.subscribe($scope, 'handleEditFilter', function(args) {
-            $scope.filterShouldBeOpen = true;
-            $scope.component = args['payload'];
-        });
 
         $scope.onSaveClick = function() {
-            $scope.component = null;
+            $modalInstance.close();
         };
 
-    }])
-    .directive('filter', function () {
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: true,
-            templateUrl: 'views/directives/filter.html',
-            controller: 'FilterCtrl'
-        };
-    });
+    }]);

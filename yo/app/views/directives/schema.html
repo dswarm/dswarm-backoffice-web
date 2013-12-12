@@ -4,24 +4,14 @@
 
     <div ng-repeat="source in sources">
 
-        <div class="box jsPanchor" ng-class="{'source-selected': source.selected}">
+        <div class="zebra30 jsPanchor jsPanchorSource" ng-class="{'source-selected': source.selected}">
 
-            <div class="data-head">
-                <h5 ng-click="collapse(source)">{{source.name}}</h5>
-
-                <div class="icons">
-
-                    <i class="glyphicon glyphicon-download" ng-click="selectSource(source)"></i>
-
-                    <i class="glyphicon" ng-class="chevron(source)" ng-click="collapse(source)"></i>
-
-                    <i class="glyphicon glyphicon-remove" ng-click="removeSource(source)"></i>
-
-                </div>
+            <div class="data-head tree-child">
+                <h5>{{source.name}}</h5>
             </div>
 
             <div ng-show="!source.collapsed">
-                <tree data="source.schema" name="source.name" res-id="{{ source.resourceId }}" conf-id="{{ source.configId }}" as-source></tree>
+                <tree data="source.schema" name="source.name" res-id="{{ source.resourceId }}" conf-id="{{ source.configId }}" as-source layer="0"></tree>
             </div>
 
         </div>
@@ -32,12 +22,11 @@
 
   <div class="col-md-5 col-md-offset-2">
 
-      <button class="btn btn-default open-schema-col-selector" type="button" ng-click="onTargetSchemaSelectorClick()">Select target schema</button>
+      <div ng-if="!isTargetLoaded">
+        <button class="btn btn-default open-schema-col-selector" type="button" ng-click="onTargetSchemaSelectorClick()">Select target schema</button>
+      </div>
 
-      <div class="box">
-
-          <h5>Target Schema</h5>
-
+      <div>
           <div ng-if="isTargetLoading && !loadTargetError">
               <img src="../../images/ajax-loader.gif">
           </div>
@@ -48,8 +37,25 @@
               </div>
           </div>
 
-          <div ng-if="!isLoading && !loadError">
-            <tree data="targetSchema" as-target></tree>
+          <div class="data-head" ng-if="!isTargetLoading && loadTargetError.length == 0 && isTargetLoaded">
+
+              <div class="zebra30">
+
+                  <div class="data-head tree-child">
+                      <h5>Target Schema</h5>
+
+                      <div class="icons">
+
+                          <i class="glyphicon glyphicon-cog" ng-click="onTargetSchemaSelectorClick()"></i>
+
+                      </div>
+
+                  </div>
+
+
+                  <tree data="targetSchema" as-target></tree>
+              </div>
+
           </div>
 
       </div>

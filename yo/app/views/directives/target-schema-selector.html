@@ -1,10 +1,14 @@
-<div modal="targetSchemaSelectorShouldBeOpen" close="close()" options="opts">
-    <div class="target-schema-selector-modal">
-        <schemalist />
+<div class="target-schema-selector-modal">
 
-        <span class="selected-set-options">
-            <button type="button" ng-click="onSelectClick()" class="btn btn-default">Select</button>
-            <button type="button" ng-click="close()" class="btn btn-default">Cancel</button>
-        </span>
+    <div class="modal-header">
+        <h3>Choose target schema</h3>
     </div>
+    <div class="modal-body">
+        <schemalist />
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="onSelectClick()" class="btn btn-default">Select</button>
+        <button type="button" ng-click="close()" class="btn btn-default">Cancel</button>
+    </div>
+
 </div>

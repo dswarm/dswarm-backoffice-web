@@ -5,6 +5,12 @@ angular.module('dmpApp')
         $scope.isSource = $scope.$parent && $scope.$parent.isSource;
         $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 
+        if(typeof $scope.$parent.layer === 'undefined') {
+            $scope.layer = 1;
+        } else {
+            $scope.layer = parseInt($scope.$parent.layer, 10) + 1;
+        }
+
         if($scope.$parent && $scope.$parent.name) {
             $scope.parentName = $scope.$parent.name;
         } else {
@@ -66,6 +72,14 @@ angular.module('dmpApp')
             if (data.children && data.children.length) {
                 return 'glyphicon-chevron-' + (data.show ? 'down' : 'right');
             }
+        };
+
+        $scope.isExpanded = function (data) {
+            return (data.show ? true : false);
+        };
+
+        $scope.layerClass = function() {
+            return 'layer' + $scope.layer;
         };
 
         $scope.handleClick = function (evt, data) {

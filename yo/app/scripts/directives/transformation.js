@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
+<<<<<<< HEAD
     .controller('TransformationCtrl', ['$scope', 'PubSub', '$window', 'TransformationResource', function ($scope, PubSub, $window, TransformationResource) {
+=======
+    .controller('TransformationCtrl', ['$scope', '$http', '$window', '$filter', '$modal', 'PubSub', function ($scope, $http, $window, $filter, $modal, PubSub) {
+>>>>>>> sprint-6/dd-201
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
@@ -134,7 +138,9 @@ angular.module('dmpApp')
                     activate(id, true, true);
                 }
             }
-            $scope.$digest();
+            if($scope.$$phase !== '$digest') {
+                $scope.$digest();
+            }
         });
 
         var lastPayload;
@@ -183,7 +189,22 @@ angular.module('dmpApp')
         };
 
         $scope.onFilterClick = function(component) {
-            PubSub.broadcast('handleEditFilter', component);
+
+            var childScope = $scope.$new();
+            childScope.component = component;
+
+            $scope.currentComponent = component;
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/filter.html',
+                controller: 'FilterCtrl',
+                scope: childScope
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.handleTargetSchemaSelected(selectedItem);
+            });
+
         };
 
     }])

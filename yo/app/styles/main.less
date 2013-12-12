@@ -41,11 +41,6 @@
   overflow:   auto;
 }
 
-.tree-list {
-  list-style-type: none;
-  margin-left:     -10px;
-}
-
 .data-sample {
   color: @gray-light;
 }
@@ -83,7 +78,7 @@ svg.mapping-active {
   fill: transparent;
 }
 
-.modal.really.in {
+.modal.in {
   display: block;
 }
 
@@ -204,29 +199,40 @@ button.open-schema-col-selector {
   left: -40%;
 }
 
-.data-head,
-.well {
-  position: relative;
-}
 
 .source-selected .data-head .icons .glyphicon {
   color: @brand-success;
 }
 
-.data-head .icons .glyphicon-download {
-  -moz-transform:rotate(90deg);
-  -webkit-transform:rotate(90deg);
-  -o-transform:rotate(90deg);
-  -ms-transform:rotate(90deg);
-  transform:rotate(90deg);
+.data-head,
+.well {
+
+  position: relative;
+
+  .icons .glyphicon-download {
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+  }
+
+  .icons {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    cursor: pointer;
+  }
+
+  h5 {
+    margin: 0;
+  }
+
 }
 
-.data-head .icons,
 .well .icons {
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
+  top: 10px;
+  right: 10px;
 }
 
 .data-tab-heading {
@@ -239,7 +245,48 @@ button.open-schema-col-selector {
   }
 }
 
-.well .icons {
-  top: 10px;
-  right: 10px;
+.zebra30 {
+  background: url("../images/zebra30.png");
+
+  .tree-child {
+    width: 100%;
+    padding: 5px;
+    height: 30px;
+    position: relative;
+  }
+
+}
+.jsPanchorSource .glyphicon-unchecked {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.jsPanchorIcon {
+  cursor: pointer;
+}
+
+.layer1 {
+  padding-left: 0;
+}
+
+.layer2 {
+  padding-left: 10px;
+}
+
+.layer3 {
+  padding-left: 20px;
+}
+
+.layer4 {
+  padding-left: 30px;
+}
+
+.layer5 {
+  padding-left: 40px;
+}
+
+.not-allowed {
+  cursor: not-allowed;
+  opacity: 0.2;
 }

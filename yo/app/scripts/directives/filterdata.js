@@ -6,7 +6,9 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope: {
+                data : '='
+            },
             templateUrl: 'views/directives/filter-data.html',
             controller: 'FilterDataCtrl'
         };
