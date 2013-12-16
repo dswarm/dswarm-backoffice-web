@@ -127,7 +127,7 @@ angular.module('dmpApp')
 
             if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).parent().hasClass('tree-leaf')) {
 
-                $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', guid());
+                $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
                 elId = $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
 
             }
@@ -278,7 +278,6 @@ angular.module('dmpApp')
             unmakeTarget: unmakeTarget,
             repaintEverything : repaintEverything,
             addEndpoint : addEndpoint,
-            removeAllEndpoints : removeAllEndpoints,
-            guid : guid
+            removeAllEndpoints : removeAllEndpoints
         };
     }]);

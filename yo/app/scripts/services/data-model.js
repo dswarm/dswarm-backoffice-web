@@ -32,13 +32,13 @@ angular.module('dmpApp')
             var paramsMap = {};
             angular.forEach(params, function(val, key) {
                 if (val.data) {
-                    paramsMap[key] = val.data;
+                    paramsMap[key] = val.data + '';
                 }
             });
 
             if (parameters) {
                 angular.forEach(parameters, function(val, key) {
-                    paramsMap[val] = key;
+                    paramsMap[val] = key + '';
                 });
             }
 

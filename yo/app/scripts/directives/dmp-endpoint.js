@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, PubSub) {
+    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'GUID', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, GUID, PubSub) {
         var components = {
                 active: null,
                 pool: []
@@ -530,7 +530,7 @@ angular.module('dmpApp')
                     var sourceOpts = jspSourceOptsWatch(scope) || {}
                         , targetOpts = jspTargetOptsWatch(scope) || {};
 
-                    scope.guid = jsP.guid();
+                    scope.guid = GUID.uuid4();
                     $(iElement).attr('id', scope.guid);
 
                     if(jspSourceOptsWatch(scope)) {
