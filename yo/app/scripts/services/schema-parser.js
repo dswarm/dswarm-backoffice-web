@@ -320,7 +320,7 @@ factory('schemaParser', ['$window', function ($window) {
 
         var pathArray = path.split('.');
 
-        if(data.name === null) {
+        if(data.name === null || typeof data.name === 'undefined') {
             data.name = '';
         }
 

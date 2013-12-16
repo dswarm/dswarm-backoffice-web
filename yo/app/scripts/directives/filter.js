@@ -6,7 +6,7 @@ angular.module('dmpApp')
         $scope.internalName = 'Filter Widget';
 
         if(!$scope.component.filters) {
-            $scope.component.filters = [  ];
+            $scope.component.filters = [];
         }
 
         $scope.dataSource = {};

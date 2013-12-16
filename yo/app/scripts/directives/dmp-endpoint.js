@@ -48,8 +48,6 @@ angular.module('dmpApp')
 
                                 var newConnection = connectComponent(component, payload.source, scope.guid, scope.jspSourceOptions, scope.jspTargetOptions, true, true);
 
-                                var targetConnection = getTargetConnectionFromPool(component);
-
                                 var targetConnection = getPoolEntrybyId(target[0].id);
 
                                 removeFromPool(newConnection);
@@ -81,7 +79,6 @@ angular.module('dmpApp')
         function connectComponent(component, sourceId, targetId, sourceOptions, targetOptions, noActivate, noReLabel) {
 
             var targetEndpoint = null,
-                newConnection = null,
                 newConnection = null;
 
 
