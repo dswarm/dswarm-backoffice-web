@@ -10,7 +10,8 @@ describe('Directive: MappingComponent', function() {
         $provide.value('jsP', {
             makeTarget: angular.noop,
             makeSource: angular.noop,
-            on: angular.noop
+            on: angular.noop,
+            guid: angular.noop
         });
     }));
 
@@ -35,16 +36,15 @@ describe('Directive: MappingComponent', function() {
         expect(elm.find('small').text()).toBe('qux-42');
         expect(elm.find('h4').text()).toBe('bazqux-42');
         expect(elm.text().trim().replace(/\s+/g, ' ')).toBe('bazqux-42 Some Foobar');
+        expect(elm.find('div').attr('dmp-endpoint')).toBe('');
+        expect(elm.find('div').attr('js-plumb-target-options')).toBe('jspTargetOptions');
+        expect(elm.find('div').attr('js-plumb-source-options')).toBe('jspSourceOptions');
+        expect(elm.find('div').attr('source')).toBe('true');
+        expect(elm.find('div').attr('target')).toBe('true');
 
-        expect(elm.attr('dmp-endpoint')).toBe('');
-        expect(elm.attr('js-plumb-target-options')).toBe('jspTargetOptions');
-        expect(elm.attr('js-plumb-source-options')).toBe('jspSourceOptions');
-        expect(elm.attr('source')).toBe('true');
-        expect(elm.attr('target')).toBe('true');
-
-        var classes = [].slice.call(elm[0].classList);
+        var classes = [].slice.call(elm.find('div')[0].classList);
         expect(classes).toContain('well');
-        expect(elm[0].tagName).toBe('DIV');
+        expect(elm[0].tagName).toBe('MAPPING-COMPONENT');
     }));
 
     it('should have at least (Unknown) as name', inject(function($compile) {
