@@ -42,9 +42,7 @@ angular.module('dmpApp')
                     cid: configId
                 }).$promise;
 
-                schemaTransformer = function(res) {
-                    return res['data'];
-                };
+                schemaTransformer = angular.identity;
 
                 dataPromise = SchemaDataResource.data({
                     id: resourceId,
@@ -60,7 +58,7 @@ angular.module('dmpApp')
                     angular.forEach(dataResult, function(record) {
                         records.push({
                             id: record.recordId,
-                            data: schemaParser.parseAny(record, schemaResult['title'], schemaResult)
+                            data: schemaParser.parseFromDomainSchema(record, schemaResult)
                         });
                     });
 

@@ -5,13 +5,19 @@ describe('Controller: ComponentsCtrl', function () {
 
   beforeEach(module('dmpApp', 'mockedFunctions'));
 
+  beforeEach(module(function($provide) {
+      $provide.value('Util', {
+          apiEndpoint: '/dmp/'
+      });
+  }));
+
   beforeEach(inject(function ($injector) {
     $httpBackend = $injector.get('$httpBackend');
     $rootScope = $injector.get('$rootScope');
 
     scope = $rootScope.$new();
 
-    $httpBackend.when('GET', '/data/functions.json').respond($injector.get('mockFunctionsJSON'));
+    $httpBackend.when('GET', '/dmp/functions').respond($injector.get('mockFunctionsJSON'));
 
     var $controller = $injector.get('$controller');
 
@@ -28,7 +34,7 @@ describe('Controller: ComponentsCtrl', function () {
   });
 
   it('should have loaded function data', function () {
-      $httpBackend.expectGET('/data/functions.json');
+      $httpBackend.expectGET('/dmp/functions');
       componentsCtrl();
       $rootScope.$digest();
       $httpBackend.flush();

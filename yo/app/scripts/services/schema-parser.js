@@ -57,6 +57,106 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
         return data;
     }
 
+
+    /**
+     * Maps from DMP domain schema to json Schema and then uses mapData
+     * to get the internal tree model.
+     * The domain schema consists of several attribute paths,
+     * each containing one or more attributes.
+     *
+     *
+     * @param domainSchema  {{id: Number, name: String, attribute_paths: Array}}
+     * @param editableTitle {Boolean=}
+     * @returns {{name: String, show: boolean}}
+     */
+    function fromDomainSchema(domainSchema, editableTitle) {
+
+        var data = {name: domainSchema.name, show: true, editableTitle: editableTitle};
+
+        var make = function(obj) {
+            return angular.extend({show: true, hasChildren: false, editableTitle: editableTitle}, obj);
+        };
+
+        var loop = function(attribs, obj) {
+            var props = angular.extend({children: []}, obj);
+
+            var cache = {};
+
+            angular.forEach(attribs, function (val) {
+                var path = val.name.split('.');
+                if (path.length > 1) {
+
+                    var newVal = loDash.clone(val);
+                    newVal.name = path.slice(1).join('.');
+
+                    var name = path[0];
+                    if (!cache.hasOwnProperty(name)) {
+                        cache[name] = {name: name, children: []};
+                    }
+
+                    var parsed = loop([newVal]);
+                    cache[name].children = cache[name].children.concat(parsed.children);
+                } else {
+                    props.children.push(make(val));
+                }
+            });
+
+            angular.forEach(cache, function(item) {
+                item.hasChildren = item.children.length > 0;
+                props.children.push(item);
+            });
+
+            props.hasChildren = props.children.length > 0;
+
+            return props;
+        };
+
+        var paths = domainSchema['attribute_paths'];
+        var attrs = loDash.flatten(paths, true, 'attributes');
+
+        if (attrs.length) {
+            angular.extend(data, loop(attrs));
+        }
+
+        data.hasChildren = data.children && data.children.length > 0;
+
+        return data;
+    }
+
+    /**
+     * Parse in input record based on a schema, that is a domain schema.
+     * This will call `fromDomainSchmema` to gen an internal representation
+     * of the schema and will then transform it into something json-schema-esque.
+     *
+     * @param record        {Object}
+     * @param schemaResult  {Object}
+     * @returns {*}
+     */
+    function parseFromDomainSchema(record, schemaResult) {
+        var schema = fromDomainSchema(schemaResult);
+
+        var data = {title: schema.name, type: 'object'};
+
+        var loop = function(children) {
+
+            var properties = {};
+            angular.forEach(children, function(child) {
+                if (child.hasChildren) {
+                    properties[child.name] = {type: 'object'};
+                    properties[child.name].properties = loop(child.children);
+                } else {
+                    properties[child.name] = {type: 'string'};
+                }
+            });
+
+            return properties;
+        };
+
+        data.properties = loop(schema.children);
+
+        return parseAny(record, schema.name, data);
+    }
+
     /**
      * creates a leaf item
      * @param name {String}
@@ -357,6 +457,8 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
     return {
         mapData: mapData
+      , fromDomainSchema: fromDomainSchema
+      , parseFromDomainSchema: parseFromDomainSchema
       , makeItem: makeItem
       , parseObject: parseObject
       , parseArray: parseArray
