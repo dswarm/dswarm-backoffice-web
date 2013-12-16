@@ -10,11 +10,21 @@ angular.module('dmpApp')
         $scope.targetSchema = {};
 
         $scope.isTargetLoading = false;
+        $scope.isTargetLoaded = false;
         $scope.isSourceLoading = true;
         $scope.loadTargetError = '';
 
         $scope.onTargetSchemaSelectorClick = function() {
-            PubSub.broadcast('handleOpenTargetSchemaSelector', {});
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/target-schema-selector.html',
+                controller: 'TargetSchemaSelectorCtrl'
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.handleTargetSchemaSelected(selectedItem);
+            });
+
         };
 
         $scope.onAddDataClick = function() {
@@ -69,7 +79,7 @@ angular.module('dmpApp')
                         schemaParser.fromDomainSchema(sourceSchema),
                         resourceId,
                         configId,
-                        true,
+                        false,
                         true,
                         resourceData.name
                     );
@@ -116,6 +126,44 @@ angular.module('dmpApp')
 
         };
 
+        $scope.handleTargetSchemaSelected = function(args) {
+            var latestConfigurationId = 0;
+
+            $scope.isTargetLoading = true;
+            $scope.loadTargetError = '';
+            $scope.isTargetLoaded = false;
+
+            angular.forEach(args.configurations, function(configuration) {
+
+                if(configuration.id >= latestConfigurationId) {
+                    latestConfigurationId = configuration.id;
+                }
+
+            });
+
+            SchemaDataResource.schema({
+                id: args.id,
+                cid: latestConfigurationId
+            }, function(result) {
+                $scope.targetSchema = schemaParser.fromDomainSchema(result);
+
+                $scope.isTargetLoading = false;
+                $scope.loadTargetError = '';
+                $scope.isTargetLoaded = true;
+            }, function(error) {
+
+                if(error && error.status === 404) {
+                    $scope.loadTargetError = 'please choose a configured schema';
+                } else {
+                    $scope.loadTargetError = 'error loading chosen schema';
+                }
+
+                $scope.isTargetLoading = false;
+
+            });
+
+        };
+
         PubSub.subscribe($scope, 'handleDataSelected', function(args) {
 
             var latestConfigurationId = 0;
@@ -135,42 +183,6 @@ angular.module('dmpApp')
             }
 
             $scope.loadSourceData(args.id, latestConfigurationId);
-        });
-
-        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(args) {
-            var latestConfigurationId = 0;
-
-            $scope.isTargetLoading = true;
-            $scope.loadTargetError = '';
-
-            angular.forEach(args.configurations, function(configuration) {
-
-                if(configuration.id >= latestConfigurationId) {
-                    latestConfigurationId = configuration.id;
-                }
-
-            });
-
-            SchemaDataResource.schema({
-                id: args.id,
-                cid: latestConfigurationId
-            }, function(result) {
-                $scope.targetSchema = schemaParser.fromDomainSchema(result);
-
-                $scope.isTargetLoading = false;
-                $scope.loadTargetError = '';
-            }, function(error) {
-
-                if(error && error.status === 404) {
-                    $scope.loadTargetError = 'please choose a configured schema';
-                } else {
-                    $scope.loadTargetError = 'error laoding chosen schema';
-                }
-
-                $scope.isTargetLoading = false;
-
-            });
-
         });
 
         $scope.loadSourceData($scope.resourceId, $scope.configId);

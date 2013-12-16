@@ -1,35 +1,33 @@
-<div modal="filterShouldBeOpen" close="close()" options="opts">
-    <div class="filters modal-dialog">
-      <div class="modal-content">
+<div class="filters modal-dialog">
+  <div class="modal-content" ng-if="dataLoaded">
 
-        <div class="modal-header">
-            <h3>filters for {{component.name}}</h3>
-            <button class="btn btn-warning cancel" ng-click="addFilter()">add filter</button>
-        </div>
-        <div class="modal-body">
-            <div class="row row-2">
+    <div class="modal-header">
+        <h3>filters for {{component.payload.name}}</h3>
+        <button class="btn btn-warning cancel" ng-click="addFilter()">add filter</button>
+    </div>
+    <div class="modal-body">
+        <div class="row row-2">
 
-                <div class="tabbable col-md-3">
+            <div class="tabbable col-md-3">
 
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a>data</a>
-                        </li>
-                    </ul>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a>data</a>
+                    </li>
+                </ul>
 
-                    <filter-data />
-
-                </div>
-
-                <filter-selector />
+                <filter-data data="dataSource"/>
 
             </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-warning cancel" ng-click="close()">Ok</button>
-        </div>
 
-       </div>
+            <filter-selector filters="component.filters" update="update" />
 
+        </div>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="close()">Ok</button>
+    </div>
+
+   </div>
+
 </div>

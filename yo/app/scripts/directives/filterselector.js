@@ -6,7 +6,10 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope: {
+                filters : '=',
+                update : '='
+            },
             templateUrl: 'views/directives/filter-selector.html',
             controller: 'FilterSelectorCtrl'
         };

@@ -125,10 +125,10 @@ angular.module('dmpApp')
          */
         jsPlumb.getCachedData = function(elId) {
 
-            if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).hasClass('tree-leaf')) {
+            if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).parent().hasClass('tree-leaf')) {
 
-                $('#'+elId).closest('.jsPanchor:visible').attr('id', GUID.uuid4());
-                elId = $('#'+elId).closest('.jsPanchor:visible').attr('id');
+                $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', guid());
+                elId = $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
 
             }
 
@@ -150,6 +150,10 @@ angular.module('dmpApp')
                 source: source,
                 target: target
             }, jsPlumbOptions, opts || {}));
+
+            if(!source.data) {
+                source = $(source);
+            }
 
             source.data('_outbound', connection);
 
@@ -243,6 +247,26 @@ angular.module('dmpApp')
             jsPlumb.repaintEverything();
         }
 
+        /**
+         * Convert element to endpoint to be used by connect
+         * @param el {jqLite|jQuery} DOM element
+         * @param params {object} Set of parameters
+         * @param referenceParams {object} Set of parameters
+         * @returns {*}
+         */
+        function addEndpoint(el, params, referenceParams) {
+            return jsPlumb.addEndpoint(el, params, referenceParams);
+        }
+
+        /**
+         * Removes all current set endpoints
+         * @param el {jqLite|jQuery} connection element
+         * @param recurse {boolean} Reursive?
+         */
+        function removeAllEndpoints(el, recurse) {
+            jsPlumb.removeAllEndpoints(el, recurse);
+        }
+
         return {
             on: on,
             connect:connect,
@@ -252,6 +276,9 @@ angular.module('dmpApp')
             makeTarget: makeTarget,
             unmakeSource: unmakeSource,
             unmakeTarget: unmakeTarget,
-            repaintEverything : repaintEverything
+            repaintEverything : repaintEverything,
+            addEndpoint : addEndpoint,
+            removeAllEndpoints : removeAllEndpoints,
+            guid : guid
         };
     }]);

@@ -150,4 +150,186 @@ angular.module('mockedSchemaParsed', [])
                 "show": true
             }
         ]
+    })
+    .value('mockSchemaPostParsedJson', {
+        "name": "marcxml_test_record.xml",
+        "resourceId": "4",
+        "configId": "3",
+        "schema": {
+            "name": "MARC21slim.xsd",
+            "show": true,
+            "children": [
+                {
+                    "name": "record",
+                    "show": true,
+                    "children": [
+                        {
+                            "name": "leader",
+                            "show": true,
+                            "$$hashKey": "00L"
+                        },
+                        {
+                            "name": "controlfield",
+                            "show": true,
+                            "children": [
+                                {
+                                    "name": "controlfield",
+                                    "show": true,
+                                    "$$hashKey": "018"
+                                }
+                            ],
+                            "hasChildren": true,
+                            "$$hashKey": "00M"
+                        },
+                        {
+                            "name": "datafield",
+                            "show": true,
+                            "children": [
+                                {
+                                    "name": "datafield",
+                                    "show": true,
+                                    "children": [
+                                        {
+                                            "name": "subfield",
+                                            "show": true,
+                                            "$$hashKey": "01G"
+                                        },
+                                        {
+                                            "name": "@tag",
+                                            "show": true,
+                                            "$$hashKey": "01H"
+                                        },
+                                        {
+                                            "name": "@ind1",
+                                            "show": true,
+                                            "$$hashKey": "01I"
+                                        },
+                                        {
+                                            "name": "@ind2",
+                                            "show": true,
+                                            "$$hashKey": "01J"
+                                        },
+                                        {
+                                            "name": "@id",
+                                            "show": true,
+                                            "$$hashKey": "01K"
+                                        }
+                                    ],
+                                    "hasChildren": true,
+                                    "$$hashKey": "01D"
+                                }
+                            ],
+                            "hasChildren": true,
+                            "$$hashKey": "00N"
+                        },
+                        {
+                            "name": "@type",
+                            "show": true,
+                            "$$hashKey": "00O"
+                        },
+                        {
+                            "name": "@id",
+                            "show": true,
+                            "$$hashKey": "00P"
+                        }
+                    ],
+                    "hasChildren": true,
+                    "$$hashKey": "00F"
+                },
+                {
+                    "name": "collection",
+                    "show": true,
+                    "children": [
+                        {
+                            "name": "record",
+                            "show": true,
+                            "children": [
+                                {
+                                    "name": "leader",
+                                    "show": true,
+                                    "$$hashKey": "01U"
+                                },
+                                {
+                                    "name": "controlfield",
+                                    "show": true,
+                                    "children": [
+                                        {
+                                            "name": "controlfield",
+                                            "show": true,
+                                            "$$hashKey": "02B"
+                                        }
+                                    ],
+                                    "hasChildren": true,
+                                    "$$hashKey": "01V"
+                                },
+                                {
+                                    "name": "datafield",
+                                    "show": true,
+                                    "children": [
+                                        {
+                                            "name": "datafield",
+                                            "show": true,
+                                            "children": [
+                                                {
+                                                    "name": "subfield",
+                                                    "show": true,
+                                                    "$$hashKey": "034"
+                                                },
+                                                {
+                                                    "name": "@tag",
+                                                    "show": true,
+                                                    "$$hashKey": "035"
+                                                },
+                                                {
+                                                    "name": "@ind1",
+                                                    "show": true,
+                                                    "$$hashKey": "036"
+                                                },
+                                                {
+                                                    "name": "@ind2",
+                                                    "show": true,
+                                                    "$$hashKey": "037"
+                                                },
+                                                {
+                                                    "name": "@id",
+                                                    "show": true,
+                                                    "$$hashKey": "038"
+                                                }
+                                            ],
+                                            "hasChildren": true,
+                                            "$$hashKey": "02D"
+                                        }
+                                    ],
+                                    "hasChildren": true,
+                                    "$$hashKey": "01W"
+                                },
+                                {
+                                    "name": "@type",
+                                    "show": true,
+                                    "$$hashKey": "01X"
+                                },
+                                {
+                                    "name": "@id",
+                                    "show": true,
+                                    "$$hashKey": "01Y"
+                                }
+                            ],
+                            "hasChildren": true,
+                            "$$hashKey": "00V"
+                        },
+                        {
+                            "name": "@id",
+                            "show": true,
+                            "$$hashKey": "00W"
+                        }
+                    ],
+                    "hasChildren": true,
+                    "$$hashKey": "00G"
+                }
+            ],
+            "hasChildren": true
+        },
+        "collapsed": false,
+        "selected": true,
+        "$$hashKey": "00C"
     });

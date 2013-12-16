@@ -1,19 +1,30 @@
-<div class="jsPanchor" ng-class="{ isFiltered : data.isFiltered }">
-  <span ng-click="expandCollapse(data)"
-        ng-mousedown="handleClick($event, data)"
-        ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}"
-        dmp-endpoint source="isSource && isLeaf(data)" js-plumb-source-options="jspSourceOptions"
-        target="isTarget && isLeaf(data)" js-plumb-target-options="jspTargetOptions">
-    <i class="glyphicon" ng-class="chevron(data)"></i>
-    {{data.name}}
-    <small ng-show="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
+<div class="jsPanchor" ng-class='{ isFiltered : data.isFiltered }'>
+    <div ng-class="layerClass()">
+      <div class="tree-child" ng-click="expandCollapse(data)"
+            ng-mousedown="handleClick($event, data)"
+            ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}">
+        <i class="glyphicon" ng-class="chevron(data)"></i>
 
-    <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
+        <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
+           ng-if="(isTarget && isLeaf(data)) || (isTarget && !isExpanded(data))"
+           dmp-endpoint
+           js-plumb-target-options="jspTargetOptions"></i>
 
-  </span>
-  <ul ng-show="data.show" class="tree-list jsPanchor">
-    <li ng-repeat="child in data.children">
-      <tree data="child" name="name" internal res-id="{{ resId }}" conf-id="{{ confId }}"></tree>
-    </li>
-  </ul>
+        {{data.name}}
+        <small ng-show="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
+
+        <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
+
+        <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
+           ng-if="(isSource && isLeaf(data)) || (isSource && !isExpanded(data))"
+           dmp-endpoint
+           js-plumb-source-options="jspSourceOptions"></i>
+
+      </div>
+      <div ng-show="data.show" class="tree-list jsPanchor">
+        <div ng-repeat="child in data.children">
+          <tree data="child" name="name" internal res-id="{{ resId }}" conf-id="{{ confId }}"></tree>
+        </div>
+      </div>
+    </div>
 </div>

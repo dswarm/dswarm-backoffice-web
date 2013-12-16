@@ -32,7 +32,6 @@ angular.module('dmpApp')
             scope: {
                 options: '='
             },
-            replace: true,
             controller: 'MappingComponentController',
             templateUrl: 'views/directives/mapping-component.html',
             link: function(scope) {
