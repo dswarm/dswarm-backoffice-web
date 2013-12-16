@@ -2,7 +2,7 @@
     "name": "frontend",
     "version": "0.0.0",
     "dependencies": {
-        "angular": "https://github.com/chrode/bower-angular/archive/1.2.3a.tar.gz",
+        "angular": "~1.2.5",
         "angular-ui-bootstrap": "https://github.com/chrode/bootstrap/archive/0.6.1.tar.gz",
         "angular-ui-utils": "~0.0.4",
         "angular-grid": "~2.0.7",
