@@ -8,7 +8,8 @@ describe('Controller: SchemaCtrl', function () {
             jsRoutes: {
                 api: '/dmp/'
             }
-        }
+        },
+        _: _
     };
 
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema'));

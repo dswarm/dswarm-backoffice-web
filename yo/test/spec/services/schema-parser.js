@@ -52,7 +52,7 @@ describe('schemaParser tests', function (){
     it('should return item from parsed object with parseObject', function () {
         var result = schemaParser.parseObject(
             { 'identifier': 'urn:nbn:de:bsz:14-ds-1229427875176-76287' },
-            'bar', 
+            'bar',
             { 'identifier': {'type': 'string'} }
         );
 
@@ -185,6 +185,172 @@ describe('schemaParser tests', function (){
 
         expect(result['name']).toBe('bar');
         expect(result['title']).toBe('IDENTIFIER');
+
+    });
+
+    it('should generate the tree model from a simple domain schema', function() {
+
+        var domainSchema = {
+            attribute_paths: [{
+                attributes: [{
+                    id: 'csv:foo',
+                    name: 'foo'
+                }, {
+                    id: 'csv:bar',
+                    name: 'bar'
+                }],
+                id: 9
+            }],
+            id: 42,
+            name: 'foobar'
+        };
+
+        var result = schemaParser.fromDomainSchema(domainSchema);
+
+        expect(result['name']).toBe('foobar');
+        expect(result['hasChildren']).toBe(true);
+        expect(result['children'].length).toBe(2);
+        expect(result['children'][0].name).toBe('foo');
+        expect(result['children'][0].id).toBe('csv:foo');
+        expect(result['children'][0].hasChildren).toBe(false);
+        expect(result['children'][1].name).toBe('bar');
+        expect(result['children'][1].id).toBe('csv:bar');
+        expect(result['children'][1].hasChildren).toBe(false);
+
+    });
+
+    it('should generate the tree model from a complex domain schema', function() {
+
+        var domainSchema = {
+            attribute_paths: [{
+                attributes: [{
+                    id: 'xml:foo.bar',
+                    name: 'foo.bar'
+                }, {
+                    id: 'xml:foo.qux',
+                    name: 'foo.qux'
+                }, {
+                    id: 'xml:bar.baz',
+                    name: 'bar.baz'
+                }],
+                id: 9
+            }],
+            id: 42,
+            name: 'foobarbazqux'
+        };
+
+        var result = schemaParser.fromDomainSchema(domainSchema);
+
+        expect(result['name']).toBe('foobarbazqux');
+        expect(result['hasChildren']).toBe(true);
+        expect(result['children'].length).toBe(2);
+        expect(result['children'][0].name).toBe('foo');
+        expect(result['children'][0].id).toBeUndefined();
+        expect(result['children'][0].hasChildren).toBe(true);
+        expect(result['children'][0].children.length).toBe(2);
+        expect(result['children'][0].children[0].name).toBe('bar');
+        expect(result['children'][0].children[0].id).toBe('xml:foo.bar');
+        expect(result['children'][0].children[0].hasChildren).toBe(false);
+        expect(result['children'][0].children[1].name).toBe('qux');
+        expect(result['children'][0].children[1].id).toBe('xml:foo.qux');
+        expect(result['children'][0].children[1].hasChildren).toBe(false);
+
+        expect(result['children'][1].name).toBe('bar');
+        expect(result['children'][1].id).toBeUndefined();
+        expect(result['children'][1].hasChildren).toBe(true);
+        expect(result['children'][1].children.length).toBe(1);
+        expect(result['children'][1].children[0].name).toBe('baz');
+        expect(result['children'][1].children[0].id).toBe('xml:bar.baz');
+        expect(result['children'][1].children[0].hasChildren).toBe(false);
+    });
+
+    it('should parse the data from a simple domain schema', function() {
+
+        var domainSchema = {
+            attribute_paths: [{
+                attributes: [{
+                    id: 'csv:foo',
+                    name: 'foo'
+                }, {
+                    id: 'csv:bar',
+                    name: 'bar'
+                }],
+                id: 9
+            }],
+            id: 42,
+            name: 'foobar'
+        };
+
+        var record = {
+            foo: 'this is foo',
+            bar: 'this is bar'
+        };
+
+        var result = schemaParser.parseFromDomainSchema(record, domainSchema);
+
+        expect(result['name']).toBe('foobar');
+        expect(result['children'].length).toBe(2);
+        expect(result['children'][0].name).toBe('foo');
+        expect(result['children'][0].title).toBe('this is foo');
+        expect(result['children'][0].leaf).toBe(true);
+        expect(result['children'][1].name).toBe('bar');
+        expect(result['children'][1].title).toBe('this is bar');
+        expect(result['children'][1].leaf).toBe(true);
+    });
+
+
+
+    it('should generate the tree model from a complex domain schema', function() {
+
+        var domainSchema = {
+            attribute_paths: [{
+                attributes: [{
+                    id: 'xml:foo.bar',
+                    name: 'foo.bar'
+                }, {
+                    id: 'xml:foo.qux',
+                    name: 'foo.qux'
+                }, {
+                    id: 'xml:bar.baz',
+                    name: 'bar.baz'
+                }],
+                id: 9
+            }],
+            id: 42,
+            name: 'foobarbazqux'
+        };
+
+        var record = {
+            foo: {
+                bar: 'this is bar',
+                qux: 'this is qux'
+            },
+            bar: {
+                baz: 'this is MADNESS'
+            }
+        };
+
+        var result = schemaParser.parseFromDomainSchema(record, domainSchema);
+
+        expect(result['name']).toBe('foobarbazqux');
+
+        expect(result['children'].length).toBe(2);
+        expect(result['children'][0].name).toBe('foo');
+        expect(result['children'][0].leaf).toBeUndefined();
+        expect(result['children'][0].children.length).toBe(2);
+        expect(result['children'][0].children[0].name).toBe('bar');
+        expect(result['children'][0].children[0].title).toBe('this is bar');
+        expect(result['children'][0].children[0].leaf).toBe(true);
+        expect(result['children'][0].children[1].name).toBe('qux');
+        expect(result['children'][0].children[1].title).toBe('this is qux');
+        expect(result['children'][0].children[1].leaf).toBe(true);
+
+        expect(result['children'][1].name).toBe('bar');
+        expect(result['children'][1].leaf).toBeUndefined();
+        expect(result['children'][1].children.length).toBe(1);
+        expect(result['children'][1].children[0].name).toBe('baz');
+        expect(result['children'][1].children[0].title).toBe('this is MADNESS');
+        expect(result['children'][1].children[0].leaf).toBe(true);
 
     });
 

@@ -11,7 +11,8 @@ describe('Controller: SourceDataCtrl', function () {
             jsRoutes: {
                 api: '/dmp/'
             }
-        }
+        },
+        _: _
     };
 
     beforeEach(module(function($provide) {

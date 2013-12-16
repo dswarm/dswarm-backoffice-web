@@ -6,7 +6,7 @@ angular.module('dmpApp')
             return $window.humanize.filesize(text);
         };
     }])
-    .controller('ImportCtrl', ['$scope', '$location', '$window', 'ngProgress', function ($scope, $location, $window, ngProgress) {
+    .controller('ImportCtrl', ['$scope', '$location', 'Util', 'ngProgress', function ($scope, $location, Util, ngProgress) {
 
         $scope.data = {};
         $scope.meta = {};
@@ -36,7 +36,7 @@ angular.module('dmpApp')
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === XMLHttpRequest.DONE) {
                             ngProgress.complete();
-                            if (xhr.status === 201) {
+                            if (Math.floor(xhr.status / 100) === 2) {
                                 var resp = JSON.parse(xhr.responseText),
                                     respId = resp['id'];
 
@@ -49,7 +49,7 @@ angular.module('dmpApp')
                     data.append('name', name);
                     data.append('description', description);
 
-                    xhr.open('POST', $window.dmp['jsRoutes']['api'] + 'resources', true);
+                    xhr.open('POST', Util.api + 'resources', true);
                     //xhr.open('POST', 'http://httpbin.org/post', true);
                     xhr.send(data);
                 })(f, $scope.data.name, $scope.data.description);

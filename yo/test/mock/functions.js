@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('mockedFunctions', [])
-  .value('mockFunctionsJSON', {
-    "functions": [
+  .value('mockFunctionsJSON',[
       {
         "name": "blacklist",
         "dsl": "metafacture",
@@ -119,5 +118,4 @@ angular.module('mockedFunctions', [])
         "reference": "whitelist"
       }
     ]
-  }
 );

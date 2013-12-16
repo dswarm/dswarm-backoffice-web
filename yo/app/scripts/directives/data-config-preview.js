@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', '$window', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, $window, PubSub, DataConfigPreviewResource, FileResource) {
+    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'Lo-Dash', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -110,7 +110,7 @@ angular.module('dmpApp')
                             encoding: config.parameters.encoding || 'UTF-8'
                         }, function(lines) {
 
-                            var map = $window['_'].map;
+                            var map = loDash.map;
 
                             $scope.colDefs = [{
                                 field: 'line',

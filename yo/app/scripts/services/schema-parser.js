@@ -18,8 +18,7 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-factory('schemaParser', ['$window', function ($window) {
-    var lod = $window['_'];
+factory('schemaParser', ['Lo-Dash', function (loDash) {
 
     /**
      * Maps from json-schema to the internal tree model.  Since json-schema
@@ -56,6 +55,106 @@ factory('schemaParser', ['$window', function ($window) {
         data.hasChildren = (data['children'] && data['children'].length > 0);
 
         return data;
+    }
+
+
+    /**
+     * Maps from DMP domain schema to json Schema and then uses mapData
+     * to get the internal tree model.
+     * The domain schema consists of several attribute paths,
+     * each containing one or more attributes.
+     *
+     *
+     * @param domainSchema  {{id: Number, name: String, attribute_paths: Array}}
+     * @param editableTitle {Boolean=}
+     * @returns {{name: String, show: boolean}}
+     */
+    function fromDomainSchema(domainSchema, editableTitle) {
+
+        var data = {name: domainSchema.name, show: true, editableTitle: editableTitle};
+
+        var make = function(obj) {
+            return angular.extend({show: true, hasChildren: false, editableTitle: editableTitle}, obj);
+        };
+
+        var loop = function(attribs, obj) {
+            var props = angular.extend({children: []}, obj);
+
+            var cache = {};
+
+            angular.forEach(attribs, function (val) {
+                var path = val.name.split('.');
+                if (path.length > 1) {
+
+                    var newVal = loDash.clone(val);
+                    newVal.name = path.slice(1).join('.');
+
+                    var name = path[0];
+                    if (!cache.hasOwnProperty(name)) {
+                        cache[name] = {name: name, children: []};
+                    }
+
+                    var parsed = loop([newVal]);
+                    cache[name].children = cache[name].children.concat(parsed.children);
+                } else {
+                    props.children.push(make(val));
+                }
+            });
+
+            angular.forEach(cache, function(item) {
+                item.hasChildren = item.children.length > 0;
+                props.children.push(item);
+            });
+
+            props.hasChildren = props.children.length > 0;
+
+            return props;
+        };
+
+        var paths = domainSchema['attribute_paths'];
+        var attrs = loDash.flatten(paths, true, 'attributes');
+
+        if (attrs.length) {
+            angular.extend(data, loop(attrs));
+        }
+
+        data.hasChildren = data.children && data.children.length > 0;
+
+        return data;
+    }
+
+    /**
+     * Parse in input record based on a schema, that is a domain schema.
+     * This will call `fromDomainSchmema` to gen an internal representation
+     * of the schema and will then transform it into something json-schema-esque.
+     *
+     * @param record        {Object}
+     * @param schemaResult  {Object}
+     * @returns {*}
+     */
+    function parseFromDomainSchema(record, schemaResult) {
+        var schema = fromDomainSchema(schemaResult);
+
+        var data = {title: schema.name, type: 'object'};
+
+        var loop = function(children) {
+
+            var properties = {};
+            angular.forEach(children, function(child) {
+                if (child.hasChildren) {
+                    properties[child.name] = {type: 'object'};
+                    properties[child.name].properties = loop(child.children);
+                } else {
+                    properties[child.name] = {type: 'string'};
+                }
+            });
+
+            return properties;
+        };
+
+        data.properties = loop(schema.children);
+
+        return parseAny(record, schema.name, data);
     }
 
     /**
@@ -119,7 +218,7 @@ factory('schemaParser', ['$window', function ($window) {
         }
 
         // no properties found? try to be forgiving
-        if (!hasMatch && !hasText && lod.keys(properties).length === 1) {
+        if (!hasMatch && !hasText && loDash.keys(properties).length === 1) {
             angular.forEach(properties, function(val, key) {
                 var it = parseAny(container, key, val);
                 if (it) {
@@ -147,7 +246,7 @@ factory('schemaParser', ['$window', function ($window) {
         angular.forEach(container, function (item) {
             // nested properties may be due to xsd parsing
             // if there is only one children equally named as the current container, traverse into it
-            while (lod.isEqual(lod.keys(properties), [name])) {
+            while (loDash.isEqual(loDash.keys(properties), [name])) {
                 properties = properties[name];
             }
 
@@ -362,6 +461,8 @@ factory('schemaParser', ['$window', function ($window) {
 
     return {
         mapData: mapData
+      , fromDomainSchema: fromDomainSchema
+      , parseFromDomainSchema: parseFromDomainSchema
       , makeItem: makeItem
       , parseObject: parseObject
       , parseArray: parseArray

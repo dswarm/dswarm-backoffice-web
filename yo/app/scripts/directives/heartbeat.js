@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('heartbeat', ['$timeout', '$http', '$window', function($timeout, $http, $window) {
+    .directive('heartbeat', ['$timeout', '$http', 'Util', function($timeout, $http, Util) {
         return function heartbeatLinkFn(scope, elem, attrs) {
             var intervalTime = +scope.$eval(attrs.interval) || 1000,
                 endpoint = scope.$eval(attrs.endpoint),
                 expected = scope.$eval(attrs.expected),
-                api = $window['dmp']['jsRoutes']['api'],
+                api = Util.apiEndpoint,
                 config = {
                     method: 'GET',
                     url: api + endpoint,

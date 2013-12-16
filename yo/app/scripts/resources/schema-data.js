@@ -17,6 +17,15 @@ angular.module('dmpApp')
                     id: '@id',
                     cid: '@cid'
                 },
+                cache: true
+            },
+            oldSchema: {
+                method: 'GET',
+                params: {
+                    kind: 'schema',
+                    id: '@id',
+                    cid: '@cid'
+                },
                 transformResponse: function (data, headers) {
                     if (angular.lowercase(headers('content-type')) === 'application/json') {
                         return {data: JSON.parse(data)};

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$http', '$timeout', '$modal', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub', function ($scope, $http, $timeout, $modal, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
@@ -66,9 +67,7 @@ angular.module('dmpApp')
                     id: resourceId
                 }).$promise;
 
-                sourceTransformer = function(res) {
-                    return res['data'];
-                };
+                sourceTransformer = angular.identity;
 
                 var allPromise = $q.all([sourcePromise, resourcePromise]);
 
@@ -77,7 +76,7 @@ angular.module('dmpApp')
                         resourceData = result[1];
 
                     $scope.addSource(
-                        schemaParser.mapData(sourceSchema['title'], sourceSchema),
+                        schemaParser.fromDomainSchema(sourceSchema),
                         resourceId,
                         configId,
                         false,
@@ -146,7 +145,7 @@ angular.module('dmpApp')
                 id: args.id,
                 cid: latestConfigurationId
             }, function(result) {
-                $scope.targetSchema = schemaParser.mapData(result.data['title'], result.data);
+                $scope.targetSchema = schemaParser.fromDomainSchema(result);
 
                 $scope.isTargetLoading = false;
                 $scope.loadTargetError = '';
