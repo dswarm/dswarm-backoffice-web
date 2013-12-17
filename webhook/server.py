@@ -27,14 +27,12 @@ def _update(tag, cmds, **kwargs):
         ["git", "checkout", tag]
     ]
 
-    kws = dict(stderr=STDOUT, **kwargs)
-
     returncode = 0
     output = ''
 
     try:
         for cmd in git + [cmds]:
-            output += check_output_and_error(cmd, **kws)
+            output += check_output_and_error(cmd, **kwargs)
     except CalledProcessError as e:
         output = e.message + '\n\n' + e.output
         returncode = e.returncode
