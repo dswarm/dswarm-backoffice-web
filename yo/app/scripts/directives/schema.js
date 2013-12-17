@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', 'SchemaDataResource', 'FileResource', 'PubSub',
-        function ($scope, $timeout, schemaParser, $q, SchemaDataResource, FileResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'SchemaDataResource', 'FileResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, $modal, SchemaDataResource, FileResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
