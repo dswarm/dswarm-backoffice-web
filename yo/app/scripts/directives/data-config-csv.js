@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'Util', 'Lo-Dash', 'DataConfigResource', 'FileResource', 'PubSub', function ($scope, $routeParams, $location, Util, loDash, DataConfigResource, FileResource, PubSub) {
+    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'Lo-Dash', 'DataModelResource', 'ResourceResource', 'PubSub',
+        function ($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
+
+        var resource = null;
 
         var allFields = 'config.parameters',
             allTickableFields = {
@@ -49,9 +52,6 @@ angular.module('dmpApp')
             return config;
         }
 
-        // TEMP
-        $scope.config.id = 1;
-
         $scope.resourceId = 1;
         if($routeParams.resourceId >= 0) {
             $scope.resourceId = $routeParams.resourceId;
@@ -59,41 +59,52 @@ angular.module('dmpApp')
 
         $scope.config.parameters = $scope.presets.parameters;
 
-        DataConfigResource.query({ resourceId: $scope.resourceId }, function(result) {
+        ResourceResource.get({ id: $scope.resourceId }, function(result) {
 
-            var latestConfig = Util.latestBy(result, 'id');
+            resource = result;
 
-            if (angular.isObject(latestConfig)) {
+            if (result.configurations) {
 
-                $scope.config.name = latestConfig.name;
-                $scope.config.description = latestConfig.description;
-                $scope.config.id = latestConfig.id;
+                var latestConfig = loDash.max(result.configurations, 'id');
 
-                angular.forEach(allTickableFields, function(ticker, param) {
-                    var varName = param.substring(param.lastIndexOf('.') + 1);
-                    if (angular.isDefined(latestConfig.parameters[varName]) && +latestConfig.parameters[varName] > 0) {
-                        $scope[ticker] = true;
-                    }
-                });
+                if (angular.isObject(latestConfig)) {
 
-                $scope.config.parameters = latestConfig.parameters;
+                    $scope.config.name = latestConfig.name;
+                    $scope.config.description = latestConfig.description;
+                    $scope.config.id = latestConfig.id;
+
+                    angular.forEach(allTickableFields, function(ticker, param) {
+                        var varName = param.substring(param.lastIndexOf('.') + 1);
+                        if (angular.isDefined(latestConfig.parameters[varName]) && +latestConfig.parameters[varName] > 0) {
+                            $scope[ticker] = true;
+                        }
+                    });
+
+                    $scope.config.parameters = latestConfig.parameters;
+                }
             }
-
         });
 
         $scope.onSaveClick = function() {
 
-            DataConfigResource.save({ resourceId: $scope.resourceId }, getConfig(), function() {
-                $location.path('#/data/');
+            var model = {
+                'data_resource': resource,
+                'configuration': getConfig()
+            };
+
+            DataModelResource.save({}, model, function(savedModel) {
+
+                console.log(savedModel);
+                $location.path('/data/');
             });
 
         };
 
         $scope.onCancelClick = function() {
-            $location.path( '#/data/' );
+            $location.path( '/data/' );
         };
 
-        // When file fornat changes, update default rowseperator
+        // When file format changes, update default row separator
         $scope.onFileFormatChanged = function() {
             if($scope.config.parameters.fileFormat && $scope.config.parameters.fileFormat.rowSeperator) {
                 $scope.config.parameters.rowSeperator = $scope.config.parameters.fileFormat.rowSeperator;

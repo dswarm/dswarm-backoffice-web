@@ -1,25 +1,18 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', ['$scope', 'FileResource', 'Util', function ($scope, FileResource, Util) {
+    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'DataModelResource', 'Lo-Dash', function ($scope, ResourceResource, DataModelResource, loDash) {
 
         $scope.files = [];
 
-        FileResource.query(function(result) {
+        DataModelResource.query(function(results) {
 
-            $scope.files = [];
+            $scope.files = loDash.map(results, function(result) {
 
-            angular.forEach(result, function(value) {
+                result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
 
-                if(value.configurations) {
-
-                    var latestConfig = Util.latestBy(value.configurations);
-                    value['storage_type'] = latestConfig.parameters['storage_type'];
-                }
-
-                $scope.files.push(value);
+                return result;
             });
-
         });
 
         $scope.schemaListOptions = {

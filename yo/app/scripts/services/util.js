@@ -33,10 +33,15 @@ angular.module('dmpApp')
 
         var baseUrl =  Util.apiEndpoint;
 
-        function create(resource, paramDefaults, actions) {
-            var endpoint = resource + '/:id';
+        function create(resource, actionsFactory) {
+            var endpoint = resource + '/:id',
+                finalUrl = baseUrl + endpoint;
 
-            return $resource(baseUrl + endpoint, paramDefaults, actions);
+            if (angular.isFunction(actionsFactory)) {
+                return $resource(finalUrl, undefined, actionsFactory(finalUrl));
+            }
+
+            return $resource(finalUrl);
         }
 
         return {

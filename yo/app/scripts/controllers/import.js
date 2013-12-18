@@ -50,7 +50,6 @@ angular.module('dmpApp')
                     data.append('description', description);
 
                     xhr.open('POST', Util.apiEndpoint + 'resources', true);
-                    //xhr.open('POST', 'http://httpbin.org/post', true);
                     xhr.send(data);
                 })(f, $scope.data.name, $scope.data.description);
             }
