@@ -43,7 +43,6 @@ angular.module('dmpApp')
         $scope.loadData = function(dataModelId, schemaId, resourceName) {
 
             var schemaPromise, dataPromise,
-                schemaTransformer, dataTransformer,
                 scopeSetter;
 
             $scope.resourceName = resourceName;

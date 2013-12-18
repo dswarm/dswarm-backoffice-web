@@ -12,7 +12,7 @@ describe('Controller: SchemaCtrl', function () {
         _: _
     };
 
-    beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema'));
+    beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema', 'mockedDataModel'));
 
     beforeEach(module(function($provide) {
         $provide.value('$window', win);
@@ -34,6 +34,8 @@ describe('Controller: SchemaCtrl', function () {
 
         $httpBackend.whenGET('/dmp/resources/1/configurations/1/schema').respond($injector.get('mockSchemaSimpleJSON'));
         $httpBackend.whenGET('/dmp/resources/1').respond($injector.get('mockSchemaSimpleJSON'));
+
+        $httpBackend.whenGET('/dmp/datamodels/1').respond($injector.get('mockDataModelJSON'));
 
         var $controller = $injector.get('$controller');
 
@@ -148,8 +150,8 @@ describe('Controller: SchemaCtrl', function () {
 
         var source = {
             name : 'foo',
-            resourceId : 1,
-            configId : 1,
+            dataModelId : 1,
+            schemaId : 1,
             schema : schema,
             collapsed : true,
             selected : true
@@ -160,8 +162,8 @@ describe('Controller: SchemaCtrl', function () {
         scope.selectSource(source);
 
         expect($rootScope.$broadcast).toHaveBeenCalledWith("handleLoadData",{
-            resourceId : source.resourceId,
-            configId : source.configId,
+            dataModelId : source.dataModelId,
+            schemaId : source.schemaId,
             resourceName : source.name
         });
 
@@ -171,9 +173,11 @@ describe('Controller: SchemaCtrl', function () {
 
     it('should load source data from server', function() {
 
+        $httpBackend.expectGET('/dmp/datamodels/1');
+
         schemaCtrl();
 
-        scope.loadSourceData(1, 1);
+        scope.loadSourceData(1);
 
         $rootScope.$digest();
         $httpBackend.flush();
