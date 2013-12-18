@@ -4,6 +4,8 @@ angular.module('dmpApp')
     .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'Lo-Dash', 'DataModelResource', 'ResourceResource', 'PubSub',
         function ($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
 
+        function returnToData() { $location.path('/data/'); }
+
         var resource = null;
 
         var allFields = 'config.parameters',
@@ -92,17 +94,11 @@ angular.module('dmpApp')
                 'configuration': getConfig()
             };
 
-            DataModelResource.save({}, model, function(savedModel) {
-
-                console.log(savedModel);
-                $location.path('/data/');
-            });
+            DataModelResource.save({}, model, returnToData);
 
         };
 
-        $scope.onCancelClick = function() {
-            $location.path( '/data/' );
-        };
+        $scope.onCancelClick = returnToData;
 
         // When file format changes, update default row separator
         $scope.onFileFormatChanged = function() {

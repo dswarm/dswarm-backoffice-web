@@ -3,26 +3,12 @@
 describe('Controller: DataConfigCsvCtrl', function () {
     var $httpBackend, $rootScope, $location, scope, dataConfigCsvCtrl, $jsonResponse, $jsonResponseGet;
 
-    var win = {
-        _: {
-            debounce: function(fn, timeout) {
-                return function() {
-                    fn();
-                }
-            },
-            max: _.max
-        },
-        dmp: {
-            jsRoutes: {
-                api: ''
-            }
-        }
-    };
-
     beforeEach(module('dmpApp', 'mockedDataConfig'));
 
     beforeEach(module(function($provide) {
-        $provide.value('$window', win);
+        $provide.value('Util', {
+            apiEndpoint: '/dmp/'
+        });
     }));
 
     beforeEach(function() {
@@ -40,8 +26,8 @@ describe('Controller: DataConfigCsvCtrl', function () {
         $jsonResponse = $injector.get('mockDataConfigSaveJSON');
         $jsonResponseGet = $injector.get('mockDataConfigGetJSON');
 
-        $httpBackend.whenGET('resources/1/configurations').respond($jsonResponseGet);
-        $httpBackend.whenPOST('resources/1/configurations').respond($jsonResponse);
+        $httpBackend.whenGET('/dmp/resources/1').respond($jsonResponseGet);
+        $httpBackend.whenPOST('/dmp/datamodels').respond($jsonResponse);
 
         scope = $rootScope.$new();
 
@@ -72,14 +58,14 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         scope.onCancelClick();
 
-        expect($location.path()).toBe('/#/data/');
+        expect($location.path()).toBe('/data/');
 
     });
 
     it('should change location after save', function() {
 
-        $httpBackend.expectGET('resources/1/configurations');
-        $httpBackend.expectPOST('resources/1/configurations');
+        $httpBackend.expectGET('/dmp/resources/1');
+        $httpBackend.expectPOST('/dmp/datamodels');
 
         dataConfigCsvCtrl();
 
@@ -93,7 +79,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
         $rootScope.$digest();
         $httpBackend.flush();
 
-        expect($location.path()).toBe('/#/data/');
+        expect($location.path()).toBe('/data/');
 
     });
 
