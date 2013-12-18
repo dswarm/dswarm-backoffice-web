@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SourceDataCtrl', ['$scope', '$http', '$q', 'schemaParser', 'SchemaDataResource', 'PubSub', function ($scope, $http, $q, schemaParser, SchemaDataResource, PubSub) {
+    .controller('SourceDataCtrl', ['$scope', '$http', '$q', 'schemaParser', 'DataModelResource', 'SchemaResource', 'SchemaDataResource', 'PubSub',
+        function ($scope, $http, $q, schemaParser, DataModelResource, SchemaResource, SchemaDataResource, PubSub) {
         $scope.internalName = 'Source Data Widget';
 
         $scope.data = {};
@@ -18,9 +19,11 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'handleLoadData', function(args) {
 
-            if(args && args.resourceId) {
-                $scope.loadData(args.resourceId, args.configId, args.resourceName);
+            if(args && args.dataModelId) {
+
+                $scope.loadData(args.dataModelId, args.schemaId, args.resourceName);
             } else {
+
                 $scope.data = {};
                 $scope.showData = false;
                 $scope.resourceName = '';
@@ -37,7 +40,7 @@ angular.module('dmpApp')
 
         });
 
-        $scope.loadData = function(resourceId, configId, resourceName) {
+        $scope.loadData = function(dataModelId, schemaId, resourceName) {
 
             var schemaPromise, dataPromise,
                 schemaTransformer, dataTransformer,
@@ -45,22 +48,16 @@ angular.module('dmpApp')
 
             $scope.resourceName = resourceName;
 
-            if (resourceId && configId) {
+            if (dataModelId && schemaId) {
 
-                schemaPromise = SchemaDataResource.schema({
-                    id: resourceId,
-                    cid: configId
-                }).$promise;
-
-                schemaTransformer = angular.identity;
-
-                dataPromise = SchemaDataResource.data({
-                    id: resourceId,
-                    cid: configId,
+                dataPromise = DataModelResource.data({
+                    id: dataModelId,
                     atMost: 3
                 }).$promise;
 
-                dataTransformer = angular.identity;
+                schemaPromise = SchemaResource.get({
+                    id: schemaId
+                }).$promise;
 
                 scopeSetter = function(schemaResult, dataResult) {
 
@@ -86,8 +83,8 @@ angular.module('dmpApp')
 
             allPromise.then(function (result) {
 
-                var schemaResult = schemaTransformer(result[0])
-                    , dataResult = dataTransformer(result[1]);
+                var schemaResult = result[0]
+                    , dataResult = result[1];
 
                 scopeSetter(schemaResult, dataResult);
             });
@@ -99,10 +96,6 @@ angular.module('dmpApp')
     }])
     .directive('sourceData', [ function () {
         return {
-            scope: {
-                'resourceId': '@',
-                'configId': '@'
-            },
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/source-data.html',

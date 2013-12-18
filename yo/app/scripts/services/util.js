@@ -26,6 +26,29 @@ angular.module('dmpApp')
         };
     }])
 /**
+ * Factory for creating basic resources, that follow a typial pattern.
+ * TODO: what cas restangular do here for us?
+ */
+    .factory('ResourceFactory', ['$resource', 'Util', function($resource, Util) {
+
+        var baseUrl =  Util.apiEndpoint;
+
+        function create(resource, actionsFactory) {
+            var endpoint = resource + '/:id',
+                finalUrl = baseUrl + endpoint;
+
+            if (angular.isFunction(actionsFactory)) {
+                return $resource(finalUrl, undefined, actionsFactory(finalUrl));
+            }
+
+            return $resource(finalUrl);
+        }
+
+        return {
+            create: create
+        };
+    }])
+/**
  * Provide utility functions to generate UUID-4-ish pseudo-random identifiers.
  * For more concrete implementations, refer to
  * http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript

@@ -2,6 +2,6 @@
 
 angular.module('dmpApp')
     .controller('ModelCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {
-        $scope.resourceId = $routeParams.resourceId;
-        $scope.configId = $routeParams.configId;
+        $scope.dataModelId = $routeParams.dataModelId;
+        $scope.schemaId = $routeParams.schemaId;
     }]);
