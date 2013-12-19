@@ -28,6 +28,9 @@ angular.module('dmpApp')
         $scope.components = [];
         $scope.tabs = [];
 
+        $scope.sourceDataModel = null;
+        $scope.targetDataModel = null;
+
         function activate(id, skipBackup, skipBroadcast) {
             $scope.showSortable = true;
             if (activeComponentId !== id) {
@@ -92,13 +95,13 @@ angular.module('dmpApp')
             if (activeComponentId === tab.id) {
 
 
-                var pl = generatePayload(tab);
-                dump(pl);
+                //var pl = generatePayload(tab);
+                //dump(pl);
 
 
 
-                var payload = dmg.genTask([tab]);
-                dump(payload);
+                var payload = dmg.genTask([tab], $scope.sourceDataModel, $scope.targetDataModel);
+                //dump(payload);
 
                 sendTransformations(payload);
             }
@@ -106,8 +109,8 @@ angular.module('dmpApp')
 
         $scope.sendTransformations = function () {
 
-            var payload = dmg.genTask($scope.tabs);
-            dump(payload);
+            var payload = dmg.genTask($scope.tabs, $scope.sourceDataModel, $scope.targetDataModel);
+            //dump(payload);
 
             sendTransformations(payload);
         };
@@ -134,6 +137,9 @@ angular.module('dmpApp')
                             source: data.source,
                             target: data.target
                         };
+
+                    $scope.sourceDataModel = data.sourceData.sourceDataModel;
+                    $scope.targetDataModel = data.targetData.targetDataModel;
 
                     allComponents[id] = {
                         components: [],

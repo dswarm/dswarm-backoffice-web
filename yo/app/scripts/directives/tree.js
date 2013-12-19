@@ -11,6 +11,14 @@ angular.module('dmpApp')
             $scope.layer = parseInt($scope.$parent.layer, 10) + 1;
         }
 
+        if($scope.$parent && $scope.$parent.sourceDataModel && Object.keys($scope.$parent.sourceDataModel).length >0) {
+            $scope.sourceDataModel = $scope.$parent.sourceDataModel;
+        }
+
+        if($scope.$parent && $scope.$parent.targetDataModel && Object.keys($scope.$parent.targetDataModel).length >0) {
+            $scope.targetDataModel = $scope.$parent.targetDataModel;
+        }        
+
         if($scope.$parent && $scope.$parent.name) {
             $scope.parentName = $scope.$parent.name;
         } else {
@@ -32,7 +40,7 @@ angular.module('dmpApp')
                     location: 1,
                     width: 10,
                     length: 12,
-                    foldback: 0.75,
+                    foldback: 0.75
                 }]
             ],
             connector: 'StateMachine',
