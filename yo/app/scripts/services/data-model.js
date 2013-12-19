@@ -22,13 +22,17 @@ angular.module('dmpApp')
             }
 
             return function genFunctions(payload) {
+                // TODO: load from funtions instead of generating
                 return {
-                    id: getId(payload.dsl, payload.reference)
+                    'function_description': payload,
+                    name: payload.name,
+                    parameters: loDash.keys(payload.parameters),
+                    type: 'Function'
                 };
             };
         })();
 
-        function genParamMappings(params, parameters) {
+        function genParamMappings(params) {
             var paramsMap = {};
             angular.forEach(params, function(val, key) {
                 if (val.data) {
@@ -36,46 +40,37 @@ angular.module('dmpApp')
                 }
             });
 
-            if (parameters) {
-                angular.forEach(parameters, function(val, key) {
-                    paramsMap[val] = key + '';
-                });
-            }
-
             return paramsMap;
         }
 
-        function genComponent(component, parameters, previous) {
+        function genComponent(component, previous) {
             /* jshint camelcase:false */
-            var uuid = GUID.uuid4(),
-                params = genParamMappings(component.payload.parameters, parameters),
-                comp = {
-                    id: uuid,
-                    name: component.payload.name,
-                    description: component.payload.description,
-                    'function': genFunctions(component.payload)
-                };
+            var comp = {
+                name: component.payload.name,
+                description: component.payload.description,
+                'function': genFunctions(component.payload)
+            };
+
+            comp.parameter_mappings = genParamMappings(component.payload.parameters);
 
             if (angular.isDefined(previous)) {
-                comp.input_components = [{
-                    id: previous.id
-                }];
+                comp.input_components = [previous];
 
                 var output = previous.output_components || [];
-                output.push({
-                    id: uuid
-                });
+                output.push(comp);
                 previous.output_components = output;
             }
 
-            comp.parameter_mappings = params;
             return comp;
         }
 
         function genAttribPath(component) {
+            // TODO: copy this from schema instead of generating
             return {
-                id: component.payload.path,
-                name: component.payload.name
+                attributes: [{
+                    id: component.payload.path,
+                    name: component.payload.name
+                }]
             };
         }
 
@@ -99,37 +94,31 @@ angular.module('dmpApp')
         };
 
         DataModelGen.prototype.genTransformation = function genTransformation(tab) {
-            var uuid = GUID.uuid4(),
-                scp = this.getScope(tab);
+            var scp = this.getScope(tab);
 
             if (!scp) {
                 return null;
             }
 
-            // this must be per component
-            var parameters = {
-                transformationInputString: 'inputString'
-            };
             return {
-                id: uuid,
                 name: tab.title,
-                description: tab.title,
-                parameters: loDash.keys(parameters),
-                components: loDash.foldl(scp.components, function(acc, c) {
-                    acc.push(genComponent(c, acc.length? {'previousComponent.outputString': 'inputString'} :parameters, loDash.last(acc)));
-                    return acc;
-                }, [])
+                'function': {
+                    name: 'transformation',
+                    type: 'Transformation',
+                    components: loDash.foldl(scp.components, function(acc, c) {
+                        acc.push(genComponent(c, loDash.last(acc)));
+                        return acc;
+                    }, [])
+                }
             };
         };
 
         DataModelGen.prototype.genMapping = function genMapping(tab) {
             /* jshint camelcase:false */
             var scp = this.getScope(tab),
-                transformation = this.genTransformation(tab),
-                id = GUID.uuid4();
+                transformation = this.genTransformation(tab);
 
             return {
-                id: id,
                 name: transformation.name,
                 transformation: transformation,
                 input_attribute_paths: [
@@ -142,8 +131,16 @@ angular.module('dmpApp')
         DataModelGen.prototype.genJob = function genJob(tabs) {
             var mappings = loDash(tabs).map(this.genMapping, this).filter(notNull).valueOf();
             return {
-                id: GUID.uuid4(),
                 mappings: mappings
+            };
+        };
+
+        DataModelGen.prototype.genTask = function genTask(tabs, inputModel, outputModel) {
+            /* jshint camelcase:false */
+            return {
+                input_data_model: inputModel,
+                output_data_model: outputModel,
+                job: this.genJob(tabs)
             };
         };
 
