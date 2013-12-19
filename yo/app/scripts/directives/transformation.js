@@ -15,10 +15,10 @@ angular.module('dmpApp')
                 };
             })();
 
-        var dump = function(o) {
+        /*var dump = function(o) {
             console.log(o);
             console.log(JSON.stringify(o, null, 2));
-        };
+        };*/
 
         var dmg = new DataModelGen(allComponents);
 
@@ -61,25 +61,6 @@ angular.module('dmpApp')
         $scope.switchTab = function(tab) {
             activate(tab.id);
         };
-
-        function generatePayload(tab) {
-            var id = tab.id
-                , scp = allComponents[id];
-
-            if (!scp) {
-                return null;
-            }
-
-            return {
-                'id': id,
-                'name': tab.title,
-                'components': angular.copy(scp.components),
-                'source': angular.copy(scp.source),
-                'target': angular.copy(scp.target),
-                'resource_id': scp.source.payload.resourceId,
-                'configuration_id': scp.source.payload.configurationId
-            };
-        }
 
         function sendTransformations(transformations) {
             TaskResource.save(transformations, function (resp) {

@@ -17,7 +17,7 @@ angular.module('dmpApp')
 
         if($scope.$parent && $scope.$parent.targetDataModel && Object.keys($scope.$parent.targetDataModel).length >0) {
             $scope.targetDataModel = $scope.$parent.targetDataModel;
-        }        
+        }
 
         if($scope.$parent && $scope.$parent.name) {
             $scope.parentName = $scope.$parent.name;
