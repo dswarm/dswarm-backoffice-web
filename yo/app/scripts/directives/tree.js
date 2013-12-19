@@ -22,17 +22,17 @@ angular.module('dmpApp')
         $scope.jspSourceOptions = {
             scope: 'schema',
             container: 'schema',
-            anchor: 'Continuous',
+            anchor: ['Continuous', { faces:['top'] } ],
             endpoint: ['Dot', {
                 radius: 5,
-                cssClass: 'source-endpoint'
+                cssClass: 'source-endpoint source-endpoint-tree'
             }],
             connectorOverlays: [
                 ['Arrow', {
                     location: 1,
                     width: 10,
                     length: 12,
-                    foldback: 0.75
+                    foldback: 0.75,
                 }]
             ],
             connector: 'StateMachine',
@@ -49,7 +49,7 @@ angular.module('dmpApp')
         $scope.jspTargetOptions = {
             scope: 'schema',
             container: 'schema',
-            anchor: 'Continuous',
+            anchor: ['Continuous', { faces:['top'] } ],
             endpoint: ['Dot', {
                 radius: 5,
                 cssClass: 'transparent'
