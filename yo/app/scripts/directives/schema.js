@@ -14,6 +14,9 @@ angular.module('dmpApp')
         $scope.isSourceLoading = true;
         $scope.loadTargetError = '';
 
+        $scope.sourceDataModel = null;
+        $scope.targetDataModel = null;
+
         $scope.onTargetSchemaSelectorClick = function() {
 
             var modalInstance = $modal.open({
@@ -58,7 +61,9 @@ angular.module('dmpApp')
 
                 DataModelResource.get({id: dataModelId}, function(model) {
 
-                    var sourceSchema = model['schema'];
+                    $scope.sourceDataModel = model;
+
+                    var sourceSchema = $scope.sourceDataModel['schema'];
 
                     $scope.addSource(
                         schemaParser.fromDomainSchema(sourceSchema),
@@ -110,6 +115,10 @@ angular.module('dmpApp')
         };
 
         $scope.handleTargetSchemaSelected = function(dataModel) {
+
+            delete dataModel['storage_type'];
+
+            $scope.targetDataModel = dataModel;
 
             $scope.targetSchema = schemaParser.fromDomainSchema(dataModel.schema);
 

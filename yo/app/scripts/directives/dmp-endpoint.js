@@ -20,7 +20,7 @@ angular.module('dmpApp')
                     var component = {
                             dropEndpoint : null,
                             scope : 'schema',
-                            sourceId : payload.source.guid,
+                            sourceId : payload.source,
                             targetId : scope.guid
                         };
 
@@ -188,7 +188,9 @@ angular.module('dmpApp')
         function getData(c) {
             var scp = angular.element(c).scope(),
                 data = scp.data,
-                parentName = scp.parentName;
+                parentName = scp.parentName,
+                sourceDataModel = scp.sourceDataModel,
+                targetDataModel = scp.targetDataModel;
 
             if(data) {
                 data.path = realPath([], scp);
@@ -199,6 +201,9 @@ angular.module('dmpApp')
             if(parentName) {
                 data.parentName = parentName;
             }
+
+            data.sourceDataModel = sourceDataModel;
+            data.targetDataModel = targetDataModel;
 
             data.resourceId = scp.resId;
             data.configurationId = scp.confId;

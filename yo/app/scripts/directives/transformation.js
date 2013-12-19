@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$window', '$modal', 'PubSub', 'Lo-Dash', 'TransformationResource', 'DataModelGen', function ($scope, $window, $modal, PubSub, loDash, TransformationResource, DataModelGen) {
+    .controller('TransformationCtrl', ['$scope', '$window', '$modal', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen', function ($scope, $window, $modal, PubSub, loDash, TaskResource, DataModelGen) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
@@ -15,10 +15,10 @@ angular.module('dmpApp')
                 };
             })();
 
-        var dump = function(o) {
+        /*var dump = function(o) {
             console.log(o);
             console.log(JSON.stringify(o, null, 2));
-        };
+        };*/
 
         var dmg = new DataModelGen(allComponents);
 
@@ -27,6 +27,9 @@ angular.module('dmpApp')
         $scope.targetComponent = null;
         $scope.components = [];
         $scope.tabs = [];
+
+        $scope.sourceDataModel = null;
+        $scope.targetDataModel = null;
 
         function activate(id, skipBackup, skipBroadcast) {
             $scope.showSortable = true;
@@ -59,27 +62,8 @@ angular.module('dmpApp')
             activate(tab.id);
         };
 
-        function generatePayload(tab) {
-            var id = tab.id
-                , scp = allComponents[id];
-
-            if (!scp) {
-                return null;
-            }
-
-            return {
-                'id': id,
-                'name': tab.title,
-                'components': angular.copy(scp.components),
-                'source': angular.copy(scp.source),
-                'target': angular.copy(scp.target),
-                'resource_id': scp.source.payload.resourceId,
-                'configuration_id': scp.source.payload.configurationId
-            };
-        }
-
-        function sendTransformations(transformations, singleTransformation) {
-            TransformationResource[singleTransformation? 'one' : 'all'](transformations, function (resp) {
+        function sendTransformations(transformations) {
+            TaskResource.save(transformations, function (resp) {
                 console.log(resp);
                 PubSub.broadcast('transformationFinished', resp.data);
             }, function (resp) {
@@ -90,26 +74,26 @@ angular.module('dmpApp')
 
         $scope.sendTransformation = function (tab) {
             if (activeComponentId === tab.id) {
-                var transformation = generatePayload(tab);
 
-                dump(dmg.genJob([tab]));
 
-                sendTransformations(transformation, true);
+                //var pl = generatePayload(tab);
+                //dump(pl);
+
+
+
+                var payload = dmg.genTask([tab], $scope.sourceDataModel, $scope.targetDataModel);
+                //dump(payload);
+
+                sendTransformations(payload);
             }
         };
 
         $scope.sendTransformations = function () {
-            var payloads = loDash($scope.tabs).map(generatePayload).filter(function (payload) {
-                return payload !== null;
-            }).valueOf();
 
-            dump(dmg.genJob($scope.tabs));
+            var payload = dmg.genTask($scope.tabs, $scope.sourceDataModel, $scope.targetDataModel);
+            //dump(payload);
 
-            var transformations = {
-                'transformations': payloads
-            };
-
-            sendTransformations(transformations);
+            sendTransformations(payload);
         };
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
@@ -134,6 +118,9 @@ angular.module('dmpApp')
                             source: data.source,
                             target: data.target
                         };
+
+                    $scope.sourceDataModel = data.sourceData.sourceDataModel;
+                    $scope.targetDataModel = data.targetData.targetDataModel;
 
                     allComponents[id] = {
                         components: [],
