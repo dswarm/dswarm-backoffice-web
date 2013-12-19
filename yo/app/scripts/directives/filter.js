@@ -70,7 +70,7 @@ angular.module('dmpApp')
         $scope.addFilter = function () {
 
             $scope.component.filters.push({
-                filter : schemaParser.mapData($scope.dataSchema['title'], $scope.dataSchema, true),
+                filter : schemaParser.fromDomainSchema($scope.dataSchema, true),
                 inputfilters : [],
                 name : 'new filter'
             });
