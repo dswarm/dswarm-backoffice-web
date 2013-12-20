@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$window', '$modal', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen', function ($scope, $window, $modal, PubSub, loDash, TaskResource, DataModelGen) {
+    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen',
+        function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var allComponents = {}
@@ -28,8 +29,8 @@ angular.module('dmpApp')
         $scope.components = [];
         $scope.tabs = [];
 
-        $scope.sourceDataModel = null;
-        $scope.targetDataModel = null;
+//        $scope.sourceDataModel = null;
+//        $scope.targetDataModel = null;
 
         function activate(id, skipBackup, skipBroadcast) {
             $scope.showSortable = true;
@@ -62,26 +63,28 @@ angular.module('dmpApp')
             activate(tab.id);
         };
 
-        function sendTransformations(transformations) {
-            TaskResource.save(transformations, function (resp) {
-                console.log(resp);
-                PubSub.broadcast('transformationFinished', resp.data);
-            }, function (resp) {
-                console.log(resp);
-                $window.alert(resp.data.error);
+        function sendTransformations(tasks) {
+            var promises = loDash.map(tasks, function(task) {
+                return TaskResource.execute(task).$promise;
             });
+
+            $q.all(promises)
+                .then(function(results) {
+                    loDash.forEach(results, function(result) {
+                        console.log(result);
+                        PubSub.broadcast('transformationFinished', result.data);
+                    });
+                }, function(resp) {
+                    console.log(resp);
+                    $window.alert(resp.message || resp.data.error);
+                });
+
         }
 
         $scope.sendTransformation = function (tab) {
             if (activeComponentId === tab.id) {
 
-
-                //var pl = generatePayload(tab);
-                //dump(pl);
-
-
-
-                var payload = dmg.genTask([tab], $scope.sourceDataModel, $scope.targetDataModel);
+                var payload = dmg.genTask([tab]);
                 //dump(payload);
 
                 sendTransformations(payload);
@@ -90,7 +93,7 @@ angular.module('dmpApp')
 
         $scope.sendTransformations = function () {
 
-            var payload = dmg.genTask($scope.tabs, $scope.sourceDataModel, $scope.targetDataModel);
+            var payload = dmg.genTask($scope.tabs);
             //dump(payload);
 
             sendTransformations(payload);
@@ -106,21 +109,19 @@ angular.module('dmpApp')
 
                     var start = {
                             componentType: 'source',
-                            payload: data.sourceData,
-                            id: data.id + ':source',
-                            source: data.source,
-                            target: data.target
-                        }
-                        , end = {
+                            id: data.sourcePath.id,
+                            attribute: data.sourcePath,
+                            dataModel: data.sourceModel
+                        },
+                        end = {
                             componentType: 'target',
-                            payload: data.targetData,
-                            id: data.id + ':source',
-                            source: data.source,
-                            target: data.target
+                            id: data.targetPath,
+                            attribute: data.targetPath,
+                            dataModel: data.targetModel
                         };
 
-                    $scope.sourceDataModel = data.sourceData.sourceDataModel;
-                    $scope.targetDataModel = data.targetData.targetDataModel;
+//                    $scope.sourceDataModel = data.sourcePath.sourceDataModel;
+//                    $scope.targetDataModel = data.targetPath.targetDataModel;
 
                     allComponents[id] = {
                         components: [],

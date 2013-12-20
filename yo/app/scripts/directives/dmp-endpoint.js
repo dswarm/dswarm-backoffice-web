@@ -188,9 +188,7 @@ angular.module('dmpApp')
         function getData(c) {
             var scp = angular.element(c).scope(),
                 data = scp.data,
-                parentName = scp.parentName,
-                sourceDataModel = scp.sourceDataModel,
-                targetDataModel = scp.targetDataModel;
+                parentName = scp.parentName;
 
             if(data) {
                 data.path = realPath([], scp);
@@ -202,12 +200,18 @@ angular.module('dmpApp')
                 data.parentName = parentName;
             }
 
-            data.sourceDataModel = sourceDataModel;
-            data.targetDataModel = targetDataModel;
-
-            data.resourceId = scp.resId;
-            data.configurationId = scp.confId;
             return data;
+        }
+
+        function getModel(c) {
+            var scp = angular.element(c).scope(),
+                sourceDataModel = scp.sourceDataModel,
+                targetDataModel = scp.targetDataModel;
+
+            return {
+                sourceDataModel: sourceDataModel,
+                targetDataModel: targetDataModel
+            };
         }
 
         function isConnectionAdditionalInput(connection) {
@@ -245,15 +249,21 @@ angular.module('dmpApp')
                 deSelectAll();
                 doSelect(connection);
 
-                var label = connection.getLabel()
-                    , id = connection.id;
+                var label = connection.getLabel(),
+                    source = getData(connection.source),
+                    target = getData(connection.target),
+                    sourceModel = getModel(connection.source).sourceDataModel,
+                    targetModel = getModel(connection.target).targetDataModel,
+                    id = source.id + ':' + target.id;
 
                 if (!dontFire) {
                     PubSub.broadcast('connectionSelected', {
                         id: id,
                         label: label,
-                        sourceData: getData(connection.source),
-                        targetData: getData(connection.target),
+                        sourcePath: source,
+                        targetPath: target,
+                        sourceModel: sourceModel,
+                        targetModel: targetModel,
                         additionalInput : getDatas(connection.additionalInput)
                     });
                 }
