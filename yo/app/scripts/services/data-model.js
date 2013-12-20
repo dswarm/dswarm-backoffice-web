@@ -64,14 +64,29 @@ angular.module('dmpApp')
             return comp;
         }
 
-        function genAttribPath(component) {
-            // TODO: copy this from schema instead of generating
-            return {
-                attributes: [{
-                    id: component.payload.path,
-                    name: component.payload.name
-                }]
-            };
+        function genAttribPath(component, schema) {
+            /* jshint camelcase:false */
+
+            var attribute = component.attribute.id;
+
+            var attributePath = loDash(schema.attribute_paths)
+                .filter(function (ap) {
+
+                    var attributeIds = loDash.pluck(ap.attributes, 'id');
+                    return loDash.contains(attributeIds, attribute);
+                })
+                .map(function (ap) {
+                    return {
+                        id: ap.id,
+                        attributes: loDash.filter(ap.attributes, function (a) {
+                            return a.id === attribute;
+                        })
+                    };
+                })
+                .head()
+                .valueOf();
+
+            return attributePath;
         }
 
 
@@ -116,15 +131,16 @@ angular.module('dmpApp')
         DataModelGen.prototype.genMapping = function genMapping(tab) {
             /* jshint camelcase:false */
             var scp = this.getScope(tab),
-                transformation = this.genTransformation(tab);
+                transformation = this.genTransformation(tab),
+                models = this.genDataModels(tab);
 
             return {
                 name: transformation.name,
                 transformation: transformation,
                 input_attribute_paths: [
-                    genAttribPath(scp.source)
+                    genAttribPath(scp.source, models.source.schema)
                 ],
-                output_attribute_path: genAttribPath(scp.target)
+                output_attribute_path: genAttribPath(scp.target, models.source.schema)
             };
         };
 
@@ -135,13 +151,36 @@ angular.module('dmpApp')
             };
         };
 
-        DataModelGen.prototype.genTask = function genTask(tabs, inputModel, outputModel) {
-            /* jshint camelcase:false */
+        DataModelGen.prototype.genDataModels = function genDataModels(tab) {
+            var scp = this.getScope(tab);
+
             return {
-                input_data_model: inputModel,
-                output_data_model: outputModel,
-                job: this.genJob(tabs)
+                source: scp.source.dataModel,
+                target: scp.target.dataModel
             };
+        };
+
+        DataModelGen.prototype.genTask = function genTask(tabs) {
+            var dataModelId = function (tab) {
+                var models = this.genDataModels(tab);
+                return models.source.id + ':' + models.target.id;
+            };
+
+            return loDash(tabs)
+                .groupBy(dataModelId, this)
+                .filter(function (ts) {
+                    return ts.length > 0;
+                })
+                .map(function (ts) {
+                    var models = this.genDataModels(ts[0]);
+                    /* jshint camelcase:false */
+                    return {
+                        input_data_model: models.source,
+                        output_data_model: models.target,
+                        job: this.genJob(ts)
+                    };
+                }, this)
+                .valueOf();
         };
 
 
