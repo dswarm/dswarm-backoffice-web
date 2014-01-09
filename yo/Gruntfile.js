@@ -36,6 +36,9 @@ module.exports = function (grunt) {
         yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
     } catch (e) {}
 
+    // time execution of each task
+    require('time-grunt')(grunt);
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         yeoman: yeomanConfig,

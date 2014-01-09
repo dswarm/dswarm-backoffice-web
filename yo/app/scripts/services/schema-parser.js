@@ -130,23 +130,28 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      *
      * @param record        {Object}
      * @param schemaResult  {Object}
+     * @param dontParseSchema {boolean=}
      * @returns {*}
      */
-    function parseFromDomainSchema(record, schemaResult) {
-        var schema = fromDomainSchema(schemaResult);
+    function parseFromDomainSchema(record, schemaResult, dontParseSchema) {
+        var schema = dontParseSchema ? schemaResult : fromDomainSchema(schemaResult);
 
         var data = {title: schema.name, type: 'object'};
+
+        var shortNames = {};
 
         var loop = function(children) {
 
             var properties = {};
             angular.forEach(children, function(child) {
+                var key = child.id || child.name;
                 if (child.hasChildren) {
-                    properties[child.name] = {type: 'object'};
-                    properties[child.name].properties = loop(child.children);
+                    properties[key] = {type: 'object'};
+                    properties[key].properties = loop(child.children);
                 } else {
-                    properties[child.name] = {type: 'string'};
+                    properties[key] = {type: 'string'};
                 }
+                shortNames[key] = child.name;
             });
 
             return properties;
@@ -154,7 +159,13 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
         data.properties = loop(schema.children);
 
-        return parseAny(record, schema.name, data);
+        return parseAny(record, schema.name, data, function(item) {
+            var base = {};
+            if (shortNames[item.name]) {
+                base['name'] = shortNames[item.name];
+            }
+            return base;
+        });
     }
 
     /**
@@ -162,7 +173,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * @param name {String}
      * @param children {Object}
      * @param title {String=} (optional)
-     * @param extra {Object=} (optional)
+     * @param extra {Object|Function=} (optional)
      * @returns {*}
      */
     function makeItem(name, children, title, extra) {
@@ -173,7 +184,14 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
         if (title) {
             item['title'] = title;
         }
-        return angular.extend(extra || {}, item);
+
+        if (angular.isFunction(extra)) {
+
+            return angular.extend(item, extra(item));
+        } else {
+
+            return angular.extend(extra || {}, item);
+        }
     }
 
     /**
@@ -181,14 +199,15 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * @param container {*}
      * @param name {String}
      * @param properties {Object}
+     * @param extra {*}
      * @returns {*}
      */
-    function parseObject(container, name, properties) {
+    function parseObject(container, name, properties, extra) {
         if (angular.isArray(container)) {
             return parseArray(container, name, {
                 type: 'object',
                 properties: properties
-            });
+            }, extra);
         }
         var ary = [],
             hasText = false,
@@ -197,7 +216,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
         angular.forEach(properties, function (val, key) {
             if (container[key]) {
                 hasMatch = true;
-                var it = parseAny(container[key], key, val);
+                var it = parseAny(container[key], key, val, extra);
                 if (it) {
                     ary.push(it);
                     if (key === '#text') {
@@ -209,7 +228,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
         // make #text optional
         if (!hasText && container['#text']) {
-            var itString = parseString(container['#text'], name);
+            var itString = parseString(container['#text'], name, extra);
             if (itString) {
                 hasText = true;
                 ary.push(itString);
@@ -220,7 +239,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
         // no properties found? try to be forgiving
         if (!hasMatch && !hasText && loDash.keys(properties).length === 1) {
             angular.forEach(properties, function(val, key) {
-                var it = parseAny(container, key, val);
+                var it = parseAny(container, key, val, extra);
                 if (it) {
                     ary.push(it);
                 }
@@ -231,7 +250,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
             return ary[0];
         }
 
-        return makeItem(name, ary);
+        return makeItem(name, ary, null, extra);
     }
 
     /**
@@ -239,9 +258,10 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * @param container {*}
      * @param name {String}
      * @param properties {Object}
+     * @param extra {*}
      * @returns {*}
      */
-    function parseArray(container, name, properties) {
+    function parseArray(container, name, properties, extra) {
         var ary = [];
         angular.forEach(container, function (item) {
             // nested properties may be due to xsd parsing
@@ -250,38 +270,43 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
                 properties = properties[name];
             }
 
-            var it = parseAny(item, name, properties);
+            var it = parseAny(item, name, properties, extra);
             if (it) {
                 ary.push(it);
             }
         });
-        return makeItem(name, ary);
+        return makeItem(name, ary, null, extra);
     }
 
     /**
      *  creates leafs from string type
      * @param container {*}
      * @param name {String}
+     * @param extra {*}
      * @returns {*}
      */
-    function parseString(container, name) {
+    function parseString(container, name, extra) {
+        var xtra = angular.isFunction(extra) ? function(i) {
+            return angular.extend(extra(i), {leaf: true});
+        } : angular.extend(extra || {}, {leaf: true});
+
         if (angular.isString(container)) {
-            return makeItem(name, null, container.trim(), {leaf: true});
+            return makeItem(name, null, container.trim(), xtra);
         }
 
         if (container['#text'] && container['#text'].trim()) {
-            return makeItem(name, null, container['#text'].trim(), {leaf: true});
+            return makeItem(name, null, container['#text'].trim(), xtra);
         }
 
         if (angular.isArray(container)) {
             var ary = [];
             angular.forEach(container, function (item) {
-                var it = parseString(item, name);
+                var it = parseString(item, name, extra);
                 if (it) {
                     ary.push(it);
                 }
             });
-            return makeItem(name, ary);
+            return makeItem(name, ary, null, extra);
         }
     }
 
@@ -289,7 +314,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * creates leafs from enum type
      * @param container {*}
      * @param name {String}
-     * @param enumeration {Enum}
+     * @param enumeration {String}
      * @returns {*}
      */
     function parseEnum(container, name, enumeration) {
@@ -303,22 +328,23 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * @param container {*}
      * @param name {String}
      * @param obj {*}
+     * @param extra {*}
      * @returns {*}
      */
-    function parseAny(container, name, obj) {
+    function parseAny(container, name, obj, extra) {
 
         if (obj['type'] === 'object') {
-            return parseObject(container, name, obj['properties']);
+            return parseObject(container, name, obj['properties'], extra);
         }
         if (obj['type'] === 'array') {
             if (angular.isArray(container)) {
-                return parseArray(container, name, obj['items']);
+                return parseArray(container, name, obj['items'], extra);
             } else {
-                return parseObject(container, name, obj['items']);
+                return parseObject(container, name, obj['items'], extra);
             }
         }
         if (obj['type'] === 'string') {
-            return parseString(container, name);
+            return parseString(container, name, extra);
         }
         if (obj['enum']) {
             return parseEnum(container, name, obj['enum']);

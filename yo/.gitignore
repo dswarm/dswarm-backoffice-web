@@ -10,3 +10,4 @@ app/components
 !.bowerrc
 !.editorconfig
 !.jshintrc
+app/test_out
