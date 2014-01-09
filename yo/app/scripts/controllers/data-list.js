@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', ['$scope', '$routeParams', 'DataModelResource', 'ResourceResource', 'Lo-Dash',
-        function ($scope, $routeParams, DataModelResource, ResourceResource, loDash) {
+    .controller('DataListCtrl', ['$scope', '$routeParams', 'DataModelResource', 'ResourceResource', 'ProjectResource', 'Lo-Dash',
+        function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash) {
 
         $scope.files = [];
         $scope.models = [];
+        $scope.newProject = {};
+        $scope.projects = [];
 
         ResourceResource.query(function(results) {
 
@@ -25,10 +27,31 @@ angular.module('dmpApp')
             });
         });
 
+        ProjectResource.query(function(projects) {
 
+            $scope.projects = projects;
+
+        });
 
         $scope.selectedSet = [];
         $scope.selectedModel = [];
+        $scope.selectedProject = [];
+
+        $scope.onUseForNewProjectClick = function(model, newProject) {
+
+            var input_data_model = model[0];
+            delete input_data_model['storage_type'];
+
+            var project = {
+                'input_data_model': input_data_model,
+                'name': newProject.name,
+                'description': newProject.description
+            };
+
+            ProjectResource.save({}, project, function(result) {});
+
+        };
+
 
         $scope.dataListOptions = {
             data: 'files',
@@ -52,5 +75,18 @@ angular.module('dmpApp')
             selectedItems: $scope.selectedModel,
             multiSelect: false
         };
+
+        $scope.projectListOptions = {
+            data: 'projects',
+            columnDefs: [
+                {field:'name', displayName:'Name'},
+                {field:'description', displayName:'Description '}
+            ],
+            enableColumnResize: false,
+            selectedItems: $scope.selectedProject,
+            multiSelect: false
+        };
+
+
 
     }]);
