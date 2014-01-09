@@ -282,8 +282,8 @@ describe('schemaParser tests', function (){
         };
 
         var record = {
-            foo: 'this is foo',
-            bar: 'this is bar'
+            'csv:foo': 'this is foo',
+            'csv:bar': 'this is bar'
         };
 
         var result = schemaParser.parseFromDomainSchema(record, domainSchema);
@@ -322,11 +322,11 @@ describe('schemaParser tests', function (){
 
         var record = {
             foo: {
-                bar: 'this is bar',
-                qux: 'this is qux'
+                'xml:foo.bar': 'this is bar',
+                'xml:foo.qux': 'this is qux'
             },
             bar: {
-                baz: 'this is MADNESS'
+                'xml:bar.baz': 'this is MADNESS'
             }
         };
 

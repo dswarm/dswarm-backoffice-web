@@ -118,13 +118,16 @@ angular.module('dmpApp')
 
             delete dataModel['storage_type'];
 
-            $scope.targetDataModel = dataModel;
+            var targetSchema = schemaParser.fromDomainSchema(dataModel.schema);
 
-            $scope.targetSchema = schemaParser.fromDomainSchema(dataModel.schema);
+            $scope.targetDataModel = dataModel;
+            $scope.targetSchema = targetSchema;
 
             $scope.isTargetLoading = false;
             $scope.loadTargetError = '';
             $scope.isTargetLoaded = true;
+
+            PubSub.broadcast('handleTargetSchemaSelected', targetSchema);
         };
 
         PubSub.subscribe($scope, 'handleDataSelected', function(args) {

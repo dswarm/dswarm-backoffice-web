@@ -1,6 +1,7 @@
 <div class="jsPanchor" ng-class='{ isFiltered : data.isFiltered }'>
     <div ng-class="layerClass()">
       <div class="tree-child" ng-click="expandCollapse(data)"
+           title="{{data.name}}"
             ng-mousedown="handleClick($event, data)"
             ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}">
         <i class="glyphicon" ng-class="chevron(data)"></i>
@@ -11,9 +12,6 @@
            js-plumb-target-options="jspTargetOptions"></i>
 
         {{data.name}}
-        <small ng-show="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
-
-        <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
 
         <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
            ng-if="(isSource && isLeaf(data)) || (isSource && !isExpanded(data))"
@@ -21,6 +19,8 @@
            js-plumb-source-options="jspSourceOptions"></i>
 
       </div>
+      <small ng-show="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
+      <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
       <div ng-show="data.show" class="tree-list jsPanchor">
         <div ng-repeat="child in data.children">
           <tree data="child" name="name" internal res-id="{{ resId }}" conf-id="{{ confId }}"></tree>

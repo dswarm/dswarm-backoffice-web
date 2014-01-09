@@ -72,7 +72,7 @@ angular.module('dmpApp')
                 .then(function(results) {
                     loDash.forEach(results, function(result) {
                         console.log(result);
-                        PubSub.broadcast('transformationFinished', result.data);
+                        PubSub.broadcast('transformationFinished', result);
                     });
                 }, function(resp) {
                     console.log(resp);
