@@ -1,26 +1,25 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'DataModelResource', 'Lo-Dash', function ($scope, ResourceResource, DataModelResource, loDash) {
+    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'Util', function ($scope, ResourceResource, Util) {
 
         $scope.files = [];
 
-        DataModelResource.query(function(results) {
+        ResourceResource.query(function(results) {
 
-            $scope.files = loDash.map(results, function(result) {
-
-                result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
-
-                return result;
-            });
+            //noinspection FunctionWithInconsistentReturnsJS
+            $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
+                if (config && config['parameters']['storage_type'] === 'schema') {
+                    return resource;
+                }
+            }));
         });
 
         $scope.schemaListOptions = {
             data: 'files',
             columnDefs: [
                 {field:'name', displayName:'Name'},
-                {field:'description', displayName:'Description '},
-                {field:'storage_type', displayName:'Configured Data Storage Type '}
+                {field:'description', displayName:'Description '}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedSet,
