@@ -9,6 +9,29 @@ angular.module('dmpApp')
         $scope.newProject = {};
         $scope.projects = [];
 
+        $scope.selectedSet = [];
+        $scope.selectedModel = [];
+        $scope.selectedProject = [];
+
+        $scope.onUseForNewProjectClick = function(model, newProject) {
+
+            var inputDataModel = model[0];
+            delete inputDataModel['storage_type'];
+
+            var project = {
+                'input_data_model': inputDataModel,
+                'name': newProject.name,
+                'description': newProject.description
+            };
+
+            ProjectResource.save({}, project, function() {
+                $scope.updateGridData();
+            });
+
+        };
+
+        $scope.updateGridData = function() {
+
         ResourceResource.query(function(results) {
 
             $scope.files = loDash.filter(results, function(result) {
@@ -32,23 +55,6 @@ angular.module('dmpApp')
             $scope.projects = projects;
 
         });
-
-        $scope.selectedSet = [];
-        $scope.selectedModel = [];
-        $scope.selectedProject = [];
-
-        $scope.onUseForNewProjectClick = function(model, newProject) {
-
-            var inputDataModel = model[0];
-            delete inputDataModel['storage_type'];
-
-            var project = {
-                'input_data_model': inputDataModel,
-                'name': newProject.name,
-                'description': newProject.description
-            };
-
-            ProjectResource.save({}, project, function() {});
 
         };
 
@@ -86,6 +92,9 @@ angular.module('dmpApp')
             selectedItems: $scope.selectedProject,
             multiSelect: false
         };
+
+
+        $scope.updateGridData();
 
 
 
