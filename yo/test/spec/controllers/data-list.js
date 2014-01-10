@@ -10,7 +10,18 @@ describe('Controller: DataListCtrl', function () {
   ];
 
   var models = [
-    {id: 1, name: 'dm01', data_resource: {id: 1}, configuration: {id: 1, parameters: {storage_type: 'csv'}}}
+      {id: 1, name: 'dm01', data_resource: {id: 1}, configuration: {id: 1, parameters: {storage_type: 'csv'}}}
+  ];
+
+  var projects = [
+    {
+      id : 3,
+      name : "Foo",
+      description : "Bar",
+      mappings : [],
+      functions : [],
+      input_data_model : {id: 1, name: 'dm01', data_resource: {id: 1}, configuration: {id: 1, parameters: {storage_type: 'csv'}}}
+    }
   ];
 
   beforeEach(module(function($provide) {
@@ -28,6 +39,7 @@ describe('Controller: DataListCtrl', function () {
 
     $httpBackend.when('GET', '/dmp/resources').respond(resources);
     $httpBackend.when('GET', '/dmp/datamodels').respond(models);
+    $httpBackend.when('GET', '/dmp/projects').respond(projects);
 
     var $controller = $injector.get('$controller');
 
@@ -41,7 +53,7 @@ describe('Controller: DataListCtrl', function () {
   it('should load the resource data objects', function() {
     var ctrl;
     $httpBackend.expectGET('/dmp/resources');
-    $httpBackend.expectGET('/dmp/datamodels');
+    $httpBackend.expectGET('/dmp/projects');
     scope.$apply(function() {
       ctrl = dataListCtrl();
     });
