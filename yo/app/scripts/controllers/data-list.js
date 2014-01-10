@@ -32,29 +32,29 @@ angular.module('dmpApp')
 
         $scope.updateGridData = function() {
 
-        ResourceResource.query(function(results) {
+            ResourceResource.query(function(results) {
 
-            $scope.files = loDash.filter(results, function(result) {
+                $scope.files = loDash.filter(results, function(result) {
 
-                return !result.configurations || result.configurations.length === 0;
+                    return !result.configurations || result.configurations.length === 0;
+                });
             });
-        });
 
-        DataModelResource.query(function(results) {
+            DataModelResource.query(function(results) {
 
-            $scope.models = loDash.map(results, function(result) {
+                $scope.models = loDash.map(results, function(result) {
 
-                result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
+                    result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
 
-                return result;
+                    return result;
+                });
             });
-        });
 
-        ProjectResource.query(function(projects) {
+            ProjectResource.query(function(projects) {
 
-            $scope.projects = projects;
+                $scope.projects = projects;
 
-        });
+            });
 
         };
 
