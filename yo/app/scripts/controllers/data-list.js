@@ -39,16 +39,16 @@ angular.module('dmpApp')
 
         $scope.onUseForNewProjectClick = function(model, newProject) {
 
-            var input_data_model = model[0];
-            delete input_data_model['storage_type'];
+            var inputDataModel = model[0];
+            delete inputDataModel['storage_type'];
 
             var project = {
-                'input_data_model': input_data_model,
+                'input_data_model': inputDataModel,
                 'name': newProject.name,
                 'description': newProject.description
             };
 
-            ProjectResource.save({}, project, function(result) {});
+            ProjectResource.save({}, project, function() {});
 
         };
 

@@ -8,18 +8,6 @@ angular.module('dmpApp')
         };
 
         var genFunctions = (function(){
-            var idMap = {};
-
-            function getId(functionDsl, functionName) {
-                var key = functionDsl + '##' + functionName;
-                if (idMap.hasOwnProperty(key)) {
-                    return idMap[key];
-                }
-                var id = GUID.uuid4();
-                idMap[key] = id;
-
-                return id;
-            }
 
             return function genFunctions(payload) {
                 // TODO: load from funtions instead of generating

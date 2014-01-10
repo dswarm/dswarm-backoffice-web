@@ -61,6 +61,7 @@ angular.module('dmpApp')
 
                 ProjectResource.get({id: projectId}, function(project) {
 
+                    /* jshint camelcase:false */
                     var model = project.input_data_model;
                     $scope.sourceDataModel = model;
 

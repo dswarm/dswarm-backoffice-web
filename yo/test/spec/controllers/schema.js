@@ -12,7 +12,7 @@ describe('Controller: SchemaCtrl', function () {
         _: _
     };
 
-    beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema', 'mockedDataModel'));
+    beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema', 'mockedDataModel', 'mockedProject'));
 
     beforeEach(module(function($provide) {
         $provide.value('$window', win);
@@ -35,7 +35,7 @@ describe('Controller: SchemaCtrl', function () {
         $httpBackend.whenGET('/dmp/resources/1/configurations/1/schema').respond($injector.get('mockSchemaSimpleJSON'));
         $httpBackend.whenGET('/dmp/resources/1').respond($injector.get('mockSchemaSimpleJSON'));
 
-        $httpBackend.whenGET('/dmp/datamodels/1').respond($injector.get('mockDataModelJSON'));
+        $httpBackend.whenGET('/dmp/projects/1').respond($injector.get('mockProjectJSON'));
 
         var $controller = $injector.get('$controller');
 
@@ -173,7 +173,7 @@ describe('Controller: SchemaCtrl', function () {
 
     it('should load source data from server', function() {
 
-        $httpBackend.expectGET('/dmp/datamodels/1');
+        $httpBackend.expectGET('/dmp/projects/1');
 
         schemaCtrl();
 

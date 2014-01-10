@@ -10,7 +10,7 @@ describe('Controller: DataListCtrl', function () {
   ];
 
   var models = [
-      {id: 1, name: 'dm01', data_resource: {id: 1}, configuration: {id: 1, parameters: {storage_type: 'csv'}}}
+    {id: 1, name: 'dm01', data_resource: {id: 1}, configuration: {id: 1, parameters: {storage_type: 'csv'}}}
   ];
 
   var projects = [
