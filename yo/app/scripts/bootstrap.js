@@ -27,7 +27,7 @@ angular.module('dmpApp')
                 templateUrl: 'views/perspectives/import.html',
                 controller: 'ImportCtrl'
             })
-            .when('/model/:dataModelId', {
+            .when('/model/:projectId', {
                 title: 'Modelling Perspective',
                 slug: 'model',
                 templateUrl: 'views/perspectives/model.html',

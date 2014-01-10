@@ -23,7 +23,7 @@
 </span>
 
 <hr>
-<h3>Available for modelling</h3>
+<h3>Available for projects</h3>
 <div class="gridStyle" ng-grid="modelListOptions"></div>
 
 <span ng-if="selectedModel.length" class="selected-set-options">
@@ -44,5 +44,33 @@
 
     </span>
 
-    <a ng-href="#/model/{{ selectedModel.0.id }}"><button class="btn btn-default">Load for modelling</button></a>
+    <span class="dropdown">
+
+        <a class="dropdown-toggle"><button class="btn btn-default">Use for new project</button></a>
+
+        <div class="dropdown-menu" style="padding: 15px;">
+            <input ng-model="newProject.name" id="project_name" style="margin-bottom: 15px;" type="text" name="project[name]" placeholder="Name" size="30" />
+            <input ng-model="newProject.description" id="project_description" style="margin-bottom: 15px;" type="text" name="user[description]" placeholder="Description" size="30" />
+            <a ng-click="onUseForNewProjectClick(selectedModel, newProject)"><button class="btn btn-default">Create</button></a>
+        </div>
+
+        <script>
+            // Fix input element click problem
+            $('.dropdown-menu input, .dropdown-menu label').click(function(e) {
+                e.stopPropagation();
+            });
+        </script>
+
+    </span>
+
+</span>
+
+<hr>
+<h3>All projects</h3>
+<div class="gridStyle" ng-grid="projectListOptions"></div>
+
+<span ng-if="selectedProject.length" class="selected-set-options">
+    Selected project ({{ selectedProject.0.name }}):
+
+    <a ng-href="#/model/{{ selectedProject.0.id }}"><button class="btn btn-default">Load for modelling</button></a>
 </span>

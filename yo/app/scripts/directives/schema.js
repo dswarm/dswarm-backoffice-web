@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'DataModelResource', 'SchemaDataResource', 'FileResource', 'PubSub',
-        function ($scope, $timeout, schemaParser, $q, $modal, DataModelResource, SchemaDataResource, FileResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'DataModelResource', 'SchemaDataResource', 'FileResource', 'ProjectResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, $modal, DataModelResource, SchemaDataResource, FileResource, ProjectResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
@@ -55,12 +55,14 @@ angular.module('dmpApp')
 
         };
 
-        $scope.loadSourceData = function(dataModelId) {
+        $scope.loadSourceData = function(projectId) {
 
-            if (dataModelId) {
+            if (projectId) {
 
-                DataModelResource.get({id: dataModelId}, function(model) {
+                ProjectResource.get({id: projectId}, function(project) {
 
+                    /* jshint camelcase:false */
+                    var model = project.input_data_model;
                     $scope.sourceDataModel = model;
 
                     var sourceSchema = $scope.sourceDataModel['schema'];
@@ -151,7 +153,7 @@ angular.module('dmpApp')
             $scope.loadSourceData(args.id, latestConfigurationId);
         });
 
-        $scope.loadSourceData($scope.dataModelId);
+        $scope.loadSourceData($scope.projectId);
 
     }])
     .directive('schema', [ function () {
