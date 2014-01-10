@@ -8,10 +8,6 @@ angular.module('dmpApp')
         };
 
         var genFunctions = (function(){
-<<<<<<< HEAD
-=======
-
->>>>>>> remotes/rodejoha/sprint-7/DD-275
             return function genFunctions(payload) {
                 // TODO: load from funtions instead of generating
                 return {
