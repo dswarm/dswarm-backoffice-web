@@ -5,7 +5,10 @@ angular.module('dmpApp')
 
         $scope.files = [];
 
+        //TODO: load from SchemaResource or the like
         ResourceResource.query(function(results) {
+
+            console.log(results);
 
             //noinspection FunctionWithInconsistentReturnsJS
             $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
