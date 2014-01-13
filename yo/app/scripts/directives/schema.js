@@ -5,17 +5,12 @@ angular.module('dmpApp')
         function ($scope, $timeout, schemaParser, $q, $modal, DataModelResource, SchemaDataResource, FileResource, ProjectResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
-        $scope.sources = [];
-        $scope.currentSource = {};
         $scope.targetSchema = {};
 
         $scope.isTargetLoading = false;
         $scope.isTargetLoaded = false;
         $scope.isSourceLoading = true;
         $scope.loadTargetError = '';
-
-        $scope.sourceDataModel = null;
-        $scope.targetDataModel = null;
 
         $scope.onTargetSchemaSelectorClick = function() {
 
@@ -40,45 +35,6 @@ angular.module('dmpApp')
             $timeout(function() {
                 PubSub.broadcast('schemaCanvasUpdated', {});
             }, 0);
-
-        };
-
-        $scope.removeSource = function(source) {
-
-            var index = $scope.sources.indexOf(source);
-            $scope.sources.splice(index,1);
-
-            $scope.currentSource = {};
-
-            PubSub.broadcast('handleLoadData', { });
-
-
-        };
-
-        $scope.loadSourceData = function(projectId) {
-
-            if (projectId) {
-
-                ProjectResource.get({id: projectId}, function(project) {
-
-                    /* jshint camelcase:false */
-                    var model = project.input_data_model;
-                    $scope.sourceDataModel = model;
-
-                    var sourceSchema = $scope.sourceDataModel['schema'];
-
-                    $scope.addSource(
-                        schemaParser.fromDomainSchema(sourceSchema),
-                        model.id,
-                        sourceSchema.id,
-                        false,
-                        true,
-                        model.name
-                    );
-
-                });
-
-            }
 
         };
 
@@ -153,7 +109,6 @@ angular.module('dmpApp')
             $scope.loadSourceData(args.id, latestConfigurationId);
         });
 
-        $scope.loadSourceData($scope.projectId);
 
     }])
     .directive('schema', [ function () {
