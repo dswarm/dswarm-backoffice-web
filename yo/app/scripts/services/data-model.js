@@ -1,15 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataModelGen', ['GUID', 'Lo-Dash', function(GUID, loDash) {
-
-        var notNull = function notNull(thing) {
-            return thing !== null;
-        };
+    .factory('DataModelGen', ['Util', 'Lo-Dash', function(Util, loDash) {
 
         var genFunctions = (function(){
             return function genFunctions(payload) {
-                // TODO: load from funtions instead of generating
+                // TODO: load from functions instead of generating
                 return {
                     'function_description': payload,
                     name: payload.name,
@@ -54,26 +50,20 @@ angular.module('dmpApp')
         function genAttribPath(component, schema) {
             /* jshint camelcase:false */
 
-            var attribute = component.attribute.id;
+            var attributePath = component.attribute.path.join('$');
 
-            var attributePath = loDash(schema.attribute_paths)
-                .filter(function (ap) {
+            //noinspection FunctionWithInconsistentReturnsJS
+            return loDash.head(Util.collect(schema.attribute_paths, function (ap) {
 
-                    var attributeIds = loDash.pluck(ap.attributes, 'id');
-                    return loDash.contains(attributeIds, attribute);
-                })
-                .map(function (ap) {
+                var attributeIds = loDash.pluck(ap.attributes, 'id').join('$');
+                if (attributeIds === attributePath) {
+
                     return {
                         id: ap.id,
-                        attributes: loDash.filter(ap.attributes, function (a) {
-                            return a.id === attribute;
-                        })
+                        attributes: ap.attributes
                     };
-                })
-                .head()
-                .valueOf();
-
-            return attributePath;
+                }
+            }));
         }
 
 
@@ -127,12 +117,12 @@ angular.module('dmpApp')
                 input_attribute_paths: [
                     genAttribPath(scp.source, models.source.schema)
                 ],
-                output_attribute_path: genAttribPath(scp.target, models.source.schema)
+                output_attribute_path: genAttribPath(scp.target, models.target.schema)
             };
         };
 
         DataModelGen.prototype.genJob = function genJob(tabs) {
-            var mappings = loDash(tabs).map(this.genMapping, this).filter(notNull).valueOf();
+            var mappings = Util.collect(tabs, this.genMapping, this);
             return {
                 mappings: mappings
             };
@@ -149,6 +139,7 @@ angular.module('dmpApp')
 
         DataModelGen.prototype.genTask = function genTask(tabs) {
             var dataModelId = function (tab) {
+                //noinspection JSPotentiallyInvalidUsageOfThis
                 var models = this.genDataModels(tab);
                 return models.source.id + ':' + models.target.id;
             };
@@ -163,7 +154,8 @@ angular.module('dmpApp')
                     /* jshint camelcase:false */
                     return {
                         input_data_model: models.source,
-                        output_data_model: models.target,
+                        // TODO: DataModel is not accessible at the moment
+                        // output_data_model: models.target,
                         job: this.genJob(ts)
                     };
                 }, this)

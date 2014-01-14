@@ -37,7 +37,7 @@ angular.module('dmpApp')
                 {field:'description', displayName:'Description '}
             ],
             enableColumnResize: false,
-            selectedItems: $scope.selectedSet,
+            selectedItems: $scope.items,
             multiSelect: false
         };
 
@@ -48,7 +48,8 @@ angular.module('dmpApp')
             restrict: 'E',
             replace: true,
             scope: {
-                from: '@'
+                from: '@',
+                items: '='
             },
             templateUrl: 'views/directives/schema-list.html',
             controller: 'SchemaListCtrl'

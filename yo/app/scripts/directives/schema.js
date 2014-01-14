@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'DataModelResource', 'SchemaDataResource', 'FileResource', 'ProjectResource', 'PubSub',
-        function ($scope, $timeout, schemaParser, $q, $modal, DataModelResource, SchemaDataResource, FileResource, ProjectResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'ProjectResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, $modal, ProjectResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.handleOutputSelected = function(dataModel) {
@@ -40,7 +40,6 @@ angular.module('dmpApp')
         $scope.chevron = function (source) {
             return 'glyphicon-chevron-' + (source.collapsed ? 'right' : 'down');
         };
-
     }])
     .directive('schema', [ function () {
         return {
