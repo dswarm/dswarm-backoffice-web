@@ -134,7 +134,6 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
             angular.extend(data, loop(attrs));
         }
 
-        console.log(data);
         data.hasChildren = data.children && data.children.length > 0;
 
         return data;

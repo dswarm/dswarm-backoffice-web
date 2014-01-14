@@ -1,22 +1,34 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'Util', function ($scope, ResourceResource, Util) {
+    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'SchemaResource', 'Util', function ($scope, ResourceResource, SchemaResource, Util) {
 
         $scope.files = [];
 
-        //TODO: load from SchemaResource or the like
-        ResourceResource.query(function(results) {
+        if ($scope.from === 'resources') {
 
-            console.log(results);
+            ResourceResource.query(function(results) {
 
-            //noinspection FunctionWithInconsistentReturnsJS
-            $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
-                if (config && config['parameters']['storage_type'] === 'schema') {
-                    return resource;
-                }
-            }));
-        });
+                //noinspection FunctionWithInconsistentReturnsJS
+                $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
+                    if (config && config['parameters']['storage_type'] === 'schema') {
+                        return resource;
+                    }
+                }));
+            });
+        } else {
+
+            SchemaResource.query(function(results) {
+
+                //noinspection FunctionWithInconsistentReturnsJS
+                $scope.files = Util.collect(results, function(schema) {
+                    if (schema['attribute_paths'].length) {
+                        schema.description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
+                        return schema;
+                    }
+                });
+            });
+        }
 
         $scope.schemaListOptions = {
             data: 'files',
@@ -35,7 +47,9 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope: {
+                from: '@'
+            },
             templateUrl: 'views/directives/schema-list.html',
             controller: 'SchemaListCtrl'
         };
