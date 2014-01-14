@@ -1,7 +1,63 @@
 'use strict';
 
 describe('schemaParser tests', function (){
-    var schemaParser;
+    /*jshint indent:4 */
+    var schemaParser,
+
+        csvSchema = {
+            id: 42,
+            name: 'foobar',
+            attribute_paths: [
+                {
+                    id: 9,
+                    attributes: [{
+                        id: 'csv:foo',
+                        name: 'foo'
+                    }]
+                }, {
+                    id: 19,
+                    attributes: [{
+                        id: 'csv:bar',
+                        name: 'bar'
+                    }]
+                }
+            ]
+        },
+
+        xmlSchema = {
+            id: 42,
+            name: 'foobarbazqux',
+            attribute_paths: [
+                {
+                    id: 9,
+                    attributes: [{
+                        id: 'xml:foo',
+                        name: 'foo'
+                    }, {
+                        id: 'xml:foo.bar',
+                        name: 'foo.bar'
+                    }]
+                }, {
+                    id: 19,
+                    attributes: [{
+                        id: 'xml:foo',
+                        name: 'foo'
+                    }, {
+                        id: 'xml:foo.qux',
+                        name: 'foo.qux'
+                    }]
+                }, {
+                    id: 29,
+                    attributes: [{
+                        id: 'xml:bar',
+                        name: 'bar'
+                    }, {
+                        id: 'xml:bar.baz',
+                        name: 'bar.baz'
+                    }]
+                }
+            ]
+        };
 
     //excuted before each "it" is run.
     beforeEach(function (){
@@ -190,22 +246,7 @@ describe('schemaParser tests', function (){
 
     it('should generate the tree model from a simple domain schema', function() {
 
-        var domainSchema = {
-            attribute_paths: [{
-                attributes: [{
-                    id: 'csv:foo',
-                    name: 'foo'
-                }, {
-                    id: 'csv:bar',
-                    name: 'bar'
-                }],
-                id: 9
-            }],
-            id: 42,
-            name: 'foobar'
-        };
-
-        var result = schemaParser.fromDomainSchema(domainSchema);
+        var result = schemaParser.fromDomainSchema(csvSchema);
 
         expect(result['name']).toBe('foobar');
         expect(result['hasChildren']).toBe(true);
@@ -221,72 +262,39 @@ describe('schemaParser tests', function (){
 
     it('should generate the tree model from a complex domain schema', function() {
 
-        var domainSchema = {
-            attribute_paths: [{
-                attributes: [{
-                    id: 'xml:foo.bar',
-                    name: 'foo.bar'
-                }, {
-                    id: 'xml:foo.qux',
-                    name: 'foo.qux'
-                }, {
-                    id: 'xml:bar.baz',
-                    name: 'bar.baz'
-                }],
-                id: 9
-            }],
-            id: 42,
-            name: 'foobarbazqux'
-        };
-
-        var result = schemaParser.fromDomainSchema(domainSchema);
+        var result = schemaParser.fromDomainSchema(xmlSchema);
 
         expect(result['name']).toBe('foobarbazqux');
         expect(result['hasChildren']).toBe(true);
         expect(result['children'].length).toBe(2);
         expect(result['children'][0].name).toBe('foo');
-        expect(result['children'][0].id).toBeUndefined();
+        expect(result['children'][0].id).toBe('xml:foo');
         expect(result['children'][0].hasChildren).toBe(true);
         expect(result['children'][0].children.length).toBe(2);
-        expect(result['children'][0].children[0].name).toBe('bar');
+        expect(result['children'][0].children[0].name).toBe('foo.bar');
         expect(result['children'][0].children[0].id).toBe('xml:foo.bar');
-        expect(result['children'][0].children[0].hasChildren).toBe(false);
-        expect(result['children'][0].children[1].name).toBe('qux');
+        expect(result['children'][0].children[0].hasChildren).toBeFalsy();
+        expect(result['children'][0].children[1].name).toBe('foo.qux');
         expect(result['children'][0].children[1].id).toBe('xml:foo.qux');
-        expect(result['children'][0].children[1].hasChildren).toBe(false);
+        expect(result['children'][0].children[1].hasChildren).toBeFalsy();
 
         expect(result['children'][1].name).toBe('bar');
-        expect(result['children'][1].id).toBeUndefined();
+        expect(result['children'][1].id).toBe('xml:bar');
         expect(result['children'][1].hasChildren).toBe(true);
         expect(result['children'][1].children.length).toBe(1);
-        expect(result['children'][1].children[0].name).toBe('baz');
+        expect(result['children'][1].children[0].name).toBe('bar.baz');
         expect(result['children'][1].children[0].id).toBe('xml:bar.baz');
-        expect(result['children'][1].children[0].hasChildren).toBe(false);
+        expect(result['children'][1].children[0].hasChildren).toBeFalsy();
     });
 
     it('should parse the data from a simple domain schema', function() {
-
-        var domainSchema = {
-            attribute_paths: [{
-                attributes: [{
-                    id: 'csv:foo',
-                    name: 'foo'
-                }, {
-                    id: 'csv:bar',
-                    name: 'bar'
-                }],
-                id: 9
-            }],
-            id: 42,
-            name: 'foobar'
-        };
 
         var record = {
             'csv:foo': 'this is foo',
             'csv:bar': 'this is bar'
         };
 
-        var result = schemaParser.parseFromDomainSchema(record, domainSchema);
+        var result = schemaParser.parseFromDomainSchema(record, csvSchema);
 
         expect(result['name']).toBe('foobar');
         expect(result['children'].length).toBe(2);
@@ -302,35 +310,17 @@ describe('schemaParser tests', function (){
 
     it('should generate the tree model from a complex domain schema', function() {
 
-        var domainSchema = {
-            attribute_paths: [{
-                attributes: [{
-                    id: 'xml:foo.bar',
-                    name: 'foo.bar'
-                }, {
-                    id: 'xml:foo.qux',
-                    name: 'foo.qux'
-                }, {
-                    id: 'xml:bar.baz',
-                    name: 'bar.baz'
-                }],
-                id: 9
-            }],
-            id: 42,
-            name: 'foobarbazqux'
-        };
-
         var record = {
-            foo: {
+            'xml:foo': {
                 'xml:foo.bar': 'this is bar',
                 'xml:foo.qux': 'this is qux'
             },
-            bar: {
+            'xml:bar': {
                 'xml:bar.baz': 'this is MADNESS'
             }
         };
 
-        var result = schemaParser.parseFromDomainSchema(record, domainSchema);
+        var result = schemaParser.parseFromDomainSchema(record, xmlSchema);
 
         expect(result['name']).toBe('foobarbazqux');
 
@@ -338,21 +328,86 @@ describe('schemaParser tests', function (){
         expect(result['children'][0].name).toBe('foo');
         expect(result['children'][0].leaf).toBeUndefined();
         expect(result['children'][0].children.length).toBe(2);
-        expect(result['children'][0].children[0].name).toBe('bar');
+        expect(result['children'][0].children[0].name).toBe('foo.bar');
         expect(result['children'][0].children[0].title).toBe('this is bar');
         expect(result['children'][0].children[0].leaf).toBe(true);
-        expect(result['children'][0].children[1].name).toBe('qux');
+        expect(result['children'][0].children[1].name).toBe('foo.qux');
         expect(result['children'][0].children[1].title).toBe('this is qux');
         expect(result['children'][0].children[1].leaf).toBe(true);
 
         expect(result['children'][1].name).toBe('bar');
         expect(result['children'][1].leaf).toBeUndefined();
         expect(result['children'][1].children.length).toBe(1);
-        expect(result['children'][1].children[0].name).toBe('baz');
+        expect(result['children'][1].children[0].name).toBe('bar.baz');
         expect(result['children'][1].children[0].title).toBe('this is MADNESS');
         expect(result['children'][1].children[0].leaf).toBe(true);
 
     });
+
+    it('should parse an MAB like schema', function() {
+        var mabSchema = JSON.parse('{"id":1,"attribute_paths":[{"id":3,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr","name":"nr"}]},{"id":4,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind","name":"ind"}]},{"id":1,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"}]},{"id":2,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]},{"id":7,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf","name":"tf"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]},{"id":8,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status","name":"status"}]},{"id":5,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#value","name":"value"}]},{"id":6,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf","name":"tf"}]},{"id":11,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ","name":"typ"}]},{"id":9,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion","name":"mabVersion"}]},{"id":10,"attributes":[{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]}],"record_class":{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType","name":"datensatzType"}}');
+
+        var expected = {
+            show: true,
+            children: [{
+                show: true,
+                hasChildren: true,
+                id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld',
+                name: 'feld',
+                children: [{
+                    show: true,
+                    id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr',
+                    name: 'nr'
+                }, {
+                    show: true,
+                    id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind',
+                    name: 'ind'
+                }, {
+                    show: true,
+                    id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                    name: 'type'
+                }, {
+                    id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf',
+                    name: 'tf',
+                    children: [{
+                        show: true,
+                        id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                        name: 'type'
+                    }],
+                    hasChildren: true
+                }, {
+                    show: true,
+                    id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+                    name: 'value'
+                }]
+            }, {
+                show: true,
+                hasChildren: false,
+                id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status',
+                name: 'status'
+            }, {
+                show: true,
+                hasChildren: false,
+                id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ',
+                name: 'typ'
+            }, {
+                show: true,
+                hasChildren: false,
+                id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion',
+                name: 'mabVersion'
+            }, {
+                show: true,
+                hasChildren: false,
+                id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                name: 'type'
+            }],
+            hasChildren: true
+        }
+
+        var actual = schemaParser.fromDomainSchema(mabSchema);
+
+        expect(expected).toEqual(actual);
+    })
 
 
 });
