@@ -7,7 +7,7 @@ angular.module('dmpApp')
         $scope.projectId = $routeParams.projectId;
         $scope.schemaId = $routeParams.schemaId;
 
-        // Set default data.
+        // Mock project data for angular data handling
         $scope.project = {
             id : 0,
             name : '',
@@ -18,10 +18,15 @@ angular.module('dmpApp')
             output_data_model : {}
         };
 
-        $scope.sourceDataModel = null;
-        $scope.targetDataModel = null;
         $scope.currentSource = {};
         $scope.sources = [];
+
+        $scope.targetSchema = {};
+
+        $scope.isTargetLoading = false;
+        $scope.isTargetLoaded = false;
+        $scope.isSourceLoading = true;
+        $scope.loadTargetError = '';
 
         $scope.selectSource = function(source) {
 
@@ -65,34 +70,57 @@ angular.module('dmpApp')
 
         };
 
-        $scope.loadSourceData = function(projectId) {
+        $scope.handleOutputDataModel = function() {
 
-            if (projectId) {
+            var targetSchema = schemaParser.fromDomainSchema($scope.project.output_data_model.schema);
 
-                ProjectResource.get({id: projectId}, function(project) {
+            $scope.targetSchema = targetSchema;
 
-                    var model = project.input_data_model;
+            $scope.isTargetLoading = false;
+            $scope.loadTargetError = '';
+            $scope.isTargetLoaded = true;
 
-
-                    $scope.sourceDataModel = model;
-
-                    var sourceSchema = $scope.sourceDataModel['schema'];
-
-                    $scope.addSource(
-                        schemaParser.fromDomainSchema(sourceSchema),
-                        model.id,
-                        sourceSchema.id,
-                        false,
-                        true,
-                        model.name
-                    );
-
-                });
-
-            }
+            PubSub.broadcast('handleTargetSchemaSelected', targetSchema);
 
         };
 
-        $scope.loadSourceData($routeParams.projectId);
+        $scope.handleInputDataModel = function() {
+
+            $scope.addSource(
+                schemaParser.fromDomainSchema($scope.project.input_data_model.schema),
+                $scope.project.input_data_model.id,
+                $scope.project.input_data_model.schema.id,
+                false,
+                true,
+                $scope.project.input_data_model.name
+            );
+
+        };
+
+        $scope.loadProjectData = function(projectId) {
+
+            ProjectResource.get({id: projectId}, function(project) {
+
+                $scope.project = project;
+
+                if($scope.project.input_data_model) {
+                    $scope.handleInputDataModel();
+                }
+
+                if($scope.project.output_data_model) {
+                    $scope.handleOutputDataModel();
+                }
+
+            });
+
+        };
+
+        $scope.onSaveProjectClick = function() {
+
+            ProjectResource.update({ id: $scope.project.id }, $scope.project, function(project) { });
+
+        };
+
+        $scope.loadProjectData($routeParams.projectId);
 
     }]);

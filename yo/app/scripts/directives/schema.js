@@ -5,13 +5,6 @@ angular.module('dmpApp')
         function ($scope, $timeout, schemaParser, $q, $modal, DataModelResource, SchemaDataResource, FileResource, ProjectResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
-        $scope.targetSchema = {};
-
-        $scope.isTargetLoading = false;
-        $scope.isTargetLoaded = false;
-        $scope.isSourceLoading = true;
-        $scope.loadTargetError = '';
-
         $scope.onTargetSchemaSelectorClick = function() {
 
             var modalInstance = $modal.open({
@@ -76,16 +69,10 @@ angular.module('dmpApp')
 
             delete dataModel['storage_type'];
 
-            var targetSchema = schemaParser.fromDomainSchema(dataModel.schema);
+            $scope.project.output_data_model = dataModel;
 
-            $scope.targetDataModel = dataModel;
-            $scope.targetSchema = targetSchema;
+            $scope.handleOutputDataModel(dataModel);
 
-            $scope.isTargetLoading = false;
-            $scope.loadTargetError = '';
-            $scope.isTargetLoaded = true;
-
-            PubSub.broadcast('handleTargetSchemaSelected', targetSchema);
         };
 
         PubSub.subscribe($scope, 'handleDataSelected', function(args) {
@@ -106,7 +93,7 @@ angular.module('dmpApp')
 
             }
 
-            $scope.loadSourceData(args.id, latestConfigurationId);
+            $scope.loadProjectData(args.id, latestConfigurationId);
         });
 
 

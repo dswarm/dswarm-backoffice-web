@@ -16,11 +16,6 @@ angular.module('dmpApp')
                 };
             })();
 
-        /*var dump = function(o) {
-            console.log(o);
-            console.log(JSON.stringify(o, null, 2));
-        };*/
-
         var dmg = new DataModelGen(allComponents);
 
         $scope.showSortable = false;
@@ -28,9 +23,6 @@ angular.module('dmpApp')
         $scope.targetComponent = null;
         $scope.components = [];
         $scope.tabs = [];
-
-//        $scope.sourceDataModel = null;
-//        $scope.targetDataModel = null;
 
         function activate(id, skipBackup, skipBroadcast) {
             $scope.showSortable = true;
@@ -119,9 +111,6 @@ angular.module('dmpApp')
                             attribute: data.targetPath,
                             dataModel: data.targetModel
                         };
-
-//                    $scope.sourceDataModel = data.sourcePath.sourceDataModel;
-//                    $scope.targetDataModel = data.targetPath.targetDataModel;
 
                     allComponents[id] = {
                         components: [],
