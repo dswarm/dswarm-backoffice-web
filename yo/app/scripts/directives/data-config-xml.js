@@ -18,7 +18,17 @@ angular.module('dmpApp')
         };
 
         function getConfig() {
-            return angular.copy($scope.config);
+            var config = angular.copy($scope.config);
+
+            if ($scope.selectedSet[0]) {
+                config.parameters['schema_file'] = {
+                    id: $scope.selectedSet[0].id,
+                    name: $scope.selectedSet[0].name,
+                    description: $scope.selectedSet[0].description
+                };
+            }
+
+            return config;
         }
 
         ResourceResource.get({ id: $scope.resourceId }, Util.mapResources(function(result, config) {
@@ -38,12 +48,6 @@ angular.module('dmpApp')
         }));
 
         $scope.onSaveClick = function() {
-
-            $scope.config.parameters['schema_file'] = {
-                id: $scope.selectedSet[0].id,
-                name: $scope.selectedSet[0].name,
-                description: $scope.selectedSet[0].description
-            };
 
             var model = {
                 'data_resource': resource,
