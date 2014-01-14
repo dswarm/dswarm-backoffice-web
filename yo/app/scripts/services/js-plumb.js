@@ -251,7 +251,7 @@ angular.module('dmpApp')
          * Convert element to endpoint to be used by connect
          * @param el {jqLite|jQuery} DOM element
          * @param params {object} Set of parameters
-         * @param referenceParams {object} Set of parameters
+         * @param referenceParams {object=} Set of parameters
          * @returns {*}
          */
         function addEndpoint(el, params, referenceParams) {

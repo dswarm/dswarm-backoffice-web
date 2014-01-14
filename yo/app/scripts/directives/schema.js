@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'DataModelResource', 'SchemaDataResource', 'FileResource', 'ProjectResource', 'PubSub',
-        function ($scope, $timeout, schemaParser, $q, $modal, DataModelResource, SchemaDataResource, FileResource, ProjectResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'ProjectResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, $modal, ProjectResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
@@ -116,13 +116,10 @@ angular.module('dmpApp')
             $scope.selectSource(newSource);
         };
 
-        $scope.handleTargetSchemaSelected = function(dataModel) {
+        function selectTargetSchema(schema, dataModel) {
+            var targetSchema = schemaParser.fromDomainSchema(schema);
 
-            delete dataModel['storage_type'];
-
-            var targetSchema = schemaParser.fromDomainSchema(dataModel.schema);
-
-            $scope.targetDataModel = dataModel;
+            $scope.targetDataModel = dataModel || {id: 0, schema: schema};
             $scope.targetSchema = targetSchema;
 
             $scope.isTargetLoading = false;
@@ -130,6 +127,18 @@ angular.module('dmpApp')
             $scope.isTargetLoaded = true;
 
             PubSub.broadcast('handleTargetSchemaSelected', targetSchema);
+        }
+
+        $scope.handleTargetSchemaSelected = function(dataModelOrSchema) {
+
+            if (dataModelOrSchema['schema']) {
+
+                delete dataModelOrSchema['storage_type'];
+                selectTargetSchema(dataModelOrSchema.schema, dataModelOrSchema);
+            } else {
+
+                selectTargetSchema(dataModelOrSchema);
+            }
         };
 
         PubSub.subscribe($scope, 'handleDataSelected', function(args) {

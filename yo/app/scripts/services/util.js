@@ -54,12 +54,13 @@ angular.module('dmpApp')
          *     var squaredEvens = collect([1,2,3,4,5], function(x){ if (x % 2 === 0) return x * x })
          * </code>
          *
-         * @param seq
-         * @param func
+         * @param seq      sequence to map over. sequence might be an array or an object.
+         * @param func     mapping function, that might return nothing (undefined or null)
+         * @param thisObj  `this` for the function
          * @returns {Array}
          */
-        function collect(seq, func) {
-            return loDash(seq).map(func).filter(function(el) {return el !== undefined;}).valueOf();
+        function collect(seq, func, thisObj) {
+            return loDash(seq).map(func, thisObj).filter(function(el) {return el !== undefined && el !== null;}).valueOf();
         }
 
         return {
