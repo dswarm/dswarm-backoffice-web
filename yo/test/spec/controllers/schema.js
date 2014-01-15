@@ -36,6 +36,9 @@ describe('Controller: SchemaCtrl', function () {
         $httpBackend.whenGET('/dmp/resources/1').respond($injector.get('mockSchemaSimpleJSON'));
 
         $httpBackend.whenGET('/dmp/projects/1').respond($injector.get('mockProjectJSON'));
+        // QUICKFIX
+        $httpBackend.whenGET('/dmp/datamodels/34').respond($injector.get('mockProjectJSON').input_data_model);
+        // ENDQUICKFIX
 
         var $controller = $injector.get('$controller');
 
@@ -174,6 +177,9 @@ describe('Controller: SchemaCtrl', function () {
     it('should load source data from server', function() {
 
         $httpBackend.expectGET('/dmp/projects/1');
+        // QUICKFIX
+        $httpBackend.expectGET('/dmp/datamodels/34');
+        // ENDQUICKFIX
 
         schemaCtrl();
 
