@@ -5,10 +5,10 @@ angular.module('dmpApp')
         function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen) {
         $scope.internalName = 'Transformation Logic Widget';
 
-        var allComponents = {}
-            , activeComponentId = null
-            , availableIds = []
-            , makeComponentId = (function () {
+        var allComponents = {},
+            activeComponentId = null,
+            availableIds = [],
+            makeComponentId = (function () {
                 var _id = 0;
                 return function () {
                     _id += 1;
@@ -65,13 +65,14 @@ angular.module('dmpApp')
 
         function sendTransformations(tasks) {
             var promises = loDash.map(tasks, function(task) {
+                //noinspection JSUnresolvedVariable
                 return TaskResource.execute(task).$promise;
             });
 
             $q.all(promises)
                 .then(function(results) {
                     loDash.forEach(results, function(result) {
-                        console.log(result);
+                        //dump(result);
                         PubSub.broadcast('transformationFinished', result);
                     });
                 }, function(resp) {
@@ -115,13 +116,10 @@ angular.module('dmpApp')
                         },
                         end = {
                             componentType: 'target',
-                            id: data.targetPath,
+                            id: data.targetPath.id,
                             attribute: data.targetPath,
                             dataModel: data.targetModel
                         };
-
-//                    $scope.sourceDataModel = data.sourcePath.sourceDataModel;
-//                    $scope.targetDataModel = data.targetPath.targetDataModel;
 
                     allComponents[id] = {
                         components: [],

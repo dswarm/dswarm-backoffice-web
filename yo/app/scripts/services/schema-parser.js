@@ -77,42 +77,58 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
             return angular.extend({show: true, hasChildren: false, editableTitle: editableTitle}, obj);
         };
 
+        var merge = function(container, newChildren) {
+            var index = loDash.zipObject(loDash.map(container.children, function(c, idx) {
+                return [c.id, idx];
+            }));
+
+            loDash.forEach(newChildren, function(item) {
+                if (index.hasOwnProperty(item.id)) {
+                    var child = container.children[index[item.id]];
+                    child.children = (child.children || []).concat(item.children || []);
+                    child.hasChildren = child.children.length > 0;
+                } else {
+                    item.hasChildren = item.children && item.children.length > 0;
+                    container.children.push(item);
+                }
+            });
+
+            container.hasChildren = container.children.length > 0;
+        };
+
         var loop = function(attribs, obj) {
             var props = angular.extend({children: []}, obj);
 
             var cache = {};
 
             angular.forEach(attribs, function (val) {
-                var path = val.name.split('.');
+                var path = loDash.map(val, 'id');
                 if (path.length > 1) {
 
-                    var newVal = loDash.clone(val);
-                    newVal.name = path.slice(1).join('.');
-
+                    var newVal = val.slice(1);
                     var name = path[0];
                     if (!cache.hasOwnProperty(name)) {
-                        cache[name] = {name: name, children: []};
+                        cache[name] = {id: name, name: val[0].name, children: []};
                     }
 
                     var parsed = loop([newVal]);
-                    cache[name].children = cache[name].children.concat(parsed.children);
+
+                    merge(cache[name], parsed.children);
+//                    cache[name].children = cache[name].children.concat(parsed.children);
                 } else {
-                    props.children.push(make(val));
+                    props.children.push(make(val[0]));
                 }
             });
 
-            angular.forEach(cache, function(item) {
-                item.hasChildren = item.children.length > 0;
-                props.children.push(item);
-            });
-
-            props.hasChildren = props.children.length > 0;
+            if (!loDash.isEmpty(cache)) {
+                merge(props, cache);
+            }
 
             return props;
         };
 
         var paths = domainSchema['attribute_paths'];
-        var attrs = loDash.flatten(paths, true, 'attributes');
+        var attrs = loDash.map(paths, 'attributes');
 
         if (attrs.length) {
             angular.extend(data, loop(attrs));

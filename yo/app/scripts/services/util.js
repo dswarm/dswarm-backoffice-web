@@ -20,8 +20,53 @@ angular.module('dmpApp')
             return loDash.max(list, prop);
         }
 
+
+        /**
+         * Helper function that maps over `resources` that may have a configuration
+         * @param func
+         * @returns {Function}
+         */
+        function mapResources(func) {
+            return function(resource) {
+                if (resource.configurations) {
+                    var latestConfig = latestBy(resource.configurations);
+                    if (angular.isObject(latestConfig)) {
+                        return func(resource, latestConfig);
+                    }
+                }
+                return func(resource, null);
+            };
+        }
+
+        /**
+         * collect works like map, except that it filters out any `undefined` values.
+         * It is like map and filter combined.
+         *
+         * so instead of
+         * <code>
+         *     var evens = _.filter([1,2,3,4,5], function(x){ return x % 2 === 0});
+         *     var squaredEvens = _.map(evens, function(x){ return x * x });
+         *     // -> [4, 16]
+         * </code>
+         *
+         * one can use collect like this
+         * <code>
+         *     var squaredEvens = collect([1,2,3,4,5], function(x){ if (x % 2 === 0) return x * x })
+         * </code>
+         *
+         * @param seq      sequence to map over. sequence might be an array or an object.
+         * @param func     mapping function, that might return nothing (undefined or null)
+         * @param thisObj  `this` for the function
+         * @returns {Array}
+         */
+        function collect(seq, func, thisObj) {
+            return loDash(seq).map(func, thisObj).filter(function(el) {return el !== undefined && el !== null;}).valueOf();
+        }
+
         return {
             latestBy: latestBy,
+            mapResources: mapResources,
+            collect: collect,
             apiEndpoint: api
         };
     }])

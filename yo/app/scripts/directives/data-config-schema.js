@@ -11,9 +11,6 @@ angular.module('dmpApp')
             }
         };
 
-        // TEMP
-        $scope.config.id = 1;
-
         $scope.onFlagClick = function() {
 
             DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
