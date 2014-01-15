@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'ProjectResource', 'PubSub',
-        function ($scope, $timeout, schemaParser, $q, $modal, ProjectResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'ProjectResource', 'DataModelResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, $modal, ProjectResource, DataModelResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.sources = [];
@@ -61,21 +61,23 @@ angular.module('dmpApp')
 
                 ProjectResource.get({id: projectId}, function(project) {
 
-                    /* jshint camelcase:false */
-                    var model = project.input_data_model;
-                    $scope.sourceDataModel = model;
+                    // quick-fix until projects are working properly //
+                    var dmId = project['input_data_model'].id;
+                    DataModelResource.get({id: dmId}, function(model) {
 
-                    var sourceSchema = $scope.sourceDataModel['schema'];
+                        $scope.sourceDataModel = model;
 
-                    $scope.addSource(
-                        schemaParser.fromDomainSchema(sourceSchema),
-                        model.id,
-                        sourceSchema.id,
-                        false,
-                        true,
-                        model.name
-                    );
+                        var sourceSchema = $scope.sourceDataModel['schema'];
 
+                        $scope.addSource(
+                            schemaParser.fromDomainSchema(sourceSchema),
+                            model.id,
+                            sourceSchema.id,
+                            false,
+                            true,
+                            model.name
+                        );
+                    });
                 });
 
             }
