@@ -13,7 +13,7 @@
            connect-when="sourceComponent"
            ng-click="onFilterClick(sourceComponent)">
         <div>
-          <span>{{ sourceComponent.payload.name }}</span>
+          <span>{{ sourceComponent.attribute.name }}</span>
         </div>
       </div>
       <ul class="function-sortable" ng-show="showSortable" ng-class="{bigger:!components.length}">
@@ -21,9 +21,9 @@
             ng-class="'function-'+component.componentType" dmp-connectible
             ng-click="onFunctionClick(component)">
           <div ng-switch on="component.componentType">
-            <span ng-switch-when="fun">{{ component.payload.name }}</span>
-            <span ng-switch-when="source">{{ component.payload.name }}</span>
-            <span ng-switch-when="target">{{ component.payload.name }}</span>
+            <span ng-switch-when="fun">{{ component.attribute.name }}</span>
+            <span ng-switch-when="source">{{ component.attribute.name }}</span>
+            <span ng-switch-when="target">{{ component.attribute.name }}</span>
             <span ng-switch-default></span>
           </div>
         </li>
@@ -31,7 +31,7 @@
       <div class="function component function-target"
            ng-show="targetComponent">
         <div>
-          <span>{{ targetComponent.payload.name }}</span>
+          <span>{{ targetComponent.attribute.name }}</span>
         </div>
       </div>
     </div>
