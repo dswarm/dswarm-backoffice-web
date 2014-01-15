@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'ProjectResource', 'PubSub',
-        function ($scope, $timeout, schemaParser, $q, $modal, ProjectResource, PubSub) {
+    .controller('SchemaCtrl', ['$scope', '$timeout', 'schemaParser', '$q', '$modal', 'ProjectResource', 'DataModelResource', 'PubSub',
+        function ($scope, $timeout, schemaParser, $q, $modal, ProjectResource, DataModelResource, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
         $scope.handleOutputSelected = function(dataModel) {
