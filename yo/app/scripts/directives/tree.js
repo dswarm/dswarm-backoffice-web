@@ -2,6 +2,9 @@
 
 angular.module('dmpApp')
     .controller('TreeCtrl', ['$scope', '$timeout', 'PubSub', function ($scope, $timeout, PubSub) {
+
+        /* jshint camelcase:false */
+
         $scope.isSource = $scope.$parent && $scope.$parent.isSource;
         $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 

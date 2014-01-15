@@ -67,6 +67,8 @@ angular.module('dmpApp')
 
         $scope.handleTargetSchemaSelected = function(dataModel) {
 
+            /* jshint camelcase:false */
+
             delete dataModel['storage_type'];
 
             $scope.project.output_data_model = dataModel;

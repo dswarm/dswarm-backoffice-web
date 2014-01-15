@@ -95,6 +95,7 @@ angular.module('dmpApp')
     }])
     .directive('sourceData', [ function () {
         return {
+            scope : true,
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/source-data.html',

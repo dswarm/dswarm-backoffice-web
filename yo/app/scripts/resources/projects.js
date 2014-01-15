@@ -10,5 +10,4 @@ angular.module('dmpApp')
             'update': { method:'PUT' }
         });
 
-        return ResourceFactory.create('projects');
     }]);

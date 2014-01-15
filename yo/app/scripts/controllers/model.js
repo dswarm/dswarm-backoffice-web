@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', ['$scope', '$routeParams', 'ProjectResource', 'schemaParser', 'PubSub',
-        function($scope, $routeParams, ProjectResource, schemaParser, PubSub) {
+    .controller('ModelCtrl', ['$scope', '$routeParams', '$timeout', 'ProjectResource', 'schemaParser', 'PubSub',
+        function($scope, $routeParams, $timeout, ProjectResource, schemaParser, PubSub) {
+
+        /* jshint camelcase:false */
 
         $scope.projectId = $routeParams.projectId;
         $scope.schemaId = $routeParams.schemaId;
@@ -32,11 +34,16 @@ angular.module('dmpApp')
 
             $scope.currentSource.selected = false;
 
-            PubSub.broadcast('handleLoadData', {
-                dataModelId : source.dataModelId,
-                schemaId : source.schemaId,
-                resourceName : source.name
-            });
+            // Give the listener a second to build up
+            $timeout(function() {
+
+                PubSub.broadcast('handleLoadData', {
+                    dataModelId : source.dataModelId,
+                    schemaId : source.schemaId,
+                    resourceName : source.name
+                });
+
+            }, 1);
 
             $scope.currentSource = source;
             $scope.currentSource.selected = true;
@@ -116,9 +123,7 @@ angular.module('dmpApp')
         };
 
         $scope.onSaveProjectClick = function() {
-
-            ProjectResource.update({ id: $scope.project.id }, $scope.project, function(project) { });
-
+            ProjectResource.update({ id: $scope.project.id }, $scope.project, function() { });
         };
 
         $scope.loadProjectData($routeParams.projectId);
