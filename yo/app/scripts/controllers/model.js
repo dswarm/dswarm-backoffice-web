@@ -30,6 +30,8 @@ angular.module('dmpApp')
         $scope.isSourceLoading = true;
         $scope.loadTargetError = '';
 
+        $scope.allComponents = {};
+
         $scope.selectSource = function(source) {
 
             $scope.currentSource.selected = false;
