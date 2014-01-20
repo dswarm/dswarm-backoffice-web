@@ -102,6 +102,10 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
             var cache = {};
 
             angular.forEach(attribs, function (val) {
+                if (angular.isUndefined(val)) {
+                    return;
+                }
+
                 var path = loDash.map(val, 'id');
                 if (path.length > 1) {
 
@@ -115,7 +119,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
                     merge(cache[name], parsed.children);
 //                    cache[name].children = cache[name].children.concat(parsed.children);
-                } else {
+                } else if (angular.isObject(val[0])) {
                     props.children.push(make(val[0]));
                 }
             });

@@ -42,8 +42,13 @@ angular.module('dmpApp')
 
             .otherwise({redirectTo: '/data/'});
     }])
-    .run(['$rootScope', function($rootScope) {
+    .run(['$rootScope', '$window', function($rootScope, $window) {
         $rootScope.projectName = 'DMP 2000';
+
+        $rootScope.$on('$routeChangeStart', function() {
+            $rootScope.$broadcast('restorestate');
+        });
+
         $rootScope.$on('$routeChangeSuccess', function(event, current) {
             $rootScope.viewTitle = current.title;
             $rootScope.activeTarget = current.slug;

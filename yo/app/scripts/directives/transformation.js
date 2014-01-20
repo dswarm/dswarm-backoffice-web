@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen',
-        function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen) {
+    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen', 'ModelFactory',
+        function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen, ModelFactory) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -15,13 +15,13 @@ angular.module('dmpApp')
                 };
             })();
 
-        var dmg = new DataModelGen($scope.project.mappings);
-
         $scope.showSortable = false;
         $scope.inputComponent = null;
         $scope.outputComponent = null;
         $scope.components = [];
         $scope.tabs = [];
+
+        var internalState = ModelFactory.create('transformations');
 
         function activate(id, skipBroadcast) {
             $scope.showSortable = true;
@@ -37,12 +37,26 @@ angular.module('dmpApp')
                 $scope.outputComponent = currentMapping.$target;
 
                 activeComponentId = id;
+                internalState.model.activeId = id;
+                internalState.persist();
 
                 if (!skipBroadcast) {
                     PubSub.broadcast('connectionSwitched', { id: currentMapping.$connection_id });
                 }
             }
         }
+
+        if (internalState.model.components) {
+            allComponents = internalState.model.components;
+            $scope.tabs = internalState.model.tabs;
+
+            availableIds = loDash.keys(allComponents);
+
+            activate(internalState.model.activeId, true, false);
+        }
+
+        var dmg = new DataModelGen(allComponents);
+
 
         $scope.switchTab = function(tab) {
             activate(tab.id);
@@ -129,6 +143,11 @@ angular.module('dmpApp')
 
                     $scope.tabs.push( { title: data.name, active: true, id: data.internal_id } );
                     availableIds.push(data.internal_id);
+
+                    internalState.model.project = $scope.project;
+                    internalState.model.tabs = $scope.tabs;
+                    internalState.persist();
+
                     activate(data.internal_id, true);
                 }
             }
