@@ -13,14 +13,14 @@ angular.module('dmpApp')
                     _id += 1;
                     return [activeComponentId, 'fun_' + _id].join(':');
                 };
-            })();
+            })(),
+            lastPayload;
 
         var dmg = new DataModelGen($scope.project.mappings);
 
+        $scope.activeMapping = null;
+
         $scope.showSortable = false;
-        $scope.inputComponent = null;
-        $scope.outputComponent = null;
-        $scope.components = [];
         $scope.tabs = [];
 
         function activate(id, skipBroadcast) {
@@ -28,18 +28,14 @@ angular.module('dmpApp')
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
-                var currentMapping =  $scope.project.mappings[
+                $scope.activeMapping =  $scope.project.mappings[
                     loDash.findIndex($scope.project.mappings,  { '$internal_id' : id })
                     ];
-
-                $scope.components = currentMapping.$components;
-                $scope.inputComponent = currentMapping.$source;
-                $scope.outputComponent = currentMapping.$target;
 
                 activeComponentId = id;
 
                 if (!skipBroadcast) {
-                    PubSub.broadcast('connectionSwitched', { id: currentMapping.$connection_id });
+                    PubSub.broadcast('connectionSwitched', { id: $scope.activeMapping.$connection_id });
                 }
             }
         }
@@ -92,36 +88,15 @@ angular.module('dmpApp')
                     $scope.tabs[idx].active = true;
                 } else {
 
-                    var start = {
-                            componentType: 'source',
-                            id: data.sourcePath.id,
-                            attribute: data.sourcePath,
-                            dataModel: data.inputDataModel
-                        },
-                        end = {
-                            componentType: 'target',
-                            id: data.targetPath,
-                            attribute: data.targetPath,
-                            dataModel: data.outputDataModel
-                        },
-                        mapping = {
-                            id :  data.id,
+                    var mapping = {
+                            id :  new Date().getTime()*-1,
                             $internal_id : data.internal_id,
                             $connection_id : data.connection_id,
                             name : data.name,
-                            transformation : {
-                            },
-                            input_attribute_paths : [{
-                                id : data.sourcePath.id,
-                                name : data.sourcePath.name
-                            }],
-                            output_attribute_path : {
-                                id : data.targetPath.id,
-                                name : data.targetPath.name
-                            },
-                            $components : [],
-                            $source: start,
-                            $target: end
+                            transformation : {},
+                            input_attribute_paths : [loDash.find($scope.project.input_data_model.schema.attribute_paths, { 'id': data.inputAttributePath.path_id })],
+                            output_attribute_path : loDash.find($scope.project.output_data_model.schema.attribute_paths, { 'id': data.outputAttributePath.path_id }),
+                            $components : []
                         };
 
                     $scope.project.mappings.push(mapping);
@@ -136,16 +111,14 @@ angular.module('dmpApp')
             }
         });
 
-        var lastPayload;
-
         function push(data, index, oldIndex) {
           if (angular.isDefined(oldIndex)) {
-                $scope.components.splice(oldIndex, 1);
+              $scope.activeMapping.$components.splice(oldIndex, 1);
             }
             if (angular.isDefined(index)) {
-                $scope.components.splice(index, 0, data);
+                $scope.activeMapping.$components.splice(index, 0, data);
             } else {
-                $scope.components.push(data);
+                $scope.activeMapping.$components.push(data);
             }
         }
 
@@ -165,7 +138,7 @@ angular.module('dmpApp')
                     lastPayload = null;
                 } else {
                     payload = ui.item.scope()['component'];
-                    oldIndex = $scope.components.indexOf(payload);
+                    oldIndex = $scope.activeMapping.$components.indexOf(payload);
                 }
 
                 if (payload) {

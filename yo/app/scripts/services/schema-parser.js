@@ -122,9 +122,6 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
             return attribute_path.attributes;
         });
-
-        console.log(domainSchema, data);
-
         if (attrs.length) {
             angular.extend(data, loop(attrs));
         }
