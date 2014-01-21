@@ -205,12 +205,12 @@ angular.module('dmpApp')
 
         function getModel(c) {
             var scp = angular.element(c).scope(),
-                sourceDataModel = scp.sourceDataModel,
-                targetDataModel = scp.targetDataModel;
+                inputDataModel = scp.project.input_data_model,
+                outputDataModel = scp.project.output_data_model;
 
             return {
-                sourceDataModel: sourceDataModel,
-                targetDataModel: targetDataModel
+                inputDataModel: inputDataModel,
+                outputDataModel: outputDataModel
             };
         }
 
@@ -249,21 +249,23 @@ angular.module('dmpApp')
                 deSelectAll();
                 doSelect(connection);
 
-                var label = connection.getLabel(),
+                var name = connection.getLabel(),
                     source = getData(connection.source),
                     target = getData(connection.target),
-                    sourceModel = getModel(connection.source).sourceDataModel,
-                    targetModel = getModel(connection.target).targetDataModel,
-                    id = source.id + ':' + target.id;
+                    inputDataModel = getModel(connection.source).inputDataModel,
+                    outputDataModel = getModel(connection.target).outputDataModel,
+                    id = new Date().getTime()*-1;
 
                 if (!dontFire) {
                     PubSub.broadcast('connectionSelected', {
                         id: id,
-                        label: label,
+                        internal_id : source.id + ':' + target.id,
+                        connection_id : connection.id,
+                        name: name,
                         sourcePath: source,
                         targetPath: target,
-                        sourceModel: sourceModel,
-                        targetModel: targetModel,
+                        inputDataModel: inputDataModel,
+                        outputDataModel: outputDataModel,
                         additionalInput : getDatas(connection.additionalInput)
                     });
                 }
