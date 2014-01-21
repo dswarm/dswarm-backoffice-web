@@ -112,7 +112,18 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
         };
 
         var paths = domainSchema['attribute_paths'];
-        var attrs = loDash.flatten(paths, true, 'attributes');
+        var attrs = loDash.flatten(paths, true, function(attribute_path) {
+
+            if(attribute_path.id) {
+                angular.forEach(attribute_path.attributes, function(attribute) {
+                    attribute.path_id = attribute_path.id;
+                });
+            }
+
+            return attribute_path.attributes;
+        });
+
+        console.log(domainSchema, data);
 
         if (attrs.length) {
             angular.extend(data, loop(attrs));

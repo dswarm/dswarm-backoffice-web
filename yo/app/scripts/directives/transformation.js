@@ -18,12 +18,12 @@ angular.module('dmpApp')
         var dmg = new DataModelGen($scope.project.mappings);
 
         $scope.showSortable = false;
-        $scope.sourceComponent = null;
-        $scope.targetComponent = null;
+        $scope.inputComponent = null;
+        $scope.outputComponent = null;
         $scope.components = [];
         $scope.tabs = [];
 
-        function activate(id, skipBackup, skipBroadcast) {
+        function activate(id, skipBroadcast) {
             $scope.showSortable = true;
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
@@ -33,8 +33,8 @@ angular.module('dmpApp')
                     ];
 
                 $scope.components = currentMapping.$components;
-                $scope.sourceComponent = currentMapping.$source;
-                $scope.targetComponent = currentMapping.$target;
+                $scope.inputComponent = currentMapping.$source;
+                $scope.outputComponent = currentMapping.$target;
 
                 activeComponentId = id;
 
@@ -92,8 +92,6 @@ angular.module('dmpApp')
                     $scope.tabs[idx].active = true;
                 } else {
 
-                    console.log("data", data);
-
                     var start = {
                             componentType: 'source',
                             id: data.sourcePath.id,
@@ -130,7 +128,7 @@ angular.module('dmpApp')
 
                     $scope.tabs.push( { title: data.name, active: true, id: data.internal_id } );
                     availableIds.push(data.internal_id);
-                    activate(data.internal_id, true, true);
+                    activate(data.internal_id, true);
                 }
             }
             if($scope.$$phase !== '$digest') {
@@ -196,9 +194,7 @@ angular.module('dmpApp')
                 scope: childScope
             });
 
-            modalInstance.result.then(function (selectedItem) {
-                $scope.handleTargetSchemaSelected(selectedItem);
-            });
+            modalInstance.result.then(function () { });
 
         };
 

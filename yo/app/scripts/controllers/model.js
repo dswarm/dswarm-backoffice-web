@@ -7,7 +7,6 @@ angular.module('dmpApp')
         /* jshint camelcase:false */
 
         $scope.projectId = $routeParams.projectId;
-        $scope.schemaId = $routeParams.schemaId;
 
         // Mock project data for angular data handling
         $scope.project = {
@@ -17,93 +16,35 @@ angular.module('dmpApp')
             mappings : [],
             functions : [],
             input_data_model : {},
-            output_data_model : {}
+            $input_data_model_schema : {},
+            output_data_model : {},
+            $output_data_model_schema : {}
         };
 
-        $scope.currentSource = {};
-        $scope.sources = [];
+        $scope.isOutputDataModelLoaded = false;
 
-        $scope.targetSchema = {};
+        $scope.setOutputDataModel = function(dataModel) {
+            $scope.project.output_data_model = dataModel;
 
-        $scope.isTargetLoading = false;
-        $scope.isTargetLoaded = false;
-        $scope.isSourceLoading = true;
-        $scope.loadTargetError = '';
-
-        $scope.allComponents = {};
-
-        $scope.selectSource = function(source) {
-
-            $scope.currentSource.selected = false;
-
-            // Give the listener a second to build up
-            $timeout(function() {
-
-                PubSub.broadcast('handleLoadData', {
-                    dataModelId : source.dataModelId,
-                    schemaId : source.schemaId,
-                    resourceName : source.name
-                });
-
-            }, 1);
-
-            $scope.currentSource = source;
-            $scope.currentSource.selected = true;
+            $scope.processOutputDataModel();
         };
 
-        $scope.addSource = function(schema, dataModelId, schemaId, collpased, selected, name) {
+        $scope.processOutputDataModel = function() {
+            $scope.project.$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
-            var newSource = {
-                name : name,
-                dataModelId : dataModelId,
-                schemaId : schemaId,
-                schema : schema,
-                collapsed : collpased,
-                selected : selected
+            $scope.isOutputDataModelLoaded = true;
 
-            };
+            PubSub.broadcast('outputDataSelected', {});
+        }
 
-            $scope.sources.push(newSource);
-            $scope.selectSource(newSource);
+        $scope.processInputDataModel = function() {
+            $scope.project.$input_data_model_schema = $scope.dataModelToSchema($scope.project.input_data_model);
 
-        };
+            PubSub.broadcast('inputDataSelected', { });
+        }
 
-        $scope.removeSource = function(source) {
-
-            var index = $scope.sources.indexOf(source);
-            $scope.sources.splice(index,1);
-
-            $scope.currentSource = {};
-
-            PubSub.broadcast('handleLoadData', { });
-
-        };
-
-        $scope.handleOutputDataModel = function() {
-
-            var targetSchema = schemaParser.fromDomainSchema($scope.project.output_data_model.schema);
-
-            $scope.targetSchema = targetSchema;
-
-            $scope.isTargetLoading = false;
-            $scope.loadTargetError = '';
-            $scope.isTargetLoaded = true;
-
-            PubSub.broadcast('handleTargetSchemaSelected', targetSchema);
-
-        };
-
-        $scope.handleInputDataModel = function() {
-
-            $scope.addSource(
-                schemaParser.fromDomainSchema($scope.project.input_data_model.schema),
-                $scope.project.input_data_model.id,
-                $scope.project.input_data_model.schema.id,
-                false,
-                true,
-                $scope.project.input_data_model.name
-            );
-
+        $scope.dataModelToSchema = function(dataModel) {
+            return schemaParser.fromDomainSchema(dataModel.schema);
         };
 
         $scope.loadProjectData = function(projectId) {
@@ -113,11 +54,11 @@ angular.module('dmpApp')
                 $scope.project = project;
 
                 if($scope.project.input_data_model) {
-                    $scope.handleInputDataModel();
+                    $scope.processInputDataModel();
                 }
 
                 if($scope.project.output_data_model) {
-                    $scope.handleOutputDataModel();
+                    $scope.processOutputDataModel();
                 }
 
             });
@@ -127,6 +68,10 @@ angular.module('dmpApp')
         $scope.onSaveProjectClick = function() {
             ProjectResource.update({ id: $scope.project.id }, $scope.project, function() { });
         };
+
+        $scope.$watch('project', function(newValue) {
+            console.log('Project changed: ', newValue);
+        }, true);
 
         $scope.loadProjectData($routeParams.projectId);
 

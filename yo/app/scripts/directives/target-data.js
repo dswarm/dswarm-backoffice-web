@@ -6,9 +6,11 @@ angular.module('dmpApp')
 
         var schemaPromise;
 
-        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(schema) {
+        PubSub.subscribe($scope, 'outputDataSelected', function() {
 
-            var deferred = $q.defer();
+            var schema = $scope.project.$output_data_model_schema,
+                deferred = $q.defer();
+
             schemaPromise = deferred.promise;
             deferred.resolve(schema);
         });

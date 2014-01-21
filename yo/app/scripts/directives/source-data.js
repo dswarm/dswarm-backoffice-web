@@ -17,17 +17,9 @@ angular.module('dmpApp')
             return $scope.showData ? 'sourcedata' : '';
         };
 
-        PubSub.subscribe($scope, 'handleLoadData', function(args) {
+        PubSub.subscribe($scope, 'inputDataSelected', function() {
 
-            if(args && args.dataModelId) {
-
-                $scope.loadData(args.dataModelId, args.schemaId, args.resourceName);
-            } else {
-
-                $scope.data = {};
-                $scope.showData = false;
-                $scope.resourceName = '';
-            }
+            $scope.loadData($scope.project.input_data_model.id, $scope.project.input_data_model.schema.id, $scope.project.input_data_model.name);
 
         });
 
