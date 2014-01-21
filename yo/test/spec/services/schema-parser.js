@@ -348,61 +348,84 @@ describe('schemaParser tests', function (){
         var mabSchema = JSON.parse('{"id":1,"attribute_paths":[{"id":3,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr","name":"nr"}]},{"id":4,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind","name":"ind"}]},{"id":1,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"}]},{"id":2,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]},{"id":7,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf","name":"tf"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]},{"id":8,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status","name":"status"}]},{"id":5,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#value","name":"value"}]},{"id":6,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf","name":"tf"}]},{"id":11,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ","name":"typ"}]},{"id":9,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion","name":"mabVersion"}]},{"id":10,"attributes":[{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]}],"record_class":{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType","name":"datensatzType"}}');
 
         var expected = {
+            name: undefined,
             show: true,
+            editableTitle : undefined,
             children: [{
                 show: true,
                 hasChildren: true,
+                editableTitle : undefined,
                 id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld',
                 name: 'feld',
+                path_id: 1,
                 children: [{
                     show: true,
+                    editableTitle : undefined,
                     id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr',
-                    name: 'nr'
+                    name: 'nr',
+                    path_id: 3
                 }, {
                     show: true,
+                    editableTitle : undefined,
                     id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind',
-                    name: 'ind'
+                    name: 'ind',
+                    path_id: 4
                 }, {
                     show: true,
+                    editableTitle : undefined,
                     id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                    name: 'type'
+                    name: 'type',
+                    path_id: 2
                 }, {
                     id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf',
                     name: 'tf',
                     children: [{
                         show: true,
+                        editableTitle : undefined,
                         id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                        name: 'type'
+                        name: 'type',
+                        path_id: 7
                     }],
-                    hasChildren: true
+                    hasChildren: true,
+                    editableTitle : undefined
                 }, {
                     show: true,
+                    editableTitle : undefined,
                     id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-                    name: 'value'
+                    name: 'value',
+                    path_id: 5
                 }]
             }, {
                 show: true,
                 hasChildren: false,
+                editableTitle : undefined,
                 id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status',
-                name: 'status'
+                name: 'status',
+                path_id: 8
             }, {
                 show: true,
                 hasChildren: false,
+                editableTitle : undefined,
                 id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ',
-                name: 'typ'
+                name: 'typ',
+                path_id: 11
             }, {
                 show: true,
                 hasChildren: false,
+                editableTitle : undefined,
                 id: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion',
-                name: 'mabVersion'
+                name: 'mabVersion',
+                path_id: 9
             }, {
                 show: true,
                 hasChildren: false,
+                editableTitle : undefined,
                 id: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                name: 'type'
+                name: 'type',
+                path_id: 10
             }],
             hasChildren: true
-        }
+        };
 
         var actual = schemaParser.fromDomainSchema(mabSchema);
 

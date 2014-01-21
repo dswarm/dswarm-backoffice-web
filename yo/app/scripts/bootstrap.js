@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .config(['$routeProvider', function ($routeProvider) {
+    .config(['$routeProvider', 'localStorageServiceProvider', function ($routeProvider, localStorageServiceProvider) {
         $routeProvider
             .when('/data/', {
                 title: 'Data Perspective',
@@ -41,13 +41,12 @@ angular.module('dmpApp')
             })
 
             .otherwise({redirectTo: '/data/'});
-    }])
-    .run(['$rootScope', '$window', function($rootScope, $window) {
-        $rootScope.projectName = 'DMP 2000';
 
-        $rootScope.$on('$routeChangeStart', function() {
-            $rootScope.$broadcast('restorestate');
-        });
+        localStorageServiceProvider.setPrefix('dmp');
+        localStorageServiceProvider.setNotify(false, false);
+    }])
+    .run(['$rootScope', '$window', function($rootScope) {
+        $rootScope.projectName = 'DMP 2000';
 
         $rootScope.$on('$routeChangeSuccess', function(event, current) {
             $rootScope.viewTitle = current.title;

@@ -2,10 +2,11 @@
 
 angular.module('dmpApp')
     .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen', 'ModelFactory',
-        function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen, ModelFactory) {
+    function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
+            activeMappingId = null,
             availableIds = [],
             makeComponentId = (function () {
                 var _id = 0;
@@ -21,41 +22,28 @@ angular.module('dmpApp')
         $scope.components = [];
         $scope.tabs = [];
 
-        var internalState = ModelFactory.create('transformations');
-
         function activate(id, skipBroadcast) {
             $scope.showSortable = true;
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
-                var currentMapping =  $scope.project.mappings[
-                    loDash.findIndex($scope.project.mappings,  { '$internal_id' : id })
-                    ];
+                activeMappingId = loDash.findIndex($scope.project.mappings, { '_$internal_id' : id });
 
-                $scope.components = currentMapping.$components;
-                $scope.inputComponent = currentMapping.$source;
-                $scope.outputComponent = currentMapping.$target;
+                var currentMapping =  $scope.project.mappings[activeMappingId];
+
+                $scope.components = currentMapping._$components;
+                $scope.inputComponent = currentMapping._$source;
+                $scope.outputComponent = currentMapping._$target;
 
                 activeComponentId = id;
-                internalState.model.activeId = id;
-                internalState.persist();
 
                 if (!skipBroadcast) {
-                    PubSub.broadcast('connectionSwitched', { id: currentMapping.$connection_id });
+                    PubSub.broadcast('connectionSwitched', { id: currentMapping._$connection_id });
                 }
             }
         }
 
-        if (internalState.model.components) {
-            allComponents = internalState.model.components;
-            $scope.tabs = internalState.model.tabs;
-
-            availableIds = loDash.keys(allComponents);
-
-            activate(internalState.model.activeId, true, false);
-        }
-
-        var dmg = new DataModelGen(allComponents);
+        var dmg = new DataModelGen($scope.project.mappings);
 
 
         $scope.switchTab = function(tab) {
@@ -102,9 +90,12 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
             if (activeComponentId !== data.internal_id) {
-                if (loDash.findIndex($scope.project.mappings,  { '$internal_id' : data.internal_id }) > -1) {
+                if (loDash.any($scope.project.mappings, { '_$internal_id' : data.internal_id })) {
+
                     var idx = availableIds.indexOf(data.internal_id);
                     $scope.tabs[idx].active = true;
+                    activate(data.internal_id, true);
+
                 } else {
 
                     var start = {
@@ -121,8 +112,8 @@ angular.module('dmpApp')
                         },
                         mapping = {
                             id :  data.id,
-                            $internal_id : data.internal_id,
-                            $connection_id : data.connection_id,
+                            _$internal_id : data.internal_id,
+                            _$connection_id : data.connection_id,
                             name : data.name,
                             transformation : {
                             },
@@ -134,19 +125,15 @@ angular.module('dmpApp')
                                 id : data.targetPath.id,
                                 name : data.targetPath.name
                             },
-                            $components : [],
-                            $source: start,
-                            $target: end
+                            _$components : [],
+                            _$source: start,
+                            _$target: end
                         };
 
                     $scope.project.mappings.push(mapping);
 
                     $scope.tabs.push( { title: data.name, active: true, id: data.internal_id } );
                     availableIds.push(data.internal_id);
-
-                    internalState.model.project = $scope.project;
-                    internalState.model.tabs = $scope.tabs;
-                    internalState.persist();
 
                     activate(data.internal_id, true);
                 }
@@ -156,10 +143,22 @@ angular.module('dmpApp')
             }
         });
 
+        var mappingsCount = $scope.project.mappings.length;
+        loDash.forEach($scope.project.mappings, function(mapping, idx) {
+            var last = idx === mappingsCount - 1;
+
+            $scope.tabs.push({title: mapping.name, active: last, id: mapping._$internal_id});
+            availableIds.push(mapping._$internal_id);
+
+            if (last) {
+                activate(mapping._$internal_id, true);
+            }
+        });
+
         var lastPayload;
 
         function push(data, index, oldIndex) {
-          if (angular.isDefined(oldIndex)) {
+            if (angular.isDefined(oldIndex)) {
                 $scope.components.splice(oldIndex, 1);
             }
             if (angular.isDefined(index)) {
@@ -171,8 +170,8 @@ angular.module('dmpApp')
 
         $scope.sortableCallbacks = {
             receive: function (event, ui) {
-                var payload = angular.element(ui.item).scope()['child']
-                    , componentId = makeComponentId();
+                var payload = angular.element(ui.item).scope()['child'],
+                    componentId = makeComponentId();
 
                 lastPayload = {componentType: 'fun', payload: payload, id: componentId};
             },
@@ -194,6 +193,7 @@ angular.module('dmpApp')
                 }
 
                 $scope.$digest();
+                $scope.saveProjectDraft();
             }
         };
 
