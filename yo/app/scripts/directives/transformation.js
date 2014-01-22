@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen', 'ModelFactory',
+    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen',
     function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
-            activeMappingId = null,
             availableIds = [],
             makeComponentId = (function () {
                 var _id = 0;
@@ -14,12 +13,13 @@ angular.module('dmpApp')
                     _id += 1;
                     return [activeComponentId, 'fun_' + _id].join(':');
                 };
-            })();
+            })(),
+            lastPayload;
 
+        var dmg = new DataModelGen($scope.project.mappings);
+
+        $scope.activeMapping = null;
         $scope.showSortable = false;
-        $scope.inputComponent = null;
-        $scope.outputComponent = null;
-        $scope.components = [];
         $scope.tabs = [];
 
         function activate(id, skipBroadcast) {
@@ -27,24 +27,17 @@ angular.module('dmpApp')
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
-                activeMappingId = loDash.findIndex($scope.project.mappings, { '_$internal_id' : id });
-
-                var currentMapping =  $scope.project.mappings[activeMappingId];
-
-                $scope.components = currentMapping._$components;
-                $scope.inputComponent = currentMapping._$source;
-                $scope.outputComponent = currentMapping._$target;
+                $scope.activeMapping =  $scope.project.mappings[
+                    loDash.findIndex($scope.project.mappings,  { '_$internal_id' : id })
+                ];
 
                 activeComponentId = id;
 
                 if (!skipBroadcast) {
-                    PubSub.broadcast('connectionSwitched', { id: currentMapping._$connection_id });
+                    PubSub.broadcast('connectionSwitched', { id: $scope.activeMapping._$connection_id });
                 }
             }
         }
-
-        var dmg = new DataModelGen($scope.project.mappings);
-
 
         $scope.switchTab = function(tab) {
             activate(tab.id);
@@ -59,7 +52,7 @@ angular.module('dmpApp')
             $q.all(promises)
                 .then(function(results) {
                     loDash.forEach(results, function(result) {
-                        //dump(result);
+                        console.log(result);
                         PubSub.broadcast('transformationFinished', result);
                     });
                 }, function(resp) {
@@ -98,36 +91,15 @@ angular.module('dmpApp')
 
                 } else {
 
-                    var start = {
-                            componentType: 'source',
-                            id: data.sourcePath.id,
-                            attribute: data.sourcePath,
-                            dataModel: data.inputDataModel
-                        },
-                        end = {
-                            componentType: 'target',
-                            id: data.targetPath.id,
-                            attribute: data.targetPath,
-                            dataModel: data.outputDataModel
-                        },
-                        mapping = {
-                            id :  data.id,
+                    var mapping = {
+                            id :  new Date().getTime()*-1,
                             _$internal_id : data.internal_id,
                             _$connection_id : data.connection_id,
                             name : data.name,
-                            transformation : {
-                            },
-                            input_attribute_paths : [{
-                                id : data.sourcePath.id,
-                                name : data.sourcePath.name
-                            }],
-                            output_attribute_path : {
-                                id : data.targetPath.id,
-                                name : data.targetPath.name
-                            },
-                            _$components : [],
-                            _$source: start,
-                            _$target: end
+                            transformation : {},
+                            input_attribute_paths : [loDash.find($scope.project.input_data_model.schema.attribute_paths, { 'id': data.inputAttributePath.path_id })],
+                            output_attribute_path : loDash.find($scope.project.output_data_model.schema.attribute_paths, { 'id': data.outputAttributePath.path_id }),
+                            _$components : []
                         };
 
                     $scope.project.mappings.push(mapping);
@@ -155,16 +127,14 @@ angular.module('dmpApp')
             }
         });
 
-        var lastPayload;
-
         function push(data, index, oldIndex) {
             if (angular.isDefined(oldIndex)) {
-                $scope.components.splice(oldIndex, 1);
+                $scope.activeMapping._$components.splice(oldIndex, 1);
             }
             if (angular.isDefined(index)) {
-                $scope.components.splice(index, 0, data);
+                $scope.activeMapping._$components.splice(index, 0, data);
             } else {
-                $scope.components.push(data);
+                $scope.activeMapping._$components.push(data);
             }
         }
 
@@ -177,14 +147,14 @@ angular.module('dmpApp')
             },
             update: function (event, ui) {
                 //noinspection JSCheckFunctionSignatures
-                var index = ui.item.parent().children('.function').index(ui.item)
-                    , payload, oldIndex;
+                var index = ui.item.parent().children('.function').index(ui.item),
+                    payload, oldIndex;
                 if (lastPayload) {
                     payload = angular.copy(lastPayload);
                     lastPayload = null;
                 } else {
                     payload = ui.item.scope()['component'];
-                    oldIndex = $scope.components.indexOf(payload);
+                    oldIndex = $scope.activeMapping._$components.indexOf(payload);
                 }
 
                 if (payload) {

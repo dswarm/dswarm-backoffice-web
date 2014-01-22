@@ -201,17 +201,6 @@ angular.module('dmpApp')
             return data;
         }
 
-        function getModel(c) {
-            var scp = angular.element(c).scope(),
-                inputDataModel = scp.project.input_data_model,
-                outputDataModel = scp.project.output_data_model;
-
-            return {
-                inputDataModel: inputDataModel,
-                outputDataModel: outputDataModel
-            };
-        }
-
         function isConnectionAdditionalInput(connection) {
 
             var connectionIsAdditionalInput = false;
@@ -250,21 +239,15 @@ angular.module('dmpApp')
 
                 var name = connection.getLabel(),
                     source = getData(connection.source),
-                    target = getData(connection.target),
-                    inputDataModel = getModel(connection.source).inputDataModel,
-                    outputDataModel = getModel(connection.target).outputDataModel,
-                    id = new Date().getTime()*-1;
+                    target = getData(connection.target);
 
                 if (!dontFire) {
                     PubSub.broadcast('connectionSelected', {
-                        id: id,
                         internal_id : source.id + ':' + target.id,
                         connection_id : connection.id,
                         name: name,
-                        sourcePath: source,
-                        targetPath: target,
-                        inputDataModel: inputDataModel,
-                        outputDataModel: outputDataModel,
+                        inputAttributePath: source,
+                        outputAttributePath: target,
                         additionalInput : getDatas(connection.additionalInput)
                     });
                 }
