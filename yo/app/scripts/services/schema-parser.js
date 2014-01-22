@@ -112,7 +112,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
                     var newVal = val.slice(1);
                     var name = path[0];
                     if (!cache.hasOwnProperty(name)) {
-                        cache[name] = {id: name, name: val[0].name, children: []};
+                        cache[name] = {id: name, uri: val[0].uri, name: val[0].name, children: []};
                     }
 
                     var parsed = loop([newVal]);

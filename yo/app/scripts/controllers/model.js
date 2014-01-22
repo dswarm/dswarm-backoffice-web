@@ -85,6 +85,50 @@ angular.module('dmpApp')
 
         };
 
+        /**
+         * Eliminates keys, that start with '$' (angular internal stuff)
+         * and '_$' (dmp internal stuff)
+         *
+         * @param key
+         * @param value
+         * @returns {*}
+         */
+        function toJsonReplacer(key, value) {
+            var val = value;
+
+            if (typeof key === 'string' && (key.charAt(0) === '$' || (key.charAt(0) === '_' && key.charAt(1) === '$'))) {
+                val = undefined;
+            } else if (angular.isWindow(value)) {
+                val = '$WINDOW';
+            } else if (value &&  document === value) {
+                val = '$DOCUMENT';
+            } else if (value && value.$evalAsync && value.$watch) {
+                val = '$SCOPE';
+            }
+
+            return val;
+        }
+
+
+        /**
+         * Serializes input into a JSON-formatted string.
+         * Properties with leading $ or _$ will be stripped.
+         *
+         * Do not use this for drafts/saving into local storage but for
+         * serializing an object before sending it over the wire.
+         *
+         * @param {Object|Array|Date|string|number} obj Input to be serialized into JSON.
+         * @param {boolean=} pretty If set to true, the JSON output will contain newlines and whitespace.
+         * @returns {string|undefined} JSON-ified string representing `obj`.
+         */
+        $scope.toJson = function(obj, pretty) {
+            if (typeof obj === 'undefined') {
+                return undefined;
+            }
+            return JSON.stringify(obj, toJsonReplacer, pretty ? '  ' : null);
+        };
+
+
         $scope.onSaveProjectClick = function() {
             localStorageService.delete(getStorageDraftKey());
             ProjectResource.update({ id: $scope.project.id }, $scope.project, function() { });

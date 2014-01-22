@@ -8,12 +8,12 @@
     </tabset>
     <div class="transformation-container">
       <div class="function component function-source"
-           ng-show="activeMapping.input_attribute_paths.0"
+           ng-show="activeMapping.input_attribute_paths[0]"
            connect-with="{'.function-target': activeMapping.output_attribute_path}"
-           connect-when="activeMapping.input_attribute_paths.0"
-           ng-click="onFilterClick(activeMapping.input_attribute_paths.0)">
+           connect-when="activeMapping.input_attribute_paths[0]"
+           ng-click="onFilterClick(activeMapping.input_attribute_paths[0])">
         <div>
-          <span>{{ activeMapping.input_attribute_paths.0.attributes }}</span>
+          <span>{{ formatAttributePath(activeMapping.input_attribute_paths[0]) }}</span>
         </div>
       </div>
       <ul class="function-sortable" ng-show="showSortable" ng-class="{bigger:!activeMapping._$components.length}">
@@ -31,7 +31,7 @@
       <div class="function component function-target"
            ng-show="activeMapping.output_attribute_path">
         <div>
-          <span>{{ activeMapping.output_attribute_path.attributes }}</span>
+          <span>{{ formatAttributePath(activeMapping.output_attribute_path) }}</span>
         </div>
       </div>
     </div>

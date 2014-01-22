@@ -27,9 +27,7 @@ angular.module('dmpApp')
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
-                $scope.activeMapping =  $scope.project.mappings[
-                    loDash.findIndex($scope.project.mappings,  { '_$internal_id' : id })
-                ];
+                $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
 
                 activeComponentId = id;
 
@@ -41,6 +39,10 @@ angular.module('dmpApp')
 
         $scope.switchTab = function(tab) {
             activate(tab.id);
+        };
+
+        $scope.formatAttributePath = function (ap) {
+            return loDash.map(ap.attributes, 'name').join(' › ');
         };
 
         function sendTransformations(tasks) {
@@ -90,15 +92,23 @@ angular.module('dmpApp')
                     activate(data.internal_id, true);
 
                 } else {
+                    var inputPath = data.inputAttributePath.path,
+                        inputAttributePaths = loDash.filter($scope.project.input_data_model.schema.attribute_paths, function(ap) {
+                            return angular.equals(inputPath, loDash.map(ap.attributes, 'id'));
+                        }),
+                        outputPath = data.outputAttributePath.path,
+                        outputAttributePaths = loDash.filter($scope.project.output_data_model.schema.attribute_paths, function(ap) {
+                            return angular.equals(outputPath, loDash.map(ap.attributes, 'id'));
+                        }),
 
-                    var mapping = {
+                        mapping = {
                             id :  new Date().getTime()*-1,
                             _$internal_id : data.internal_id,
                             _$connection_id : data.connection_id,
                             name : data.name,
                             transformation : {},
-                            input_attribute_paths : [loDash.find($scope.project.input_data_model.schema.attribute_paths, { 'id': data.inputAttributePath.path_id })],
-                            output_attribute_path : loDash.find($scope.project.output_data_model.schema.attribute_paths, { 'id': data.outputAttributePath.path_id }),
+                            input_attribute_paths : inputAttributePaths,
+                            output_attribute_path : outputAttributePaths[0],
                             _$components : []
                         };
 
