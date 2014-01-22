@@ -116,7 +116,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
             if(attribute_path.id) {
                 angular.forEach(attribute_path.attributes, function(attribute) {
-                    attribute.path_id = attribute_path.id;
+                    attribute.$path_id = attribute_path.id;
                 });
             }
 

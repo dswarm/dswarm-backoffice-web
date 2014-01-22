@@ -16,10 +16,6 @@ angular.module('dmpApp')
             })(),
             lastPayload;
 
-        var dmg = new DataModelGen($scope.project.mappings);
-
-        $scope.activeMapping = null;
-
         $scope.showSortable = false;
         $scope.tabs = [];
 
@@ -44,7 +40,7 @@ angular.module('dmpApp')
             activate(tab.id);
         };
 
-        function sendTransformations(tasks) {
+        function sendTransformationss(tasks) {
             var promises = loDash.map(tasks, function(task) {
                 return TaskResource.execute(task).$promise;
             });
@@ -65,19 +61,33 @@ angular.module('dmpApp')
         $scope.sendTransformation = function (tab) {
             if (activeComponentId === tab.id) {
 
-                var payload = dmg.genTask([tab]);
-                //dump(payload);
+                var payload = {
+                    name: tab.title,
+                    description : 'A Transformation',
+                    job: {
+                        mappings : [$scope.activeMapping]
+                    },
+                    input_data_model :$scope.project.input_data_model,
+                    output_data_model : $scope.project.output_data_model
+                };
 
-                sendTransformations(payload);
+                sendTransformationss([payload]);
             }
         };
 
         $scope.sendTransformations = function () {
 
-            var payload = dmg.genTask($scope.tabs);
-            //dump(payload);
+            var payload = {
+                name: "Transformations",
+                description : 'Transformations',
+                job: {
+                    mappings : $scope.project.mappings
+                },
+                input_data_model :$scope.project.input_data_model,
+                output_data_model : $scope.project.output_data_model
+            };
 
-            sendTransformations(payload);
+            sendTransformationss([payload]);
         };
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
@@ -94,8 +104,8 @@ angular.module('dmpApp')
                             $connection_id : data.connection_id,
                             name : data.name,
                             transformation : {},
-                            input_attribute_paths : [loDash.find($scope.project.input_data_model.schema.attribute_paths, { 'id': data.inputAttributePath.path_id })],
-                            output_attribute_path : loDash.find($scope.project.output_data_model.schema.attribute_paths, { 'id': data.outputAttributePath.path_id }),
+                            input_attribute_paths : [loDash.find($scope.project.input_data_model.schema.attribute_paths, { 'id': data.inputAttributePath.$path_id })],
+                            output_attribute_path : loDash.find($scope.project.output_data_model.schema.attribute_paths, { 'id': data.outputAttributePath.$path_id }),
                             $components : []
                         };
 
