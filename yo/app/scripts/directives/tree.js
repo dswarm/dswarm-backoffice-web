@@ -77,12 +77,12 @@ angular.module('dmpApp')
 
         $scope.chevron = function (data) {
             if (data.children && data.children.length) {
-                return 'glyphicon-chevron-' + (data.show ? 'down' : 'right');
+                return 'glyphicon-chevron-' + (data.$show ? 'down' : 'right');
             }
         };
 
         $scope.isExpanded = function (data) {
-            return (data.show ? true : false);
+            return (data.$show ? true : false);
         };
 
         $scope.layerClass = function() {
@@ -99,7 +99,7 @@ angular.module('dmpApp')
         };
 
         $scope.expandCollapse = function (data) {
-            data.show = !$scope.isLeaf(data) && !data.show;
+            data.$show = !$scope.isLeaf(data) && !data.$show;
 
             $timeout(function() {
                 PubSub.broadcast('schemaCanvasUpdated', {});

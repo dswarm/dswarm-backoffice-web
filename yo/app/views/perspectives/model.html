@@ -1,3 +1,17 @@
+<div class="alert alert-dismissable" ng-repeat="alert in alerts" ng-class="'alert-'+alert.type">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
+    {{alert.msg}}
+    <button class="btn btn-danger draft-alert" ng-class="{disabled:alert.busy}"
+            ng-if="alert.discard" ng-click="onDiscardDraftClick($index)">
+        <i ng-if="alert.busy" class="fa fa-spinner fa-spin"></i>
+        discard
+    </button>
+    <button class="btn btn-success draft-alert" ng-class="{disabled:alert.busy}"
+            ng-if="alert.save" ng-click="onSaveProjectClick($index)">
+        <i ng-if="alert.busy" class="fa fa-spinner fa-spin"></i>
+        save
+    </button>
+</div>
 <div class="row row-2" id="top-row">
     <div class="col-md-3 box" id="sourceData">
 

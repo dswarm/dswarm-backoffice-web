@@ -14,13 +14,41 @@ angular.module('dmpApp')
                     return [activeComponentId, 'fun_' + _id].join(':');
                 };
             })(),
-            lastPayload;
+            lastPayload,
+            dmg;
 
-        var dmg = new DataModelGen($scope.project.mappings);
+        function init() {
+            dmg = new DataModelGen($scope.project.mappings);
+            $scope.activeMapping = {};
+            $scope.showSortable = false;
+            $scope.tabs = [];
 
-        $scope.activeMapping = null;
-        $scope.showSortable = false;
-        $scope.tabs = [];
+            // restore mappings if a previous project was loaded from a draft
+            loDash.forEach($scope.project.mappings, function(mapping) {
+
+                $scope.tabs.push({title: mapping.name, active: false, id: mapping._$internal_id});
+                availableIds.push(mapping._$internal_id);
+            });
+
+            var last = loDash.last($scope.project.mappings);
+
+            if (last) {
+                activate(last._$internal_id, true);
+            }
+        }
+        init();
+        PubSub.subscribe($scope, 'projectDraftDiscarded', init);
+        PubSub.subscribe($scope, 'projectModelChanged', init);
+
+        // show draft banner
+        if ($scope.projectIsDraft) {
+            $scope.alerts.push({
+                type: 'info',
+                discard: true,
+                save: true,
+                msg: 'I opened an unsaved draft for you to continue working where you left off.'
+            });
+        }
 
         function activate(id, skipBroadcast) {
             $scope.showSortable = true;
@@ -42,7 +70,10 @@ angular.module('dmpApp')
         };
 
         $scope.formatAttributePath = function (ap) {
-            return loDash.map(ap.attributes, 'name').join(' › ');
+            if (angular.isObject(ap) && angular.isDefined(ap.attributes)) {
+                return loDash.map(ap.attributes, 'name').join(' › ');
+            }
+            return '';
         };
 
         function sendTransformations(tasks) {
@@ -122,18 +153,6 @@ angular.module('dmpApp')
             }
             if($scope.$$phase !== '$digest') {
                 $scope.$digest();
-            }
-        });
-
-        var mappingsCount = $scope.project.mappings.length;
-        loDash.forEach($scope.project.mappings, function(mapping, idx) {
-            var last = idx === mappingsCount - 1;
-
-            $scope.tabs.push({title: mapping.name, active: last, id: mapping._$internal_id});
-            availableIds.push(mapping._$internal_id);
-
-            if (last) {
-                activate(mapping._$internal_id, true);
             }
         });
 
