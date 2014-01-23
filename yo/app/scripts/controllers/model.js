@@ -21,6 +21,8 @@ angular.module('dmpApp')
             $output_data_model_schema : {}
         };
 
+        $scope.$project_saved_state =  {};
+
         $scope.isOutputDataModelLoaded = false;
 
         $scope.setOutputDataModel = function(dataModel) {
@@ -52,6 +54,8 @@ angular.module('dmpApp')
             ProjectResource.get({id: projectId}, function(project) {
 
                 $scope.project = project;
+
+                $scope.$project_saved_state = project;
 
                 if($scope.project.input_data_model) {
                     $scope.processInputDataModel();

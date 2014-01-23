@@ -9,7 +9,7 @@
 
   <form role="form" ng-submit="onSaveClick()" name="componentForm">
 
-    <div class="form-group" ng-repeat="(key,parameter) in component.parameters">
+    <div class="form-group" ng-repeat="(key,parameter) in component.function_description.parameters">
       <ng-form name="compForm" ng-switch on="parameter.type">
 
         <div ng-switch-when="repeat">
