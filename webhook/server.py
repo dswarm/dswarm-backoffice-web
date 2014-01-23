@@ -80,9 +80,12 @@ def update_doc(port):
             pid = int(lsof[1:])
             check_call(["kill", str(pid)])
 
-        output += check_output_and_error(["mvn", "-DskipTests=true", "-PSDVDMPDEV", "clean", "install"],
+        mvn_opts = ["-DskipTests=true", "-PSDVDMPDOCS",
+                    "-Ddb.mysql.url=jdbc:mysql://localhost:3306/dmp_dev",
+                    "-Ddb.mysql.username=dmp", "-Ddb.mysql.password=dmp_mysql"]
+        output += check_output_and_error(["mvn"] + mvn_opts + ["clean", "install"],
                                          cwd="/home/dmp/api-docs/datamanagement-platform/")
-        Popen(["mvn", "-DskipTests=true", "-PSDVDMPDEV", "jetty:run-war"],
+        Popen(["mvn"] + mvn_opts + ["jetty:run-war"],
               cwd="/home/dmp/api-docs/datamanagement-platform/controller")
     except CalledProcessError as e:
         returncode = e.returncode

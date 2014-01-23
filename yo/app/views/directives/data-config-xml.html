@@ -1,18 +1,34 @@
 <div>
 
-    <schemalist />
+    <schemalist from="resources" ></schemalist>
 
-    <form role="form" style="margin-top: 2em; margin-bottom: 2em">
-        <div class="form-group">
-            <label for="xmlRecordTagInput">XML Record Tag</label>
-            <input type="text" class="form-control" id="xmlRecordTagInput" placeholder="XML Record Tag" ng-required="true"
-                    ng-model="config.parameters.record_tag">
+    <form role="form" style="margin-top: 2em; margin-bottom: 2em" name="dataConfigXmlForm">
+        <div class="form-group" ng-class="{'has-error':dataConfigXmlForm.xmlRecordTagInput.$error.required}">
+            <label class="control-label">XML Record Tag
+                <span ng-show="dataConfigXmlForm.xmlNamespaceInput.$error.required"
+                      class="pull-right">required <i
+                        class="glyphicon glyphicon-exclamation-sign"></i></span>
+                <input type="text" class="form-control"
+                       name="xmlRecordTagInput"
+                       id="xmlRecordTagInput"
+                       placeholder="XML Record Tag"
+                       ng-required="true"
+                       ng-model="config.parameters.record_tag">
+            </label>
             <p class="help-block">The name of the tag, that denotes a record. </p>
         </div>
         <div class="form-group">
-            <label for="xmlNamespaceInput">XML Namespace</label>
-            <input type="text" class="form-control" id="xmlNamespaceInput" placeholder="XML Namespace" ng-required="true"
-                    ng-model="config.parameters.xml_namespace">
+            <label class="control-label">XML Namespace
+                <span ng-show="dataConfigXmlForm.xmlNamespaceInput.$error.required"
+                      class="pull-right">required <i
+                        class="glyphicon glyphicon-exclamation-sign"></i></span>
+                <input type="text" class="form-control"
+                       name="xmlNamespaceInput"
+                       id="xmlNamespaceInput"
+                       placeholder="XML Namespace"
+                       ng-required="false"
+                       ng-model="config.parameters.xml_namespace">
+            </label>
             <p class="help-block">The namespace of the root document, e.g. http://www.ddb.de/professionell/mabxml/mabxml-1.xsd</p>
         </div>
 

@@ -16,6 +16,7 @@
         "angular-resource": "1.2.5",
         "angular-cookies": "1.2.5",
         "angular-sanitize": "1.2.5",
+        "angular-local-storage": "*",
         "humanize": "~0.0.8",
         "ngprogress": "~1.0.3"
     },

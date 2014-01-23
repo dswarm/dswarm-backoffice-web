@@ -8,7 +8,7 @@
             <h5>{{project.input_data_model.name}}</h5>
         </div>
 
-        <tree data="project.$input_data_model_schema" name="project.input_data_model.name" res-id="{{ project.input_data_model.id }}" conf-id="{{ project.input_data_model.configuration.id }}" as-source layer="0"></tree>
+        <tree data="project._$input_data_model_schema" name="project.input_data_model.name" res-id="{{ project.input_data_model.id }}" conf-id="{{ project.input_data_model.configuration.id }}" as-source layer="0"></tree>
 
     </div>
 
@@ -38,7 +38,7 @@
                   </div>
 
 
-                  <tree data="project.$output_data_model_schema" as-target></tree>
+                  <tree data="project._$output_data_model_schema" as-target></tree>
               </div>
 
           </div>

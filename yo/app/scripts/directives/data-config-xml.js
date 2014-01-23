@@ -1,35 +1,62 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', ['$scope', '$location', '$routeParams', 'DataConfigResource', 'Util', function ($scope, $location, $routeParams, DataConfigResource, Util) {
+    .controller('DataConfigXmlCtrl', ['$scope', '$location', '$routeParams', 'DataModelResource', 'ResourceResource', 'Util',
+    function ($scope, $location, $routeParams, DataModelResource, ResourceResource, Util) {
+
+        var resource = null;
+        $scope.resourceId = $routeParams.resourceId;
 
         $scope.selectedSet = [];
 
         $scope.config = {
             name : 'xml',
-            description : 'xml with id ' + $routeParams.resourceId,
+            description : 'xml with id ' + $scope.resourceId,
             parameters : {
                 'storage_type' : 'xml'
             }
         };
 
-        // TEMP
-        $scope.config.id = 1;
+        function getConfig() {
+            var config = angular.copy($scope.config);
 
-        DataConfigResource.query({ resourceId: $routeParams.resourceId }, function(result) {
+            if ($scope.selectedSet[0]) {
+                config.parameters['schema_file'] = {
+                    id: $scope.selectedSet[0].id,
+                    name: $scope.selectedSet[0].name,
+                    description: $scope.selectedSet[0].description
+                };
+            }
 
-            var latestConfig = Util.latestBy(result);
+            return config;
+        }
 
-            $scope.selectedSet.push(latestConfig.parameters['schema_file']);
-            $scope.config.parameters = latestConfig.parameters;
+        ResourceResource.get({ id: $scope.resourceId }, Util.mapResources(function(result, config) {
 
-        });
+            resource = result;
+
+            if (config) {
+
+                $scope.config.id = config.id;
+
+                $scope.config.name = config.name;
+                $scope.config.description = config.description;
+                $scope.config.parameters = config.parameters;
+
+                $scope.selectedSet.push(config.parameters['schema_file']);
+            }
+        }));
 
         $scope.onSaveClick = function() {
 
-            $scope.config.parameters['schema_file'] = $scope.selectedSet[0];
+            var model = {
+                'data_resource': resource,
+                'name'         : resource.name,
+                'description'  : resource.description,
+                'configuration': getConfig()
+            };
 
-            DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
+            DataModelResource.save({}, model, function() {
                 $location.path('/data/');
             });
         };

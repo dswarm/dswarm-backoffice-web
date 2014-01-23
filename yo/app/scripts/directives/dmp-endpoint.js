@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'GUID', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, GUID, PubSub) {
+    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'GUID', 'Lo-Dash', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, GUID, loDash, PubSub) {
         var components = {
                 active: null,
                 pool: []
@@ -78,9 +78,8 @@ angular.module('dmpApp')
 
         function connectComponent(component, sourceId, targetId, sourceOptions, targetOptions, noActivate, noReLabel) {
 
-            var targetEndpoint = null,
-                newConnection = null;
-
+            var targetEndpoint,
+                newConnection;
 
             //create endpoint
             sourceEndpoint = jsP.addEndpoint($('#'+ sourceId), sourceOptions);
@@ -160,11 +159,11 @@ angular.module('dmpApp')
 
         function realPath(segments, scp) {
             if (angular.isUndefined(scp.data) || scp.data.name === 'record') {
-                return segments.join('.');
+                return segments;
             }
 
-            var lastSegment = segments[0]
-                , currentSegment = scp.data && scp.data.name;
+            var lastSegment = segments[0],
+                currentSegment = scp.data && scp.data.id;
 
             if (!currentSegment || currentSegment === lastSegment) {
                 return realPath(segments, scp.$parent);
@@ -175,23 +174,22 @@ angular.module('dmpApp')
 
         function getDatas(c) {
 
-            var outDatas = [];
-
-            angular.forEach(c, function(data){
-                outDatas.push(getData(data.connection.source));
+            return loDash.map(c, function(data) {
+                return getData(data.connection.source);
             });
-
-            return outDatas;
-
         }
 
         function getData(c) {
             var scp = angular.element(c).scope(),
-                data = scp.data,
-                parentName = scp.parentName;
+                parentName = scp.parentName,
+                data;
 
-            if(data) {
-                data.path = realPath([], scp);
+            if (scp.data) {
+                data = {
+                    id: scp.data.id,
+                    name: scp.data.name,
+                    path: realPath([], scp)
+                };
             } else {
                 data = c;
             }
@@ -220,6 +218,7 @@ angular.module('dmpApp')
             return connectionIsAdditionalInput;
         }
 
+        //noinspection FunctionWithInconsistentReturnsJS
         function activate(connection, dontFire) {
 
             if(connection.getLabel() === null) {

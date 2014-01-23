@@ -1,29 +1,43 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'DataModelResource', 'Lo-Dash', function ($scope, ResourceResource, DataModelResource, loDash) {
+    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'SchemaResource', 'Util', function ($scope, ResourceResource, SchemaResource, Util) {
 
         $scope.files = [];
 
-        DataModelResource.query(function(results) {
+        if ($scope.from === 'resources') {
 
-            $scope.files = loDash.map(results, function(result) {
+            ResourceResource.query(function(results) {
 
-                result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
-
-                return result;
+                //noinspection FunctionWithInconsistentReturnsJS
+                $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
+                    if (config && config['parameters']['storage_type'] === 'schema') {
+                        return resource;
+                    }
+                }));
             });
-        });
+        } else {
+
+            SchemaResource.query(function(results) {
+
+                //noinspection FunctionWithInconsistentReturnsJS
+                $scope.files = Util.collect(results, function(schema) {
+                    if (schema['attribute_paths'].length) {
+                        schema.description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
+                        return schema;
+                    }
+                });
+            });
+        }
 
         $scope.schemaListOptions = {
             data: 'files',
             columnDefs: [
                 {field:'name', displayName:'Name'},
-                {field:'description', displayName:'Description '},
-                {field:'storage_type', displayName:'Configured Data Storage Type '}
+                {field:'description', displayName:'Description '}
             ],
             enableColumnResize: false,
-            selectedItems: $scope.selectedSet,
+            selectedItems: $scope.items,
             multiSelect: false
         };
 
@@ -33,7 +47,10 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope: {
+                from: '@',
+                items: '='
+            },
             templateUrl: 'views/directives/schema-list.html',
             controller: 'SchemaListCtrl'
         };
