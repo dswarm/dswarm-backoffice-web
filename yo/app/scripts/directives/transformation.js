@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen',
-    function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen) {
+    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'Lo-Dash', 'TaskResource', 'DataModelGen', 'Util',
+    function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -80,7 +80,7 @@ angular.module('dmpApp')
 
             var promises = loDash.map(tasks, function(task) {
                 //noinspection JSUnresolvedVariable
-                return TaskResource.execute(task).$promise;
+                return TaskResource.execute(Util.toJson(task)).$promise;
             });
 
             $q.all(promises)
@@ -157,7 +157,7 @@ angular.module('dmpApp')
                                 "description": "transformation",
                                 "function": {
                                     "name": "transformation",
-                                    "type": "transformation",
+                                    "type": "Transformation",
                                     "components": []
                                 }
                             },
@@ -179,18 +179,6 @@ angular.module('dmpApp')
             }
         });
 
-        var mappingsCount = $scope.project.mappings.length;
-        loDash.forEach($scope.project.mappings, function(mapping, idx) {
-            var last = idx === mappingsCount - 1;
-
-            $scope.tabs.push({title: mapping.name, active: last, id: mapping._$internal_id});
-            availableIds.push(mapping._$internal_id);
-
-            if (last) {
-                activate(mapping._$internal_id, true);
-            }
-        });
-
         function createComponentsFromInternalComponents(internalComponents) {
 
             var components = [];
@@ -208,13 +196,13 @@ angular.module('dmpApp')
                     name : value.payload.name,
                     description : value.payload.description,
                     'function' : value.payload,
-                    parameter_mapping : {},
+                    parameter_mappings : {},
                     output_components : [],
                     input_components : []
                 };
 
                 angular.forEach(value.payload.function_description.parameters, function (parameter, name) {
-                    aNewComponent.parameter_mapping[name] = parameter.data;
+                    aNewComponent.parameter_mappings[name] = parameter.data;
                 });
 
                 if(components.length > 0) {
@@ -301,9 +289,9 @@ angular.module('dmpApp')
 
         };
 
-        $scope.$watch('activeMapping.$components', function() {
+        $scope.$watch('activeMapping._$components', function() {
             if($scope.activeMapping && $scope.activeMapping.transformation) {
-                $scope.activeMapping.transformation.function.components = createComponentsFromInternalComponents($scope.activeMapping.$components);
+                $scope.activeMapping.transformation.function.components = createComponentsFromInternalComponents($scope.activeMapping._$components);
             }
         }, true);
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', ['$scope', '$routeParams', '$timeout', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash',
-    function($scope, $routeParams, $timeout, localStorageService, ProjectResource, schemaParser, PubSub, loDash) {
+    .controller('ModelCtrl', ['$scope', '$routeParams', '$timeout', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util',
+    function($scope, $routeParams, $timeout, localStorageService, ProjectResource, schemaParser, PubSub, loDash, Util) {
 
         /* jshint camelcase:false */
 
@@ -65,54 +65,6 @@ angular.module('dmpApp')
         $scope.dataModelToSchema = function(dataModel) {
             return schemaParser.fromDomainSchema(dataModel.schema);
         };
-
-        //====================================
-        // Custom JSON serializing
-        //====================================
-
-        /**
-         * Eliminates keys, that start with '$' (angular internal stuff)
-         * and '_$' (dmp internal stuff)
-         *
-         * @param key
-         * @param value
-         * @returns {*}
-         */
-        function toJsonReplacer(key, value) {
-            var val = value;
-
-            if (typeof key === 'string' && (key.charAt(0) === '$' || (key.charAt(0) === '_' && key.charAt(1) === '$'))) {
-                val = undefined;
-            } else if (value) {
-                if (value.document && value.location && value.alert && value.setInterval) {
-                    val = '$WINDOW';
-                } else if (document === value) {
-                    val = '$DOCUMENT';
-                } else if (value.$evalAsync && value.$watch) {
-                    val = '$SCOPE';
-                }
-            }
-            return val;
-        }
-
-        /**
-         * Serializes input into a JSON-formatted string.
-         * Properties with leading $ or _$ will be stripped.
-         *
-         * Do not use this for drafts/saving into local storage but for
-         * serializing an object before sending it over the wire.
-         *
-         * @param {Object|Array|Date|string|number} obj Input to be serialized into JSON.
-         * @param {boolean=} pretty If set to true, the JSON output will contain newlines and whitespace.
-         * @returns {string|undefined} JSON-ified string representing `obj`.
-         */
-        $scope.toJson = function(obj, pretty) {
-            if (typeof obj === 'undefined') {
-                return undefined;
-            }
-            return JSON.stringify(obj, toJsonReplacer, pretty ? '  ' : null);
-        };
-
 
         //====================================
         // Project drafting
@@ -184,7 +136,7 @@ angular.module('dmpApp')
 
             discardProjectDraft($scope.project.id);
 
-            ProjectResource.update({ id: $scope.project.id }, $scope.toJson($scope.project), function() {
+            ProjectResource.update({ id: $scope.project.id }, Util.toJson($scope.project), function() {
                 $scope.closeAlert(idx);
             });
         };
