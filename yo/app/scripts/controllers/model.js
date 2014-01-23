@@ -47,13 +47,19 @@ angular.module('dmpApp')
 
             $scope.isOutputDataModelLoaded = true;
 
-            PubSub.broadcast('outputDataSelected', {});
+            $timeout(function() {
+                PubSub.broadcast('outputDataSelected', {});
+            }, 1);
+
         };
 
         $scope.processInputDataModel = function() {
             $scope.project._$input_data_model_schema = $scope.dataModelToSchema($scope.project.input_data_model);
 
-            PubSub.broadcast('inputDataSelected', { });
+            $timeout(function() {
+                PubSub.broadcast('inputDataSelected', { });
+            }, 1);
+
         };
 
         $scope.dataModelToSchema = function(dataModel) {
