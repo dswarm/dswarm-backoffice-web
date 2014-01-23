@@ -23,7 +23,7 @@ angular.module('dmpApp')
                 //noinspection FunctionWithInconsistentReturnsJS
                 $scope.files = Util.collect(results, function(schema) {
                     if (schema['attribute_paths'].length) {
-                        schema.description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
+                        schema._$description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
                         return schema;
                     }
                 });
@@ -34,7 +34,7 @@ angular.module('dmpApp')
             data: 'files',
             columnDefs: [
                 {field:'name', displayName:'Name'},
-                {field:'description', displayName:'Description '}
+                {field:'_$description', displayName:'Description '}
             ],
             enableColumnResize: false,
             selectedItems: $scope.items,

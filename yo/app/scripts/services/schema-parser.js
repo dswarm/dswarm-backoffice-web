@@ -31,11 +31,11 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      *   A json-schema is usually like "Property": { ... (definition) }
      *   and `name' and `container' are just that.
      * @param editableTitle {Boolean}
-     * @returns {{name: String, show: boolean}}
+     * @returns {{name: String, $show: boolean}}
      */
     function mapData(name, container, editableTitle) {
 
-        var data = {'name': name, 'show': true, 'editableTitle': editableTitle},
+        var data = {'name': name, '$show': true, 'editableTitle': editableTitle},
             itemsSetName = 'properties';
 
         if(!container['properties'] && container['items']) {
@@ -67,14 +67,14 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      *
      * @param domainSchema  {{id: Number, name: String, attribute_paths: Array}}
      * @param editableTitle {Boolean=}
-     * @returns {{name: String, show: boolean}}
+     * @returns {{name: String, $show: boolean}}
      */
     function fromDomainSchema(domainSchema, editableTitle) {
 
-        var data = {name: domainSchema.name, show: true, editableTitle: editableTitle};
+        var data = {name: domainSchema.name, $show: true, editableTitle: editableTitle};
 
         var make = function(obj) {
-            return angular.extend({show: true, hasChildren: false, editableTitle: editableTitle}, obj);
+            return angular.extend({$show: true, hasChildren: false, editableTitle: editableTitle}, obj);
         };
 
         var merge = function(container, newChildren) {
@@ -136,7 +136,9 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
             if(attribute_path.id) {
                 angular.forEach(attribute_path.attributes, function(attribute) {
-                    attribute.$path_id = attribute_path.id;
+
+                    attribute._$path_id = attribute_path.id;
+
                 });
             }
 
@@ -205,7 +207,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * @returns {*}
      */
     function makeItem(name, children, title, extra) {
-        var item = {'name': name, 'show': true};
+        var item = {'name': name, '$show': true};
         if (children && children.length) {
             item['children'] = children;
         }

@@ -17,6 +17,7 @@
 
         <!-- build:css({.tmp,app}) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" href="components/jquery-ui/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="components/ngprogress/ngProgress.css">
         <link rel="stylesheet" href="components/angular-grid/ng-grid.min.css">
@@ -50,13 +51,13 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
             <li ng-class="{active: activeTarget === 'import'}">
-              <!--suppress HtmlUnknownTarget --><a href="#/import">Import</a>
+              <!--suppress HtmlUnknownAnchorTarget --><a href="#/import">Import</a>
             </li>
             <li ng-class="{active: activeTarget === 'data'}">
-              <!--suppress HtmlUnknownTarget --><a href="#/data/">Data</a>
+              <!--suppress HtmlUnknownAnchorTarget --><a href="#/data/">Data</a>
             </li>
             <li ng-class="{active: activeTarget === 'model'}">
-              <!--suppress HtmlUnknownTarget --><a href="#/model">Modelling</a>
+              <!--suppress HtmlUnknownAnchorTarget --><a href="#/model">Modelling</a>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">

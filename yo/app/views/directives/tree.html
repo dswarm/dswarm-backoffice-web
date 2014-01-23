@@ -22,7 +22,7 @@
            js-plumb-source-options="jspSourceOptions"></i>
 
       </div>
-      <div ng-show="data.show" class="tree-list jsPanchor">
+      <div ng-show="data.$show" class="tree-list jsPanchor">
         <div ng-repeat="child in data.children">
           <tree data="child" name="name" internal res-id="{{ resId }}" conf-id="{{ confId }}"></tree>
         </div>
