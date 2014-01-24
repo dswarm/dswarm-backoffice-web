@@ -1,7 +1,15 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('functionSource', ['$timeout', 'jsP', function($timeout, jsP) {
+    .directive('functionSource', ['$timeout', '$rootScope', 'jsP', 'PubSub', function($timeout, $rootScope, jsP, PubSub) {
+
+        var connectWithSources = [];
+        PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
+            angular.forEach(connectWithSources, function(source) {
+                jsP.detachAll(source);
+            });
+        });
+
         return {
             restrict: 'C',
             link: function(scope, iElement, iAttrs) {
@@ -12,6 +20,7 @@ angular.module('dmpApp')
                         angular.forEach(connectWith, function (defined, selector) {
                             if (defined && (defined.length || angular.isObject(defined))) {
                                 var target = iElement.siblings(selector);
+                                connectWithSources.push(iElement);
                                 if (target.length) {
                                     $timeout(function () {
                                         var opts = {

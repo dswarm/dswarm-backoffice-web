@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', ['$scope', '$routeParams', '$timeout', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util',
-    function($scope, $routeParams, $timeout, localStorageService, ProjectResource, schemaParser, PubSub, loDash, Util) {
-
-        /* jshint camelcase:false */
+    .controller('ModelCtrl',
+           ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util',
+    function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,    Util) {
 
         $scope.alerts = [];
 
@@ -29,7 +28,9 @@ angular.module('dmpApp')
         $scope.isOutputDataModelLoaded = false;
 
         $scope.closeAlert = function(idx) {
-            $scope.alerts.splice(idx);
+            if (angular.isDefined(idx) && $scope.alerts.length > idx) {
+                $scope.alerts.splice(idx);
+            }
         };
 
         $scope.setOutputDataModel = function(dataModel) {
@@ -43,13 +44,20 @@ angular.module('dmpApp')
         };
 
         $scope.processOutputDataModel = function() {
-            $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
-            $scope.isOutputDataModelLoaded = true;
+           if($scope.project.output_data_model) {
 
-            $timeout(function() {
-                PubSub.broadcast('outputDataSelected', {});
-            }, 1);
+                $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
+
+                $scope.isOutputDataModelLoaded = true;
+
+                $timeout(function() {
+                    PubSub.broadcast('outputDataSelected', {});
+                }, 1);
+
+            } else {
+                $scope.isOutputDataModelLoaded = false;
+            }
 
         };
 
@@ -102,9 +110,7 @@ angular.module('dmpApp')
                 $scope.processInputDataModel();
             }
 
-            if($scope.project.output_data_model) {
-                $scope.processOutputDataModel();
-            }
+            $scope.processOutputDataModel();
 
             $timeout(function() {
                 PubSub.broadcast('projectModelChanged', {});
@@ -132,11 +138,24 @@ angular.module('dmpApp')
             PubSub.broadcast('projectDraftDiscarded');
         }
 
+        function blocked(idx) {
+            if (angular.isDefined(idx)) {
+                var alert = $scope.alerts[idx];
+                if (alert) {
+                    if (alert.busy) {
+                        return true;
+                    } else {
+                        $scope.alerts[idx].busy = true;
+                    }
+                }
+            }
+            return false;
+        }
+
         $scope.onSaveProjectClick = function(idx) {
-            if ($scope.alerts[idx].busy) {
+            if (blocked(idx)) {
                 return;
             }
-            $scope.alerts[idx].busy = true;
 
             $scope.projectIsDraft = false;
 
@@ -148,19 +167,31 @@ angular.module('dmpApp')
         };
 
         $scope.onDiscardDraftClick = function(idx) {
-            if ($scope.alerts[idx].busy) {
+            if (blocked(idx)) {
                 return;
             }
-            $scope.alerts[idx].busy = true;
 
-            $scope.projectIsDraft = false;
-            var projectId = $scope.project.id;
-            $scope.project.id = 0;
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/confirm-discard-draft.html'
+            });
 
-            discardProjectDraft(projectId);
+            modalInstance.result.then(function () {
 
-            loadProjectData(projectId, function() {
-                $scope.closeAlert(idx);
+                $scope.projectIsDraft = false;
+                var projectId = $scope.project.id;
+                $scope.project.id = 0;
+
+                discardProjectDraft(projectId);
+
+                loadProjectData(projectId, function() {
+                    $scope.closeAlert(idx);
+                });
+
+            }, function () {
+
+                if (angular.isDefined(idx) && $scope.alerts.length > idx) {
+                    $scope.alerts[idx].busy = false;
+                }
             });
         };
 
