@@ -2,6 +2,9 @@
 
 angular.module('dmpApp')
     .controller('TreeCtrl', ['$scope', '$timeout', 'PubSub', function ($scope, $timeout, PubSub) {
+
+        /* jshint camelcase:false */
+
         $scope.isSource = $scope.$parent && $scope.$parent.isSource;
         $scope.isTarget = $scope.$parent && $scope.$parent.isTarget;
 
@@ -11,12 +14,8 @@ angular.module('dmpApp')
             $scope.layer = parseInt($scope.$parent.layer, 10) + 1;
         }
 
-        if($scope.$parent && $scope.$parent.sourceDataModel && Object.keys($scope.$parent.sourceDataModel).length >0) {
-            $scope.sourceDataModel = $scope.$parent.sourceDataModel;
-        }
-
-        if($scope.$parent && $scope.$parent.targetDataModel && Object.keys($scope.$parent.targetDataModel).length >0) {
-            $scope.targetDataModel = $scope.$parent.targetDataModel;
+        if($scope.$parent && $scope.$parent.project && $scope.$parent.project && Object.keys($scope.$parent.project).length > 0) {
+            $scope.project = $scope.$parent.project;
         }
 
         if($scope.$parent && $scope.$parent.name) {
@@ -78,12 +77,12 @@ angular.module('dmpApp')
 
         $scope.chevron = function (data) {
             if (data.children && data.children.length) {
-                return 'glyphicon-chevron-' + (data.show ? 'down' : 'right');
+                return 'glyphicon-chevron-' + (data.$show ? 'down' : 'right');
             }
         };
 
         $scope.isExpanded = function (data) {
-            return (data.show ? true : false);
+            return (data.$show ? true : false);
         };
 
         $scope.layerClass = function() {
@@ -100,7 +99,7 @@ angular.module('dmpApp')
         };
 
         $scope.expandCollapse = function (data) {
-            data.show = !$scope.isLeaf(data) && !data.show;
+            data.$show = !$scope.isLeaf(data) && !data.$show;
 
             $timeout(function() {
                 PubSub.broadcast('schemaCanvasUpdated', {});

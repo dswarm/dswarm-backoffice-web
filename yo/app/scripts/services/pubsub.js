@@ -32,13 +32,21 @@ angular.module('dmpApp').
         /**
          * subscribe to a channel
          * @param scp {$scope}
-         * @param channel {String}
+         * @param channel {String|Array} one channel or a list of channels
          * @param callback {Function(*, event)}
          */
         function subscribe(scp, channel, callback) {
-            scp.$on(channel, function(event, data) {
-                callback(data, event);
-            });
+            if (angular.isArray(channel)) {
+                angular.forEach(channel, function(chan) {
+                    scp.$on(chan, function(event, data) {
+                        callback(data, event);
+                    });
+                });
+            } else {
+                scp.$on(channel, function(event, data) {
+                    callback(data, event);
+                });
+            }
         }
 
         return {

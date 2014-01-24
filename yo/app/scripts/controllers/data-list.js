@@ -34,10 +34,8 @@ angular.module('dmpApp')
 
             ResourceResource.query(function(results) {
 
-                $scope.files = loDash.filter(results, function(result) {
+                $scope.files = results;
 
-                    return !result.configurations || result.configurations.length === 0;
-                });
             });
 
             DataModelResource.query(function(results) {

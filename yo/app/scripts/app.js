@@ -1,3 +1,10 @@
 'use strict';
 
-angular.module('dmpApp', ['ngRoute', 'ngResource', 'ui.utils', 'ui.bootstrap', 'ui.bootstrap.tabs', 'ui.bootstrap.modal', 'ngProgress', 'ngGrid']);
+angular.module('dmpApp', [
+    // Angular Modules
+    'ngRoute', 'ngResource',
+    // AngularUI Modules
+    'ui.utils', 'ui.bootstrap', 'ui.bootstrap.tabs', 'ui.bootstrap.modal',
+    // 3rd Party
+    'ngProgress', 'ngGrid', 'LocalStorageModule'
+]);

@@ -1,46 +1,32 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl', ['$scope', '$http', '$q', 'Util', 'Lo-Dash', 'schemaParser', 'PubSub', function ($scope, $http, $q, Util, loDash, schemaParser, PubSub) {
+    .controller('TargetDataCtrl',
+            ['$scope', '$http', '$q', 'Util', 'Lo-Dash', 'schemaParser', 'PubSub',
+    function ($scope,   $http,   $q,   Util,   loDash,    schemaParser,   PubSub) {
         $scope.internalName = 'Target Data Widget';
-
-        var schemaPromise;
-
-        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(schema) {
-
-            var deferred = $q.defer();
-            schemaPromise = deferred.promise;
-            deferred.resolve(schema);
-        });
 
         function mapToSchema(result, schema) {
             return schemaParser.parseFromDomainSchema(result, schema, true);
         }
 
-        PubSub.subscribe($scope, 'transformationFinished', function(data) {
-            var deferred = $q.defer()
-                , all = $q.all([schemaPromise, deferred.promise]);
+        PubSub.subscribe($scope, 'transformationFinished', function(transformation) {
 
-            all.then(function(results) {
-                var schema = results[0],
-                    transformation = results[1];
+            var schema = $scope.project._$output_data_model_schema;
 
-                if (angular.isArray(transformation)) {
-                    //TODO: All records, or some configurable amount
-                    transformation = loDash.take(transformation, 3);
+            if (angular.isArray(transformation)) {
+                //TODO: All records, or some configurable amount
+                transformation = loDash.take(transformation, 3);
 
-                    $scope.records = loDash.map(transformation, function(t) {
-                        return {
-                            id: t['record_id'],
-                            data: mapToSchema(t['record_data'], schema)
-                        };
-                    });
-                } else {
-                    $scope.data = mapToSchema(transformation, schema);
-                }
-            });
-
-            deferred.resolve(data);
+                $scope.records = loDash.map(transformation, function(t) {
+                    return {
+                        id: t['record_id'],
+                        data: mapToSchema(t['record_data'], schema)
+                    };
+                });
+            } else {
+                $scope.data = mapToSchema(transformation, schema);
+            }
         });
 
     }])
