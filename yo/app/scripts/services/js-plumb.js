@@ -183,6 +183,14 @@ angular.module('dmpApp')
         }
 
         /**
+         * Deleletes endpoints
+         * @param element {jqLite|jQuery}
+         */
+        function deleteEndpoint(element) {
+            jsPlumb.deleteEndpoint(element);
+        }
+
+        /**
          * Create a source out of an element. A source can then be used to draw
          *   new connections via mouse.  The style of these connections should go
          *   to `opts`.
@@ -278,6 +286,7 @@ angular.module('dmpApp')
             unmakeTarget: unmakeTarget,
             repaintEverything : repaintEverything,
             addEndpoint : addEndpoint,
-            removeAllEndpoints : removeAllEndpoints
+            removeAllEndpoints : removeAllEndpoints,
+            deleteEndpoint : deleteEndpoint
         };
     }]);
