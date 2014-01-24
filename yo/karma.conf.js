@@ -13,6 +13,7 @@ module.exports = function(config) {
           'components/angular-ui-bootstrap/misc/test-lib/angular-mocks.js',
           'components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.6.0.js',
           'components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js',
+          'components/angular-local-storage/angular-local-storage.js',
           'components/angular-resource/angular-resource.js',
           'components/angular-cookies/angular-cookies.js',
           'components/angular-sanitize/angular-sanitize.js',

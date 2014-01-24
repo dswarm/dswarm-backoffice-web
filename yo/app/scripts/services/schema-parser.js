@@ -31,11 +31,11 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      *   A json-schema is usually like "Property": { ... (definition) }
      *   and `name' and `container' are just that.
      * @param editableTitle {Boolean}
-     * @returns {{name: String, show: boolean}}
+     * @returns {{name: String, $show: boolean}}
      */
     function mapData(name, container, editableTitle) {
 
-        var data = {'name': name, 'show': true, 'editableTitle': editableTitle},
+        var data = {'name': name, '$show': true, 'editableTitle': editableTitle},
             itemsSetName = 'properties';
 
         if(!container['properties'] && container['items']) {
@@ -67,14 +67,14 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      *
      * @param domainSchema  {{id: Number, name: String, attribute_paths: Array}}
      * @param editableTitle {Boolean=}
-     * @returns {{name: String, show: boolean}}
+     * @returns {{name: String, $show: boolean}}
      */
     function fromDomainSchema(domainSchema, editableTitle) {
 
-        var data = {name: domainSchema.name, show: true, editableTitle: editableTitle};
+        var data = {name: domainSchema.name, $show: true, editableTitle: editableTitle};
 
         var make = function(obj) {
-            return angular.extend({show: true, hasChildren: false, editableTitle: editableTitle}, obj);
+            return angular.extend({$show: true, hasChildren: false, editableTitle: editableTitle}, obj);
         };
 
         var merge = function(container, newChildren) {
@@ -102,20 +102,24 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
             var cache = {};
 
             angular.forEach(attribs, function (val) {
+                if (angular.isUndefined(val)) {
+                    return;
+                }
+
                 var path = loDash.map(val, 'id');
                 if (path.length > 1) {
 
                     var newVal = val.slice(1);
                     var name = path[0];
                     if (!cache.hasOwnProperty(name)) {
-                        cache[name] = {id: name, name: val[0].name, children: []};
+                        cache[name] = {id: name, uri: val[0].uri, name: val[0].name, children: []};
                     }
 
                     var parsed = loop([newVal]);
 
                     merge(cache[name], parsed.children);
 //                    cache[name].children = cache[name].children.concat(parsed.children);
-                } else {
+                } else if (angular.isObject(val[0])) {
                     props.children.push(make(val[0]));
                 }
             });
@@ -128,8 +132,18 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
         };
 
         var paths = domainSchema['attribute_paths'];
-        var attrs = loDash.map(paths, 'attributes');
+        var attrs = loDash.map(paths, function(attribute_path) {
 
+            if(attribute_path.id) {
+                angular.forEach(attribute_path.attributes, function(attribute) {
+
+                    attribute._$path_id = attribute_path.id;
+
+                });
+            }
+
+            return attribute_path.attributes;
+        });
         if (attrs.length) {
             angular.extend(data, loop(attrs));
         }
@@ -193,7 +207,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
      * @returns {*}
      */
     function makeItem(name, children, title, extra) {
-        var item = {'name': name, 'show': true};
+        var item = {'name': name, '$show': true};
         if (children && children.length) {
             item['children'] = children;
         }

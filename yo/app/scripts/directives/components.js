@@ -17,7 +17,7 @@ angular.module('dmpApp')
         };
 
         FunctionResource.query(function(funs) {
-            $scope.functions.children = Lodash.pluck(funs, 'function_description');
+            $scope.functions.children = funs;
         });
     }])
     .directive('components', [ function () {

@@ -1,14 +1,18 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl', ['$scope', '$http', '$q', 'Util', 'Lo-Dash', 'schemaParser', 'PubSub', function ($scope, $http, $q, Util, loDash, schemaParser, PubSub) {
+    .controller('TargetDataCtrl',
+            ['$scope', '$http', '$q', 'Util', 'Lo-Dash', 'schemaParser', 'PubSub',
+    function ($scope,   $http,   $q,   Util,   loDash,    schemaParser,   PubSub) {
         $scope.internalName = 'Target Data Widget';
 
         var schemaPromise;
 
-        PubSub.subscribe($scope, 'handleTargetSchemaSelected', function(schema) {
+        PubSub.subscribe($scope, 'outputDataSelected', function() {
 
-            var deferred = $q.defer();
+            var schema = $scope.project._$output_data_model_schema,
+                deferred = $q.defer();
+
             schemaPromise = deferred.promise;
             deferred.resolve(schema);
         });

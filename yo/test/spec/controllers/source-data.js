@@ -35,12 +35,12 @@ describe('Controller: SourceDataCtrl', function () {
         $httpBackend.verifyNoOutstandingRequest();
     }));
 
-    it('should have a SchemaCtrl controller', function() {
+    it('should have a SourceDataCtrl controller', function() {
         var SourceDataCtrl = sourceDataCtrl();
         expect(SourceDataCtrl).not.toBe(null);
     });
 
-    it('should have a SchemaCtrl controller', function() {
+    it('should have a SourceDataCtrl controller', function() {
         var dataInclude;
 
         sourceDataCtrl();

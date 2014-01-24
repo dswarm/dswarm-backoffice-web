@@ -2,19 +2,13 @@
 
   <div class="col-md-5">
 
-    <div ng-repeat="source in sources">
+    <div class="zebra30 jsPanchor jsPanchorSource source-selected">
 
-        <div class="zebra30 jsPanchor jsPanchorSource" ng-class="{'source-selected': source.selected}">
-
-            <div class="data-head tree-child">
-                <h5>{{source.name}}</h5>
-            </div>
-
-            <div ng-show="!source.collapsed">
-                <tree data="source.schema" name="source.name" res-id="{{ source.resourceId }}" conf-id="{{ source.configId }}" as-source layer="0"></tree>
-            </div>
-
+        <div class="data-head tree-child">
+            <h5>{{project.input_data_model.name}}</h5>
         </div>
+
+        <tree data="project._$input_data_model_schema" name="project.input_data_model.name" res-id="{{ project.input_data_model.id }}" conf-id="{{ project.input_data_model.configuration.id }}" as-source layer="0"></tree>
 
     </div>
 
@@ -22,38 +16,29 @@
 
   <div class="col-md-5 col-md-offset-2">
 
-      <div ng-if="!isTargetLoaded">
-        <button class="btn btn-default open-schema-col-selector" type="button" ng-click="onTargetSchemaSelectorClick()">Select target schema</button>
+      <div ng-if="!isOutputDataModelLoaded">
+          <button class="btn btn-default open-schema-col-selector" type="button" ng-click="onOutputSelectorClick()">Select output schema</button>
       </div>
 
       <div>
-          <div ng-if="isTargetLoading && !loadTargetError">
-              <img src="../../images/ajax-loader.gif">
-          </div>
 
-          <div ng-if="loadError">
-              <div class="loadError">
-                  {{loadError}}
-              </div>
-          </div>
-
-          <div class="data-head" ng-if="!isTargetLoading && loadTargetError.length == 0 && isTargetLoaded">
+          <div class="data-head" ng-if="isOutputDataModelLoaded">
 
               <div class="zebra30">
 
                   <div class="data-head tree-child">
-                      <h5>Target Schema</h5>
+                      <h5>Output Schema</h5>
 
                       <div class="icons">
 
-                          <i class="glyphicon glyphicon-cog" ng-click="onTargetSchemaSelectorClick()"></i>
+                          <i class="glyphicon glyphicon-cog" ng-click="onOutputSelectorClick()"></i>
 
                       </div>
 
                   </div>
 
 
-                  <tree data="targetSchema" as-target></tree>
+                  <tree data="project._$output_data_model_schema" as-target></tree>
               </div>
 
           </div>
