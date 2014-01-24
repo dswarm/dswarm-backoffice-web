@@ -479,6 +479,16 @@ angular.module('dmpApp')
             }
         });
 
+        PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
+            angular.forEach(components.pool, function(component) {
+                angular.forEach(component.endpoints, function(endpoint) {
+                   jsP.deleteEndpoint(endpoint);
+                });
+
+                jsP.detachAll($(component.source));
+            });
+        });
+
         PubSub.subscribe($rootScope, 'paintPlumbs', function (mappings) {
 
             angular.forEach(mappings, function(mapping) {
@@ -491,12 +501,7 @@ angular.module('dmpApp')
                     var scp = angular.element(elem).scope();
 
                     if(scp.child && scp.child.id && scp.child.id === mapping.input_attribute_paths[0].attributes[0].id) {
-                        console.log("source", scp.child.id);
-
-                        console.log(angular.element($(elem).find('i.jsPanchorIcon').first()).scope());
-
                         inputComponent = angular.element($(elem).find('i.jsPanchorIcon').first()).scope();
-
                     }
 
                 });
@@ -506,12 +511,7 @@ angular.module('dmpApp')
                     var scp = angular.element(elem).scope();
 
                     if(scp.child && scp.child.id && scp.child.id === mapping.output_attribute_path.attributes[0].id) {
-                        console.log("target", scp.child.id);
-
-                        console.log(angular.element($(elem).find('i.jsPanchorIcon').first()).scope());
-
                         outputComponent = angular.element($(elem).find('i.jsPanchorIcon').first()).scope();
-
                     }
 
                 });
