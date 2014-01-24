@@ -95,7 +95,7 @@ angular.module('dmpApp')
                 reLabel(component.connection);
             }
 
-            if(typeof noReLabel === "string") {
+            if(typeof noReLabel === 'string') {
                 newConnection.setLabel(noReLabel);
 
                 var labelOverlay = newConnection.getLabelOverlay();
@@ -482,7 +482,7 @@ angular.module('dmpApp')
         PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
             angular.forEach(components.pool, function(component) {
                 angular.forEach(component.endpoints, function(endpoint) {
-                   jsP.deleteEndpoint(endpoint);
+                    jsP.deleteEndpoint(endpoint);
                 });
 
                 jsP.detachAll($(component.source));

@@ -45,7 +45,7 @@ angular.module('dmpApp')
 
         $scope.processOutputDataModel = function() {
 
-           if($scope.project.output_data_model) {
+            if($scope.project.output_data_model) {
 
                 $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
