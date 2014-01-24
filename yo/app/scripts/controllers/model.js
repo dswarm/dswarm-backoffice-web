@@ -167,6 +167,16 @@ angular.module('dmpApp')
             });
         };
 
+        $scope.onCancelProjectClick = function() {
+
+            discardProjectDraft($scope.project.id);
+
+            ProjectResource.get({id: $scope.project.id}, function(project) {
+                restoreProject(project);
+            });
+
+        };
+
         $scope.onDiscardDraftClick = function(idx) {
             if (blocked(idx)) {
                 return;
