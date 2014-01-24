@@ -115,7 +115,7 @@ angular.module('dmpApp')
         $scope.sendTransformations = function () {
 
             var payload = {
-                name: "Transformations",
+                name: 'Transformations',
                 description : 'Transformations',
                 job: {
                     mappings : $scope.project.mappings
@@ -152,12 +152,12 @@ angular.module('dmpApp')
                             _$connection_id : data.connection_id,
                             name : data.name,
                             transformation : {
-                                "name": "transformation",
-                                "description": "transformation",
-                                "function": {
-                                    "name": "transformation",
-                                    "type": "Transformation",
-                                    "components": []
+                                name : 'transformation',
+                                description : 'transformation',
+                                function : {
+                                    name : 'transformation',
+                                    type : 'Transformation',
+                                    components : []
                                 }
                             },
                             input_attribute_paths : inputAttributePaths,
