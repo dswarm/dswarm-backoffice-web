@@ -108,7 +108,7 @@ angular.module('dmpApp')
                 return undefined;
             }
             return JSON.stringify(obj, toJsonReplacer, pretty ? '  ' : null);
-        };
+        }
 
         return {
             latestBy: latestBy,
