@@ -138,9 +138,14 @@ angular.module('dmpApp')
         }
 
         $scope.onSaveProjectClick = function(idx) {
-            if ($scope.alerts[idx].busy) {
+            if ($scope.alerts[idx] && $scope.alerts[idx].busy) {
                 return;
             }
+
+            if(!$scope.alerts[idx]) {
+                $scope.alerts[idx] = {};
+            }
+
             $scope.alerts[idx].busy = true;
 
             $scope.projectIsDraft = false;
