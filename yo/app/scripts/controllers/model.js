@@ -106,7 +106,13 @@ angular.module('dmpApp')
                 $scope.processOutputDataModel();
             }
 
-            PubSub.broadcast('projectModelChanged');
+            $timeout(function() {
+                PubSub.broadcast('projectModelChanged', {});
+            }, 1);
+
+            $timeout(function() {
+                PubSub.broadcast('paintPlumbs', $scope.project.mappings);
+            }, 1000);
 
         }
 

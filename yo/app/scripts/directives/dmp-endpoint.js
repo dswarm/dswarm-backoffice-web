@@ -91,8 +91,15 @@ angular.module('dmpApp')
             newConnection.setLabel(' ');
             component.connection = newConnection;
 
-            if(!noReLabel) {
+            if(noReLabel === false) {
                 reLabel(component.connection);
+            }
+
+            if(typeof noReLabel === "string") {
+                newConnection.setLabel(noReLabel);
+
+                var labelOverlay = newConnection.getLabelOverlay();
+                labelOverlay.addClass('mapping-label');
             }
 
             if(!noActivate) {
@@ -470,6 +477,58 @@ angular.module('dmpApp')
 
                 }
             }
+        });
+
+        PubSub.subscribe($rootScope, 'paintPlumbs', function (mappings) {
+
+            angular.forEach(mappings, function(mapping) {
+
+                var inputComponent,
+                    outputComponent;
+
+                angular.forEach($('.jsPanchorSource .jsPanchor.ng-isolate-scope'), function(elem) {
+
+                    var scp = angular.element(elem).scope();
+
+                    if(scp.child && scp.child.id && scp.child.id === mapping.input_attribute_paths[0].attributes[0].id) {
+                        console.log("source", scp.child.id);
+
+                        console.log(angular.element($(elem).find('i.jsPanchorIcon').first()).scope());
+
+                        inputComponent = angular.element($(elem).find('i.jsPanchorIcon').first()).scope();
+
+                    }
+
+                });
+
+                angular.forEach($('.jsPanchorTarget .jsPanchor.ng-isolate-scope'), function(elem) {
+
+                    var scp = angular.element(elem).scope();
+
+                    if(scp.child && scp.child.id && scp.child.id === mapping.output_attribute_path.attributes[0].id) {
+                        console.log("target", scp.child.id);
+
+                        console.log(angular.element($(elem).find('i.jsPanchorIcon').first()).scope());
+
+                        outputComponent = angular.element($(elem).find('i.jsPanchorIcon').first()).scope();
+
+                    }
+
+                });
+
+                var component = {
+                    dropEndpoint : null,
+                    scope : 'schema',
+                    sourceId : inputComponent.guid,
+                    targetId : outputComponent.guid
+                };
+
+
+                connectComponent(component, inputComponent.guid, outputComponent.guid, inputComponent.jspSourceOptions, outputComponent.jspTargetOptions, false, mapping.name);
+
+            });
+
+
         });
 
         PubSub.subscribe($rootScope, 'schemaCanvasUpdated', function () {
