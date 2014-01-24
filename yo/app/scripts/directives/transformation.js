@@ -37,8 +37,7 @@ angular.module('dmpApp')
             }
         }
         init();
-        PubSub.subscribe($scope, 'projectDraftDiscarded', init);
-        PubSub.subscribe($scope, 'projectModelChanged', init);
+        PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged'], init);
 
         // show draft banner
         if ($scope.projectIsDraft) {

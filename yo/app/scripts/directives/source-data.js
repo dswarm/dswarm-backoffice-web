@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SourceDataCtrl', ['$scope', '$http', '$q', 'schemaParser', 'DataModelResource', 'SchemaResource', 'SchemaDataResource', 'PubSub',
-        function ($scope, $http, $q, schemaParser, DataModelResource, SchemaResource, SchemaDataResource, PubSub) {
+    .controller('SourceDataCtrl',
+            ['$scope','schemaParser', 'DataModelResource', 'PubSub', 'Lo-Dash',
+    function ($scope,  schemaParser,   DataModelResource,   PubSub,   loDash) {
         $scope.internalName = 'Source Data Widget';
 
         $scope.data = {};
@@ -17,11 +18,43 @@ angular.module('dmpApp')
             return $scope.showData ? 'sourcedata' : '';
         };
 
-        PubSub.subscribe($scope, 'inputDataSelected', function() {
+        function loadData(dataModel) {
 
-            $scope.loadData($scope.project.input_data_model.id, $scope.project.input_data_model.schema.id, $scope.project.input_data_model.name);
+            if (loDash.isEmpty(dataModel) || loDash.isEmpty(dataModel.schema)) {
+                return;
+            }
 
-        });
+            function getSchema(record) {
+                return schemaParser.parseFromDomainSchema(record, dataModel.schema);
+            }
+
+            $scope.schema = dataModel.schema;
+            $scope.resourceName = dataModel.name;
+
+            DataModelResource.data({
+
+                id: dataModel.id,
+                atMost: 3
+
+            }, function(dataResult) {
+
+                $scope.records = loDash.map(dataResult, function (record) {
+                    return {
+                        id: record.recordId,
+                        data: getSchema(record)
+                    };
+                });
+
+                $scope.showData = true;
+            });
+        }
+
+        function init() {
+
+            loadData($scope.project.input_data_model);
+        }
+        init();
+        PubSub.subscribe($scope, ['inputDataSelected', 'projectDraftDiscarded', 'projectModelChanged'], init);
 
         PubSub.subscribe($scope, 'getLoadData', function() {
 
@@ -31,59 +64,6 @@ angular.module('dmpApp')
             });
 
         });
-
-        $scope.loadData = function(dataModelId, schemaId, resourceName) {
-
-            var schemaPromise, dataPromise,
-                scopeSetter;
-
-            $scope.resourceName = resourceName;
-
-            if (dataModelId && schemaId) {
-
-                dataPromise = DataModelResource.data({
-                    id: dataModelId,
-                    atMost: 3
-                }).$promise;
-
-                schemaPromise = SchemaResource.get({
-                    id: schemaId
-                }).$promise;
-
-                scopeSetter = function(schemaResult, dataResult) {
-
-                    var records = [];
-                    angular.forEach(dataResult, function(record) {
-                        records.push({
-                            id: record.recordId,
-                            data: schemaParser.parseFromDomainSchema(record, schemaResult)
-                        });
-                    });
-
-                    $scope.schema = schemaResult;
-
-                    $scope.records = records;
-
-                    $scope.showData = true;
-
-                };
-
-            }
-
-            var allPromise = $q.all([schemaPromise, dataPromise]);
-
-            allPromise.then(function (result) {
-
-                var schemaResult = result[0]
-                    , dataResult = result[1];
-
-                scopeSetter(schemaResult, dataResult);
-            });
-
-
-        };
-
-
     }])
     .directive('sourceData', [ function () {
         return {

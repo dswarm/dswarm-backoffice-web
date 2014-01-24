@@ -174,7 +174,7 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
 
             var properties = {};
             angular.forEach(children, function(child) {
-                var key = child.id || child.name;
+                var key = child.uri || child.name;
                 if (child.hasChildren) {
                     properties[key] = {type: 'object'};
                     properties[key].properties = loop(child.children);
