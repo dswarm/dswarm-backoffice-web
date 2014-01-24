@@ -43,13 +43,20 @@ angular.module('dmpApp')
         };
 
         $scope.processOutputDataModel = function() {
-            $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
-            $scope.isOutputDataModelLoaded = true;
+           if($scope.project.output_data_model) {
 
-            $timeout(function() {
-                PubSub.broadcast('outputDataSelected', {});
-            }, 1);
+                $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
+
+                $scope.isOutputDataModelLoaded = true;
+
+                $timeout(function() {
+                    PubSub.broadcast('outputDataSelected', {});
+                }, 1);
+
+            } else {
+                $scope.isOutputDataModelLoaded = false;
+            }
 
         };
 
@@ -102,9 +109,7 @@ angular.module('dmpApp')
                 $scope.processInputDataModel();
             }
 
-            if($scope.project.output_data_model) {
-                $scope.processOutputDataModel();
-            }
+            $scope.processOutputDataModel();
 
             $timeout(function() {
                 PubSub.broadcast('projectModelChanged', {});
