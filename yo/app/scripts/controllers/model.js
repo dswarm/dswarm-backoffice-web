@@ -153,9 +153,21 @@ angular.module('dmpApp')
         }
 
         $scope.onSaveProjectClick = function(idx) {
+<<<<<<< HEAD
             if (blocked(idx)) {
                 return;
             }
+=======
+            if ($scope.alerts[idx] && $scope.alerts[idx].busy) {
+                return;
+            }
+
+            if(!$scope.alerts[idx]) {
+                $scope.alerts[idx] = {};
+            }
+
+            $scope.alerts[idx].busy = true;
+>>>>>>> sprint-7/DD-276
 
             $scope.projectIsDraft = false;
 

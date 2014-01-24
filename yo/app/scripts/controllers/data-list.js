@@ -30,13 +30,19 @@ angular.module('dmpApp')
 
         };
 
+        $scope.onProjectDeleteClick = function(project) {
+            ProjectResource.remove({id : project[0].id}, {}, function() {
+                $scope.updateGridData();
+            });
+        };
+
         $scope.updateGridData = function() {
 
             ResourceResource.query(function(results) {
 
                 $scope.files = results;
 
-            });
+            }, function() { $scope.files = ''; });
 
             DataModelResource.query(function(results) {
 
@@ -46,13 +52,13 @@ angular.module('dmpApp')
 
                     return result;
                 });
-            });
+            }, function() { $scope.models = ''; });
 
             ProjectResource.query(function(projects) {
 
                 $scope.projects = projects;
 
-            });
+            }, function() { $scope.projects = ''; });
 
         };
 
@@ -90,7 +96,6 @@ angular.module('dmpApp')
             selectedItems: $scope.selectedProject,
             multiSelect: false
         };
-
 
         $scope.updateGridData();
 
