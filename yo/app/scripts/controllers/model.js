@@ -82,7 +82,7 @@ angular.module('dmpApp')
             return 'project.draft.' + (projectId || $scope.project.id);
         }
 
-        function loadProjectData(projectId, cb) {
+        $scope.loadProjectData = function(projectId, cb) {
             var callback = angular.isFunction(cb) ? cb : angular.identity,
                 draft = localStorageService.get(getStorageDraftKey(projectId));
 
@@ -196,7 +196,7 @@ angular.module('dmpApp')
 
                 discardProjectDraft(projectId);
 
-                loadProjectData(projectId, function() {
+                $scope.loadProjectData(projectId, function() {
                     $scope.closeAlert(idx);
                 });
 
@@ -229,6 +229,6 @@ angular.module('dmpApp')
             $scope.saveProjectDraft();
         }, true);
 
-        loadProjectData($routeParams.projectId);
+        $scope.loadProjectData($routeParams.projectId);
 
     }]);

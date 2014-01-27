@@ -59,7 +59,7 @@ describe('Controller: ModelCtrl', function () {
     });
 
 
-    it('should remove source from set', function() {
+    /*    it('should remove source from set', function() {
 
         var source = {
             name : 'foo',
@@ -83,7 +83,7 @@ describe('Controller: ModelCtrl', function () {
 
     });
 
-    it('should send broadcast of selected source and set selected source value', function() {
+     it('should send broadcast of selected source and set selected source value', function() {
 
         var source = {
             name : 'foo',
@@ -115,29 +115,7 @@ describe('Controller: ModelCtrl', function () {
             expect(scope.currentSource).toBe(source);
         });
 
-    });
-
-    it('should add source and it should be selected', function() {
-
-        var source = {
-            name : 'foo',
-            resourceId : 1,
-            configId : 1,
-            schema : schema,
-            collapsed : true,
-            selected : true
-        };
-
-        modelCtrl();
-
-        scope.addSource(source.schema, source.resourceId, source.configId, source.collapsed, source.selected, source.name);
-
-        expect(scope.sources.length).toBe(1);
-        expect(scope.sources[0].name).toBe('foo');
-
-        expect(scope.currentSource).toBe(scope.sources[0]);
-
-    });
+    });*/
 
     it('should load source data from server', function() {
 
@@ -150,7 +128,7 @@ describe('Controller: ModelCtrl', function () {
         $rootScope.$digest();
         $httpBackend.flush();
 
-        expect(scope.sources.length).toBe(2);
+        expect(scope.project.input_data_model.id).toBe(34);
 
     });
 

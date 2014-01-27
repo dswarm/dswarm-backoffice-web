@@ -3,7 +3,7 @@
 describe('Controller: SourceDataCtrl', function () {
     var $httpBackend, $rootScope, scope, sourceDataCtrl;
 
-    beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord', 'mockedData'));
+    beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord', 'mockedData', 'mockedProject'));
 
     beforeEach(module(function($provide) {
         $provide.value('Util', {
@@ -17,9 +17,11 @@ describe('Controller: SourceDataCtrl', function () {
         $rootScope = $injector.get('$rootScope');
 
         scope = $rootScope.$new();
+        scope.project = $injector.get('mockProjectJSON');
 
         $httpBackend.whenGET('/dmp/schemas/1').respond($injector.get('mockSchemaSimpleJSON'));
         $httpBackend.whenGET('/dmp/datamodels/1/data?atMost=3').respond($injector.get('mockDataJSON'));
+        $httpBackend.whenGET('/dmp/datamodels/34/data?atMost=3').respond($injector.get('mockDataJSON'));
 
         var $controller = $injector.get('$controller');
         sourceDataCtrl = function () {
@@ -54,8 +56,6 @@ describe('Controller: SourceDataCtrl', function () {
 
     it('should load data from server', function() {
 
-        $httpBackend.expectGET('/dmp/schemas/1');
-
         sourceDataCtrl();
 
         scope.loadData(1, 1, 'foo');
@@ -65,7 +65,7 @@ describe('Controller: SourceDataCtrl', function () {
 
         expect(scope.showData).toBe(true);
         expect(scope.records.length).toBe(3);
-        expect(scope.resourceName).toBe('foo');
+        expect(scope.resourceName).toBe('test_csv.csv + null data model');
 
     });
 

@@ -5,8 +5,8 @@ angular.module('dmpApp')
 
         $scope.internalName = 'Filter Widget';
 
-        if(!$scope.activeMapping.$filters) {
-            $scope.activeMapping.$filters = [];
+        if(!$scope.activeMapping._$filters) {
+            $scope.activeMapping._$filters = [];
         }
 
         $scope.dataSource = {};
@@ -32,7 +32,7 @@ angular.module('dmpApp')
 
             var inputfilterCollection = [];
 
-            angular.forEach($scope.activeMapping.$filters, function(filter){
+            angular.forEach($scope.activeMapping._$filters, function(filter){
 
                 filter.inputfilters = schemaParser.getData(filter.filter,'');
 
@@ -69,7 +69,7 @@ angular.module('dmpApp')
 
         $scope.addFilter = function () {
 
-            $scope.activeMapping.$filters.push({
+            $scope.activeMapping._$filters.push({
                 filter : schemaParser.fromDomainSchema($scope.dataSchema, true),
                 inputfilters : [],
                 name : 'new filter'

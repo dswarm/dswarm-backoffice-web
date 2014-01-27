@@ -18,7 +18,7 @@ angular.module('dmpApp')
             return $scope.showData ? 'sourcedata' : '';
         };
 
-        function loadData(dataModel) {
+        $scope.loadData = function(dataModel) {
 
             if (loDash.isEmpty(dataModel) || loDash.isEmpty(dataModel.schema)) {
                 return;
@@ -50,8 +50,7 @@ angular.module('dmpApp')
         }
 
         function init() {
-
-            loadData($scope.project.input_data_model);
+            $scope.loadData($scope.project.input_data_model);
         }
         init();
         PubSub.subscribe($scope, ['inputDataSelected', 'projectDraftDiscarded', 'projectModelChanged'], init);

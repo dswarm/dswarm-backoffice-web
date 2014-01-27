@@ -10,6 +10,7 @@ describe('Controller: Import', function () {
     spyOn(XMLHttpRequest.prototype, 'send');
   });
 
+
   beforeEach(inject(function ($injector) {
     $rootScope = $injector.get('$rootScope');
 
