@@ -162,8 +162,10 @@ angular.module('dmpApp')
 
             discardProjectDraft($scope.project.id);
 
-            ProjectResource.update({ id: $scope.project.id }, Util.toJson($scope.project), function() {
+            ProjectResource.update({ id: $scope.project.id }, Util.toJson($scope.project), function(project) {
                 $scope.closeAlert(idx);
+
+                restoreProject(project);
             });
         };
 
