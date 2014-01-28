@@ -20,14 +20,14 @@ angular.module('dmpApp')
         function init() {
             dmg = new DataModelGen($scope.project.mappings);
             activeComponentId = '';
-            $scope.activeMapping = { $components : {} };
+            $scope.activeMapping = { _$components : [] };
             $scope.showSortable = false;
             $scope.tabs = [];
 
             // restore mappings if a previous project was loaded from a draft
             loDash.forEach($scope.project.mappings, function(mapping) {
 
-                $scope.tabs.push({title: mapping.name, active: false, id: mapping._$internal_id});
+                $scope.tabs.push({title: mapping.name, active: false, id: mapping._$internal_id, mappingId : mapping.id});
                 availableIds.push(mapping._$internal_id);
             });
 
@@ -56,6 +56,10 @@ angular.module('dmpApp')
                 $scope.$broadcast('tabSwitch', id);
 
                 $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
+
+                if(!$scope.activeMapping._$components) {
+                    $scope.activeMapping._$components = [];
+                }
 
                 activeComponentId = id;
 
@@ -130,6 +134,13 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
+            var existingTabId = loDash.findIndex($scope.tabs, {mappingId : data.mapping_id});
+
+            if(existingTabId >= 0) {
+                $scope.tabs[existingTabId].id = data.internal_id;
+                activeComponentId = data.internal_id;
+            }
+
             if (activeComponentId !== data.internal_id) {
                 if (loDash.any($scope.project.mappings, { '_$internal_id' : data.internal_id })) {
 
@@ -168,7 +179,7 @@ angular.module('dmpApp')
 
                     $scope.project.mappings.push(mapping);
 
-                    $scope.tabs.push( { title: data.name, active: true, id: data.internal_id } );
+                    $scope.tabs.push( { title: data.name, active: true, id: data.internal_id, mappingId : data.mapping_id } );
                     availableIds.push(data.internal_id);
 
                     activate(data.internal_id, true);
