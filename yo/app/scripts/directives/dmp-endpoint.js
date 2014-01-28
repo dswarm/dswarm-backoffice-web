@@ -88,6 +88,10 @@ angular.module('dmpApp')
             //link it
             newConnection = jsP.connect(sourceEndpoint, targetEndpoint );
 
+            if(component.mappingId) {
+                newConnection.mappingId = component.mappingId;
+            }
+
             newConnection.setLabel(' ');
             component.connection = newConnection;
 
@@ -252,6 +256,7 @@ angular.module('dmpApp')
                     PubSub.broadcast('connectionSelected', {
                         internal_id : source.id + ':' + target.id,
                         connection_id : connection.id,
+                        mapping_id : connection.mappingId,
                         name: name,
                         inputAttributePath: source,
                         outputAttributePath: target,
@@ -522,7 +527,8 @@ angular.module('dmpApp')
                     dropEndpoint : null,
                     scope : 'schema',
                     sourceId : inputComponent.guid,
-                    targetId : outputComponent.guid
+                    targetId : outputComponent.guid,
+                    mappingId : mapping.id
                 };
 
 
