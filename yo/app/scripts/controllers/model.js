@@ -100,7 +100,7 @@ angular.module('dmpApp')
                     restoreProject(project);
                 });
             }
-        }
+        };
 
         function restoreProject(project) {
 

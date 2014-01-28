@@ -47,7 +47,7 @@ angular.module('dmpApp')
 
                 $scope.showData = true;
             });
-        }
+        };
 
         function init() {
             $scope.loadData($scope.project.input_data_model);
