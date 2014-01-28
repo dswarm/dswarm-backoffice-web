@@ -19,6 +19,7 @@ angular.module('dmpApp')
 
         function init() {
             dmg = new DataModelGen($scope.project.mappings);
+            activeComponentId = '';
             $scope.activeMapping = { $components : {} };
             $scope.showSortable = false;
             $scope.tabs = [];

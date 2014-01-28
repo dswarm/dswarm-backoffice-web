@@ -491,6 +491,8 @@ angular.module('dmpApp')
 
         PubSub.subscribe($rootScope, 'paintPlumbs', function (mappings) {
 
+            components.pool = [];
+
             angular.forEach(mappings, function(mapping) {
 
                 var inputComponent,
