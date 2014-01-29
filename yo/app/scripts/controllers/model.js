@@ -104,6 +104,13 @@ angular.module('dmpApp')
 
         function restoreProject(project) {
 
+            var mappingCounter = 0;
+
+            angular.forEach(project.mappings, function(mapping) {
+                project.mappings[mappingCounter]._$components = [];
+                mappingCounter++;
+            });
+
             $scope.project = project;
 
             if($scope.project.input_data_model) {

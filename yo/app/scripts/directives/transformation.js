@@ -61,10 +61,6 @@ angular.module('dmpApp')
                     $scope.activeMapping = { _$components : [] };
                 }
 
-                if(!$scope.activeMapping._$components) {
-                    $scope.activeMapping._$components = [];
-                }
-
                 activeComponentId = id;
 
                 if (!skipBroadcast) {
