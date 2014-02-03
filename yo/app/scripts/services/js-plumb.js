@@ -127,7 +127,7 @@ angular.module('dmpApp')
 
             if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).parent().hasClass('tree-leaf')) {
 
-                $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
+                //$('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
                 elId = $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
 
             }
@@ -169,7 +169,9 @@ angular.module('dmpApp')
         function detach(connection, source, target) {
             if (connection && connection.source === source[0] && connection.target === target[0]) {
                 jsPlumb.detach(connection);
-                source.data('_outbound', null);
+                if(source.data) {
+                    source.data('_outbound', null);
+                }
             }
         }
 
@@ -275,6 +277,22 @@ angular.module('dmpApp')
             jsPlumb.removeAllEndpoints(el, recurse);
         }
 
+        /**
+         * get all connections managed by the instance of jsplumb.
+         * @returns {*}
+         */
+        function getAllConnections() {
+            return jsPlumb.getAllConnections();
+        }
+
+        /**
+         * detaches every connection
+         * @param params
+         */
+        function detachEveryConnection(params) {
+            jsPlumb.detachEveryConnection(params);
+        }
+
         return {
             on: on,
             connect:connect,
@@ -287,6 +305,8 @@ angular.module('dmpApp')
             repaintEverything : repaintEverything,
             addEndpoint : addEndpoint,
             removeAllEndpoints : removeAllEndpoints,
-            deleteEndpoint : deleteEndpoint
+            deleteEndpoint : deleteEndpoint,
+            getAllConnections : getAllConnections,
+            detachEveryConnection : detachEveryConnection
         };
     }]);
