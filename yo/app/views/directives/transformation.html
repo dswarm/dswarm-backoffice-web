@@ -19,10 +19,10 @@
       </div>
       <ul class="function-sortable" ng-show="showSortable" ng-class="{bigger:!activeMapping._$components.length}">
         <li ng-repeat="component in activeMapping._$components" class="function component"
-            ng-class="'function-'+component.componentType" dmp-connectible
+            ng-class="'function-'+component._$componentType" dmp-connectible
 
             ng-click="onFunctionClick(component)">
-          <div ng-switch on="component.componentType">
+          <div ng-switch on="component._$componentType">
             <span ng-switch-when="fun">{{ component.payload.name }}</span>
             <span ng-switch-when="source">{{ component.payload.name }}</span>
             <span ng-switch-when="target">{{ component.payload.name }}</span>

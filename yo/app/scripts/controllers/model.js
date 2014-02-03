@@ -2,8 +2,8 @@
 
 angular.module('dmpApp')
     .controller('ModelCtrl',
-           ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util',
-    function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,    Util) {
+           ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util', 'jsP',
+    function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,    Util, jsP) {
 
         $scope.alerts = [];
 
@@ -104,6 +104,13 @@ angular.module('dmpApp')
 
         function restoreProject(project) {
 
+            var mappingCounter = 0;
+
+            angular.forEach(project.mappings, function() {
+                project.mappings[mappingCounter]._$components = [];
+                mappingCounter++;
+            });
+
             $scope.project = project;
 
             if($scope.project.input_data_model) {
@@ -118,7 +125,7 @@ angular.module('dmpApp')
 
             $timeout(function() {
                 PubSub.broadcast('paintPlumbs', $scope.project.mappings);
-            }, 1000);
+            }, 500);
 
         }
 
@@ -218,6 +225,11 @@ angular.module('dmpApp')
 
             $scope.saveProjectDraft();
         }, true);
+
+
+        $scope.$on("$locationChangeStart", function (event, nextLocation, currentLocation) {
+            jsP.detachEveryConnection({});
+        });
 
         $scope.loadProjectData($routeParams.projectId);
 

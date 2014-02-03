@@ -20,6 +20,7 @@ angular.module('dmpApp')
         function init() {
             dmg = new DataModelGen($scope.project.mappings);
             activeComponentId = '';
+            availableIds = [];
             $scope.activeMapping = { _$components : [] };
             $scope.showSortable = false;
             $scope.tabs = [];
@@ -57,8 +58,11 @@ angular.module('dmpApp')
 
                 $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
 
-                if(!$scope.activeMapping._$components) {
-                    $scope.activeMapping._$components = [];
+                if(!$scope.activeMapping) {
+                    $scope.activeMapping = { _$components : [] };
+                }
+                if($scope.activeMapping._$components.length !== $scope.project.mappings[availableIds.indexOf(id)].transformation.function.components.length) {
+                    $scope.activeMapping._$components = createInternalComponentsFromComponents($scope.project.mappings[availableIds.indexOf(id)].transformation.function.components);
                 }
 
                 activeComponentId = id;
@@ -190,6 +194,22 @@ angular.module('dmpApp')
             }
         });
 
+        function createInternalComponentsFromComponents(components) {
+
+            var internalComponents = [];
+
+            if(!components) {
+                return internalComponents;
+            }
+
+            angular.forEach(components, function(component){
+                internalComponents.push( { _$componentType : 'fun', payload : component.function, id : component.id});
+            });
+
+            return internalComponents;
+
+        }
+
         function createComponentsFromInternalComponents(internalComponents) {
 
             var components = [];
@@ -233,8 +253,8 @@ angular.module('dmpApp')
 
         function push(data, index, oldIndex) {
 
-            if(!loDash.contains($scope.project.functions, data)) {
-                $scope.project.functions.push(data);
+            if(!loDash.contains($scope.project.functions, data.payload)) {
+                $scope.project.functions.push(data.payload);
             }
 
             if (angular.isDefined(oldIndex)) {
@@ -255,7 +275,7 @@ angular.module('dmpApp')
                 var payload = angular.element(ui.item).scope()['child'],
                     componentId = makeComponentId();
 
-                lastPayload = {componentType: 'fun', payload: payload, id: componentId};
+                lastPayload = { _$componentType : 'fun', payload : payload, id : componentId };
             },
             update: function (event, ui) {
                 //noinspection JSCheckFunctionSignatures
