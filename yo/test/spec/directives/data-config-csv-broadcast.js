@@ -1,19 +1,24 @@
 'use strict';
 
 describe('Controller: DataConfigCsvCtrl', function () {
-    var $httpBackend, $rootScope, scope, dataConfigCsvCtrl;
+    var $httpBackend, $rootScope, scope, dataConfigCsvCtrl, spyee;
 
     var win = {
         _: {
-            debounce: function(fn, timout) {
+            debounce: function(fn) {
+                var args, thisArg;
+
                 return function() {
-                    fn();
+                    args = arguments;
+                    thisArg = this;
+
+                    fn.apply(thisArg, arguments);
                 }
             }
         },
         dmp: {
             jsRoutes: {
-                api: ''
+                api: '/dmp/'
             }
         }
     };
@@ -33,36 +38,65 @@ describe('Controller: DataConfigCsvCtrl', function () {
         $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
 
-        var $resource = $injector.get('$resource');
-
         scope = $rootScope.$new();
 
-        spyOn($rootScope, '$broadcast');
+        spyee = {
+            foo: function(){}
+        };
+
+        scope.$on('dataConfigUpdated', function(event, data) {
+            spyee.foo(data.config);
+        });
+
+        spyOn(spyee, 'foo');
+
+        var $jsonResponseGet = $injector.get('mockDataConfigGetJSON');
+        $httpBackend.whenGET('/dmp/resources/42').respond($jsonResponseGet);
 
         var $controller = $injector.get('$controller');
 
         dataConfigCsvCtrl = function () {
 
             return $controller('DataConfigCsvCtrl', {
-                '$scope': scope
+                '$scope': scope,
+                '$routeParams': {
+                    resourceId: 42
+                }
             });
         };
     }));
 
-    afterEach(inject(function () {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
-    }));
+    });
 
-    it('should emit event on form object change', function () {
+    it('should not emit event on form name change', function () {
+        $httpBackend.expectGET('/dmp/resources/42');
 
         dataConfigCsvCtrl();
 
+        $httpBackend.flush();
+
         scope.config.name = 'configname';
 
-        scope.onFieldChanged();
+        scope.$digest();
 
-        expect($rootScope.$broadcast).toHaveBeenCalledWith("dataConfigUpdated",{ config : scope.config });
+        expect(spyee.foo).not.toHaveBeenCalled();
+    });
+
+    it('should emit event on form object change', function () {
+        $httpBackend.expectGET('/dmp/resources/42');
+
+        dataConfigCsvCtrl();
+
+        $httpBackend.flush();
+
+        scope.config.parameters.column_delimiter = ';';
+
+        scope.$digest();
+
+        expect(spyee.foo).toHaveBeenCalledWith(scope.config);
     });
 
 });

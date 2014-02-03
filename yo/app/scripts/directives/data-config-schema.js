@@ -20,7 +20,7 @@ angular.module('dmpApp')
         };
 
         $scope.onCancelClick = function() {
-            $location.path( '#/data/' );
+            $location.path( '/data/' );
         };
 
     }])

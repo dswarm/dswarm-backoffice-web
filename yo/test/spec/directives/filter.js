@@ -21,10 +21,10 @@ describe('Controller: FilterCtrl', function () {
         };
 
 
-        modalInstance = $modal.open({
-            templateUrl: 'views/directives/filter.html',
-            controller: 'FilterCtrl'
-        });
+        modalInstance = {
+            dismiss: function(){},
+            close: function(){}
+        };
 
         $httpBackend.whenGET('/data/schema.json').respond($injector.get('mockSchemaJSON'));
         $httpBackend.whenGET('/data/record.json').respond($injector.get('mockRecordJSON'));

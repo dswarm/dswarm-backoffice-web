@@ -23,7 +23,7 @@ angular.module('dmpApp')
                                 elem.removeClass('yellow red green');
                                 elem.addClass((data === expected)? 'green' : 'yellow');
                             })
-                            .error(function heartbeatSuccess() {
+                            .error(function heartbeatError() {
                                 elem.removeClass('yellow green');
                                 elem.addClass('red');
                             })
@@ -39,7 +39,7 @@ angular.module('dmpApp')
                         cancelHeartbeat = null;
                         elem.removeClass('yellow red green');
                         elem.addClass('disabled');
-                    } else if(!cancelHeartbeat) {
+                    } else {
                         elem.removeClass('disabled red green');
                         elem.addClass('yellow');
                         interval();

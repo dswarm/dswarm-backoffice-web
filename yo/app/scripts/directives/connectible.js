@@ -44,11 +44,12 @@ angular.module('dmpApp')
                                             }
                                         };
                                         jsP.connect(iElement, target, opts);
-                                        opts.anchors[0][0] = 1;
-                                        opts.anchors[0][4] = -8;
-                                        opts.anchors[1][0] = 1;
-                                        opts.anchors[1][4] = -8;
-                                        jsP.connect(iElement, target, opts);
+                                        var secondOpts = angular.copy(opts);
+                                        secondOpts.anchors[0][0] = 1;
+                                        secondOpts.anchors[0][4] = -8;
+                                        secondOpts.anchors[1][0] = 1;
+                                        secondOpts.anchors[1][4] = -8;
+                                        jsP.connect(iElement, target, secondOpts);
 
                                         drawn = true;
                                     }, 0);
@@ -73,9 +74,9 @@ angular.module('dmpApp')
                 });
 
                 $timeout(function() {
-                    var src = scope.$element.prev('.function')
-                        , next = scope.$element.nextAll('.function')
-                        , outbound = src.data('_outbound');
+                    var src = scope.$element.prev('.function'),
+                        next = scope.$element.nextAll('.function'),
+                        outbound = src.data('_outbound');
 
                     jsP.detach(outbound, src, next);
 
@@ -86,11 +87,9 @@ angular.module('dmpApp')
                         for (var i = 0; i < l; i++) {
                             var current = next.slice(i, i + 1);
 
-                            if (current.length) {
-                                outbound = prev.data('_outbound');
-                                jsP.detach(outbound, prev, current);
-                                jsP.connect(prev, current);
-                            }
+                            outbound = prev.data('_outbound');
+                            jsP.detach(outbound, prev, current);
+                            jsP.connect(prev, current);
 
                             prev = current;
                         }

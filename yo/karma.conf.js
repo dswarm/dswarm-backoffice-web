@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(config) {
     config.set({
         // Karma configuration
@@ -7,30 +9,29 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files : [
-          'components/angular/angular.js',
-          'components/angular-route/angular-route.js',
-          'components/angular-mocks/angular-mocks.js',
-          'components/angular-ui-bootstrap/misc/test-lib/angular-mocks.js',
-          'components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.6.0.js',
-          'components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js',
-          'components/angular-local-storage/angular-local-storage.js',
-          'components/angular-resource/angular-resource.js',
-          'components/angular-cookies/angular-cookies.js',
-          'components/angular-sanitize/angular-sanitize.js',
-          'components/jquery/jquery.js',
-          'components/lodash/lodash.js',
-          'components/humanize/humanize.js',
-          'components/ngprogress/build/ngProgress.js',
-          'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
-          'components/angular-grid/ng-grid-2.0.7.min.js',
-          'scripts/*.js',
-          'scripts/**/*.js',
+            'components/jquery/jquery.js',
+            'components/lodash/lodash.js',
+            'components/angular/angular.js',
+            'components/angular-route/angular-route.js',
+            'components/angular-mocks/angular-mocks.js',
+            'components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.6.0.js',
+            'components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js',
+            'components/angular-local-storage/angular-local-storage.js',
+            'components/angular-resource/angular-resource.js',
+            'components/angular-cookies/angular-cookies.js',
+            'components/angular-sanitize/angular-sanitize.js',
+            'components/humanize/humanize.js',
+            'components/ngprogress/build/ngProgress.js',
+            'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
+            'components/angular-grid/ng-grid-2.0.7.min.js',
+            'scripts/*.js',
+            'scripts/**/*.js',
 
-          // templates
-          'views/directives/**/*.html',
+            // templates
+            'views/directives/**/*.html',
 
-          '../test/mock/**/*.js',
-          '../test/spec/**/*.js'
+            '../test/mock/**/*.js',
+            '../test/spec/**/*.js'
         ],
 
         // list of files to exclude
@@ -64,7 +65,7 @@ module.exports = function(config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers : ['Chrome'],
+        browsers : ['FixedChrome'],
 
         // If browser does not capture in given timeout [ms], kill it
         captureTimeout : 5000,
@@ -78,12 +79,19 @@ module.exports = function(config) {
             suite: 'unit'
         },
 
-        frameworks : ["jasmine"],
+        frameworks : ['jasmine'],
 
         preprocessors : {
             '**/*.html': ['ng-html2js'],
             'scripts/{,*/}*.js': 'coverage'
+        },
+
+        customLaunchers: {
+            FixedChrome: {
+                base: 'Chrome',
+                flags: ['--user-data-dir=../KarmaChrome/Profile']
+            }
         }
 
-    })
+    });
 };

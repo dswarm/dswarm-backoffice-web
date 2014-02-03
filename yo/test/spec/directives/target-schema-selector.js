@@ -26,16 +26,16 @@ describe('Controller: TargetSchemaSelectorCtrl', function () {
         $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
 
-        $modal = $injector.get('$modal');
-
-        var $resource = $injector.get('$resource');
-
         scope = $rootScope.$new();
 
+        var templateUrl = 'foo';
+
+        $modal = $injector.get('$modal');
         modalInstance = $modal.open({
-            templateUrl: 'views/directives/filter.html',
-            controller: 'FilterCtrl'
+            templateUrl: templateUrl
         });
+
+        $httpBackend.whenGET(templateUrl).respond('');
 
         spyOn($rootScope, '$broadcast');
 
@@ -58,6 +58,7 @@ describe('Controller: TargetSchemaSelectorCtrl', function () {
 
     it('should have a TargetSchemaSelectorCtrl controller', function() {
         var TargetSchemaSelectorCtrl = targetSchemaSelectorCtrl();
+        $httpBackend.flush();
         expect(TargetSchemaSelectorCtrl).not.toBe(null);
     });
 

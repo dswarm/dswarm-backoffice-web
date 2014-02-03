@@ -39,6 +39,8 @@ describe('Controller: SourceDataCtrl', function () {
 
     it('should have a SourceDataCtrl controller', function() {
         var SourceDataCtrl = sourceDataCtrl();
+        $httpBackend.flush();
+
         expect(SourceDataCtrl).not.toBe(null);
     });
 
@@ -46,6 +48,8 @@ describe('Controller: SourceDataCtrl', function () {
         var dataInclude;
 
         sourceDataCtrl();
+
+        $httpBackend.flush();
 
         scope.showData = true;
         dataInclude = scope.dataInclude();

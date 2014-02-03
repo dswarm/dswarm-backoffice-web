@@ -118,7 +118,12 @@ angular.module('dmpApp')
         }
 
         // do not preview more often that, say, every 200 msecs
-        var fieldChanged = loDash.debounce(function() {
+        var fieldChanged = loDash.debounce(function(oldVal, newVal) {
+            if (angular.equals(oldVal, newVal)) {
+                // initial registration
+                return;
+            }
+
             var config = getConfig();
 
             PubSub.broadcast('dataConfigUpdated', {

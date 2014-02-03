@@ -55,11 +55,12 @@ describe('Controller: ModelCtrl', function () {
 
     it('should have a ModelCtrl controller', function() {
         var ModelCtrl = modelCtrl();
+        $httpBackend.flush();
         expect(ModelCtrl).not.toBe(null);
     });
 
 
-    /*    it('should remove source from set', function() {
+    xit('should remove source from set', function() {
 
         var source = {
             name : 'foo',
@@ -80,10 +81,9 @@ describe('Controller: ModelCtrl', function () {
         scope.removeSource(scope.sources[0]);
 
         expect(scope.sources.length).toBe(0);
-
     });
 
-     it('should send broadcast of selected source and set selected source value', function() {
+    xit('should send broadcast of selected source and set selected source value', function() {
 
         var source = {
             name : 'foo',
@@ -115,7 +115,7 @@ describe('Controller: ModelCtrl', function () {
             expect(scope.currentSource).toBe(source);
         });
 
-    });*/
+    });
 
     it('should load source data from server', function() {
 

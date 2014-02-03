@@ -395,17 +395,20 @@ module.exports = function (grunt) {
                     type: 'html',
                     dir: 'test_out/coverage/'
                 },
+                browsers: ['Chrome'],
                 autoWatch: false
             },
             continuous: {
                 configFile: 'karma.conf.js',
                 singleRun: false,
-                autoWatch: true
+                autoWatch: true,
+                browsers: ['Chrome']
             },
             unit: {
                 configFile: 'karma.conf.js',
                 singleRun: true,
-                autoWatch: false
+                autoWatch: false,
+                browsers: ['Chrome']
             }
         },
         plato: {
