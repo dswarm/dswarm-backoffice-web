@@ -227,7 +227,7 @@ angular.module('dmpApp')
         }, true);
 
 
-        $scope.$on("$locationChangeStart", function (event, nextLocation, currentLocation) {
+        $scope.$on('$locationChangeStart', function () {
             jsP.detachEveryConnection({});
         });
 

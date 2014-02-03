@@ -127,7 +127,7 @@ angular.module('dmpApp')
 
             if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).parent().hasClass('tree-leaf')) {
 
-                //$('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
+                $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
                 elId = $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
 
             }
