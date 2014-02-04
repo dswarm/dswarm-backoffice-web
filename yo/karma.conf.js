@@ -75,7 +75,7 @@ module.exports = function(config) {
         singleRun : false,
 
         junitReporter : {
-            outputFile: 'test_out/unit.xml',
+            outputFile: '../target/unit.xml',
             suite: 'unit'
         },
 
@@ -89,7 +89,7 @@ module.exports = function(config) {
         customLaunchers: {
             FixedChrome: {
                 base: 'Chrome',
-                flags: ['--user-data-dir=../KarmaChrome/Profile']
+                flags: ['--user-data-dir=../KarmaChrome/Profile', '--no-js-randomness']
             }
         }
 

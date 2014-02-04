@@ -29,7 +29,8 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        target: 'target'
     };
 
     try {
@@ -173,7 +174,7 @@ module.exports = function (grunt) {
                     jshintrc: '.jshintrc',
                     reporter: 'checkstyle',
                     force: true,
-                    reporterOutput: '<%= yeoman.app %>/test_out/jshint.xml'
+                    reporterOutput: '<%= yeoman.target %>/jshint.xml'
                 },
                 files: {
                     src: ['<%= yeoman.app %>/scripts/{,*/}*.js']
@@ -381,7 +382,7 @@ module.exports = function (grunt) {
                 reporters: ['dots', 'junit', 'coverage'],
                 coverageReporter: {
                     type: 'cobertura',
-                    dir: 'test_out/coverage/'
+                    dir: '../target/coverage/'
                 },
                 browsers: ['PhantomJS'],
                 autoWatch: false
@@ -393,7 +394,7 @@ module.exports = function (grunt) {
                 reporters: ['dots', 'junit', 'coverage'],
                 coverageReporter: {
                     type: 'html',
-                    dir: 'test_out/coverage/'
+                    dir: '../target/coverage/'
                 },
                 browsers: ['Chrome'],
                 autoWatch: false
@@ -417,7 +418,7 @@ module.exports = function (grunt) {
             },
             metrics: {
                 files: {
-                    '<%= yeoman.app %>/test_out/metrics': ['<%= yeoman.app %>/scripts/{,*/}*.js']
+                    '<%= yeoman.target %>/metrics': ['<%= yeoman.app %>/scripts/{,*/}*.js']
                 }
             }
         },

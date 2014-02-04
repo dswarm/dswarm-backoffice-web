@@ -14,11 +14,9 @@ angular.module('dmpApp')
                     return [activeComponentId, 'fun_' + _id].join(':');
                 };
             })(),
-            lastPayload,
-            dmg;
+            lastPayload;
 
         function init() {
-            dmg = new DataModelGen($scope.project.mappings);
             activeComponentId = '';
             $scope.activeMapping = { _$components : [] };
             $scope.showSortable = false;
@@ -311,7 +309,7 @@ angular.module('dmpApp')
         return {
             scope : true,
             restrict: 'E',
-            replace: true,
+            replace: false,
             templateUrl: 'views/directives/transformation.html',
             controller: 'TransformationCtrl'
         };
