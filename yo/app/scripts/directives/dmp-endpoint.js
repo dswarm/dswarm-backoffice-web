@@ -252,6 +252,10 @@ angular.module('dmpApp')
                     source = getData(connection.source),
                     target = getData(connection.target);
 
+                if(!connection.mappingId) {
+                    connection.mappingId =  new Date().getTime()*-1;
+                }
+
                 if (!dontFire) {
                     PubSub.broadcast('connectionSelected', {
                         internal_id : source.id + ':' + target.id,
