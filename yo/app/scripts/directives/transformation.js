@@ -66,7 +66,7 @@ angular.module('dmpApp')
                 }
 
                 activeComponentId = id;
-console.log($scope.activeMapping);
+
                 if (!skipBroadcast) {
                     PubSub.broadcast('connectionSwitched', { id: $scope.activeMapping._$connection_id });
                 }
@@ -138,15 +138,13 @@ console.log($scope.activeMapping);
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
-            var existingTabId = loDash.findIndex($scope.tabs, {mappingId : data.mapping_id});
-
             if (activeComponentId !== data.mapping_id) {
                 if (loDash.any($scope.project.mappings, { 'id' : data.mapping_id })) {
 
                     var idx = availableIds.indexOf(data.mapping_id);
                     $scope.tabs[idx].active = true;
 
-                    var midx = loDash.findIndex($scope.project.mappings, {id : data.mapping_id})
+                    var midx = loDash.findIndex($scope.project.mappings, {id : data.mapping_id});
 
                     $scope.project.mappings[midx]._$connection_id = data.connection_id;
 
