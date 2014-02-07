@@ -9,11 +9,15 @@ angular.module('dmpApp')
         return $window['_'];
     }])
 /**
+ * Provide an injectable reference to the API endpoint
+ */
+    .factory('ApiEndpoint', ['$window', function($window) {
+        return ($window && $window['dmp']) ? $window['dmp']['jsRoutes']['api'] : '';
+    }])
+/**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', ['$window', 'Lo-Dash', function ($window, loDash) {
-
-        var api = ($window && $window['dmp']) ? $window['dmp']['jsRoutes']['api'] : '';
+    .factory('Util', ['Lo-Dash', 'ApiEndpoint', function (loDash, api) {
 
         function latestBy(list, property) {
             var prop = property || 'id';

@@ -10,6 +10,7 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files : [
             'components/jquery/jquery.js',
+            'components/jquery-ui/ui/jquery-ui.js',
             'components/lodash/lodash.js',
             'components/angular/angular.js',
             'components/angular-route/angular-route.js',
@@ -89,7 +90,7 @@ module.exports = function(config) {
         customLaunchers: {
             FixedChrome: {
                 base: 'Chrome',
-                flags: ['--user-data-dir=../KarmaChrome/Profile', '--no-js-randomness']
+                flags: ['--user-data-dir=../KarmaChrome/Profile']
             }
         }
 

@@ -59,7 +59,7 @@ angular.module('dmpApp')
 
         return {
             restrict: 'E',
-            replace: true,
+            replace: false,
             scope: true,
             templateUrl: 'views/directives/mapping-component-config.html',
             controller: 'MappingComponentConfigCtrl'
