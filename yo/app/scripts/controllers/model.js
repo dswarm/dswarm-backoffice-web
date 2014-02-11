@@ -5,6 +5,8 @@ angular.module('dmpApp')
            ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util', 'jsP',
     function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,    Util, jsP) {
 
+        var latestSave = {};
+
         $scope.alerts = [];
 
         $scope.projectId = $routeParams.projectId;
@@ -170,6 +172,9 @@ angular.module('dmpApp')
             discardProjectDraft($scope.project.id);
 
             ProjectResource.update({ id: $scope.project.id }, Util.toJson($scope.project), function(project) {
+
+                latestSave = project;
+
                 $scope.closeAlert(idx);
 
                 restoreProject(project);
@@ -211,8 +216,18 @@ angular.module('dmpApp')
         });
 
         $scope.$watch(function() {
+
+            if(latestSave === $scope.project) {
+                return false;
+            }
+
             return $scope.project.id + ':' + Util.toJson($scope.project);
         }, function(newValue, oldValue) {
+
+            if(newValue === false) {
+                return;
+            }
+
             if (newValue === oldValue) {
                 // initial call after registration
                 return;
