@@ -211,7 +211,7 @@ angular.module('dmpApp')
         });
 
         $scope.$watch(function() {
-            return $scope.project.id + ':' + angular.toJson($scope.project);
+            return $scope.project.id + ':' + Util.toJson($scope.project);
         }, function(newValue, oldValue) {
             if (newValue === oldValue) {
                 // initial call after registration
