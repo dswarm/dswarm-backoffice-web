@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'Lo-Dash', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
+    .controller('DataConfigPreviewCtrl', ['$scope', '$routeParams', '$timeout', 'loDash', 'PubSub', 'DataConfigPreviewResource', 'FileResource', function ($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];

@@ -5,7 +5,7 @@ angular.module('dmpApp')
  * Provide an injectable lo-dash.
  * see http://lodash.com/docs for documentation on lodash
  */
-    .factory('Lo-Dash', ['$window', function($window) {
+    .factory('loDash', ['$window', function($window) {
         return $window['_'];
     }])
 /**
@@ -17,7 +17,7 @@ angular.module('dmpApp')
 /**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', ['Lo-Dash', 'ApiEndpoint', function (loDash, api) {
+    .factory('Util', ['loDash', 'ApiEndpoint', function (loDash, api) {
 
         function latestBy(list, property) {
             var prop = property || 'id';
@@ -126,9 +126,7 @@ angular.module('dmpApp')
  * Factory for creating basic resources, that follow a typial pattern.
  * TODO: what cas restangular do here for us?
  */
-    .factory('ResourceFactory', ['$resource', 'Util', function($resource, Util) {
-
-        var baseUrl =  Util.apiEndpoint;
+    .factory('ResourceFactory', ['$resource', 'ApiEndpoint', function($resource, baseUrl) {
 
         function create(resource, actionsFactory) {
             var endpoint = resource + '/:id',

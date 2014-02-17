@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
     .controller('SourceDataCtrl',
-            ['$scope','schemaParser', 'DataModelResource', 'PubSub', 'Lo-Dash',
+            ['$scope','schemaParser', 'DataModelResource', 'PubSub', 'loDash',
     function ($scope,  schemaParser,   DataModelResource,   PubSub,   loDash) {
         $scope.internalName = 'Source Data Widget';
 

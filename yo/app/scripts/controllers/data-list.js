@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', ['$scope', '$routeParams', 'DataModelResource', 'ResourceResource', 'ProjectResource', 'Lo-Dash',
+    .controller('DataListCtrl', ['$scope', '$routeParams', 'DataModelResource', 'ResourceResource', 'ProjectResource', 'loDash',
         function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash) {
 
         $scope.files = [];

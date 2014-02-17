@@ -2,7 +2,7 @@
 
 angular.module('dmpApp')
     .controller('TargetDataCtrl',
-            ['$scope', '$http', '$q', 'Util', 'Lo-Dash', 'schemaParser', 'PubSub',
+            ['$scope', '$http', '$q', 'Util', 'loDash', 'schemaParser', 'PubSub',
     function ($scope,   $http,   $q,   Util,   loDash,    schemaParser,   PubSub) {
         $scope.internalName = 'Target Data Widget';
 

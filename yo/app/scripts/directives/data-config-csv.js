@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'Lo-Dash', 'DataModelResource', 'ResourceResource', 'PubSub',
+    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'loDash', 'DataModelResource', 'ResourceResource', 'PubSub',
         function ($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
 
         function returnToData() { $location.path('/data/'); }

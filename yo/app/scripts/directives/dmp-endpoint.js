@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'GUID', 'Lo-Dash', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, GUID, loDash, PubSub) {
+    .directive('dmpEndpoint', ['$compile', '$window', '$rootScope', '$modal', 'jsP', 'GUID', 'loDash', 'PubSub', function ($compile, $window, $rootScope, $modal, jsP, GUID, loDash, PubSub) {
         var components = {
                 active: null,
                 pool: []

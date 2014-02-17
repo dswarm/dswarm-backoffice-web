@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl',
-           ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util',
-    function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,    Util) {
+    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, schemaParser, PubSub, loDash,  Util) {
 
         $scope.alerts = [];
 
@@ -221,4 +219,4 @@ angular.module('dmpApp')
 
         $scope.loadProjectData($routeParams.projectId);
 
-    }]);
+    });

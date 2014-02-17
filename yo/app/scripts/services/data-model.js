@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataModelGen', ['Util', 'Lo-Dash', function(Util, loDash) {
+    .factory('DataModelGen', ['Util', 'loDash', function(Util, loDash) {
 
         var genFunctions = (function(){
             return function genFunctions(payload) {

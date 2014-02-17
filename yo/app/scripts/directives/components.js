@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ComponentsCtrl', ['$scope', 'Lo-Dash', 'FunctionResource',
+    .controller('ComponentsCtrl', ['$scope', 'loDash', 'FunctionResource',
         function ($scope, Lodash, FunctionResource) {
         $scope.internalName = 'Function List Widget';
 
