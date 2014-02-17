@@ -18,6 +18,7 @@ angular.module('dmpApp')
 
         function init() {
             activeComponentId = '';
+            availableIds = [];
             $scope.activeMapping = { _$components : [] };
             $scope.showSortable = false;
             $scope.tabs = [];
@@ -25,14 +26,14 @@ angular.module('dmpApp')
             // restore mappings if a previous project was loaded from a draft
             loDash.forEach($scope.project.mappings, function(mapping) {
 
-                $scope.tabs.push({title: mapping.name, active: false, id: mapping._$internal_id, mappingId : mapping.id});
-                availableIds.push(mapping._$internal_id);
+                $scope.tabs.push({ title: mapping.name, active: false, id: mapping.id });
+                availableIds.push(mapping.id);
             });
 
             var last = loDash.last($scope.project.mappings);
 
             if (last) {
-                activate(last._$internal_id, true);
+                activate(last.id, true);
             }
         }
         init();
@@ -55,8 +56,11 @@ angular.module('dmpApp')
 
                 $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
 
-                if(!$scope.activeMapping._$components) {
-                    $scope.activeMapping._$components = [];
+                if(!$scope.activeMapping) {
+                    $scope.activeMapping = { _$components : [] };
+                }
+                if($scope.activeMapping._$components.length !== $scope.project.mappings[availableIds.indexOf(id)].transformation.function.components.length) {
+                    $scope.activeMapping._$components = createInternalComponentsFromComponents($scope.project.mappings[availableIds.indexOf(id)].transformation.function.components);
                 }
 
                 activeComponentId = id;
@@ -132,19 +136,17 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
-            var existingTabId = loDash.findIndex($scope.tabs, {mappingId : data.mapping_id});
+            if (activeComponentId !== data.mapping_id) {
+                if (loDash.any($scope.project.mappings, { 'id' : data.mapping_id })) {
 
-            if(existingTabId >= 0) {
-                $scope.tabs[existingTabId].id = data.internal_id;
-                activeComponentId = data.internal_id;
-            }
-
-            if (activeComponentId !== data.internal_id) {
-                if (loDash.any($scope.project.mappings, { '_$internal_id' : data.internal_id })) {
-
-                    var idx = availableIds.indexOf(data.internal_id);
+                    var idx = availableIds.indexOf(data.mapping_id);
                     $scope.tabs[idx].active = true;
-                    activate(data.internal_id, true);
+
+                    var midx = loDash.findIndex($scope.project.mappings, {id : data.mapping_id});
+
+                    $scope.project.mappings[midx]._$connection_id = data.connection_id;
+
+                    activate(data.mapping_id, true);
 
                 } else {
                     var inputPath = data.inputAttributePath.path,
@@ -157,8 +159,7 @@ angular.module('dmpApp')
                         }),
 
                         mapping = {
-                            id :  new Date().getTime()*-1,
-                            _$internal_id : data.internal_id,
+                            id :  data.mapping_id,
                             _$connection_id : data.connection_id,
                             name : data.name,
                             transformation : {
@@ -177,16 +178,32 @@ angular.module('dmpApp')
 
                     $scope.project.mappings.push(mapping);
 
-                    $scope.tabs.push( { title: data.name, active: true, id: data.internal_id, mappingId : data.mapping_id } );
-                    availableIds.push(data.internal_id);
+                    $scope.tabs.push( { title: data.name, active: true, id: data.mapping_id, mappingId : data.mapping_id } );
+                    availableIds.push(data.mapping_id);
 
-                    activate(data.internal_id, true);
+                    activate(data.mapping_id, true);
                 }
             }
             if($scope.$$phase !== '$digest') {
                 $scope.$digest();
             }
         });
+
+        function createInternalComponentsFromComponents(components) {
+
+            var internalComponents = [];
+
+            if(!components) {
+                return internalComponents;
+            }
+
+            angular.forEach(components, function(component){
+                internalComponents.push( { _$componentType : 'fun', payload : component.function, id : component.id});
+            });
+
+            return internalComponents;
+
+        }
 
         function createComponentsFromInternalComponents(internalComponents) {
 
@@ -231,8 +248,8 @@ angular.module('dmpApp')
 
         function push(data, index, oldIndex) {
 
-            if(!loDash.contains($scope.project.functions, data)) {
-                $scope.project.functions.push(data);
+            if(!loDash.contains($scope.project.functions, data.payload)) {
+                $scope.project.functions.push(data.payload);
             }
 
             if (angular.isDefined(oldIndex)) {
@@ -253,7 +270,7 @@ angular.module('dmpApp')
                 var payload = angular.element(ui.item).scope()['child'],
                     componentId = makeComponentId();
 
-                lastPayload = {componentType: 'fun', payload: payload, id: componentId};
+                lastPayload = { _$componentType : 'fun', payload : payload, id : componentId };
             },
             update: function (event, ui) {
                 //noinspection JSCheckFunctionSignatures

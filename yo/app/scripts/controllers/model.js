@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, schemaParser, PubSub, loDash,  Util) {
+    .controller('ModelCtrl',
+           ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'loDash', 'Util', 'jsP',
+    function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,   Util,   jsP) {
+
+        var latestSave = {};
 
         $scope.alerts = [];
 
@@ -102,6 +106,13 @@ angular.module('dmpApp')
 
         function restoreProject(project) {
 
+            var mappingCounter = 0;
+
+            angular.forEach(project.mappings, function() {
+                project.mappings[mappingCounter]._$components = [];
+                mappingCounter++;
+            });
+
             $scope.project = project;
 
             if($scope.project.input_data_model) {
@@ -116,7 +127,7 @@ angular.module('dmpApp')
 
             $timeout(function() {
                 PubSub.broadcast('paintPlumbs', $scope.project.mappings);
-            }, 1000);
+            }, 500);
 
         }
 
@@ -161,6 +172,9 @@ angular.module('dmpApp')
             discardProjectDraft($scope.project.id);
 
             ProjectResource.update({ id: $scope.project.id }, Util.toJson($scope.project), function(project) {
+
+                latestSave = project;
+
                 $scope.closeAlert(idx);
 
                 restoreProject(project);
@@ -202,8 +216,18 @@ angular.module('dmpApp')
         });
 
         $scope.$watch(function() {
-            return $scope.project.id + ':' + angular.toJson($scope.project);
+
+            if(latestSave === $scope.project) {
+                return false;
+            }
+
+            return $scope.project.id + ':' + Util.toJson($scope.project);
         }, function(newValue, oldValue) {
+
+            if(newValue === false) {
+                return;
+            }
+
             if (newValue === oldValue) {
                 // initial call after registration
                 return;
@@ -216,6 +240,11 @@ angular.module('dmpApp')
 
             $scope.saveProjectDraft();
         }, true);
+
+
+        $scope.$on('$locationChangeStart', function () {
+            jsP.detachEveryConnection({});
+        });
 
         $scope.loadProjectData($routeParams.projectId);
 

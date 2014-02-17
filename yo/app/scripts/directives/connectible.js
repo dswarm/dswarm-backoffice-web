@@ -3,61 +3,77 @@
 angular.module('dmpApp')
     .directive('functionSource', ['$timeout', '$rootScope', 'jsP', 'PubSub', function($timeout, $rootScope, jsP, PubSub) {
 
-        var connectWithSources = [];
+        var connectWithSources = [],
+            scope, iElement, iAttrs;
+
+        var doLink = function(scopeCurrent, iElementCurrent, iAttrsCurrent) {
+
+            scope = scopeCurrent;
+            iElement = iElementCurrent;
+            iAttrs = iAttrsCurrent;
+
+            var drawn = false;
+            scope.$watch(iAttrs.connectWhen, function(source) {
+                if (!drawn && source) {
+                    var connectWith = scope.$eval(iAttrs.connectWith);
+                    angular.forEach(connectWith, function (defined, selector) {
+                        if (defined && (defined.length || angular.isObject(defined))) {
+                            var target = iElement.siblings(selector);
+                            connectWithSources.push(iElement);
+                            if (target.length) {
+                                $timeout(function () {
+                                    var opts = {
+                                        anchors: [
+                                            [0, 1, 0, 1, -4, -9],
+                                            [0, 0, 0, -1,-4, -9]
+                                        ],
+                                        connector: 'Straight',
+                                        endpoint: 'Blank',
+                                        overlays: [
+                                            ['Arrow', {
+                                                location: 1,
+                                                width: 10,
+                                                length: 12,
+                                                foldback: 0.75
+                                            }]
+                                        ],
+                                        paintStyle: {
+                                            lineWidth: 3,
+                                            strokeStyle: 'black'
+                                        }
+                                    };
+                                    jsP.connect(iElement, target, opts);
+
+                                    var secondOpts = angular.copy(opts);
+                                    secondOpts.anchors[0][0] = 1;
+                                    secondOpts.anchors[0][4] = -8;
+                                    secondOpts.anchors[1][0] = 1;
+                                    secondOpts.anchors[1][4] = -8;
+                                    jsP.connect(iElement, target, secondOpts);
+
+                                    drawn = true;
+                                }, 0);
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
         PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
             angular.forEach(connectWithSources, function(source) {
                 jsP.detachAll(source);
             });
         });
 
+        PubSub.subscribe($rootScope, 'paintPlumbs', function () {
+            doLink(scope, iElement, iAttrs);
+        });
+
         return {
             restrict: 'C',
             link: function(scope, iElement, iAttrs) {
-                var drawn = false;
-                scope.$watch(iAttrs.connectWhen, function(source) {
-                    if (!drawn && source) {
-                        var connectWith = scope.$eval(iAttrs.connectWith);
-                        angular.forEach(connectWith, function (defined, selector) {
-                            if (defined && (defined.length || angular.isObject(defined))) {
-                                var target = iElement.siblings(selector);
-                                connectWithSources.push(iElement);
-                                if (target.length) {
-                                    $timeout(function () {
-                                        var opts = {
-                                            anchors: [
-                                                [0, 1, 0, 1, -4, -9],
-                                                [0, 0, 0, -1,-4, -9]
-                                            ],
-                                            connector: 'Straight',
-                                            endpoint: 'Blank',
-                                            overlays: [
-                                                ['Arrow', {
-                                                    location: 1,
-                                                    width: 10,
-                                                    length: 12,
-                                                    foldback: 0.75
-                                                }]
-                                            ],
-                                            paintStyle: {
-                                                lineWidth: 3,
-                                                strokeStyle: 'black'
-                                            }
-                                        };
-                                        jsP.connect(iElement, target, opts);
-                                        var secondOpts = angular.copy(opts);
-                                        secondOpts.anchors[0][0] = 1;
-                                        secondOpts.anchors[0][4] = -8;
-                                        secondOpts.anchors[1][0] = 1;
-                                        secondOpts.anchors[1][4] = -8;
-                                        jsP.connect(iElement, target, secondOpts);
-
-                                        drawn = true;
-                                    }, 0);
-                                }
-                            }
-                        });
-                    }
-                });
+                doLink(scope, iElement, iAttrs);
             }
         };
     }])
@@ -74,9 +90,9 @@ angular.module('dmpApp')
                 });
 
                 $timeout(function() {
-                    var src = scope.$element.prev('.function'),
-                        next = scope.$element.nextAll('.function'),
-                        outbound = src.data('_outbound');
+                    var src = scope.$element.prev('.function')
+                        , next = scope.$element.nextAll('.function')
+                        , outbound = src.data('_outbound');
 
                     jsP.detach(outbound, src, next);
 
