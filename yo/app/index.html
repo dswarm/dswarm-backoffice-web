@@ -15,12 +15,20 @@
     </style>
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css({.tmp,app}) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
-        <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="components/angular-grid/ng-grid.min.css" />
+    <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:css styles/lib.css -->
         <link rel="stylesheet" href="components/jquery-ui/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="components/ngprogress/ngProgress.css">
-        <link rel="stylesheet" href="components/angular-grid/ng-grid.min.css">
+        <!-- endbuild -->
+
+        <!-- build:css({.tmp,app}) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
 
   </head>
@@ -89,29 +97,25 @@
 
     <script src="api.js"></script>
 
-    <!-- build:js scripts/lib.js -->
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
     <script src="components/jquery/jquery.js"></script>
-    <script src="components/jquery-ui/ui/jquery-ui.js"></script>
-    <script src="components/jsPlumb/dist/js/jquery.jsPlumb-1.5.5.js"></script>
-    <script src="components/lodash/lodash.js"></script>
     <script src="components/angular/angular.js"></script>
+    <script src="components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="components/angular-ui-utils/ui-utils.js"></script>
+    <script src="components/angular-grid/build/ng-grid.min.js"></script>
+    <script src="components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="components/jsPlumb/dist/js/jquery.jsPlumb.js"></script>
+    <script src="components/lodash/dist/lodash.compat.js"></script>
+    <script src="components/angular-route/angular-route.js"></script>
+    <script src="components/angular-resource/angular-resource.js"></script>
+    <script src="components/angular-cookies/angular-cookies.js"></script>
+    <script src="components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="components/humanize/humanize.js"></script>
+    <script src="components/ngprogress/build/ngProgress.js"></script>
+    <script src="components/angular-local-storage/angular-local-storage.js"></script>
+    <!-- endbower -->
     <!-- endbuild -->
-
-        <!-- build:js scripts/modules.js -->
-
-        <script src="components/angular-route/angular-route.js"></script>
-        <script src="components/angular-resource/angular-resource.js"></script>
-        <script src="components/angular-cookies/angular-cookies.js"></script>
-        <script src="components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.6.0.js"></script>
-        <script src="components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js"></script>
-        <script src="components/angular-grid/ng-grid-2.0.7.min.js"></script>
-        <script src="components/bootstrap/js/transition.js"></script>
-        <script src="components/bootstrap/js/collapse.js"></script>
-        <script src="components/humanize/humanize.js"></script>
-        <script src="components/angular-local-storage/angular-local-storage.js"></script>
-        <script src="components/ngprogress/build/ngProgress.js"></script>
-        <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
@@ -130,7 +134,6 @@
         <script src="scripts/resources/data-config-preview.js"></script>
         <script src="scripts/resources/resources.js"></script>
         <script src="scripts/resources/schemas.js"></script>
-        <script src="scripts/resources/schema-data.js"></script>
         <script src="scripts/resources/tasks.js"></script>
         <script src="scripts/resources/transformation.js"></script>
         <script src="scripts/resources/projects.js"></script>

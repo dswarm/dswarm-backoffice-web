@@ -1,22 +1,26 @@
 'use strict';
 
+// Karma configuration
+// http://karma-runner.github.io/0.10/config/configuration-file.html
+
 module.exports = function(config) {
     config.set({
-        // Karma configuration
-
         // base path, that will be used to resolve files and exclude
         basePath : 'app/',
+
+        // testing framework to use (jasmine/mocha/qunit/...)
+        frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
         files : [
             'components/jquery/jquery.js',
             'components/jquery-ui/ui/jquery-ui.js',
-            'components/lodash/lodash.js',
+            'components/lodash/dist/lodash.compat.js',
             'components/angular/angular.js',
             'components/angular-route/angular-route.js',
             'components/angular-mocks/angular-mocks.js',
-            'components/angular-ui-bootstrap/dist/ui-bootstrap-tpls-0.6.0.js',
-            'components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js',
+            'components/angular-bootstrap/ui-bootstrap-tpls.js',
+            'components/angular-ui-utils/ui-utils.js',
             'components/angular-local-storage/angular-local-storage.js',
             'components/angular-resource/angular-resource.js',
             'components/angular-cookies/angular-cookies.js',
@@ -79,8 +83,6 @@ module.exports = function(config) {
             outputFile: '../target/unit.xml',
             suite: 'unit'
         },
-
-        frameworks : ['jasmine'],
 
         preprocessors : {
             '**/*.html': ['ng-html2js'],
