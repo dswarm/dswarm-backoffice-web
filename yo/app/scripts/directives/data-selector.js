@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataSelectorCtrl', ['$scope','$http', '$q', 'schemaParser', 'PubSub', function ($scope, $http, $q, schemaParser, PubSub) {
+    .controller('DataSelectorCtrl', function ($scope, $http, $q, schemaParser, PubSub) {
 
         $scope.internalName = 'Data Selector Widget';
 
@@ -29,7 +29,7 @@ angular.module('dmpApp')
             $scope.dataSelectorShouldBeOpen = true;
         });
 
-    }])
+    })
     .directive('dataselector', function () {
         return {
             restrict: 'E',

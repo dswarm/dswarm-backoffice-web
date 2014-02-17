@@ -113,7 +113,7 @@ angular.module('dmpApp')
  * Provide the js-plumb service that is meant to be used by the application.
  * Code that deals with the jsPlumb specifics should go in here.
  */
-    .factory('jsP', ['jsPlumbOptions', 'jsPlumb', 'GUID', function(jsPlumbOptions, jsPlumb, GUID) {
+    .factory('jsP', function(jsPlumbOptions, jsPlumb, GUID) {
 
         // Save original getCachedData for later use
         jsPlumb.__getCachedData = jsPlumb.getCachedData;
@@ -309,4 +309,4 @@ angular.module('dmpApp')
             getAllConnections : getAllConnections,
             detachEveryConnection : detachEveryConnection
         };
-    }]);
+    });

@@ -18,7 +18,7 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-factory('schemaParser', ['Lo-Dash', function (loDash) {
+factory('schemaParser', function (loDash) {
 
     /**
      * Maps from json-schema to the internal tree model.  Since json-schema
@@ -528,4 +528,4 @@ factory('schemaParser', ['Lo-Dash', function (loDash) {
       , getData: getData
       , filterData : filterData
     };
-}]);
+});

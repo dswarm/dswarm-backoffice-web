@@ -5,10 +5,10 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
     var win = {
         _: {
-            debounce: function(fn, timout) {
+            debounce: function(fn) {
                 return function() {
                     fn();
-                }
+                };
             }
         },
         dmp: {

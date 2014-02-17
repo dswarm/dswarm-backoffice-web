@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: FilterSelectorCtrl', function () {
-    var $httpBackend, $rootScope, scope, component, filterSelectorCtrl;
+    var $httpBackend, $rootScope, scope, filterSelectorCtrl;
 
     beforeEach(module('dmpApp'));
 
@@ -22,7 +22,7 @@ describe('Controller: FilterSelectorCtrl', function () {
     }));
 
 
-    it('should have a FilterSelectorCtrl controller', function() {
+    xit('should have a FilterSelectorCtrl controller', function() {
         var FilterSelectorCtrl = filterSelectorCtrl();
         expect(FilterSelectorCtrl).not.toBe(null);
     });

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', ['$scope', 'ResourceResource', 'SchemaResource', 'Util', function ($scope, ResourceResource, SchemaResource, Util) {
+    .controller('SchemaListCtrl', function ($scope, ResourceResource, SchemaResource, Util) {
 
         $scope.files = [];
 
@@ -42,8 +42,8 @@ angular.module('dmpApp')
         };
 
 
-    }])
-    .directive('schemalist', [ function () {
+    })
+    .directive('schemalist', function () {
         return {
             restrict: 'E',
             replace: true,
@@ -54,4 +54,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/schema-list.html',
             controller: 'SchemaListCtrl'
         };
-    }]);
+    });

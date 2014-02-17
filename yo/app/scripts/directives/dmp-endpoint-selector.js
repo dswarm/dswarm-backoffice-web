@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DmpEndpointSelectorCtrl', ['$scope', '$modalInstance', 'endpointSet', function ($scope, $modalInstance, endpointSet) {
+    .controller('DmpEndpointSelectorCtrl', function ($scope, $modalInstance, endpointSet) {
 
         $scope.endpointSet = endpointSet;
         $scope.selectedSet = [];
@@ -29,4 +29,4 @@ angular.module('dmpApp')
             $modalInstance.dismiss('cancel');
         };
 
-    }]);
+    });

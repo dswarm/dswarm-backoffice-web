@@ -1,15 +1,14 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('heartbeat', ['$timeout', '$http', 'Util', function($timeout, $http, Util) {
+    .directive('heartbeat', function($timeout, $http, ApiEndpoint) {
         return function heartbeatLinkFn(scope, elem, attrs) {
             var intervalTime = +scope.$eval(attrs.interval) || 1000,
                 endpoint = scope.$eval(attrs.endpoint),
                 expected = scope.$eval(attrs.expected),
-                api = Util.apiEndpoint,
                 config = {
                     method: 'GET',
-                    url: api + endpoint,
+                    url: ApiEndpoint + endpoint,
                     timeout: 1000
                 },
 
@@ -23,14 +22,14 @@ angular.module('dmpApp')
                                 elem.removeClass('yellow red green');
                                 elem.addClass((data === expected)? 'green' : 'yellow');
                             })
-                            .error(function heartbeatSuccess() {
+                            .error(function heartbeatError() {
                                 elem.removeClass('yellow green');
                                 elem.addClass('red');
                             })
                             .finally(function() {
-                                cancelHeartbeat = $timeout(intervalFn, intervalTime, false);
+                                cancelHeartbeat = $timeout(intervalFn, intervalTime);
                             });
-                    }, intervalTime, false);
+                    }, intervalTime);
                 },
 
                 toggleAlive = function toggleAliveFn(value) {
@@ -39,7 +38,7 @@ angular.module('dmpApp')
                         cancelHeartbeat = null;
                         elem.removeClass('yellow red green');
                         elem.addClass('disabled');
-                    } else if(!cancelHeartbeat) {
+                    } else {
                         elem.removeClass('disabled red green');
                         elem.addClass('yellow');
                         interval();
@@ -53,4 +52,4 @@ angular.module('dmpApp')
 
             toggleAlive(alive);
         };
-    }]);
+    });

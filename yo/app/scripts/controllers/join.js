@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('JoinCtrl', ['$scope', function($scope) {
+    .controller('JoinCtrl', function($scope) {
 
         $scope.joinItems = [
             {name: 'Insert Mapper', action: 'mapper'}
@@ -49,4 +49,4 @@ angular.module('dmpApp')
             }
         };
 
-    }]);
+    });

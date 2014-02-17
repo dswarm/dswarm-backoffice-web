@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', ['$scope', 'PubSub', function ($scope, PubSub) {
+    .controller('ConfigurationCtrl', function ($scope, PubSub) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -26,8 +26,8 @@ angular.module('dmpApp')
             $scope.component = null;
         };
 
-    }])
-    .directive('configuration', [ function () {
+    })
+    .directive('configuration', function () {
         return {
             scope: true,
             restrict: 'E',
@@ -35,4 +35,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/configuration.html',
             controller: 'ConfigurationCtrl'
         };
-    }]);
+    });

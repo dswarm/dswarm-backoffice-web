@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ComponentsCtrl', ['$scope', 'Lo-Dash', 'FunctionResource',
-        function ($scope, Lodash, FunctionResource) {
+    .controller('ComponentsCtrl', function ($scope, FunctionResource) {
         $scope.internalName = 'Function List Widget';
 
         /**
@@ -19,12 +18,12 @@ angular.module('dmpApp')
         FunctionResource.query(function(funs) {
             $scope.functions.children = funs;
         });
-    }])
-    .directive('components', [ function () {
+    })
+    .directive('components', function () {
         return {
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/components.html',
             controller: 'ComponentsCtrl'
         };
-    }]);
+    });

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('buildInfo', ['$http', function($http) {
+    .factory('buildInfo', function($http) {
         var promise = $http.get('/data/version.json');
         promise.get = function(cb) {
             promise.success(function(resp) {
@@ -10,10 +10,10 @@ angular.module('dmpApp')
         };
 
         return promise;
-    }])
-    .directive('appVersion', ['buildInfo', '$window', function (version, $window) {
+    })
+    .directive('appVersion', function ($window, buildInfo) {
         return function(scope, iElement) {
-            version.get(function(infoWeb, infoApi) {
+            buildInfo.get(function(infoWeb, infoApi) {
                 var text = [
                     'Web:', infoWeb.revision,
                     '--',
@@ -32,4 +32,4 @@ angular.module('dmpApp')
             });
 
         };
-    }]);
+    });

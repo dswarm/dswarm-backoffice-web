@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', ['$scope', '$routeParams', 'DataModelResource', 'ResourceResource', 'ProjectResource', 'Lo-Dash',
-        function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash) {
+    .controller('DataListCtrl', function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash) {
 
         $scope.files = [];
         $scope.models = [];
@@ -101,4 +100,4 @@ angular.module('dmpApp')
 
 
 
-    }]);
+    });

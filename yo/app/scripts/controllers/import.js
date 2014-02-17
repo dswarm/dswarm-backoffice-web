@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('dmpApp')
-    .filter('filesize', ['$window', function($window) {
+    .filter('filesize', function($window) {
         return function(text) {
             return $window.humanize.filesize(text);
         };
-    }])
-    .controller('ImportCtrl', ['$scope', '$location', 'Util', 'ngProgress', function ($scope, $location, Util, ngProgress) {
+    })
+    .controller('ImportCtrl', function ($scope, $location, ngProgress, ApiEndpoint) {
 
         $scope.data = {};
         $scope.meta = {};
@@ -49,7 +49,7 @@ angular.module('dmpApp')
                     data.append('name', name);
                     data.append('description', description);
 
-                    xhr.open('POST', Util.apiEndpoint + 'resources', true);
+                    xhr.open('POST', ApiEndpoint + 'resources', true);
                     xhr.send(data);
                 })(f, $scope.data.name, $scope.data.description);
             }
@@ -64,4 +64,4 @@ angular.module('dmpApp')
                 $scope.meta.size = file.size;
             }
         });
-    }]);
+    });

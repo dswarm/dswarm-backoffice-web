@@ -6,9 +6,7 @@ describe('Controller: SourceDataCtrl', function () {
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord', 'mockedData', 'mockedProject'));
 
     beforeEach(module(function($provide) {
-        $provide.value('Util', {
-            apiEndpoint: '/dmp/'
-        });
+        $provide.value('ApiEndpoint', '/dmp/');
     }));
 
     // Initialize the controller and a mock scope
@@ -39,6 +37,8 @@ describe('Controller: SourceDataCtrl', function () {
 
     it('should have a SourceDataCtrl controller', function() {
         var SourceDataCtrl = sourceDataCtrl();
+        $httpBackend.flush();
+
         expect(SourceDataCtrl).not.toBe(null);
     });
 
@@ -46,6 +46,8 @@ describe('Controller: SourceDataCtrl', function () {
         var dataInclude;
 
         sourceDataCtrl();
+
+        $httpBackend.flush();
 
         scope.showData = true;
         dataInclude = scope.dataInclude();

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigSchemaCtrl', ['$scope', '$location', '$routeParams', 'DataConfigResource', function ($scope, $location, $routeParams, DataConfigResource) {
+    .controller('DataConfigSchemaCtrl', function ($scope, $location, $routeParams, DataConfigResource) {
 
         $scope.config = {
             name : 'schema',
@@ -13,18 +13,18 @@ angular.module('dmpApp')
 
         $scope.onFlagClick = function() {
 
-            DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
+            DataConfigResource.save({ id: $routeParams.resourceId }, $scope.config, function() {
                 $location.path('/data/');
             });
 
         };
 
         $scope.onCancelClick = function() {
-            $location.path( '#/data/' );
+            $location.path( '/data/' );
         };
 
-    }])
-    .directive('dataconfigschema', [ function () {
+    })
+    .directive('dataconfigschema', function () {
         return {
             restrict: 'E',
             replace: true,
@@ -32,4 +32,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/data-config-schema.html',
             controller: 'DataConfigSchemaCtrl'
         };
-    }]);
+    });

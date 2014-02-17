@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('ResourceResource', ['ResourceFactory', function(ResourceFactory) {
+    .factory('ResourceResource', function(ResourceFactory) {
 
         return ResourceFactory.create('resources');
-    }]);
+    });

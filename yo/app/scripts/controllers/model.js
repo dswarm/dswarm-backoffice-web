@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl',
-           ['$scope', '$routeParams', '$timeout', '$modal', 'localStorageService', 'ProjectResource', 'schemaParser', 'PubSub', 'Lo-Dash', 'Util', 'jsP',
-    function($scope,   $routeParams,   $timeout,   $modal,   localStorageService,   ProjectResource,   schemaParser,   PubSub,   loDash,    Util, jsP) {
+    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, schemaParser, PubSub, loDash, Util, jsP) {
 
         var latestSave = {};
 
@@ -248,4 +246,4 @@ angular.module('dmpApp')
 
         $scope.loadProjectData($routeParams.projectId);
 
-    }]);
+    });

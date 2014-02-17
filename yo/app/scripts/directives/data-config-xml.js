@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', ['$scope', '$location', '$routeParams', 'DataModelResource', 'ResourceResource', 'Util',
-    function ($scope, $location, $routeParams, DataModelResource, ResourceResource, Util) {
+    .controller('DataConfigXmlCtrl', function ($scope, $location, $routeParams, DataModelResource, ResourceResource, Util, ngProgress) {
 
         var resource = null;
         $scope.resourceId = $routeParams.resourceId;
@@ -48,6 +47,7 @@ angular.module('dmpApp')
         }));
 
         $scope.onSaveClick = function() {
+            ngProgress.start();
 
             var model = {
                 'data_resource': resource,
@@ -57,21 +57,24 @@ angular.module('dmpApp')
             };
 
             DataModelResource.save({}, model, function() {
+                ngProgress.complete();
                 $location.path('/data/');
+            }, function() {
+                ngProgress.complete();
             });
         };
 
         $scope.onCancelClick = function() {
-            $location.path( '#/data/' );
+            $location.path( '/data/' );
         };
 
-    }])
-    .directive('dataconfigxml', [ function () {
+    })
+    .directive('dataconfigxml', function () {
         return {
             restrict: 'E',
-            replace: true,
+            replace: false,
             scope: true,
             templateUrl: 'views/directives/data-config-xml.html',
             controller: 'DataConfigXmlCtrl'
         };
-    }]);
+    });

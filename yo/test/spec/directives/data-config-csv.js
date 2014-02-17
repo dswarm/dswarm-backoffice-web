@@ -6,9 +6,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
     beforeEach(module('dmpApp', 'mockedDataConfig'));
 
     beforeEach(module(function($provide) {
-        $provide.value('Util', {
-            apiEndpoint: '/dmp/'
-        });
+        $provide.value('ApiEndpoint', '/dmp/');
     }));
 
     beforeEach(function() {
@@ -21,12 +19,10 @@ describe('Controller: DataConfigCsvCtrl', function () {
         $rootScope = $injector.get('$rootScope');
         $location = $injector.get('$location');
 
-        var $resource = $injector.get('$resource');
-
         $jsonResponse = $injector.get('mockDataConfigSaveJSON');
         $jsonResponseGet = $injector.get('mockDataConfigGetJSON');
 
-        $httpBackend.whenGET('/dmp/resources/1').respond($jsonResponseGet);
+        $httpBackend.whenGET('/dmp/resources/42').respond($jsonResponseGet);
         $httpBackend.whenPOST('/dmp/datamodels').respond($jsonResponse);
 
         scope = $rootScope.$new();
@@ -36,7 +32,10 @@ describe('Controller: DataConfigCsvCtrl', function () {
         dataConfigCsvCtrl = function () {
 
             return $controller('DataConfigCsvCtrl', {
-                '$scope': scope
+                '$scope': scope,
+                '$routeParams': {
+                    resourceId: 42
+                }
             });
         };
     }));
@@ -47,14 +46,21 @@ describe('Controller: DataConfigCsvCtrl', function () {
     }));
 
     it('should have a DataConfigCsvCtrl controller', function() {
+        $httpBackend.expectGET('/dmp/resources/42');
+
         var DataConfigCsvCtrl = dataConfigCsvCtrl();
+
+        $httpBackend.flush();
         expect(DataConfigCsvCtrl).not.toBe(null);
     });
 
 
     it('should change location on cancel', function() {
+        $httpBackend.expectGET('/dmp/resources/42');
 
         dataConfigCsvCtrl();
+
+        $httpBackend.flush();
 
         scope.onCancelClick();
 
@@ -63,8 +69,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should change location after save', function() {
-
-        $httpBackend.expectGET('/dmp/resources/1');
+        $httpBackend.expectGET('/dmp/resources/42');
         $httpBackend.expectPOST('/dmp/datamodels');
 
         dataConfigCsvCtrl();

@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterSelectorCtrl', [function () { }])
-    .directive('filterSelector', [ function () {
+    .directive('filterSelector', function () {
         return {
             restrict: 'E',
             replace: true,
@@ -10,7 +9,6 @@ angular.module('dmpApp')
                 filters : '=',
                 update : '='
             },
-            templateUrl: 'views/directives/filter-selector.html',
-            controller: 'FilterSelectorCtrl'
+            templateUrl: 'views/directives/filter-selector.html'
         };
-    }]);
+    });

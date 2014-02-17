@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetSchemaSelectorCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+    .controller('TargetSchemaSelectorCtrl', function ($scope, $modalInstance) {
 
         $scope.result = {};
 
@@ -15,4 +15,4 @@ angular.module('dmpApp')
             $modalInstance.dismiss('cancel');
         };
 
-    }]);
+    });

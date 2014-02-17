@@ -5,19 +5,18 @@ beforeEach(module('dmpApp'));
 describe('Controller: ConfigurationCtrl', function () {
 
     var configurationCtrl,
-        scope,
-        element;
+        scope;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope) {
         scope = $rootScope.$new();
 
         scope.component = {
-            "name" : "equals",
-            "reference" : "equals",
+            "name" : 'equals',
+            "reference" : 'equals',
             "parameters" : {
                 "string" :{
-                    "type" : "text"
+                    "type" : 'text'
                 }
             }
         };

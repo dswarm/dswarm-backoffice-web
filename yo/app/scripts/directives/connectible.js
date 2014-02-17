@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('functionSource', ['$timeout', '$rootScope', 'jsP', 'PubSub', function($timeout, $rootScope, jsP, PubSub) {
+    .directive('functionSource', function($timeout, $rootScope, jsP, PubSub) {
 
         var connectWithSources = [],
             scope, iElement, iAttrs;
@@ -43,11 +43,13 @@ angular.module('dmpApp')
                                         }
                                     };
                                     jsP.connect(iElement, target, opts);
-                                    opts.anchors[0][0] = 1;
-                                    opts.anchors[0][4] = -8;
-                                    opts.anchors[1][0] = 1;
-                                    opts.anchors[1][4] = -8;
-                                    jsP.connect(iElement, target, opts);
+
+                                    var secondOpts = angular.copy(opts);
+                                    secondOpts.anchors[0][0] = 1;
+                                    secondOpts.anchors[0][4] = -8;
+                                    secondOpts.anchors[1][0] = 1;
+                                    secondOpts.anchors[1][4] = -8;
+                                    jsP.connect(iElement, target, secondOpts);
 
                                     drawn = true;
                                 }, 0);
@@ -74,8 +76,8 @@ angular.module('dmpApp')
                 doLink(scope, iElement, iAttrs);
             }
         };
-    }])
-    .directive('dmpConnectible', ['$timeout', 'jsP', function ($timeout, jsP) {
+    })
+    .directive('dmpConnectible', function ($timeout, jsP) {
         return {
             restrict: 'A',
             scope: true,
@@ -101,11 +103,9 @@ angular.module('dmpApp')
                         for (var i = 0; i < l; i++) {
                             var current = next.slice(i, i + 1);
 
-                            if (current.length) {
-                                outbound = prev.data('_outbound');
-                                jsP.detach(outbound, prev, current);
-                                jsP.connect(prev, current);
-                            }
+                            outbound = prev.data('_outbound');
+                            jsP.detach(outbound, prev, current);
+                            jsP.connect(prev, current);
 
                             prev = current;
                         }
@@ -116,4 +116,4 @@ angular.module('dmpApp')
                 }, 0, false);
             }
         };
-    }]);
+    });

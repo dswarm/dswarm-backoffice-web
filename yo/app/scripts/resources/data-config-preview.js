@@ -1,11 +1,14 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataConfigPreviewResource', ['$resource', 'Util', function($resource, Util) {
+    .factory('DataConfigPreviewResource', function (ResourceFactory) {
 
-        var baseUrl =  Util.apiEndpoint,
-            endpoint = 'resources/:resourceId/configurationpreview';
-
-        return $resource(baseUrl + endpoint);
-
-    }]);
+        return ResourceFactory.create('resources', function(url) {
+            return {
+                preview: {
+                    method: 'POST',
+                    url: url + '/configurationpreview'
+                }
+            };
+        });
+    });
