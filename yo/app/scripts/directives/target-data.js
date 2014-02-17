@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl',
-            ['$scope', '$http', '$q', 'Util', 'loDash', 'schemaParser', 'PubSub',
-    function ($scope,   $http,   $q,   Util,   loDash,    schemaParser,   PubSub) {
+    .controller('TargetDataCtrl', function ($scope, $http, $q, Util, loDash,  schemaParser, PubSub) {
         $scope.internalName = 'Target Data Widget';
 
         function mapToSchema(result, schema) {
@@ -29,8 +27,8 @@ angular.module('dmpApp')
             }
         });
 
-    }])
-    .directive('targetData', [ function () {
+    })
+    .directive('targetData', function () {
         return {
             scope: true,
             restrict: 'E',
@@ -38,5 +36,5 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/target-data.html',
             controller: 'TargetDataCtrl'
         };
-    }]);
+    });
 

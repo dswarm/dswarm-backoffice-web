@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', ['$scope','$http', '$q', '$modalInstance', 'schemaParser', 'PubSub', function ($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
+    .controller('FilterCtrl', function ($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
 
         $scope.internalName = 'Filter Widget';
 
@@ -85,4 +85,4 @@ angular.module('dmpApp')
             $modalInstance.close();
         };
 
-    }]);
+    });

@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', ['$scope', '$window', '$modal', '$q', 'PubSub', 'loDash', 'TaskResource', 'DataModelGen', 'Util',
-    function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen, Util) {
+    .controller('TransformationCtrl', function ($scope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -321,8 +320,8 @@ angular.module('dmpApp')
             }
         }, true);
 
-    }])
-    .directive('transformation', [ function () {
+    })
+    .directive('transformation', function () {
         return {
             scope : true,
             restrict: 'E',
@@ -330,4 +329,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/transformation.html',
             controller: 'TransformationCtrl'
         };
-    }]);
+    });

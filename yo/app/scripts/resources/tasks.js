@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('TaskResource', ['ResourceFactory',function(ResourceFactory) {
+    .factory('TaskResource', function(ResourceFactory) {
 
         return ResourceFactory.create('tasks', function() {
             return {
@@ -11,4 +11,4 @@ angular.module('dmpApp')
                 }
             };
         });
-    }]);
+    });

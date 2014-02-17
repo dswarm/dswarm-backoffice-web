@@ -5,19 +5,19 @@ angular.module('dmpApp')
  * Provide an injectable lo-dash.
  * see http://lodash.com/docs for documentation on lodash
  */
-    .factory('loDash', ['$window', function($window) {
+    .factory('loDash', function($window) {
         return $window['_'];
-    }])
+    })
 /**
  * Provide an injectable reference to the API endpoint
  */
-    .factory('ApiEndpoint', ['$window', function($window) {
+    .factory('ApiEndpoint', function($window) {
         return ($window && $window['dmp']) ? $window['dmp']['jsRoutes']['api'] : '';
-    }])
+    })
 /**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', ['loDash', 'ApiEndpoint', function (loDash, api) {
+    .factory('Util', function (loDash, ApiEndpoint) {
 
         function latestBy(list, property) {
             var prop = property || 'id';
@@ -118,22 +118,22 @@ angular.module('dmpApp')
             latestBy: latestBy,
             mapResources: mapResources,
             collect: collect,
-            apiEndpoint: api,
+            apiEndpoint: ApiEndpoint,
             toJson : toJson
         };
-    }])
+    })
 /**
  * Factory for creating basic resources, that follow a typial pattern.
  * TODO: what cas restangular do here for us?
  */
-    .factory('ResourceFactory', ['$resource', 'ApiEndpoint', function($resource, baseUrl) {
+    .factory('ResourceFactory', function($resource, ApiEndpoint) {
 
         function create(resource, actionsFactory) {
             var endpoint = resource + '/:id',
-                finalUrl = baseUrl + endpoint;
+                finalUrl = ApiEndpoint + endpoint;
 
             if (angular.isFunction(actionsFactory)) {
-                return $resource(finalUrl, undefined, actionsFactory(finalUrl));
+                return $resource(finalUrl, undefined, actionsFactory(finalUrl, ApiEndpoint));
             }
 
             return $resource(finalUrl);
@@ -142,13 +142,13 @@ angular.module('dmpApp')
         return {
             create: create
         };
-    }])
+    })
 /**
  * Provide utility functions to generate UUID-4-ish pseudo-random identifiers.
  * For more concrete implementations, refer to
  * http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
  */
-    .factory('GUID', [function(){
+    .factory('GUID', function(){
         /**
          * Random parts for GUID
          * @returns {string} guid part
@@ -171,4 +171,4 @@ angular.module('dmpApp')
         return {
             'uuid4': guid
         };
-    }]);
+    });

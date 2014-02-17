@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('MappingComponentConfigCtrl', ['$scope', 'PubSub', function ($scope, PubSub) {
+    .controller('MappingComponentConfigCtrl', function ($scope, PubSub) {
 
         $scope.internalName = 'Mapping Component Config Widget';
 
@@ -54,9 +54,8 @@ angular.module('dmpApp')
 
 
 
-    }])
+    })
     .directive('mappingComponentConfig', function () {
-
         return {
             restrict: 'E',
             replace: false,

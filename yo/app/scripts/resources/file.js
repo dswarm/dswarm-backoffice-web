@@ -1,21 +1,18 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('FileResource', ['$resource', 'Util', function($resource, Util) {
+    .factory('FileResource', function (ResourceFactory) {
 
-        var baseUrl = Util.apiEndpoint,
-            endpoint = 'resources/:id';
-
-        return $resource(baseUrl + endpoint, {
-            id: '@id'
-        }, {
-            lines: {
-                method: 'GET',
-                url: baseUrl + 'resources/:id/lines',
-                params: {
-                    id: '@id'
-                },
-                cache: false
-            }
+        return ResourceFactory.create('resources', function (url) {
+            return {
+                lines: {
+                    method: 'GET',
+                    url: url + '/lines',
+                    params: {
+                        id: '@id'
+                    },
+                    cache: false
+                }
+            };
         });
-    }]);
+    });

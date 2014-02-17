@@ -1,15 +1,14 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('heartbeat', ['$timeout', '$http', 'Util', function($timeout, $http, Util) {
+    .directive('heartbeat', function($timeout, $http, ApiEndpoint) {
         return function heartbeatLinkFn(scope, elem, attrs) {
             var intervalTime = +scope.$eval(attrs.interval) || 1000,
                 endpoint = scope.$eval(attrs.endpoint),
                 expected = scope.$eval(attrs.expected),
-                api = Util.apiEndpoint,
                 config = {
                     method: 'GET',
-                    url: api + endpoint,
+                    url: ApiEndpoint + endpoint,
                     timeout: 1000
                 },
 
@@ -53,4 +52,4 @@ angular.module('dmpApp')
 
             toggleAlive(alive);
         };
-    }]);
+    });

@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', ['$scope', '$routeParams', '$location', 'loDash', 'DataModelResource', 'ResourceResource', 'PubSub',
-        function ($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
+    .controller('DataConfigCsvCtrl', function ($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
 
         function returnToData() { $location.path('/data/'); }
 
@@ -135,8 +134,8 @@ angular.module('dmpApp')
 
         $scope.$watch(allFields, fieldChanged, true);
 
-    }])
-    .directive('dataconfigcsv', [ function () {
+    })
+    .directive('dataconfigcsv', function () {
         return {
             restrict: 'E',
             replace: true,
@@ -144,4 +143,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/data-config-csv.html',
             controller: 'DataConfigCsvCtrl'
         };
-    }]);
+    });

@@ -1,13 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('ProjectResource', ['$resource', 'Util', function($resource, Util) {
+    .factory('ProjectResource', function (ResourceFactory) {
 
-        var baseUrl = Util.apiEndpoint,
-            endpoint = 'projects/:id';
-
-        return $resource(baseUrl + endpoint, {}, {
-            'update': { method:'PUT' }
+        return ResourceFactory.create('projects', function() {
+            return {
+                'update': { method:'PUT' }
+            };
         });
-
-    }]);
+    });

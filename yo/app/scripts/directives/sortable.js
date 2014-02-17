@@ -61,10 +61,10 @@
                 revertDuration: 400
             }
         })
-        .directive('functionSortable', ['functionSortableOptions', '$timeout', function (functionSortableOptions, $timeout) {
+        .directive('functionSortable', function (functionSortableOptions, $timeout) {
             return sortableFactory(functionSortableOptions, $timeout);
-        }])
-        .directive('componentMember', ['componentDraggableOptions', '$timeout', function (componentDraggableOptions, $timeout) {
+        })
+        .directive('componentMember', function (componentDraggableOptions, $timeout) {
             return sortableFactory(componentDraggableOptions, $timeout);
-        }]);
+        });
 }());

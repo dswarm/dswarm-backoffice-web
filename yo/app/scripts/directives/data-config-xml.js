@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl',
-        ['$scope', '$location', '$routeParams', 'DataModelResource', 'ResourceResource', 'Util', 'ngProgress',
-    function ($scope, $location, $routeParams, DataModelResource, ResourceResource, Util, ngProgress) {
+    .controller('DataConfigXmlCtrl', function ($scope, $location, $routeParams, DataModelResource, ResourceResource, Util, ngProgress) {
 
         var resource = null;
         $scope.resourceId = $routeParams.resourceId;
@@ -70,8 +68,8 @@ angular.module('dmpApp')
             $location.path( '/data/' );
         };
 
-    }])
-    .directive('dataconfigxml', [ function () {
+    })
+    .directive('dataconfigxml', function () {
         return {
             restrict: 'E',
             replace: false,
@@ -79,4 +77,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/data-config-xml.html',
             controller: 'DataConfigXmlCtrl'
         };
-    }]);
+    });

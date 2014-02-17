@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TreeCtrl', ['$scope', '$timeout', 'PubSub', function ($scope, $timeout, PubSub) {
+    .controller('TreeCtrl', function ($scope, $timeout, PubSub) {
 
         /* jshint camelcase:false */
 
@@ -110,8 +110,8 @@ angular.module('dmpApp')
             return data.leaf || !data.children || !data.children.length;
         };
 
-    }])
-    .directive('tree', ['$compile', function ($compile) {
+    })
+    .directive('tree', function ($compile) {
         return {
             restrict: 'E',
             scope: {
@@ -153,4 +153,4 @@ angular.module('dmpApp')
                 };
             }
         };
-    }]);
+    });

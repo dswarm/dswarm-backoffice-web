@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('functionSource', ['$timeout', '$rootScope', 'jsP', 'PubSub', function($timeout, $rootScope, jsP, PubSub) {
+    .directive('functionSource', function($timeout, $rootScope, jsP, PubSub) {
 
         var connectWithSources = [],
             scope, iElement, iAttrs;
@@ -76,8 +76,8 @@ angular.module('dmpApp')
                 doLink(scope, iElement, iAttrs);
             }
         };
-    }])
-    .directive('dmpConnectible', ['$timeout', 'jsP', function ($timeout, jsP) {
+    })
+    .directive('dmpConnectible', function ($timeout, jsP) {
         return {
             restrict: 'A',
             scope: true,
@@ -116,4 +116,4 @@ angular.module('dmpApp')
                 }, 0, false);
             }
         };
-    }]);
+    });

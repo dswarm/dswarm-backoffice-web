@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataModelResource', ['ResourceFactory', function(ResourceFactory) {
+    .factory('DataModelResource', function(ResourceFactory) {
 
         return ResourceFactory.create('datamodels', function(baseUrl) {
             return {
@@ -28,4 +28,4 @@ angular.module('dmpApp')
                 }
             };
         });
-    }]);
+    });

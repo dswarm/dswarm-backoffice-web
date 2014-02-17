@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SourceDataCtrl',
-            ['$scope','schemaParser', 'DataModelResource', 'PubSub', 'loDash',
-    function ($scope,  schemaParser,   DataModelResource,   PubSub,   loDash) {
+    .controller('SourceDataCtrl', function ($scope, schemaParser, DataModelResource, PubSub, loDash) {
         $scope.internalName = 'Source Data Widget';
 
         $scope.data = {};
@@ -63,8 +61,8 @@ angular.module('dmpApp')
             });
 
         });
-    }])
-    .directive('sourceData', [ function () {
+    })
+    .directive('sourceData', function () {
         return {
             scope : true,
             restrict: 'E',
@@ -72,4 +70,4 @@ angular.module('dmpApp')
             templateUrl: 'views/directives/source-data.html',
             controller: 'SourceDataCtrl'
         };
-    }]);
+    });

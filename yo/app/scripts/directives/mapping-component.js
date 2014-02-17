@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('MappingComponentController', ['$scope', 'PubSub', function($scope, PubSub) {
+    .controller('MappingComponentController', function($scope, PubSub) {
 
         var incomingPool = {},
             outgoingPool = {};
@@ -24,7 +24,7 @@ angular.module('dmpApp')
 
         });
 
-    }])
+    })
     .directive('mappingComponent', function() {
 
         return {
