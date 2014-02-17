@@ -13,7 +13,7 @@ angular.module('dmpApp')
 
         $scope.onFlagClick = function() {
 
-            DataConfigResource.save({ resourceId: $routeParams.resourceId }, $scope.config, function() {
+            DataConfigResource.save({ id: $routeParams.resourceId }, $scope.config, function() {
                 $location.path('/data/');
             });
 

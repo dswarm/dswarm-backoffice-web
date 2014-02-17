@@ -316,7 +316,6 @@ describe('Directive: Transformation', function () {
             spyee.cb(data);
         });
 
-        var expectedId = new Date().getTime() * -1;
         var data = connectionDatas[0];
 
         $rootScope.$broadcast('connectionSelected', data);
@@ -324,9 +323,7 @@ describe('Directive: Transformation', function () {
         expect(project.mappings.length).toBe(1);
         var mapping = project.mappings[0];
 
-        expect(mapping.id - expectedId).toBeLessThan(1);
-        expect(mapping.id - expectedId).toBeGreaterThan(-10);
-        expect(mapping._$internal_id).toBe(data.internal_id);
+        expect(mapping.id).toBe(13);
         expect(mapping._$connection_id).toBe(data.connection_id);
         expect(mapping.name).toBe(data.name);
         expect(mapping._$components).toEqual([]);
@@ -344,13 +341,13 @@ describe('Directive: Transformation', function () {
         expect(elScope.tabs[0]).toEqual({
             title: data.name,
             active: true,
-            id: data.internal_id,
+            id: data.mapping_id,
             mappingId: data.mapping_id
         });
 
         expect(elScope.showSortable).toBeTruthy();
 
-        expect(spyee.cb).toHaveBeenCalledWith(data.internal_id);
+        expect(spyee.cb).toHaveBeenCalledWith(data.mapping_id);
         expect(elScope.activeMapping).toBe(mapping);
     });
 
@@ -370,8 +367,6 @@ describe('Directive: Transformation', function () {
             spyee.cb(data);
         });
 
-        var expectedId = new Date().getTime() * -1;
-
         _.each(connectionDatas, function(data) {
             $rootScope.$broadcast('connectionSelected', data);
         });
@@ -382,15 +377,13 @@ describe('Directive: Transformation', function () {
 
         var expectedPaths = [[28, 30], [27, 29]];
 
-        _.each(_.zip(project.mappings, connectionDatas, elScope.tabs, expectedPaths), function(mappingDataTabsPaths) {
+        _.each(_.zip(project.mappings, connectionDatas, elScope.tabs, expectedPaths), function(mappingDataTabsPaths, idx) {
             var mapping = mappingDataTabsPaths[0],
                 data = mappingDataTabsPaths[1],
                 tab = mappingDataTabsPaths[2],
                 paths = mappingDataTabsPaths[3];
 
-            expect(mapping.id - expectedId).toBeLessThan(1);
-            expect(mapping.id - expectedId).toBeGreaterThan(-10);
-            expect(mapping._$internal_id).toBe(data.internal_id);
+            expect(mapping.id).toBe(13 + idx);
             expect(mapping._$connection_id).toBe(data.connection_id);
             expect(mapping.name).toBe(data.name);
             expect(mapping._$components).toEqual([]);
@@ -407,13 +400,13 @@ describe('Directive: Transformation', function () {
             expect(tab).toEqual({
                 title: data.name,
                 active: true,
-                id: data.internal_id,
+                id: data.mapping_id,
                 mappingId: data.mapping_id
             });
 
             expect(elScope.showSortable).toBeTruthy();
 
-            expect(spyee.cb).toHaveBeenCalledWith(data.internal_id);
+            expect(spyee.cb).toHaveBeenCalledWith(data.mapping_id);
         });
 
         expect(elScope.activeMapping).toBe(project.mappings[1]);

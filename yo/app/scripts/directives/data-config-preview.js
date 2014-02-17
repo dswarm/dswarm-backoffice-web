@@ -88,8 +88,8 @@ angular.module('dmpApp')
                     resourceId = config.resourceId;
                 }
 
-                DataConfigPreviewResource.save(
-                    { resourceId: resourceId },
+                DataConfigPreviewResource.preview(
+                    { id: resourceId },
                     config,
                     function(result) {
 

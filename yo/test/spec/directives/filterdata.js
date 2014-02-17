@@ -22,7 +22,7 @@ describe('Controller: FilterDataCtrl', function () {
     }));
 
 
-    it('should have a FilterDataCtrl controller', function() {
+    xit('should have a FilterDataCtrl controller', function() {
         var FilterDataCtrl = filterDataCtrl();
         expect(FilterDataCtrl).not.toBe(null);
     });
