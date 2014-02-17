@@ -235,6 +235,29 @@ module.exports = function (grunt) {
             }
         },
 
+        // combine and cache angular templates
+        ngtemplates: {
+            dmpApp: {
+                cwd: '<%= yeoman.app %>',
+                src: ['views/{,*/}*.html', 'template/{,*/}*.html'],
+                dest: '.tmp/scripts/templates.js',
+                options: {
+                    htmlmin: {
+                        collapseBooleanAttributes:      true,
+                        collapseWhitespace:             true,
+                        removeAttributeQuotes:          true,
+                        removeComments:                 true,
+                        removeEmptyAttributes:          true,
+                        removeOptionalTags:             true,
+                        removeRedundantAttributes:      true,
+                        removeScriptTypeAttributes:     true,
+                        removeStyleLinkTypeAttributes:  true
+                    },
+                    usemin: 'scripts/scripts.js'
+                }
+            }
+        },
+
         // Renames files for browser caching purposes
         rev: {
             dist: {
@@ -292,16 +315,19 @@ module.exports = function (grunt) {
         htmlmin: {
             dist: {
                 options: {
-                    collapseWhitespace: true,
-                    collapseBooleanAttributes: true,
-                    removeRedundantAttributes: true,
-                    removeCommentsFromCDATA: true,
-                    removeOptionalTags: true
+                    collapseBooleanAttributes:      true,
+                    collapseWhitespace:             true,
+                    removeComments:                 true,
+                    removeEmptyAttributes:          true,
+                    removeOptionalTags:             true,
+                    removeRedundantAttributes:      true,
+                    removeScriptTypeAttributes:     true,
+                    removeStyleLinkTypeAttributes:  true
                 },
                 files: [{
                     expand: true,
                     cwd: '<%= yeoman.dist %>',
-                    src: ['*.html', 'views/{,*/}*.html'],
+                    src: ['*.html'],
                     dest: '<%= yeoman.dist %>'
                 }]
             }
@@ -342,9 +368,7 @@ module.exports = function (grunt) {
                         'components/**/*',
                         'images/{,*/}*.{webp}',
                         'styles/fonts/*',
-                        'views/**/*',
                         'data/*',
-                        'template/**/*',
                         'fonts/**/*'
                     ]
                 }, {
@@ -542,6 +566,7 @@ module.exports = function (grunt) {
         'bowerInstall',
         'useminPrepare',
         'concurrent:dist',
+        'ngtemplates',
         'autoprefixer',
         'concat',
         'ngmin',
