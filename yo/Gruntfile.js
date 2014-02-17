@@ -537,7 +537,8 @@ module.exports = function (grunt) {
             'clean:server',
             'less',
             'bowerInstall',
-            'concurrent:server',
+            'template:api-server',
+            'copy:styles',
             'autoprefixer',
             'connect:livereload',
             'watch'
@@ -553,7 +554,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:server',
             'less',
-            'concurrent:test',
+            'copy:styles',
             'autoprefixer',
             'connect:test',
             'karma:' + ((target === 'ci') ? 'ci' : 'unit')
@@ -565,7 +566,11 @@ module.exports = function (grunt) {
         'less',
         'bowerInstall',
         'useminPrepare',
-        'concurrent:dist',
+        'template:api-server-dist',
+        'revision:dist',
+        'copy:styles',
+        'imagemin',
+        'svgmin',
         'ngtemplates',
         'autoprefixer',
         'concat',
