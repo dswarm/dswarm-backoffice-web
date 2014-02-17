@@ -28,9 +28,9 @@ angular.module('dmpApp')
                                 elem.addClass('red');
                             })
                             .finally(function() {
-                                cancelHeartbeat = $timeout(intervalFn, intervalTime, false);
+                                cancelHeartbeat = $timeout(intervalFn, intervalTime);
                             });
-                    }, intervalTime, false);
+                    }, intervalTime);
                 },
 
                 toggleAlive = function toggleAliveFn(value) {
