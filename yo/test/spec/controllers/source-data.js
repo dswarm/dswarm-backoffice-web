@@ -6,9 +6,7 @@ describe('Controller: SourceDataCtrl', function () {
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedRecord', 'mockedData', 'mockedProject'));
 
     beforeEach(module(function($provide) {
-        $provide.value('Util', {
-            apiEndpoint: '/dmp/'
-        });
+        $provide.value('ApiEndpoint', '/dmp/');
     }));
 
     // Initialize the controller and a mock scope

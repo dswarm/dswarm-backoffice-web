@@ -1,7 +1,6 @@
 'use strict';
 
 describe('schemaParser tests', function (){
-    /*jshint indent:4 */
     var schemaParser,
 
         csvSchema = {
@@ -355,111 +354,111 @@ describe('schemaParser tests', function (){
     it('should parse an MAB like schema', function() {
         var mabSchema = JSON.parse('{"id":1,"attribute_paths":[{"id":3,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr","name":"nr"}]},{"id":4,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind","name":"ind"}]},{"id":1,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"}]},{"id":2,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]},{"id":7,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf","name":"tf"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]},{"id":8,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status","name":"status"}]},{"id":5,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#value","name":"value"}]},{"id":6,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld","name":"feld"},{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf","name":"tf"}]},{"id":11,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ","name":"typ"}]},{"id":9,"attributes":[{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion","name":"mabVersion"}]},{"id":10,"attributes":[{"id":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","name":"type"}]}],"record_class":{"id":"http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType","name":"datensatzType"}}');
 
-        var expected = {
-            name: undefined,
-            $show: true,
-            editableTitle: undefined,
-            children: [
-                {
-                    $show: true,
-                    hasChildren: true,
-                    editableTitle: undefined,
-                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld',
-                    name: 'feld',
-                    _$path_id: 1,
-                    children: [
-                        {
-                            $show: true,
-                            hasChildren: undefined,
-                            editableTitle: undefined,
-                            id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr',
-                            name: 'nr',
-                            _$path_id: 3
-                        },
-                        {
-                            $show: true,
-                            hasChildren: undefined,
-                            editableTitle: undefined,
-                            id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind',
-                            name: 'ind',
-                            _$path_id: 4
-                        },
-                        {
-                            $show: true,
-                            hasChildren: undefined,
-                            editableTitle: undefined,
-                            id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                            name: 'type',
-                            _$path_id: 2
-                        },
-                        {
-                            id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf',
-                            uri: undefined,
-                            name: 'tf',
-                            children: [
-                                {
-                                    $show: true,
-                                    hasChildren: undefined,
-                                    editableTitle: undefined,
-                                    id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                                    name: 'type',
-                                    _$path_id: 7
-                                }
-                            ],
-                            hasChildren: true
-                        },
-                        {
-                            $show: true,
-                            hasChildren: undefined,
-                            editableTitle: undefined,
-                            id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#value',
-                            name: 'value',
-                            _$path_id: 5
-                        }
-                    ]
-                },
-                {
-                    $show: true,
-                    hasChildren: false,
-                    editableTitle: undefined,
-                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#status',
-                    name: 'status',
-                    _$path_id: 8
-                },
-                {
-                    $show: true,
-                    hasChildren: false,
-                    editableTitle: undefined,
-                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ',
-                    name: 'typ',
-                    _$path_id: 11
-                },
-                {
-                    $show: true,
-                    hasChildren: false,
-                    editableTitle: undefined,
-                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion',
-                    name: 'mabVersion',
-                    _$path_id: 9
-                },
-                {
-                    $show: true,
-                    hasChildren: false,
-                    editableTitle: undefined,
-                    id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                    name: 'type',
-                    _$path_id: 10
-                }
-            ],
-            hasChildren: true
-        };
+//        var expected = {
+//            name: undefined,
+//            $show: true,
+//            editableTitle: undefined,
+//            children: [
+//                {
+//                    $show: true,
+//                    hasChildren: true,
+//                    editableTitle: undefined,
+//                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld',
+//                    name: 'feld',
+//                    _$path_id: 1,
+//                    children: [
+//                        {
+//                            $show: true,
+//                            hasChildren: undefined,
+//                            editableTitle: undefined,
+//                            id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr',
+//                            name: 'nr',
+//                            _$path_id: 3
+//                        },
+//                        {
+//                            $show: true,
+//                            hasChildren: undefined,
+//                            editableTitle: undefined,
+//                            id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind',
+//                            name: 'ind',
+//                            _$path_id: 4
+//                        },
+//                        {
+//                            $show: true,
+//                            hasChildren: undefined,
+//                            editableTitle: undefined,
+//                            id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#type',
+//                            name: 'type',
+//                            _$path_id: 2
+//                        },
+//                        {
+//                            id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf',
+//                            uri: undefined,
+//                            name: 'tf',
+//                            children: [
+//                                {
+//                                    $show: true,
+//                                    hasChildren: undefined,
+//                                    editableTitle: undefined,
+//                                    id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#type',
+//                                    name: 'type',
+//                                    _$path_id: 7
+//                                }
+//                            ],
+//                            hasChildren: true
+//                        },
+//                        {
+//                            $show: true,
+//                            hasChildren: undefined,
+//                            editableTitle: undefined,
+//                            id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#value',
+//                            name: 'value',
+//                            _$path_id: 5
+//                        }
+//                    ]
+//                },
+//                {
+//                    $show: true,
+//                    hasChildren: false,
+//                    editableTitle: undefined,
+//                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#status',
+//                    name: 'status',
+//                    _$path_id: 8
+//                },
+//                {
+//                    $show: true,
+//                    hasChildren: false,
+//                    editableTitle: undefined,
+//                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ',
+//                    name: 'typ',
+//                    _$path_id: 11
+//                },
+//                {
+//                    $show: true,
+//                    hasChildren: false,
+//                    editableTitle: undefined,
+//                    id: 'http: //www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion',
+//                    name: 'mabVersion',
+//                    _$path_id: 9
+//                },
+//                {
+//                    $show: true,
+//                    hasChildren: false,
+//                    editableTitle: undefined,
+//                    id: 'http: //www.w3.org/1999/02/22-rdf-syntax-ns#type',
+//                    name: 'type',
+//                    _$path_id: 10
+//                }
+//            ],
+//            hasChildren: true
+//        };
 
         var actual = schemaParser.fromDomainSchema(mabSchema);
 
         expect(actual.children.length).toEqual(5);
         expect(actual.children[3]._$path_id).toEqual(9);
         expect(actual.children[0].children.length).toEqual(5);
-    })
+    });
 
 
 });

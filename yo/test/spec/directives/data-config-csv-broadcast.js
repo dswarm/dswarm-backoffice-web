@@ -13,7 +13,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
                     thisArg = this;
 
                     fn.apply(thisArg, arguments);
-                }
+                };
             }
         },
         dmp: {

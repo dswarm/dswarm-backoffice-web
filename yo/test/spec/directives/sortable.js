@@ -1,5 +1,5 @@
 'use strict';
-/* jshint ignore:start */
+
 describe('Directive: Sortables', function () {
 
     beforeEach(module('dmpApp'));

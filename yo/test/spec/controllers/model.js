@@ -3,19 +3,10 @@
 describe('Controller: ModelCtrl', function () {
     var $httpBackend, $rootScope, scope, modelCtrl, schema;
 
-    var win = {
-        dmp: {
-            jsRoutes: {
-                api: '/dmp/'
-            }
-        },
-        _: _
-    };
-
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema', 'mockedDataModel', 'mockedProject'));
 
     beforeEach(module(function($provide) {
-        $provide.value('$window', win);
+        $provide.value('ApiEndpoint', '/dmp/');
     }));
 
     // Initialize the controller and a mock scope

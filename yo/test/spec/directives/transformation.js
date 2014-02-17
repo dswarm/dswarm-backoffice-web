@@ -1,5 +1,5 @@
 'use strict';
-/* jshint ignore:start */
+
 describe('Directive: Transformation', function () {
     var element, scope, $rootScope, $compile, $timeout, $httpBackend;
     var elementHtml = '<transformation></transformation>';

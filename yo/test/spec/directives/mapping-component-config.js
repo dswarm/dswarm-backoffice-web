@@ -1,5 +1,5 @@
 'use strict';
-/* jshint ignore:start */
+
 describe('Directive: MappingComponentConfig', function () {
     var $rootScope, $compile, $httpBackend;
     var element, scope;

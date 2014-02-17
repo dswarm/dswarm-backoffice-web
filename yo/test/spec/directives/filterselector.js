@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: FilterSelectorCtrl', function () {
-    var $httpBackend, $rootScope, scope, component, filterSelectorCtrl;
+    var $httpBackend, $rootScope, scope, filterSelectorCtrl;
 
     beforeEach(module('dmpApp'));
 

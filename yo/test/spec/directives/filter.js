@@ -35,7 +35,7 @@ describe('Controller: FilterCtrl', function () {
         FilterCtrl = $controller('FilterCtrl', {
             '$scope': scope,
             '$modalInstance': modalInstance
-        })
+        });
 
     }));
 

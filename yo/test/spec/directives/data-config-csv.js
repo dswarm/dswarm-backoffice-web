@@ -6,9 +6,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
     beforeEach(module('dmpApp', 'mockedDataConfig'));
 
     beforeEach(module(function($provide) {
-        $provide.value('Util', {
-            apiEndpoint: '/dmp/'
-        });
+        $provide.value('ApiEndpoint', '/dmp/');
     }));
 
     beforeEach(function() {
