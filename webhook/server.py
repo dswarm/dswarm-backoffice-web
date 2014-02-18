@@ -1,4 +1,5 @@
 from subprocess import *
+import os
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -52,7 +53,7 @@ def update_web(tag):
     return _update(tag,
                    ["make", "dist"],
                    cwd="/home/dmp/dmp-backoffice-web",
-                   env={'DMP_HOME': "/home/dmp/datamanagement-platform"})
+                   env=dict(os.environ, DMP_HOME="/home/dmp/datamanagement-platform"))
 
 
 def update_api(tag):
