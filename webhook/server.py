@@ -51,7 +51,8 @@ def _update_to_response(updater):
 def update_web(tag):
     return _update(tag,
                    ["make", "dist"],
-                   cwd="/home/dmp/dmp-backoffice-web")
+                   cwd="/home/dmp/dmp-backoffice-web",
+                   env={'DMP_HOME': "/home/dmp/datamanagement-platform"})
 
 
 def update_api(tag):

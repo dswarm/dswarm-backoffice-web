@@ -10,14 +10,14 @@ env-install:
 
 # install all
 
-install: env-install 
+install: env-install
 .PHONY: install
 
 # update all
 update-files:
 	cd yo && bower update
 
-update: update-files 
+update: update-files
 .PHONY: update-files update
 
 
@@ -52,9 +52,9 @@ yo/publish:
 	mkdir yo/publish
 
 
-dist: yo/Gruntfile.js install | yo/publish
+dist: yo/Gruntfile.js clean install | yo/publish
 	cd yo && grunt build
-	rsync --delete --recursive yo/dist/ yo/publish
+	rsync --delete --verbose --recursive yo/dist/ yo/publish
 .PHONY: dist
 
 
