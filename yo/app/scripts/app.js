@@ -6,5 +6,5 @@ angular.module('dmpApp', [
     // AngularUI Modules
     'ui.utils', 'ui.bootstrap', 'ui.bootstrap.tabs', 'ui.bootstrap.modal',
     // 3rd Party
-    'ngProgress', 'ngGrid', 'LocalStorageModule', 'gridster'
+    'ngProgress', 'ngGrid', 'LocalStorageModule'
 ]);
