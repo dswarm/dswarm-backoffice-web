@@ -9,7 +9,7 @@ You'll also need [grunt](http://gruntjs.com/) and [bower](http://bower.io/).
 These would be installed by `npm install`, but it's probably better,
 if you install them globally and have them in your $PATH.
 
-    npm install -g grunt bower
+    npm install -g grunt-cli bower
 
 Also, [yeoman](http://yeoman.io/) might be of service.
 
@@ -23,20 +23,10 @@ to adjust them if you work on other systems, e.g. Windows.
     npm install
     bower install
 
-Some components need an additional build step:
-
-    cd app/components/angular-ui-bootstrap
-    npm install && grunt build
-
-as well as
-
-    cd app/components/angular-ui-utils
-    npm install && grunt build
-
 
 ### Start Development Server ###
 
-    grunt server
+    grunt serve
 
 A browser should open at localhost:9999
 
@@ -76,3 +66,35 @@ Linting is done by [jshint](http://jshint.com/). It can be run via grunt:
 A good idea is to incorporate jshint within your favorite IDE: [jshint plugins](http://jshint.com/install/#plugins)
 For example, the IDEA plugin highlights jshint issues directly as syntax errors in the IDE
 
+
+### Build the whole distribution ###
+
+Just run
+
+    grunt
+
+
+### other helpful tasks ###
+
+> **Note**: `grunt` to execute these tasks is implied
+
+task                     | description
+------------------------ | -----------
+ngtemplates              | Compile AngularJS templates for $templateCache, produces the file `.tmp/scripts/templates.js`
+bowerInstall             | Inject all components in your HTML file. (into `app/index.html`).
+clean:tmp                | Clean temporary (intermediate) files and folders. (`./tmp`).
+clean:dist               | Clean all generated files and folders. (`./tmp` and `./dist`).
+jshint:all               | Validate source files with JSHint.
+jshint:test              | Validate test files with JSHint.
+jshint:ci                | Validate source files with JSHint and generate a jenkins-readable report in `target/jshint.xml`.
+less                     | Compile LESS files to CSS into `.tmp/styles/`.
+karma:ci                 | Run karma using PhantomJS and reporting jenkins-readble coverage reports in `target/coverage`. Indented to be used by jenkins.
+karma:localci            | Run karma using Chrome and reporting coverage reports in `target/coverage` in html form.
+plato                    | Generate static analysis charts with plato in `target/metrics`.
+template:api-server      | Generate the `app/api.js` file with the API url pointing to `http://localhost:8087/dmp`.
+template:api-server-dist | Generate the `app/api.js` file with the API url pointing to `/dmp`.
+revision                 | Generate the `app/data/version.json` file with build information gathered from the exection of `git describe`.
+printConfig              | Dump the complete Grunt configuration.
+test                     | Rebuild the styles and then run the tests.
+build                    | Build the application without running the tests
+jenkins                  | Test and analyze the application. Indented to be used by jenkins (duh).
