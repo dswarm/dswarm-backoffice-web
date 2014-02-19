@@ -246,9 +246,7 @@ describe('Directive: Transformation', function () {
     beforeEach(module('dmpApp'));
 
     beforeEach(module(function($provide) {
-        $provide.value('Util', {
-            apiEndpoint: 'foo/'
-        });
+        $provide.value('ApiEndpoint', 'foo/');
     }));
 
     beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$httpBackend_) {

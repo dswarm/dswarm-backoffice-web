@@ -11,7 +11,7 @@ angular.module('dmpApp')
 
                 //noinspection FunctionWithInconsistentReturnsJS
                 $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
-                    if (config && config['parameters']['storage_type'] === 'schema') {
+                    if (config && config['parameters'] && config['parameters']['storage_type'] === 'schema') {
                         return resource;
                     }
                 }));
@@ -22,7 +22,7 @@ angular.module('dmpApp')
 
                 //noinspection FunctionWithInconsistentReturnsJS
                 $scope.files = Util.collect(results, function(schema) {
-                    if (schema['attribute_paths'].length) {
+                    if (schema && schema['attribute_paths'] && schema['attribute_paths'].length) {
                         schema._$description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
                         return schema;
                     }
@@ -45,8 +45,8 @@ angular.module('dmpApp')
     })
     .directive('schemalist', function () {
         return {
+            replace: false,
             restrict: 'E',
-            replace: true,
             scope: {
                 from: '@',
                 items: '='
