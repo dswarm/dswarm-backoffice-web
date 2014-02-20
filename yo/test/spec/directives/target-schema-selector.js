@@ -45,7 +45,8 @@ describe('Controller: TargetSchemaSelectorCtrl', function () {
 
             return $controller('TargetSchemaSelectorCtrl', {
                 '$scope': scope,
-                '$modalInstance' : modalInstance
+                '$modalInstance' : modalInstance,
+                'project' : {}
             });
         };
 
