@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetSchemaSelectorCtrl', function ($scope, $modalInstance, $modal) {
+    .controller('TargetSchemaSelectorCtrl', function ($scope, $modalInstance, $modal, project) {
 
         $scope.result = {};
 
