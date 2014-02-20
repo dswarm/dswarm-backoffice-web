@@ -48,7 +48,7 @@ angular.module('dmpApp')
 
             $scope.project.mappings = [];
 
-            PubSub.broadcast('unpaintPlumbs', {});
+            PubSub.broadcast('changeOutputModel', {});
 
         };
 
