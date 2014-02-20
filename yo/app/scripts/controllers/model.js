@@ -36,9 +36,22 @@ angular.module('dmpApp')
         };
 
         $scope.setOutputDataModel = function(dataModel) {
+
+            if($scope.project.output_data_model) {
+                $scope.removeMappings();
+            }
+
             $scope.project.output_data_model = dataModel;
 
             $scope.processOutputDataModel();
+        };
+
+        $scope.removeMappings = function() {
+
+            $scope.project.mappings = [];
+
+            PubSub.broadcast('unpaintPlumbs', {});
+
         };
 
         $scope.setOutputSchema = function(schema) {

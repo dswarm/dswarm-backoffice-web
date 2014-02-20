@@ -488,7 +488,7 @@ angular.module('dmpApp')
             }
         });
 
-        PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
+        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'unpaintPlumbs'], function () {
             angular.forEach(components.pool, function(component) {
                 angular.forEach(component.endpoints, function(endpoint) {
                     jsP.deleteEndpoint(endpoint);

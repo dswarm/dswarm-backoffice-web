@@ -58,7 +58,7 @@ angular.module('dmpApp')
             });
         };
 
-        PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
+        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'unpaintPlumbs'], function () {
             angular.forEach(connectWithSources, function(source) {
                 jsP.detachAll(source);
             });
