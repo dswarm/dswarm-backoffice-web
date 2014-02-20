@@ -98,3 +98,26 @@ printConfig              | Dump the complete Grunt configuration.
 test                     | Rebuild the styles and then run the tests.
 build                    | Build the application without running the tests
 jenkins                  | Test and analyze the application. Indented to be used by jenkins (duh).
+
+
+### Use yeoman ###
+
+Yeoman can be of service to create new components
+
+    yo angular:directive awesome-foo
+    yo angular:controller awesome-foo
+    yo angular:view awesome-foo
+
+This will create the following files
+
+- app/scripts/directives/awesome-foo.js
+- test/spec/directives/awesome-foo.js
+- create app/scripts/controllers/awesome-foo.js
+- create test/spec/controllers/awesome-foo.js
+- create app/views/awesome-foo.html
+
+Also, it will inject them into the `app/index.html`
+
+    <script src="scripts/directives/awesome-foo.js"></script>
+    <script src="scripts/controllers/awesome-foo.js"></script>
+
