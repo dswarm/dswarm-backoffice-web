@@ -365,7 +365,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         '*.html',
-                        // 'components/**/*',
+                        'api.js',
                         'images/{,*/}*.{webp}',
                         'styles/fonts/*',
                         'data/*',
@@ -376,6 +376,11 @@ module.exports = function (grunt) {
                     cwd: '.tmp/images',
                     dest: '<%= yeoman.dist %>/images',
                     src: ['generated/*']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.bower %>/font-awesome/fonts',
+                    dest: '<%= yeoman.dist %>/fonts',
+                    src: ['*']
                 }]
             },
             styles: {
@@ -428,18 +433,24 @@ module.exports = function (grunt) {
         //     }
         //   }
         // },
-        // uglify: {
-        //   dist: {
-        //     files: {
-        //       '<%= yeoman.dist %>/scripts/scripts.js': [
-        //         '<%= yeoman.dist %>/scripts/scripts.js'
-        //       ]
-        //     }
-        //   }
-        // },
         // concat: {
         //   dist: {}
         // },
+
+        uglify: {
+            local: {
+                options: {
+                    sourceMap: true,
+                    sourceMapIncludeSources: true
+                },
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/concat/scripts',
+                    src: '*.js',
+                    dest: '<%= yeoman.dist %>/scripts/'
+                }]
+            }
+        },
 
         // Test settings
         karma: {
@@ -494,7 +505,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('revision', function () {
+    grunt.registerTask('revision', 'generate a version.js file, based on the output of git-describe', function () {
         var buildInfo = {}
             , tasks = [
                 'git-describe:build',
@@ -524,11 +535,11 @@ module.exports = function (grunt) {
         'copy:rev'
     ]);
 
-    grunt.registerTask('printConfig', function() {
+    grunt.registerTask('printConfig', 'print the complete configuration', function() {
         grunt.log.writeln(JSON.stringify(grunt.config(), null, 2));
     });
 
-    grunt.registerTask('serve', function (target) {
+    grunt.registerTask('serve', 'start the development server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
@@ -550,39 +561,41 @@ module.exports = function (grunt) {
         grunt.task.run(['serve']);
     });
 
-    grunt.registerTask('test', function (target) {
+    grunt.registerTask('test', 'run tests', function (target) {
         grunt.task.run([
             'clean:server',
             'less',
             'copy:styles',
             'autoprefixer',
             'connect:test',
-            'karma:' + ((target === 'ci') ? 'ci' : 'unit')
+            target === 'ci' ? 'karma:ci' : 'karma:unit'
         ]);
     });
 
-    grunt.registerTask('build', [
-        'clean:dist',
-        'less',
-        'bowerInstall',
-        'useminPrepare',
-        'template:api-server-dist',
-        'revision:dist',
-        'copy:styles',
-        'imagemin',
-        'svgmin',
-        'ngtemplates',
-        'autoprefixer',
-        'concat',
-        'ngmin',
-        'copy:dist',
-        'cdnify',
-        'cssmin',
-        'uglify',
-        'rev',
-        'usemin',
-        'htmlmin'
-    ]);
+    grunt.registerTask('build', 'run the build process', function(target) {
+        grunt.task.run([
+            'clean:dist',
+            'less',
+            'bowerInstall',
+            'useminPrepare',
+            target === 'local' ? 'template:api-server' : 'template:api-server-dist',
+            'revision:dist',
+            'copy:styles',
+            'imagemin',
+            'svgmin',
+            'ngtemplates',
+            'autoprefixer',
+            'concat',
+            'ngmin',
+            'copy:dist',
+            'cdnify',
+            'cssmin',
+            target === 'local' ? 'uglify:local' : 'uglify:generated',
+            'rev',
+            'usemin',
+            'htmlmin'
+        ]);
+    });
 
     grunt.registerTask('jenkins', [
         'jshint:ci',

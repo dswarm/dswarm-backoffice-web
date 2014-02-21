@@ -32,7 +32,6 @@ angular.module('dmpApp')
         return {
             scope: true,
             restrict: 'E',
-            replace: true,
             templateUrl: 'views/directives/target-data.html',
             controller: 'TargetDataCtrl'
         };

@@ -3,8 +3,8 @@
 describe('Directive: SchemaList', function () {
     var $rootScope, $compile, $httpBackend;
     var element1, element2, scope1, scope2, files1, files2, files3;
-    var elementHtml1 = '<schemalist from="resources" items="items"></div>';
-    var elementHtml2 = '<schemalist from="otherThing" items="items"></div>';
+    var elementHtml1 = '<schemalist from="resources" items="items"></schemalist>';
+    var elementHtml2 = '<schemalist from="otherThing" items="items"></schemalist>';
 
     beforeEach(module('dmpApp'));
 

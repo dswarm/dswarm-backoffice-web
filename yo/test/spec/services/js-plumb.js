@@ -1,8 +1,8 @@
 'use strict';
 
 describe('jsPlump service tests', function () {
-    beforeEach(module('dmpApp', function (jsPlumbProvider) {
-        jsPlumbProvider.setInstance({
+    beforeEach(module('dmpApp', function ($provide) {
+        $provide.value('jsPlumb', {
             connect: function (options) {
                 var connection = {
                     source: options.source[0],

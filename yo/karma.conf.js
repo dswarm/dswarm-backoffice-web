@@ -27,8 +27,8 @@ module.exports = function(config) {
             'components/angular-sanitize/angular-sanitize.js',
             'components/humanize/humanize.js',
             'components/ngprogress/build/ngProgress.js',
-            'components/jsPlumb/dist/js/jquery.jsPlumb-*.js',
-            'components/angular-grid/ng-grid-2.0.7.min.js',
+            'components/jsPlumb/dist/js/jquery.jsPlumb.js',
+            'components/angular-grid/ng-grid-2.0.7.debug.js',
             'scripts/*.js',
             'scripts/**/*.js',
 
@@ -44,7 +44,7 @@ module.exports = function(config) {
 
         // test results reporter to use
         // possible values: dots || progress || growl
-        reporters : ['progress', 'junit'],
+        reporters : ['progress', 'junit', 'coverage'],
 
         // web server port
         //port : 8080,
@@ -57,7 +57,7 @@ module.exports = function(config) {
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-        //logLevel : LOG_DEBUG,
+        // logLevel : config.LOG_DEBUG,
 
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch : true,
@@ -70,7 +70,7 @@ module.exports = function(config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers : ['FixedChrome'],
+        browsers : [process.env.KARMA_BROWSER || 'Chrome'],
 
         // If browser does not capture in given timeout [ms], kill it
         captureTimeout : 5000,
@@ -86,7 +86,14 @@ module.exports = function(config) {
 
         preprocessors : {
             '**/*.html': ['ng-html2js'],
-            'scripts/{,*/}*.js': 'coverage'
+            'scripts/**/*.js': ['coverage']
+        },
+
+        coverageReporter: {
+            reporters: [{
+                type: 'html',
+                dir: '../target/coverage/'
+            }, { type: 'text' }]
         },
 
         customLaunchers: {
