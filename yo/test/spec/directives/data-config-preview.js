@@ -6,8 +6,13 @@ describe('Controller: DataConfigPreviewCtrl', function () {
     var win = {
         _: {
             debounce: function(fn) {
+                var args, thisArg;
+
                 return function() {
-                    fn();
+                    args = arguments;
+                    thisArg = this;
+
+                    fn.apply(thisArg, arguments);
                 };
             }
         },
