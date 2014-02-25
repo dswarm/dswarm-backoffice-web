@@ -8,34 +8,16 @@ env-install:
 	cd yo && bower install
 .PHONY: env-install
 
-
-## needs build after `bower install'
-
-yo/app/components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js: yo/app/components/angular-ui-bootstrap/package.json yo/app/components/angular-ui-bootstrap/Gruntfile.js
-	cd yo/app/components/angular-ui-bootstrap && npm install
-	cd yo/app/components/angular-ui-bootstrap && grunt build
-
-yo/app/components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js: yo/app/components/angular-ui-utils/package.json yo/app/components/angular-ui-utils/gruntFile.js
-	cd yo/app/components/angular-ui-utils && npm install
-	cd yo/app/components/angular-ui-utils && grunt build
-
-# shorthand
-
-ui-bootstrap: yo/app/components/angular-ui-bootstrap/dist/ui-bootstrap-0.5.0.js
-ui-utils: yo/app/components/angular-ui-utils/components/angular-ui-docs/build/ui-utils.js
-.PHONY: ui-bootstrap ui-utils
-
-
 # install all
 
-install: env-install ui-bootstrap ui-utils
+install: env-install
 .PHONY: install
 
 # update all
 update-files:
 	cd yo && bower update
 
-update: update-files ui-bootstrap ui-utils
+update: update-files
 .PHONY: update-files update
 
 
@@ -70,9 +52,9 @@ yo/publish:
 	mkdir yo/publish
 
 
-dist: yo/Gruntfile.js install | yo/publish
+dist: yo/Gruntfile.js clean install | yo/publish
 	cd yo && grunt build
-	rsync --delete --recursive yo/dist/ yo/publish
+	rsync --delete --verbose --recursive yo/dist/ yo/publish
 .PHONY: dist
 
 
