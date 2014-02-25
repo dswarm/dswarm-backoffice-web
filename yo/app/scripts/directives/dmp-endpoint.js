@@ -488,7 +488,7 @@ angular.module('dmpApp')
             }
         });
 
-        PubSub.subscribe($rootScope, 'projectDraftDiscarded', function () {
+        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'changeOutputModel'], function () {
             angular.forEach(components.pool, function(component) {
                 angular.forEach(component.endpoints, function(endpoint) {
                     jsP.deleteEndpoint(endpoint);
@@ -496,6 +496,8 @@ angular.module('dmpApp')
 
                 jsP.detachAll($(component.source));
             });
+
+            components.pool = [];
         });
 
         PubSub.subscribe($rootScope, 'paintPlumbs', function (mappings) {

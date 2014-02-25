@@ -15,7 +15,12 @@ angular.module('dmpApp')
 
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/target-schema-selector.html',
-                controller: 'TargetSchemaSelectorCtrl'
+                controller: 'TargetSchemaSelectorCtrl',
+                resolve: {
+                    project: function () {
+                        return $scope.project;
+                    }
+                }
             });
 
             modalInstance.result.then(function (selectedItem) {
