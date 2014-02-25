@@ -246,19 +246,17 @@ describe('Directive: Transformation', function () {
     beforeEach(module('dmpApp'));
 
     beforeEach(module(function($provide) {
-        $provide.value('Util', {
-            apiEndpoint: 'foo/'
-        });
+        $provide.value('ApiEndpoint', 'foo/');
     }));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$httpBackend_) {
+    beforeEach(inject(function($injector) {
 
-        $rootScope = _$rootScope_;
-        $compile = _$compile_;
-        $timeout = _$timeout_;
-        $httpBackend = _$httpBackend_;
+        $rootScope = $injector.get('$rootScope');
+        $compile = $injector.get('$compile');
+        $timeout = $injector.get('$timeout');
+        $httpBackend = $injector.get('$httpBackend');
 
-        $httpBackend.whenGET('views/directives/transformation.html').respond('<div><span>{{ internalName }}</span></div>');
+        $injector.get('$templateCache').put('views/directives/transformation.html', '<div></div>');
 
         scope = $rootScope.$new();
         scope.project = project;
@@ -274,11 +272,7 @@ describe('Directive: Transformation', function () {
     });
 
     it('should initialize the controller', function() {
-        $httpBackend.expectGET('views/directives/transformation.html');
-
         scope.$digest();
-        $httpBackend.flush();
-
         var elScope = element.scope();
 
         expect(elScope.internalName).toBe('Transformation Logic Widget');
@@ -288,12 +282,9 @@ describe('Directive: Transformation', function () {
     });
 
     it('should show the draft banner if the current project is a draft', function() {
-        $httpBackend.expectGET('views/directives/transformation.html');
         scope.projectIsDraft = true;
 
         scope.$digest();
-        $httpBackend.flush();
-
         var elScope = element.scope();
 
         expect(elScope.alerts.length).toBe(1);
@@ -301,11 +292,7 @@ describe('Directive: Transformation', function () {
     });
 
     it('should react to the connectionSelected Event', function() {
-        $httpBackend.expectGET('views/directives/transformation.html');
-
         scope.$digest();
-        $httpBackend.flush();
-
         var elScope = element.scope();
 
         expect(project.mappings.length).toBe(0);
@@ -352,11 +339,7 @@ describe('Directive: Transformation', function () {
     });
 
     it('should switch tabs of more connections are mapped', function() {
-        $httpBackend.expectGET('views/directives/transformation.html');
-
         scope.$digest();
-        $httpBackend.flush();
-
         var elScope = element.scope();
 
         expect(project.mappings.length).toBe(0);
@@ -412,5 +395,131 @@ describe('Directive: Transformation', function () {
         expect(elScope.activeMapping).toBe(project.mappings[1]);
 
     });
+
+    it('should format an attribute path for display', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(elScope.formatAttributePath(attributePaths[7])).toBe('feld › tf › type');
+        expect(elScope.formatAttributePath()).toBe('');
+        expect(elScope.formatAttributePath(false)).toBe('');
+        expect(elScope.formatAttributePath({})).toBe('');
+        expect(elScope.formatAttributePath({attributes: {}})).toBe('');
+        expect(elScope.formatAttributePath({attributes: []})).toBe('');
+    });
+
+    it('should send transformations', inject(function(Util, TaskResource, PubSub) {
+        var taskResult = [
+            {'foo': 'bar'}
+        ];
+        $httpBackend.expectPOST('foo/tasks').respond(taskResult);
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        var dataIdx = 0;
+        var data = connectionDatas[dataIdx];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        var payload = {
+            name: data.name,
+            description: 'A Transformation',
+            job: {
+                mappings: [project.mappings[dataIdx]]
+            },
+            input_data_model: project.input_data_model,
+            output_data_model: project.output_data_model
+        };
+        var payloadJson = Util.toJson(payload);
+
+        spyOn(TaskResource, 'execute').andCallThrough();
+        spyOn(PubSub, 'broadcast');
+
+        elScope.sendTransformation(elScope.tabs[dataIdx]);
+        $httpBackend.flush();
+
+        expect(TaskResource.execute).toHaveBeenCalledWith(payloadJson);
+        // JS, Y U NO WORK?
+        // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
+
+        expect(PubSub.broadcast.calls.length).toBe(1);
+        expect(PubSub.broadcast.calls[0].args.length).toBe(2);
+        expect(PubSub.broadcast.calls[0].args[0]).toBe('transformationFinished');
+        expect(PubSub.broadcast.calls[0].args[1].length).toBe(1);
+        expect(PubSub.broadcast.calls[0].args[1][0].foo).toBe('bar');
+    }));
+
+    it('should alert an error on wrong transformations', inject(function(TaskResource, $window) {
+        $httpBackend.expectPOST('foo/tasks').respond(500, {error: 'foo bar'});
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        var dataIdx = 0;
+        var data = connectionDatas[dataIdx];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        spyOn(TaskResource, 'execute').andCallThrough();
+        spyOn($window, 'alert');
+
+        elScope.sendTransformation(elScope.tabs[dataIdx]);
+        $httpBackend.flush();
+
+        expect($window.alert).toHaveBeenCalledWith('foo bar');
+    }));
+
+    it('should not send anything for the wrong tab', inject(function(TaskResource) {
+        scope.$digest();
+        var elScope = element.scope();
+
+        var dataIdx = 0;
+        var data = connectionDatas[dataIdx];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        spyOn(TaskResource, 'execute').andCallThrough();
+
+        elScope.sendTransformation({id: 9999});
+
+        expect(TaskResource.execute).not.toHaveBeenCalled();
+    }));
+
+    it('should send all transformations', inject(function(Util, TaskResource, PubSub) {
+        var taskResult = [
+            {'foo': 'bar'}
+        ];
+        $httpBackend.expectPOST('foo/tasks').respond(taskResult);
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        $rootScope.$broadcast('connectionSelected', connectionDatas[0]);
+        $rootScope.$broadcast('connectionSelected', connectionDatas[1]);
+
+        var payload = {
+            name: 'Transformations',
+            description: 'Transformations',
+            job: {
+                mappings: project.mappings
+            },
+            input_data_model: project.input_data_model,
+            output_data_model: project.output_data_model
+        };
+        var payloadJson = Util.toJson(payload);
+
+        spyOn(TaskResource, 'execute').andCallThrough();
+        spyOn(PubSub, 'broadcast');
+
+        elScope.sendTransformations();
+        $httpBackend.flush();
+
+        expect(TaskResource.execute).toHaveBeenCalledWith(payloadJson);
+        // JS, Y U NO WORK?
+        // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
+        expect(PubSub.broadcast.calls.length).toBe(1);
+        expect(PubSub.broadcast.calls[0].args.length).toBe(2);
+        expect(PubSub.broadcast.calls[0].args[0]).toBe('transformationFinished');
+        expect(PubSub.broadcast.calls[0].args[1].length).toBe(1);
+        expect(PubSub.broadcast.calls[0].args[1][0].foo).toBe('bar');
+    }));
 
 });

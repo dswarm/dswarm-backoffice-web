@@ -37,7 +37,7 @@ angular.module('dmpApp')
                     location: 1,            // at the source-end
                     width: 10,              // widest point of arrowhead
                     length: 12,             // longest span of arrowhead
-                    foldback: 0.75          // tailpoint is at 9 pixels (9 / 12)
+                    foldback: 0.75          // tailpoint is at 9 pixels (12 * 0.75 = 9)
                 }]
             ]
         } , options;
@@ -75,39 +75,8 @@ angular.module('dmpApp')
  * Provide an injectable instance of jsPlumb. Defaults to jsPlumb.getInstance
  * but can be mocked out (so, injectable...)
  */
-    .provider('jsPlumb', function() {
-        var instance = null;
-
-        /**
-         * Set up the default instance, which is pulled from the global jsPlumb
-         *   object.  Thus, you have to load some jsPlumb.js before setting up
-         *   jsPlumb.
-         */
-        function setDefaultInstance() {
-            /* global jsPlumb */
-            instance = jsPlumb.getInstance();
-        }
-
-        /**
-         * Set the instance to use as jsPlumb.  If you want to mock, use this.
-         * @param inst {Object}
-         */
-        this.setInstance = function (inst) {
-            instance = inst;
-        };
-
-        /**
-         * Provide the jsPlumb implementation.  This gets called during
-         *   injection-time and will set-up the default options if options wasn't
-         *   specified earlier.
-         * @returns {jsPlumb}
-         */
-        this.$get = function() {
-            if (!instance) {
-                setDefaultInstance();
-            }
-            return instance;
-        };
+    .factory('jsPlumb', function($window) {
+        return $window['jsPlumb'].getInstance();
     })
 /**
  * Provide the js-plumb service that is meant to be used by the application.
@@ -125,10 +94,11 @@ angular.module('dmpApp')
          */
         jsPlumb.getCachedData = function(elId) {
 
-            if($('#'+elId) && !$('#'+elId).is(':visible') && $('#'+elId).parent().hasClass('tree-leaf')) {
+            var $2 = $('#' + elId);
+            if($2 && !$2.is(':visible') && $2.parent().hasClass('tree-leaf')) {
 
-                $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
-                elId = $('#'+elId).closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
+                $2.closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
+                elId = $2.closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
 
             }
 

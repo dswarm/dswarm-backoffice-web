@@ -1,18 +1,54 @@
 'use strict';
 
 describe('Controller: ModelCtrl', function () {
-    var $httpBackend, $rootScope, scope, modelCtrl, schema;
+    var $httpBackend, $rootScope, $q;
+    var scope, modelCtrl, schema, expectModelCtrl, mockProjectJSON;
+    var shouldRejectModal;
 
     beforeEach(module('dmpApp', 'mockedSchema', 'mockedTargetSchema', 'mockedDataModel', 'mockedProject'));
 
     beforeEach(module(function($provide) {
         $provide.value('ApiEndpoint', '/dmp/');
+        $provide.value('jsP', {
+            detachEveryConnection: angular.noop
+        });
+        $provide.value('schemaParser', {
+            fromDomainSchema: angular.identity
+        });
+        $provide.value('localStorageService', {
+            get: function(id) {
+                if (id === 'project.draft.9') {
+                    var mockProjectJSON2 = angular.copy(mockProjectJSON);
+                    mockProjectJSON2.id = 9;
+                    return  mockProjectJSON2;
+                }
+                return null;
+            },
+            set: angular.noop,
+            remove: angular.noop
+        });
+        $provide.value('$modal', {
+            open: function() {
+                var defer = $q.defer();
+                if (shouldRejectModal) {
+                    defer.reject();
+                } else {
+                    defer.resolve();
+                }
+                return {
+                    result: defer.promise
+                };
+            }
+        });
     }));
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($injector) {
         $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
+        $q = $injector.get('$q');
+
+        shouldRejectModal = false;
 
         scope = $rootScope.$new();
 
@@ -26,15 +62,26 @@ describe('Controller: ModelCtrl', function () {
         $httpBackend.whenGET('/dmp/resources/1/configurations/1/schema').respond($injector.get('mockSchemaSimpleJSON'));
         $httpBackend.whenGET('/dmp/resources/1').respond($injector.get('mockSchemaSimpleJSON'));
 
-        $httpBackend.whenGET('/dmp/projects').respond($injector.get('mockProjectJSON'));
-        $httpBackend.whenGET('/dmp/projects/1').respond($injector.get('mockProjectJSON'));
+        mockProjectJSON = $injector.get('mockProjectJSON');
+        $httpBackend.whenGET('/dmp/projects').respond(mockProjectJSON);
+        $httpBackend.whenGET('/dmp/projects/1').respond(mockProjectJSON);
+        $httpBackend.whenGET('/dmp/projects/6').respond(mockProjectJSON);
+        $httpBackend.whenPUT('/dmp/projects/6').respond(mockProjectJSON);
 
         var $controller = $injector.get('$controller');
 
-        modelCtrl = function () {
+        modelCtrl = function (projectId) {
             return $controller('ModelCtrl', {
-                '$scope': scope
+                '$scope': scope,
+                '$routeParams': {projectId: projectId}
             });
+        };
+
+        expectModelCtrl = function (projectId) {
+            $httpBackend.expectGET('/dmp/projects');
+            var ctrl = modelCtrl(projectId);
+            $httpBackend.flush();
+            return ctrl;
         };
 
     }));
@@ -45,8 +92,7 @@ describe('Controller: ModelCtrl', function () {
     }));
 
     it('should have a ModelCtrl controller', function() {
-        var ModelCtrl = modelCtrl();
-        $httpBackend.flush();
+        var ModelCtrl = expectModelCtrl();
         expect(ModelCtrl).not.toBe(null);
     });
 
@@ -109,18 +155,230 @@ describe('Controller: ModelCtrl', function () {
     });
 
     it('should load source data from server', function() {
-
-        $httpBackend.expectGET('/dmp/projects');
-
-        modelCtrl();
+        expectModelCtrl();
 
         scope.loadProjectData(1);
-
         $rootScope.$digest();
         $httpBackend.flush();
 
         expect(scope.project.input_data_model.id).toBe(34);
-
     });
 
+    it('should close alters', function() {
+        expectModelCtrl();
+
+        scope.alerts.push('alert1');
+        scope.alerts.push('alert2');
+
+        scope.closeAlert(0);
+        expect(scope.alerts.length).toBe(1);
+
+        scope.closeAlert();
+        expect(scope.alerts.length).toBe(1);
+
+        scope.closeAlert(1);
+        expect(scope.alerts.length).toBe(1);
+    });
+
+    it('should set the output data model', inject(function($timeout, PubSub) {
+        expectModelCtrl();
+
+        spyOn(PubSub, 'broadcast');
+
+        scope.setOutputDataModel({schema: 'foo'});
+
+        expect(scope.project.output_data_model).toEqual({schema: 'foo'});
+        expect(scope.project._$output_data_model_schema).toEqual('foo');
+        expect(scope.isOutputDataModelLoaded).toBe(true);
+
+        expect(PubSub.broadcast).not.toHaveBeenCalled();
+        $timeout.flush();
+
+        expect(PubSub.broadcast).toHaveBeenCalledWith('outputDataSelected', {});
+    }));
+
+    it('should set the output data model via schema', inject(function($timeout, PubSub) {
+        expectModelCtrl();
+
+        spyOn(PubSub, 'broadcast');
+
+        scope.setOutputSchema('foo');
+
+        expect(scope.project.output_data_model).toEqual({schema: 'foo'});
+        expect(scope.project._$output_data_model_schema).toEqual('foo');
+        expect(scope.isOutputDataModelLoaded).toBe(true);
+
+        expect(PubSub.broadcast).not.toHaveBeenCalled();
+        $timeout.flush();
+
+        expect(PubSub.broadcast).toHaveBeenCalledWith('outputDataSelected', {});
+    }));
+
+
+    it('should detach every connection on a location change', inject(function(jsP) {
+        expectModelCtrl();
+
+        spyOn(jsP, 'detachEveryConnection');
+
+        scope.$emit('$locationChangeStart', 'doo');
+
+        expect(jsP.detachEveryConnection).toHaveBeenCalled();
+    }));
+
+    it('should load a project from cache', inject(function(localStorageService) {
+
+        spyOn(localStorageService, 'get').andCallThrough();
+
+        expectModelCtrl();
+
+        var foo = jasmine.createSpyObj('foo', ['callback']);
+
+        scope.loadProjectData(9, foo.callback);
+
+        expect(localStorageService.get).toHaveBeenCalledWith('project.draft.9');
+        expect(foo.callback).toHaveBeenCalled();
+    }));
+
+    it('should save a project', function() {
+        expectModelCtrl();
+
+        $httpBackend.expectPUT('/dmp/projects/6');
+
+        scope.onSaveProjectClick();
+
+        $httpBackend.flush();
+        expect(scope.projectIsDraft).toBe(false);
+    });
+
+    it('should save a project from an alert button', function() {
+        expectModelCtrl();
+
+        scope.alerts.push({name: 'foo'});
+
+        $httpBackend.expectPUT('/dmp/projects/6');
+
+        scope.onSaveProjectClick(0);
+
+        expect(scope.alerts[0].busy).toBe(true);
+
+        $httpBackend.flush();
+        expect(scope.projectIsDraft).toBe(false);
+        expect(scope.alerts.length).toBe(0);
+
+        // ----
+
+        scope.projectIsDraft = true;
+
+        $httpBackend.expectPUT('/dmp/projects/6');
+
+        scope.onSaveProjectClick(0);
+
+        expect(scope.alerts.length).toBe(0);
+
+        $httpBackend.flush();
+        expect(scope.projectIsDraft).toBe(false);
+        expect(scope.alerts.length).toBe(0);
+
+        // ----
+
+        scope.projectIsDraft = true;
+        scope.alerts.push({name: 'foo', busy: true});
+
+        scope.onSaveProjectClick(0);
+
+        expect(scope.projectIsDraft).toBe(true);
+        expect(scope.alerts.length).toBe(1);
+    });
+
+    it('should discard a project', function() {
+//        $templateCache.put('views/controller/confirm-discard-draft.html', '<div></div>');
+        expectModelCtrl();
+
+        $httpBackend.expectGET('/dmp/projects/6');
+
+        scope.onDiscardDraftClick();
+        scope.$apply();
+
+        $httpBackend.flush();
+
+        expect(scope.projectIsDraft).toBe(false);
+    });
+
+    it('should discard a project from an alert button', function() {
+        expectModelCtrl();
+
+        scope.alerts.push({name: 'foo'});
+
+        $httpBackend.expectGET('/dmp/projects/6');
+
+        scope.onDiscardDraftClick(0);
+        scope.$apply();
+
+        expect(scope.alerts[0].busy).toBe(true);
+
+        $httpBackend.flush();
+        expect(scope.projectIsDraft).toBe(false);
+        expect(scope.alerts.length).toBe(0);
+
+        // ----
+
+        scope.projectIsDraft = true;
+
+        $httpBackend.expectGET('/dmp/projects/6');
+
+        scope.onDiscardDraftClick(0);
+        scope.$apply();
+
+        expect(scope.alerts.length).toBe(0);
+
+        $httpBackend.flush();
+        expect(scope.projectIsDraft).toBe(false);
+        expect(scope.alerts.length).toBe(0);
+
+        // ----
+
+        scope.projectIsDraft = true;
+        scope.alerts.push({name: 'foo', busy: true});
+
+        scope.onDiscardDraftClick(0);
+        scope.$apply();
+
+        expect(scope.projectIsDraft).toBe(true);
+        expect(scope.alerts.length).toBe(1);
+    });
+
+    it('should leave the alter open, but unbusy when the discard was rejected', function() {
+        shouldRejectModal = true;
+        var previousDraftStatus;
+
+        expectModelCtrl();
+
+        previousDraftStatus = scope.projectIsDraft;
+        scope.onDiscardDraftClick();
+        scope.$apply();
+
+        expect(scope.projectIsDraft).toBe(previousDraftStatus);
+
+        // ----
+
+        scope.alerts.push({name: 'foo'});
+
+        previousDraftStatus = scope.projectIsDraft;
+        scope.onDiscardDraftClick(0);
+        scope.$apply();
+
+        expect(scope.alerts[0].busy).toBe(false);
+        expect(scope.projectIsDraft).toBe(previousDraftStatus);
+
+        // ----
+
+        scope.alerts = [];
+
+        previousDraftStatus = scope.projectIsDraft;
+        scope.onDiscardDraftClick(0);
+        scope.$apply();
+
+        expect(scope.alerts.length).toBe(0);
+        expect(scope.projectIsDraft).toBe(previousDraftStatus);
+    });
 });

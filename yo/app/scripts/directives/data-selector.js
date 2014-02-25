@@ -33,7 +33,6 @@ angular.module('dmpApp')
     .directive('dataselector', function () {
         return {
             restrict: 'E',
-            replace: true,
             scope: true,
             templateUrl: 'views/directives/data-selector.html',
             controller: 'DataSelectorCtrl'

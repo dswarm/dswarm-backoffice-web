@@ -72,6 +72,6 @@
 <span ng-if="selectedProject.length" class="selected-set-options">
     Selected project ({{ selectedProject.0.name }}):
 
-    <a ng-href="#/model/{{ selectedProject.0.id }}"><button class="btn btn-default">Load for modelling</button></a>
-    <a ng-click="onProjectDeleteClick(selectedProject)"><button class="btn btn-default">Delete</button></a>
+    <a href="#/model/{{ selectedProject.0.id }}" class="btn btn-primary">Load for modelling</a>
+    <a ng-click="onProjectDeleteClick(selectedProject)" class="btn btn-default">Delete</a>
 </span>

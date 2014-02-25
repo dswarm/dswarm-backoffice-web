@@ -28,21 +28,24 @@ angular.module('mockedDataConfig', [])
             "column_names": "columnN",
             "storage_type": "csv"
         }
-    },
-    {
-        "id": 5,
-        "resources": [
-            {
-                "id": 2
+    })
+    .value('mockDataResourceGetJson', {
+        "id": 42,
+        configurations: [{
+            id: 1337,
+            name: 'foo',
+            description: 'Lorem ipsum dolor sit amet.',
+            parameters: {
+                ignore_lines: 0,
+                discard_rows: 2,
+                at_most_rows: 5,
+                column_delimiter: "^",
+                escape_character: "\\\\",
+                quote_character: "\\\"",
+                column_names: "columnN",
+                storage_type: "csv"
             }
-        ],
-        "parameters": {
-            "column_delimiter": ";",
-            "escape_character": "\\\\",
-            "quote_character": "\\\"",
-            "column_names": "columnN",
-            "storage_type": "csv"
-        }
+        }]
     })
     .value('mockDataConfigXMLResource', {
         id: 42,
@@ -62,4 +65,4 @@ angular.module('mockedDataConfig', [])
                 storage_type: 'xml'
             }
         }]
-    })
+    });

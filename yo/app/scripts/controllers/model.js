@@ -29,7 +29,7 @@ angular.module('dmpApp')
 
         $scope.closeAlert = function(idx) {
             if (angular.isDefined(idx) && $scope.alerts.length > idx) {
-                $scope.alerts.splice(idx);
+                $scope.alerts.splice(idx, 1);
             }
         };
 
