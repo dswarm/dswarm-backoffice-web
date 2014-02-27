@@ -58,7 +58,7 @@ angular.module('dmpApp')
 
         $scope.processOutputDataModel = function() {
 
-            if($scope.project.output_data_model.id) {
+            if(loDash.size($scope.project.output_data_model) > 0) {
 
                 $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
