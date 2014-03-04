@@ -25,12 +25,17 @@ xdescribe('Directive: DmpEndpoint', function () {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
 
-        sourceScope = $rootScope.$new();
+        var parentScope = $rootScope.$new();
+        parentScope.data = {
+            _$path_id: 20
+        };
+
+        sourceScope = parentScope.$new();
         sourceScope.opts = {
             'foo': 'bar'
         };
-        targetScope = $rootScope.$new();
-        sourceScope.opts = {
+        targetScope = parentScope.$new();
+        targetScope.opts = {
             'foo': 'bar'
         };
 

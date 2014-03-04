@@ -1,75 +1,16 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', function ($compile, $window, $rootScope, $modal, $q, jsP, GUID, Util, loDash, PubSub) {
-        var components = {
-                active: null,
-                pool: []
-            },
-            sourceScope = null,
+    .directive('dmpEndpoint', function ($rootScope, $modal, $q, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub) {
+        var sourceScope = null,
             elements = {},
             sourceMap = {},
             targetMap = {},
             unknownMap = {};
 
-        //noinspection FunctionWithInconsistentReturnsJS
-        function activate(connection, dontFire) {
+        // ordering of methods is roughly equivalent to the order of execution during a typical workflow
 
-            if(connection.getLabel() === null) {
-                return true;
-            }
-
-            if(isConnectionAdditionalInput(connection)) {
-                activate(getTargetConnectionFromPool(connection));
-            } else {
-
-                if (components.pool.indexOf(connection) === -1) {
-                    components.pool.push(connection);
-                }
-
-                components.active = connection;
-                deSelectAll();
-                doSelect(connection);
-
-                var name = connection.getLabel(),
-                    source = getData(connection.source),
-                    target = getData(connection.target);
-
-                if(!connection.mappingId) {
-                    connection.mappingId =  new Date().getTime()*-1;
-                }
-
-                if (!dontFire) {
-                    PubSub.broadcast('connectionSelected', {
-                        internal_id : source.id + ':' + target.id,
-                        connection_id : connection.id,
-                        mapping_id : connection.mappingId,
-                        name: name,
-                        inputAttributePath: source,
-                        outputAttributePath: target,
-                        additionalInput : getDatas(connection.additionalInput)
-                    });
-                }
-
-            }
-
-        }
-
-        function addInputToComponent(newInputComponent, baseComponent) {
-
-            newInputComponent.connection.setLabel(' ');
-            var labelOverlay = newInputComponent.connection.getLabelOverlay();
-            labelOverlay.addClass('mapping-label');
-
-            if(!baseComponent.additionalInput) {
-                baseComponent.additionalInput = [];
-            }
-
-            baseComponent.additionalInput.push(newInputComponent);
-
-        }
-
-        function addSource(scope) {
+        function selectSource(scope) {
 
             if (sourceScope && sourceScope.$id === scope.$id && sourceScope.isSelected) {
                 // clicked again, deselect
@@ -87,7 +28,7 @@ angular.module('dmpApp')
             sourceScope.isSelected = true;
         }
 
-        function addTarget(scope) {
+        function selectTarget(scope) {
             if (sourceScope === null) {
                 return;
             }
@@ -105,46 +46,8 @@ angular.module('dmpApp')
             });
         }
 
-        function askForEndpoint(component) {
-
-            var modalInstance = $modal.open({
-                templateUrl: 'views/modals/dmp-endpoint-selector.html',
-                controller: 'DmpEndpointSelectorCtrl',
-                resolve: {
-                    endpointSet: function () {
-                        return getTargetPoolComponents(component);
-                    }
-                }
-            });
-
-            return modalInstance.result;
-        }
-
         function connectionParamPromise(component, scope) {
-            var defer = $q.defer();
-            var baseParams = {
-                component: component,
-                sourceId: sourceScope.guid,
-                targetId: scope.guid,
-                sourceOptions: scope.jspSourceOptions,
-                targetOptions: scope.jspTargetOptions
-            };
-
-            if (isTargetInPool(component)) {
-
-                askForEndpoint(component).then(function (target) {
-
-                    if (target !== null) {
-                        defer.reject(angular.extend({mergeTo: target}, baseParams));
-                    } else {
-                        defer.resolve(angular.extend({active: true, label: true}, baseParams));
-                    }
-                });
-            } else {
-                defer.resolve(angular.extend({active: true, label: true}, baseParams));
-            }
-
-            return defer.promise;
+            return endpointSelector.connectionParamPromise(component, sourceScope, scope, elements);
         }
 
         function connectComponent(parameters) {
@@ -177,7 +80,7 @@ angular.module('dmpApp')
 
                 if (label !== null) {
 
-                    setLabel(newConnection, label);
+                    endpointLabel.set(newConnection, label);
                 }
 
                 if(active) {
@@ -190,7 +93,7 @@ angular.module('dmpApp')
             }
 
             if(label === true) {
-                reLabel().then(continuation, loDash.bind(connectionDefer.reject, connectionDefer));
+                endpointLabel.ask().then(continuation, connectionDefer.reject);
             } else if(typeof label === 'string') {
                 continuation(label);
             } else {
@@ -200,45 +103,54 @@ angular.module('dmpApp')
             return connectionDefer.promise;
         }
 
-        function deSelect(connection) {
-            setColor(connection, 'black');
-
-            angular.forEach(connection.additionalInput, function(additionalInputEntry) {
-                setColor(additionalInputEntry.connection, 'black');
+        function mergeComponent(parameters) {
+            var connectParams = angular.extend({}, parameters, {
+                active: false,
+                label: false
             });
 
-            if(connection.getLabelOverlay()) {
-                connection.getLabelOverlay().removeClass('mapping-active');
+            connectComponent(connectParams).then(function(newConnection) {
+
+                endpointSelector.removeFromPool(newConnection);
+                var targetConnection = endpointSelector.getFromPool(parameters.mergeTo[0].id);
+
+                addInputToComponent(parameters.component, targetConnection);
+                activate(newConnection);
+            });
+        }
+
+        function addInputToComponent(newInputComponent, baseComponent) {
+
+            newInputComponent.connection.setLabel(' ');
+            var labelOverlay = newInputComponent.connection.getLabelOverlay();
+            labelOverlay.addClass('mapping-label');
+
+            if(!baseComponent.additionalInput) {
+                baseComponent.additionalInput = [];
             }
-            connection.getConnector().removeClass('mapping-active');
+
+            baseComponent.additionalInput.push(newInputComponent);
+
         }
 
-        function deSelectAll() {
-            var active = components.active;
-            angular.forEach(components.pool, function(comp) {
-                if (comp !== active) {
-                    deSelect(comp);
-                }
-            });
-        }
+        function activate(connection, dontFire) {
+            var conn = endpointSelector.activate(connection);
+            if (conn && !dontFire) {
 
-        function doSelect(connection) {
-            setColor(connection, 'red');
+                var name = conn.getLabel(),
+                    source = getData(conn.source),
+                    target = getData(conn.target);
 
-            angular.forEach(connection.additionalInput, function(additionalInputEntry) {
-                setColor(additionalInputEntry.connection, 'red');
-            });
-
-            if(connection.getLabelOverlay()) {
-                connection.getLabelOverlay().addClass('mapping-active');
+                PubSub.broadcast('connectionSelected', {
+                    internal_id: source.id + ':' + target.id,
+                    connection_id: conn.id,
+                    mapping_id: conn.mappingId,
+                    name: name,
+                    inputAttributePath: source,
+                    outputAttributePath: target,
+                    additionalInput: getDatas(conn.additionalInput)
+                });
             }
-            connection.getConnector().addClass('mapping-active');
-
-        }
-
-        function findInPool(selector) {
-
-            return loDash.find(components.pool, selector);
         }
 
         function getData(c) {
@@ -270,70 +182,6 @@ angular.module('dmpApp')
             });
         }
 
-        function getPoolEntryById(id) {
-
-            return findInPool({id: id});
-        }
-
-        function getTargetPoolComponents(component) {
-
-            return Util.collect(components.pool, function(poolEntry) {
-                if(component.targetId === poolEntry.targetId) {
-
-                    var sourceScope = elements[component.sourceId].scope();
-                    var targetScope = elements[component.targetId].scope();
-
-                    return {
-                        id : poolEntry.id,
-                        label: poolEntry.getLabel(),
-                        sourceName: sourceScope.data.name,
-                        sourceData: sourceScope.data,
-                        targetName : targetScope.data.name,
-                        targetData : targetScope.data
-                    };
-                }
-                return null;
-            });
-
-        }
-
-        function getTargetConnectionFromPool(component) {
-
-            return findInPool({targetId: component.targetId});
-        }
-
-        function isConnectionAdditionalInput(connection) {
-
-            return !!findInPool(function(poolEntry) {
-                return angular.isDefined(loDash.find(poolEntry.additionalInput || [], {connection: connection}));
-            });
-        }
-
-        function isTargetInPool(component) {
-
-            return !!getTargetConnectionFromPool(component);
-        }
-
-        function isLabelValid(label) {
-            return angular.isString(label) && label.length >= 5;
-        }
-
-        function mergeComponent(parameters) {
-            var connectParams = angular.extend({}, parameters, {
-                active: false,
-                label: false
-            });
-
-            connectComponent(connectParams).then(function(newConnection) {
-
-                var targetConnection = getPoolEntryById(parameters.mergeTo[0].id);
-
-                removeFromPool(newConnection);
-                addInputToComponent(parameters.component, targetConnection);
-                activate(newConnection);
-            });
-        }
-
         function realPath(segments, scp) {
             if (angular.isUndefined(scp.data) || scp.data.name === 'record') {
                 return segments;
@@ -349,66 +197,6 @@ angular.module('dmpApp')
             return realPath([currentSegment].concat(segments), scp.$parent);
         }
 
-        function reLabel(promptText, helpText) {
-            var text = promptText || 'Name this connection',
-                help = helpText || 'The name has to be at least 5 characters long';
-
-            var labelDefer = $q.defer();
-
-            var modalInstance = $modal.open({
-                templateUrl: 'views/modals/re-label-connection.html',
-                controller: ['$scope', function($scope) {
-                    $scope.text = text;
-                    $scope.help = help;
-
-                    $scope.isValid = function(label) {
-                        return isLabelValid(label);
-                    };
-
-                    $scope.close = function(label) {
-                        if (isLabelValid(label)) {
-                            $scope.$close(label);
-                        }
-                    };
-                }]
-            });
-
-            modalInstance.result.then(function (label) {
-
-                if (isLabelValid(label)) {
-                    labelDefer.resolve(label);
-                } else {
-                    labelDefer.reject('invalid');
-                }
-            }, function (reason) {
-
-                labelDefer.reject(reason);
-            });
-
-
-
-            return labelDefer.promise;
-        }
-
-        function removeFromPool(connection) {
-
-            components.pool = loDash.filter(components.pool, function(poolEntry) {
-                return connection !== poolEntry;
-            });
-        }
-
-        function setColor(connection, color) {
-            connection.endpoints[0].setPaintStyle({fillStyle: color});
-            connection.setPaintStyle({strokeStyle: color});
-        }
-
-        function setLabel(connection, label) {
-            connection.setLabel(label);
-
-            var labelOverlay = connection.getLabelOverlay();
-            labelOverlay.addClass('mapping-label');
-        }
-
 
         // === Callbacks ===
 
@@ -416,7 +204,7 @@ angular.module('dmpApp')
 
             // When is this executed? That is, when gets beforeDrop fired?
 
-            if (isTargetInPool(component)) {
+            if (endpointSelector.inPool(component)) {
 
                 var modalInstance = $modal.open({
                     templateUrl: 'views/modals/dmp-endpoint-selector.html',
@@ -429,26 +217,25 @@ angular.module('dmpApp')
 
                     if (target === null) {
 
-                        newConnection = jsP.connect($('#' + component.sourceId), $('#' + component.targetId));
+                        newConnection = jsP.connect(elements[component.sourceId], elements[component.targetId]);
                         newConnection.setLabel(' ');
 
                         component.connection = newConnection;
 
-                        reLabel().then(function(label){
-                            setLabel(component.connection, label);
+                        endpointLabel.ask().then(function(label){
+                            endpointLabel.set(component.connection, label);
                         });
 
                         activate(component.connection, true);
 
-
                     } else {
 
-                        var targetConnection = getTargetConnectionFromPool(component);
+                        var targetConnection = endpointSelector.getTargetFromPool(component.targetId);
 
-                        newConnection = jsP.connect($('#' + component.sourceId), $('#' + component.targetId));
+                        newConnection = jsP.connect(elements[component.sourceId], elements[component.targetId]);
                         newConnection.setLabel(' ');
 
-                        removeFromPool(newConnection);
+                        endpointSelector.removeFromPool(newConnection);
 
                         component.connection = newConnection;
 
@@ -469,8 +256,8 @@ angular.module('dmpApp')
             } else {
 
                 if (component.scope === 'schema') {
-                    reLabel().then(function(label){
-                        setLabel(component.connection, label);
+                    endpointLabel.ask().then(function(label){
+                        endpointLabel.set(component.connection, label);
                     });
                 }
 
@@ -501,20 +288,19 @@ angular.module('dmpApp')
         }
 
         function onProjectDiscarded() {
-            angular.forEach(components.pool, function (component) {
+            endpointSelector.foreach(function (component) {
                 angular.forEach(component.endpoints, function (endpoint) {
                     jsP.deleteEndpoint(endpoint);
                 });
 
                 jsP.detachAll($(component.source));
             });
-
-            components.pool = [];
+            endpointSelector.reset();
         }
 
         function onPaintPlumbs(mappings) {
 
-            components.pool = [];
+            endpointSelector.reset();
 
             angular.forEach(mappings, function (mapping) {
 
@@ -553,20 +339,10 @@ angular.module('dmpApp')
         }
 
         function onConnectionSwitched(data) {
-            var pool = components.pool
-                , i = 0
-                , id = data.id
-                , connection
-                , found;
 
-            for (; !found && (connection = pool[i++]);) {
-                if (connection.id === id) {
-                    found = connection;
-                }
-            }
-
-            if (found) {
-                activate(found, true);
+            var connection = endpointSelector.getFromPool(data.id);
+            if (connection) {
+                activate(connection, true);
             }
         }
 
@@ -620,7 +396,7 @@ angular.module('dmpApp')
                         // jsP.unmakeTarget(iElement);
 
                         iElement.bind('click', function() {
-                            addSource(scope);
+                            selectSource(scope);
                         });
                     }
 
@@ -630,7 +406,7 @@ angular.module('dmpApp')
                         // jsP.makeTarget(iElement, null, targetOpts);
 
                         iElement.bind('click', function() {
-                            addTarget(scope);
+                            selectTarget(scope);
                         });
                     }
 

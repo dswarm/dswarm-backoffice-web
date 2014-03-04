@@ -17,7 +17,7 @@ angular.module('dmpApp')
 /**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', function (loDash, ApiEndpoint) {
+    .factory('Util', function (loDash, ApiEndpoint, $q, $timeout) {
 
         function latestBy(list, property) {
             var prop = property || 'id';
@@ -65,6 +65,26 @@ angular.module('dmpApp')
          */
         function collect(seq, func, thisObj) {
             return loDash(seq).map(func, thisObj).filter(function(el) {return el !== undefined && el !== null;}).valueOf();
+        }
+
+        /**
+         * Promise, that will be resolved or rejected by the original Promise,
+         *  but that times out after the given timeout.
+         *
+         * @param promise {{then:function(), catch: function(), finally: function()}} The original promise
+         * @param timeout {Number}  The timeout in milliseconds
+         * @returns {{then:function(), catch: function(), finally: function()}}
+         */
+        function timedoutPromise(promise, timeout) {
+            var defer = $q.defer();
+
+            promise.then(defer.resolve, defer.reject);
+
+            $timeout(function() {
+                defer.reject('timeout');
+            }, timeout);
+
+            return defer.promise;
         }
 
         //====================================
@@ -118,6 +138,7 @@ angular.module('dmpApp')
             latestBy: latestBy,
             mapResources: mapResources,
             collect: collect,
+            timedoutPromise: timedoutPromise,
             apiEndpoint: ApiEndpoint,
             toJson : toJson
         };

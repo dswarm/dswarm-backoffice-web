@@ -37,25 +37,18 @@ describe('Controller: DmpEndpointSelector', function () {
         expect(scope.schemaListOptions).toEqual({
             data: 'endpointSet',
             columnDefs: [{
-                field:'targetName',
-                displayName:'Name'
+                field : 'sourceName',
+                displayName : 'Source'
+            }, {
+                field : 'targetName',
+                displayName : 'Target'
+            }, {
+                field : 'label',
+                displayName : 'Name'
             }],
             enableColumnResize: false,
             selectedItems: [],
             multiSelect: false
         });
-    });
-
-    it('should interact with the modalInstance', function() {
-        dmpEndpointSelector();
-
-        scope.onSelectClick();
-        expect(modalInstance.close).toHaveBeenCalledWith([]);
-
-        scope.onNewClick();
-        expect(modalInstance.close).toHaveBeenCalledWith(null);
-
-        scope.close();
-        expect(modalInstance.dismiss).toHaveBeenCalledWith('cancel');
     });
 });
