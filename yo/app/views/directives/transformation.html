@@ -12,9 +12,9 @@
            ng-show="activeMapping.input_attribute_paths[0]"
            connect-with="{'.function-target': activeMapping.output_attribute_path}"
            connect-when="activeMapping.input_attribute_paths[0]"
-           ng-click="onFilterClick(activeMapping.input_attribute_paths[0])">
+           ng-click="onFilterClick(activeMapping.input_attribute_paths[0].attribute_path)">
         <div>
-          <span>{{ formatAttributePath(activeMapping.input_attribute_paths[0]) }}</span>
+          <span>{{ formatAttributePath(activeMapping.input_attribute_paths[0].attribute_path) }}</span>
         </div>
       </div>
       <ul class="function-sortable" ng-show="showSortable" ng-class="{bigger:!activeMapping._$components.length}">
@@ -33,7 +33,7 @@
       <div class="function component function-target"
            ng-show="activeMapping.output_attribute_path">
         <div>
-          <span>{{ formatAttributePath(activeMapping.output_attribute_path) }}</span>
+          <span>{{ formatAttributePath(activeMapping.output_attribute_path.attribute_path) }}</span>
         </div>
       </div>
     </div>
