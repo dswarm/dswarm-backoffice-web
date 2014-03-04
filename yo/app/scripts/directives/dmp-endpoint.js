@@ -513,7 +513,7 @@ angular.module('dmpApp')
 
                     var scp = angular.element(elem).scope();
 
-                    if(scp.child && scp.child.id && scp.child.id === mapping.input_attribute_paths[0].attributes[0].id) {
+                    if(scp.child && scp.child.id && scp.child.id === mapping.input_attribute_paths[0].attribute_path.attributes[0].id) {
                         inputComponent = angular.element($(elem).find('i.jsPanchorIcon').first()).scope();
                     }
 
@@ -523,7 +523,7 @@ angular.module('dmpApp')
 
                     var scp = angular.element(elem).scope();
 
-                    if(scp.child && scp.child.id && scp.child.id === mapping.output_attribute_path.attributes[0].id) {
+                    if(scp.child && scp.child.id && scp.child.id === mapping.output_attribute_path.attribute_path.attributes[0].id) {
                         outputComponent = angular.element($(elem).find('i.jsPanchorIcon').first()).scope();
                     }
 
