@@ -304,8 +304,8 @@ angular.module('dmpApp')
 
             angular.forEach(mappings, function (mapping) {
 
-                var inputScopes = sourceMap[mapping.input_attribute_paths[0].id] || [],
-                    outputScopes = targetMap[mapping.output_attribute_path.id] || [];
+                var inputScopes = sourceMap[mapping.input_attribute_paths[0].attribute_path.id] || [],
+                    outputScopes = targetMap[mapping.output_attribute_path.attribute_path.id] || [];
 
                 angular.forEach(inputScopes, function (inputScope) {
                     angular.forEach(outputScopes, function (outputScope) {
