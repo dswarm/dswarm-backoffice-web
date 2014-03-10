@@ -219,4 +219,20 @@ describe('Service: endpointSelector', function () {
         expect(instances).toBe(0);
     }));
 
+    it('should add a connection from the pool', inject(function (endpointLabel) {
+        spyOn(endpointLabel, 'activate');
+
+        var fakeConnection = makeFakeConnection();
+
+        endpointSelector.activate(fakeConnection);
+
+        var instances = countPoolSize();
+        expect(instances).toBe(1);
+
+        endpointSelector.toPool(fakeConnection);
+
+        instances = countPoolSize();
+        expect(instances).toBe(2);
+    }));
+
 });
