@@ -123,12 +123,12 @@ angular.module('dmpApp')
             }
         });
 
-        PubSub.subscribe($rootScope, 'LVL-DRAG-START', function() {
+        PubSub.subscribe($rootScope, 'DRAG-START', function() {
             isDraggingToGrid = true;
             createDropPlaceholder();
         });
 
-        PubSub.subscribe($rootScope, 'LVL-DRAG-END', function() {
+        PubSub.subscribe($rootScope, 'DRAG-END', function() {
             isDraggingToGrid = false;
             removeDropPlaceholder();
         });
