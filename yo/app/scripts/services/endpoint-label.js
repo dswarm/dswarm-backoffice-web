@@ -65,10 +65,6 @@ angular.module('dmpApp')
                 }
             }, function (reason) {
 
-                if (reason === 'timeout') {
-                    modalInstance.close();
-                }
-
                 labelDefer.reject(reason);
             });
 
