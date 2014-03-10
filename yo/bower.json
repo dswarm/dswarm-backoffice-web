@@ -21,7 +21,8 @@
     "json3": "~3.3.0",
     "lodash": "~2.4.1",
     "ngprogress": "~1.0.3",
-    "angular-localForage": "~0.0.1"
+    "angular-localForage": "~0.0.1",
+    "angular-gridster" : "*"
   },
   "devDependencies": {
     "angular-mocks": "1.2.13",

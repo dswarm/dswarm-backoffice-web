@@ -153,6 +153,11 @@ angular.module('dmpApp')
             return !!getTargetFromPool(component.targetId);
         }
 
+        function toPool(connection) {
+
+            pool.push(connection);
+        }
+
         function getFromPool(id) {
 
             return findInPool({id: id});
@@ -187,6 +192,7 @@ angular.module('dmpApp')
             getTargetFromPool: getTargetFromPool,
             removeFromPool: removeFromPool,
             foreach: foreach,
-            reset: reset
+            reset: reset,
+            toPool: toPool
         };
     });

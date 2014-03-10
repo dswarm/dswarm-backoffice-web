@@ -29,6 +29,7 @@ module.exports = function(config) {
             'components/ngprogress/build/ngProgress.js',
             'components/jsPlumb/dist/js/jquery.jsPlumb.js',
             'components/angular-grid/ng-grid-2.0.7.debug.js',
+            'components/angular-gridster/app/scripts/gridster.js',
             'scripts/*.js',
             'scripts/**/*.js',
 

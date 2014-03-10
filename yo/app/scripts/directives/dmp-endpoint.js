@@ -289,13 +289,23 @@ angular.module('dmpApp')
 
         function onProjectDiscarded() {
             endpointSelector.foreach(function (component) {
-                angular.forEach(component.endpoints, function (endpoint) {
-                    jsP.deleteEndpoint(endpoint);
-                });
 
-                jsP.detachAll($(component.source));
+                removePlumbs(component);
+
+                angular.forEach(component.additionalInput, function(additionalInput) {
+                    removePlumbs(additionalInput.connection);
+                });
             });
             endpointSelector.reset();
+        }
+
+        function removePlumbs(connection) {
+
+            angular.forEach(connection.endpoints, function (endpoint) {
+                jsP.deleteEndpoint(endpoint);
+            });
+
+            jsP.detachAll($(connection.source));
         }
 
         function onPaintPlumbs(mappings) {
@@ -304,21 +314,49 @@ angular.module('dmpApp')
 
             angular.forEach(mappings, function (mapping) {
 
-                var inputScopes = sourceMap[mapping.input_attribute_paths[0].attribute_path.id] || [],
-                    outputScopes = targetMap[mapping.output_attribute_path.attribute_path.id] || [];
+                var additionalInputPath = false;
 
-                angular.forEach(inputScopes, function (inputScope) {
-                    angular.forEach(outputScopes, function (outputScope) {
-                        var component = {
-                            dropEndpoint: null,
-                            scope: 'schema',
-                            sourceId: inputScope.scope.guid,
-                            targetId: outputScope.scope.guid,
-                            mappingId: mapping.id
-                        };
+                angular.forEach(mapping.input_attribute_paths, function (input_attribute_path) {
 
-                        connectComponent({component: component, sourceId: inputScope.scope.guid, targetId: outputScope.scope.guid, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: true, label: mapping.name});
+                    var inputScopes = sourceMap[input_attribute_path.attribute_path.id] || [],
+                        outputScopes = targetMap[mapping.output_attribute_path.attribute_path.id] || [];
+
+                    angular.forEach(inputScopes, function (inputScope) {
+                        angular.forEach(outputScopes, function (outputScope) {
+                            var component = {
+                                dropEndpoint: null,
+                                scope: 'schema',
+                                sourceId: inputScope.scope.guid,
+                                targetId: outputScope.scope.guid,
+                                mappingId: mapping.id
+                            };
+
+                            console.log(additionalInputPath);
+
+                            if(!additionalInputPath) {
+                                connectComponent({component: component, sourceId: inputScope.scope.guid, targetId: outputScope.scope.guid, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: true, label: mapping.name});
+                            } else {
+
+                                var connectParams = {component: component, sourceId: inputScope.scope.guid, targetId: outputScope.scope.guid, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: false, label: false};
+
+                                connectComponent(connectParams).then(function(newConnection) {
+
+                                    endpointSelector.removeFromPool(newConnection);
+                                    var targetConnection = endpointSelector.getTargetFromPool(connectParams.component.targetId);
+
+                                    connectParams.component.connection = newConnection;
+
+                                    addInputToComponent(connectParams.component, targetConnection);
+                                    activate(targetConnection);
+                                });
+
+
+                            }
+                        });
                     });
+
+                    additionalInputPath = true;
+
                 });
 
             });

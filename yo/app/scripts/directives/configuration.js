@@ -19,7 +19,7 @@ angular.module('dmpApp')
         };
 
         PubSub.subscribe($scope, 'handleEditConfig', function(args) {
-            $scope.component = args['payload'];
+            $scope.component = args['function'];
         });
 
         $scope.onSaveClick = function() {
