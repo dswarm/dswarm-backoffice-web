@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function ($scope, $rootScope, $window, $modal, $q, PubSub, loDash, TaskResource, DataModelGen, Util) {
+    .controller('TransformationCtrl', function ($scope, $window, $modal, $q, $rootScope, PubSub, loDash, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,

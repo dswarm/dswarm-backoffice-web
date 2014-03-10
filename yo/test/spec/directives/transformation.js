@@ -6,6 +6,31 @@ describe('Directive: Transformation', function () {
 
     var project, schema, attributePaths, data_resource, configuration;
 
+
+    function cleanPath(path) {
+        var ip = angular.copy(path);
+        var id = ip.id;
+
+        var expectedId = -new Date();
+
+        expect(Math.abs(id - expectedId)).toBeGreaterThan(-1);
+        expect(Math.abs(id - expectedId)).toBeLessThan(10);
+
+        delete ip.id;
+        return ip;
+    }
+
+    function getMappingWithPath(attributePaths, selector, specs) {
+        var paths = _.filter(attributePaths, selector);
+        var mapping = angular.extend({
+            type: 'MappingAttributePathInstance',
+            name: 'input mapping attribute path instance'
+        }, specs || {});
+        mapping.attribute_path = paths[0];
+
+        return mapping;
+    }
+
     beforeEach(function() {
 
         configuration = {
@@ -321,8 +346,18 @@ describe('Directive: Transformation', function () {
         expect(mapping.transformation.function.type).toBe('Transformation');
         expect(mapping.transformation.function.components).toEqual([]);
 
-        expect(mapping.input_attribute_paths).toEqual(_.filter(attributePaths, {id: 28}));
-        expect(mapping.output_attribute_path).toEqual(_.find(attributePaths, {id: 30}));
+        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {
+            name: 'input mapping attribute path instance'
+        })];
+        var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
+
+        var expectedOutputMapping = getMappingWithPath(attributePaths, {id: 30}, {
+            name: 'output mapping attribute path instance'
+        });
+        var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath)[0];
+
+        expect(actualInputMapping).toEqual(expectedInputMapping);
+        expect(actualOutputMapping).toEqual(expectedOutputMapping);
 
         expect(elScope.tabs.length).toBe(1);
         expect(elScope.tabs[0]).toEqual({
@@ -377,8 +412,19 @@ describe('Directive: Transformation', function () {
             expect(mapping.transformation.function.type).toBe('Transformation');
             expect(mapping.transformation.function.components).toEqual([]);
 
-            expect(mapping.input_attribute_paths).toEqual(_.filter(attributePaths, {id: paths[0]}));
-            expect(mapping.output_attribute_path).toEqual(_.find(attributePaths, {id: paths[1]}));
+
+            var expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
+                name: 'input mapping attribute path instance'
+            })];
+            var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
+
+            var expectedOutputMapping = [getMappingWithPath(attributePaths, {id: paths[1]}, {
+                name: 'output mapping attribute path instance'
+            })];
+            var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath);
+
+            expect(actualInputMapping).toEqual(expectedInputMapping);
+            expect(actualOutputMapping).toEqual(expectedOutputMapping);
 
             expect(tab).toEqual({
                 title: data.name,
