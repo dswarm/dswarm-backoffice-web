@@ -113,13 +113,15 @@ angular.module('dmpApp')
                 'function': itemData
             });
 
-            //createInternalComponentsFromGridItems();
+            // TODO: Update internal values
+            // createInternalComponentsFromGridItems()
         };
 
         $scope.$watchCollection('gridItems', function() {
 
             if(!isDraggingToGrid) {
-                console.log('/// NEW GRIDITEM:', $scope.gridItems);
+                // TODO: Update internal values
+                // createInternalComponentsFromGridItems()
             }
         });
 
@@ -134,9 +136,6 @@ angular.module('dmpApp')
         });
 
         $scope.dropped = function(dragEl, dropEl) {
-
-            console.log(angular.element(dropEl).scope().item);
-
             dropToGrid(angular.element(dropEl).scope().item.positionX, angular.element(dropEl).scope().item.positionY, angular.element(dragEl).scope().child);
         };
         //** End of function drag/drops handling
@@ -153,15 +152,15 @@ angular.module('dmpApp')
                 if(!$scope.activeMapping) {
                     $scope.activeMapping = { _$components : [] };
                 }
-                if($scope.activeMapping._$components.length !== $scope.project.mappings[availableIds.indexOf(id)].transformation.function.components.length) {
-                    //$scope.activeMapping._$components = createInternalComponentsFromComponents($scope.project.mappings[availableIds.indexOf(id)].transformation.function.components);
-                }
 
                 activeComponentId = id;
 
                 if (!skipBroadcast) {
                     PubSub.broadcast('connectionSwitched', { id: $scope.activeMapping._$connection_id });
                 }
+
+                //TODO: Update Grid to current tab
+
             }
         }
 
@@ -258,8 +257,6 @@ angular.module('dmpApp')
                     });
 
                 });
-
-                //var activeMappingIndex = loDash.findIndex($scope.project.mappings, { id : $scope.activeMapping.id });
 
             }
 
