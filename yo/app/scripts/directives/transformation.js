@@ -170,8 +170,18 @@ angular.module('dmpApp')
                                     components: []
                                 }
                             },
-                            input_attribute_paths : inputAttributePaths,
-                            output_attribute_path : outputAttributePaths[0],
+                            input_attribute_paths : [{
+                                type : 'MappingAttributePathInstance',
+                                name : 'input mapping attribute path instance',
+                                id : (new Date().getTime()+1)*-1,
+                                attribute_path : inputAttributePaths[0]
+                            }],
+                            output_attribute_path : {
+                                type : 'MappingAttributePathInstance',
+                                name : 'output mapping attribute path instance',
+                                id : (new Date().getTime()+2)*-1,
+                                attribute_path : outputAttributePaths[0]
+                            },
                             _$components : []
                         };
 
