@@ -17,11 +17,11 @@ angular.module('dmpApp')
                 el.bind('dragstart', function(e) {
                     e.dataTransfer.setData('text', id);
 
-                    $rootScope.$emit('LVL-DRAG-START');
+                    $rootScope.$emit('DRAG-START');
                 });
 
                 el.bind('dragend', function() {
-                    $rootScope.$emit('LVL-DRAG-END');
+                    $rootScope.$emit('DRAG-END');
                 });
             }
         };

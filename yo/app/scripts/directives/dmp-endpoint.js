@@ -331,8 +331,6 @@ angular.module('dmpApp')
                                 mappingId: mapping.id
                             };
 
-                            console.log(additionalInputPath);
-
                             if(!additionalInputPath) {
                                 connectComponent({component: component, sourceId: inputScope.scope.guid, targetId: outputScope.scope.guid, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: true, label: mapping.name});
                             } else {
