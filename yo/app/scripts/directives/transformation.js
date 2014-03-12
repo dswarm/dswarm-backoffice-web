@@ -21,7 +21,11 @@ angular.module('dmpApp')
             },
             mobileBreakPoint : 100,
             minRows : 0,
-            maxRows : 0
+            maxRows : 0,
+            maxGridRows : 0,
+            maxColumns : gridMaxItemsPerRow,
+            noFloatingUp : true,
+            containment : '.gridster'
         };
 
         $scope.customItemMap = {
@@ -50,7 +54,8 @@ angular.module('dmpApp')
 
             $scope.gridsterOpts = angular.extend({}, $scope.gridsterOpts, {
                 minRows : 0,
-                maxRows : 0
+                maxRows : 0,
+                maxGridRows : 0
             });
 
             // restore mappings if a previous project was loaded from a draft
@@ -117,13 +122,12 @@ angular.module('dmpApp')
             // createInternalComponentsFromGridItems()
         };
 
-        $scope.$watchCollection('gridItems', function() {
-
+        $scope.$watch('gridItems', function() {
             if(!isDraggingToGrid) {
                 // TODO: Update internal values
                 // createInternalComponentsFromGridItems()
             }
-        });
+        }, true);
 
         PubSub.subscribe($rootScope, 'DRAG-START', function() {
             isDraggingToGrid = true;
@@ -238,7 +242,9 @@ angular.module('dmpApp')
                 }
             }
 
-            $scope.gridsterOpts.maxRows = $scope.gridsterOpts.minRows = data.additionalInput.length +1;
+            $scope.gridsterOpts.maxRows =
+                $scope.gridsterOpts.minRows =
+                    $scope.gridsterOpts.maxGridRows = data.additionalInput.length +1;
 
             if($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length+1) {
 
