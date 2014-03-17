@@ -7,34 +7,39 @@
       </tab>
     </tabset>
 
-    <div class="transformation-container">
-      <div class="function component function-source"
-           ng-show="activeMapping.input_attribute_paths[0]"
-           connect-with="{'.function-target': activeMapping.output_attribute_path}"
-           connect-when="activeMapping.input_attribute_paths[0]"
-           ng-click="onFilterClick(activeMapping.input_attribute_paths[0].attribute_path)">
-        <div>
-          <span>{{ formatAttributePath(activeMapping.input_attribute_paths[0].attribute_path) }}</span>
-        </div>
-      </div>
-      <ul class="function-sortable" ng-show="showSortable" ng-class="{bigger:!activeMapping._$components.length}">
-        <li ng-repeat="component in activeMapping._$components" class="function component"
-            ng-class="'function-'+component._$componentType" dmp-connectible
+    <div class="transformation-container" ng-if="activeMapping.id">
 
-            ng-click="onFunctionClick(component)">
-          <div ng-switch on="component._$componentType">
-            <span ng-switch-when="fun">{{ component.payload.name }}</span>
-            <span ng-switch-when="source">{{ component.payload.name }}</span>
-            <span ng-switch-when="target">{{ component.payload.name }}</span>
-            <span ng-switch-default></span>
-          </div>
-        </li>
-      </ul>
-      <div class="function component function-target"
-           ng-show="activeMapping.output_attribute_path">
-        <div>
-          <span>{{ formatAttributePath(activeMapping.output_attribute_path.attribute_path) }}</span>
+        <div class="transformation-inputs">
+            <ul>
+                <li ng-repeat="iap in activeMapping.input_attribute_paths" class="count{{activeMapping.input_attribute_paths.length}}">
+                    <span>{{ formatAttributePath(iap.attribute_path) }}</span>
+                </li>
+            </ul>
         </div>
-      </div>
+
+        <div class="transformation-output">
+            <ul>
+                <li>
+                    <span>{{ formatAttributePath(activeMapping.output_attribute_path.attribute_path) }}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div gridster="gridsterOpts">
+            <ul>
+                <span ng-repeat="item in gridItems">
+                    <span ng-if="item.placeholder">
+                        <li gridster-item="customItemMap" class='gridster-preview' ng-click="onFunctionClick(item)" x-drop-target="true" x-on-drop="dropped(dragEl, dropEl)"></li>
+                    </span>
+                    <span ng-if="!item.placeholder">
+                        <li gridster-item="customItemMap" ng-class="{'gridster-preview': item.placeholder}" ng-click="onFunctionClick(item)">
+                            {{item.function.name}}
+                        </li>
+                    </span>
+                </span>
+            </ul>
+        </div>
+
     </div>
+
 </div>

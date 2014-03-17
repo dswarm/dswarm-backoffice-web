@@ -8,7 +8,8 @@
 
         <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
            ng-if="(isTarget && isLeaf(data)) || (isTarget && !isExpanded(data))"
-           dmp-endpoint
+           ng-style="{color:isSelected?'slategrey':''}"
+           dmp-endpoint test-name="data"
            js-plumb-target-options="jspTargetOptions"></i>
 
         {{data.name}}
@@ -18,7 +19,8 @@
 
         <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
            ng-if="(isSource && isLeaf(data)) || (isSource && !isExpanded(data))"
-           dmp-endpoint
+           ng-style="{color:isSelected?'slategrey':''}"
+           dmp-endpoint test-name="data"
            js-plumb-source-options="jspSourceOptions"></i>
 
       </div>

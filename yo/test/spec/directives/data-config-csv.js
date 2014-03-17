@@ -10,15 +10,15 @@ describe('Controller: DataConfigCsvCtrl', function () {
         resourceId: 42
     };
 
-    function dumpSpy(spy, name) {
-        console.log(name + ' calls length', spy.calls.length);
-        spy.calls.forEach(function(call, i) {
-            console.log(name + ' call ' + i + ' args length', call.args.length);
-            call.args.forEach(function(arg, ii) {
-                console.log(name + ' call ' + i + ' arg ' + ii, JSON.stringify(arg, null, 2));
-            });
-        });
-    }
+//    function dumpSpy(spy, name) {
+//        console.log(name + ' calls length', spy.calls.length);
+//        spy.calls.forEach(function(call, i) {
+//            console.log(name + ' call ' + i + ' args length', call.args.length);
+//            call.args.forEach(function(arg, ii) {
+//                console.log(name + ' call ' + i + ' arg ' + ii, JSON.stringify(arg, null, 2));
+//            });
+//        });
+//    }
 
     beforeEach(module('dmpApp', 'mockedDataConfig'));
 

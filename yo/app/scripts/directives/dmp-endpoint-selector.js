@@ -1,32 +1,22 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DmpEndpointSelectorCtrl', function ($scope, $modalInstance, endpointSet) {
+    .controller('DmpEndpointSelectorCtrl', function ($scope, $modalInstance, endpointSet, $log) {
 
         $scope.endpointSet = endpointSet;
         $scope.selectedSet = [];
 
+        $log.debug(endpointSet);
+
         $scope.schemaListOptions = {
             data: 'endpointSet',
             columnDefs: [
-                {field:'targetName', displayName:'Name'}
+                {field:'sourceName', displayName:'Source'},
+                {field:'targetName', displayName:'Target'},
+                {field:'label', displayName:'Name'}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedSet,
             multiSelect: false
         };
-
-
-        $scope.onSelectClick = function() {
-            $modalInstance.close($scope.selectedSet);
-        };
-
-        $scope.onNewClick = function() {
-            $modalInstance.close(null);
-        };
-
-        $scope.close = function () {
-            $modalInstance.dismiss('cancel');
-        };
-
     });

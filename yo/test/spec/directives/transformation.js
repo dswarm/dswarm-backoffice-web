@@ -4,7 +4,32 @@ describe('Directive: Transformation', function () {
     var element, scope, $rootScope, $compile, $timeout, $httpBackend;
     var elementHtml = '<transformation></transformation>';
 
-    var project, schema, attributePaths, data_resource, configuration;
+    var project, schema, attributePaths, data_resource, configuration, gridsterOpts;
+
+
+    function cleanPath(path) {
+        var ip = angular.copy(path);
+        var id = ip.id;
+
+        var expectedId = -new Date();
+
+        expect(Math.abs(id - expectedId)).toBeGreaterThan(-1);
+        expect(Math.abs(id - expectedId)).toBeLessThan(10);
+
+        delete ip.id;
+        return ip;
+    }
+
+    function getMappingWithPath(attributePaths, selector, specs) {
+        var paths = _.filter(attributePaths, selector);
+        var mapping = angular.extend({
+            type: 'MappingAttributePathInstance',
+            name: 'input mapping attribute path instance'
+        }, specs || {});
+        mapping.attribute_path = paths[0];
+
+        return mapping;
+    }
 
     beforeEach(function() {
 
@@ -207,12 +232,28 @@ describe('Directive: Transformation', function () {
                 "schema": schema
             }
         };
+        gridsterOpts = {
+            margins: [20, 20],
+            draggable: {
+                enabled: true
+            },
+            resizable: {
+                enabled: false
+            },
+            mobileBreakPoint : 100,
+            minRows : 0,
+            maxRows : 0
+        };
     });
 
     var connectionSources = [{
         id: 42,
         name: 'feld.nr',
         path: [17, 18]
+    }, {
+        id: 43,
+        name: 'feld.type',
+        path: [17, 5]
     }, {
         id: 43,
         name: 'feld.type',
@@ -226,10 +267,23 @@ describe('Directive: Transformation', function () {
         id: 1338,
         name: 'feld.ind',
         path: [17, 19]
+    },{
+        id: 1338,
+        name: 'feld.ind',
+        path: [17, 19]
     }];
-    var connectionDatas = _.map(_.zip(connectionSources, connectionTargets), function(sourceTarget, idx) {
-        var source = sourceTarget[0],
-            target = sourceTarget[1];
+    var additionalTargets = [ [], [],
+        [{
+            id: 1339,
+            name: 'feld.additional',
+            path: [22]
+        }]
+    ];
+
+    var connectionDatas = _.map(_.zip(connectionSources, connectionTargets, additionalTargets), function(sourceTargetAdditional, idx) {
+        var source = sourceTargetAdditional[0],
+            target = sourceTargetAdditional[1],
+            additionalTargets = sourceTargetAdditional[2];
 
         return {
             internal_id: source.id + ':' + target.id,
@@ -238,7 +292,7 @@ describe('Directive: Transformation', function () {
             name: 'testMapping',
             inputAttributePath: source,
             outputAttributePath: target,
-            additionalInput: []
+            additionalInput: additionalTargets
         };
     });
 
@@ -260,6 +314,7 @@ describe('Directive: Transformation', function () {
 
         scope = $rootScope.$new();
         scope.project = project;
+        scope.gridsterOpts = gridsterOpts;
         scope.alerts = [];
 
         var _element = angular.element(elementHtml);
@@ -321,8 +376,18 @@ describe('Directive: Transformation', function () {
         expect(mapping.transformation.function.type).toBe('Transformation');
         expect(mapping.transformation.function.components).toEqual([]);
 
-        expect(mapping.input_attribute_paths).toEqual(_.filter(attributePaths, {id: 28}));
-        expect(mapping.output_attribute_path).toEqual(_.find(attributePaths, {id: 30}));
+        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {
+            name: 'input mapping attribute path instance'
+        })];
+        var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
+
+        var expectedOutputMapping = getMappingWithPath(attributePaths, {id: 30}, {
+            name: 'output mapping attribute path instance'
+        });
+        var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath)[0];
+
+        expect(actualInputMapping).toEqual(expectedInputMapping);
+        expect(actualOutputMapping).toEqual(expectedOutputMapping);
 
         expect(elScope.tabs.length).toBe(1);
         expect(elScope.tabs[0]).toEqual({
@@ -355,10 +420,10 @@ describe('Directive: Transformation', function () {
         });
         $rootScope.$broadcast('connectionSelected', connectionDatas[1]);
 
-        expect(project.mappings.length).toBe(2);
-        expect(elScope.tabs.length).toBe(2);
+        expect(project.mappings.length).toBe(3);
+        expect(elScope.tabs.length).toBe(3);
 
-        var expectedPaths = [[28, 30], [27, 29]];
+        var expectedPaths = [[28, 30], [27, 29], [27, 29, 34]];
 
         _.each(_.zip(project.mappings, connectionDatas, elScope.tabs, expectedPaths), function(mappingDataTabsPaths, idx) {
             var mapping = mappingDataTabsPaths[0],
@@ -377,8 +442,29 @@ describe('Directive: Transformation', function () {
             expect(mapping.transformation.function.type).toBe('Transformation');
             expect(mapping.transformation.function.components).toEqual([]);
 
-            expect(mapping.input_attribute_paths).toEqual(_.filter(attributePaths, {id: paths[0]}));
-            expect(mapping.output_attribute_path).toEqual(_.find(attributePaths, {id: paths[1]}));
+
+            if(paths[2]) {
+                var expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
+                    name: 'input mapping attribute path instance'
+                }), getMappingWithPath(attributePaths, {id: paths[2]}, {
+                    name: 'input mapping attribute path instance'
+                })];
+
+            } else {
+                var expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
+                    name: 'input mapping attribute path instance'
+                })];
+            }
+
+            var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
+
+            var expectedOutputMapping = [getMappingWithPath(attributePaths, {id: paths[1]}, {
+                name: 'output mapping attribute path instance'
+            })];
+            var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath);
+
+            expect(actualInputMapping).toEqual(expectedInputMapping);
+            expect(actualOutputMapping).toEqual(expectedOutputMapping);
 
             expect(tab).toEqual({
                 title: data.name,
@@ -521,5 +607,56 @@ describe('Directive: Transformation', function () {
         expect(PubSub.broadcast.calls[0].args[1].length).toBe(1);
         expect(PubSub.broadcast.calls[0].args[1][0].foo).toBe('bar');
     }));
+
+    it('should map additional input data to input attribute path', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        var spyee = jasmine.createSpyObj('spyee', ['cb']);
+        elScope.$on('tabSwitch', function(evt, data) {
+            spyee.cb(data);
+        });
+
+        var data = connectionDatas[0];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(elScope.activeMapping.input_attribute_paths.length).toBe(1);
+
+        data = connectionDatas[2];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(elScope.activeMapping.input_attribute_paths.length).toBe(2);
+
+    });
+
+    it('should set gridRows according to mapping data', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(elScope.gridsterOpts.minRows).toBe(0);
+        expect(elScope.gridsterOpts.maxRows).toBe(0);
+
+        var spyee = jasmine.createSpyObj('spyee', ['cb']);
+        elScope.$on('tabSwitch', function(evt, data) {
+            spyee.cb(data);
+        });
+
+        var data = connectionDatas[0];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(elScope.gridsterOpts.minRows).toBe(1);
+        expect(elScope.gridsterOpts.maxRows).toBe(1);
+
+        data = connectionDatas[2];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(elScope.gridsterOpts.minRows).toBe(2);
+        expect(elScope.gridsterOpts.maxRows).toBe(2);
+
+    });
 
 });

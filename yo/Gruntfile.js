@@ -133,6 +133,17 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+            'ide-debug': {
+                options: {
+                    open: false,
+                    livereload: false,
+                    debug: true,
+                    base: [
+                        '.tmp',
+                        '<%= yeoman.app %>'
+                    ]
+                }
+            },
             test: {
                 options: {
                     port: SERVER_PORT + 1,
@@ -551,7 +562,7 @@ module.exports = function (grunt) {
             'template:api-server',
             'copy:styles',
             'autoprefixer',
-            'connect:livereload',
+            'connect:' + (target === 'debug' ? 'ide-debug' : 'livereload'),
             'watch'
         ]);
     });
