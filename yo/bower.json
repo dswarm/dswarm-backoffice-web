@@ -12,17 +12,16 @@
     "angular-sanitize": "1.2.13",
     "angular-ui-utils": "~0.1.1",
     "bootstrap": "~3.1.1",
-    "es5-shim": "~2.3.0",
-    "font-awesome": "avantgarde-labs/Font-Awesome#1cb28fbe7e1aa1d0d7bf6e1360d2157fba7f9ed8",
+    "es5-shim": "~2.1.0",
+    "font-awesome": "~4.0.0",
     "humanize": "~0.0.8",
     "jquery": "~2.0.3",
     "jquery-ui": "~1.10.3",
-    "jsPlumb": "avantgarde-labs/jsPlumb#19f4b79e0436e70fe2fd5ff90c22a0748253ba1a",
+    "jsPlumb": "1.5.5",
     "json3": "~3.3.0",
-    "lodash": "~2.4.1",
+    "lodash": "~2.4.0",
     "ngprogress": "~1.0.3",
-    "angular-localForage": "~0.0.1",
-    "angular-gridster" : "chrode/angular-gridster#2421e9d1ed0a77c783caf6cd63e3de7a6901e5f5"
+    "angular-gridster": "chrode/angular-gridster#2421e9d1ed0a77c783caf6cd63e3de7a6901e5f5"
   },
   "devDependencies": {
     "angular-mocks": "1.2.13",
@@ -34,5 +33,13 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "overrides": {
+    "font-awesome": {
+      "main": ["css/font-awesome.css"]
+    },
+    "jsPlumb": {
+      "main": ["./dist/js/jquery.jsPlumb-1.5.5.js"]
+    }
+  }
 }

@@ -27,7 +27,7 @@ module.exports = function(config) {
             'components/angular-sanitize/angular-sanitize.js',
             'components/humanize/humanize.js',
             'components/ngprogress/build/ngProgress.js',
-            'components/jsPlumb/dist/js/jquery.jsPlumb.js',
+            'components/jsPlumb/dist/js/jquery.jsPlumb-1.5.5.js',
             'components/angular-grid/ng-grid-2.0.7.debug.js',
             'components/angular-gridster/app/scripts/gridster.js',
             'scripts/*.js',
@@ -58,7 +58,7 @@ module.exports = function(config) {
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-        // logLevel : config.LOG_DEBUG,
+        logLevel : config.LOG_INFO,
 
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch : true,
