@@ -263,6 +263,13 @@ angular.module('dmpApp')
             jsPlumb.detachEveryConnection(params);
         }
 
+        /**
+         * Resets the jsPlumb instance
+         */
+        function reset() {
+            jsPlumb.reset();
+        }
+
         return {
             on: on,
             connect:connect,
@@ -277,6 +284,7 @@ angular.module('dmpApp')
             removeAllEndpoints : removeAllEndpoints,
             deleteEndpoint : deleteEndpoint,
             getAllConnections : getAllConnections,
-            detachEveryConnection : detachEveryConnection
+            detachEveryConnection : detachEveryConnection,
+            reset : reset
         };
     });

@@ -297,6 +297,8 @@ angular.module('dmpApp')
                 });
             });
             endpointSelector.reset();
+
+            init();
         }
 
         function removePlumbs(connection) {
@@ -332,15 +334,15 @@ angular.module('dmpApp')
                             };
 
                             if(!additionalInputPath) {
-                                connectComponent({component: component, sourceId: inputScope.scope.guid, targetId: outputScope.scope.guid, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: true, label: mapping.name});
+                                connectComponent({component: component, sourceId: component.sourceId, targetId: component.targetId, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: true, label: mapping.name});
                             } else {
 
-                                var connectParams = {component: component, sourceId: inputScope.scope.guid, targetId: outputScope.scope.guid, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: false, label: false};
+                                var connectParams = {component: component, sourceId: component.sourceId, targetId: component.targetId, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: false, label: false};
 
                                 connectComponent(connectParams).then(function(newConnection) {
 
                                     endpointSelector.removeFromPool(newConnection);
-                                    var targetConnection = endpointSelector.getTargetFromPool(connectParams.component.targetId);
+                                    var targetConnection = endpointSelector.getTargetFromPool(connectParams.targetId);
 
                                     connectParams.component.connection = newConnection;
 
@@ -400,6 +402,18 @@ angular.module('dmpApp')
             }
             return null;
         }
+
+        // init
+        function init() {
+            sourceMap = {};
+            targetMap = {};
+
+            jsP.reset();
+        }
+
+        $rootScope.$on('$locationChangeStart', init);
+
+        init();
 
         return {
             scope: true,
