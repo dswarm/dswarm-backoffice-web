@@ -11,7 +11,8 @@ describe('Directive: MappingComponent', function() {
             makeTarget: angular.noop,
             makeSource: angular.noop,
             on: angular.noop,
-            guid: angular.noop
+            guid: angular.noop,
+            reset: angular.noop
         });
     }));
 
