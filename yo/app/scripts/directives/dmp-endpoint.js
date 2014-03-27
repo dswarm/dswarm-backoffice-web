@@ -74,6 +74,8 @@ angular.module('dmpApp')
                 //link it
                 newConnection = jsP.connect(sourceEndpoint, targetEndpoint);
 
+                jsP.on('click', onClick);
+
                 if(component.mappingId) {
                     newConnection.mappingId = component.mappingId;
                 }
@@ -200,82 +202,7 @@ angular.module('dmpApp')
 
         // === Callbacks ===
 
-        function onBeforeDrop(component) {
-
-            // When is this executed? That is, when gets beforeDrop fired?
-
-            if (endpointSelector.inPool(component)) {
-
-                var modalInstance = $modal.open({
-                    templateUrl: 'views/modals/dmp-endpoint-selector.html',
-                    controller: 'DmpEndpointSelectorCtrl'
-                });
-
-                modalInstance.result.then(function (target) {
-
-                    var newConnection = null;
-
-                    if (target === null) {
-
-                        newConnection = jsP.connect(elements[component.sourceId], elements[component.targetId]);
-                        newConnection.setLabel(' ');
-
-                        component.connection = newConnection;
-
-                        endpointLabel.ask().then(function(label){
-                            endpointLabel.set(component.connection, label);
-                        });
-
-                        activate(component.connection, true);
-
-                    } else {
-
-                        var targetConnection = endpointSelector.getTargetFromPool(component.targetId);
-
-                        newConnection = jsP.connect(elements[component.sourceId], elements[component.targetId]);
-                        newConnection.setLabel(' ');
-
-                        endpointSelector.removeFromPool(newConnection);
-
-                        component.connection = newConnection;
-
-                        addInputToComponent(component, targetConnection);
-
-                        activate(targetConnection);
-
-                    }
-
-                }, function () {
-
-                    return false;
-
-                });
-
-                return false;
-
-            } else {
-
-                if (component.scope === 'schema') {
-                    endpointLabel.ask().then(function(label){
-                        endpointLabel.set(component.connection, label);
-                    });
-                }
-
-            }
-
-            return true;
-
-        }
-
-        function onConnection(component) {
-
-            if (component.scope === 'schema' || component.connection.scope === 'schema') {
-                activate(component.connection);
-            }
-        }
-
         function onClick(component, event) {
-
             if (component.scope === 'schema') {
                 switch (event.target.tagName) {
 
@@ -383,10 +310,6 @@ angular.module('dmpApp')
                 activate(connection, true);
             }
         }
-
-        jsP.on('beforeDrop', onBeforeDrop);
-        jsP.on('connection', onConnection);
-        jsP.on('click', onClick);
 
         PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'changeOutputModel'], onProjectDiscarded);
         PubSub.subscribe($rootScope, 'paintPlumbs', onPaintPlumbs);
