@@ -6,7 +6,7 @@ angular.module('dmpApp')
 
         var activeComponentId = null,
             availableIds = [],
-        // TODO: Find better solution instead of hard limiting to 6 itemas per row
+        // TODO: Find better solution instead of hard limiting to 6 items per row
             gridMaxItemsPerRow = 6,
             isDraggingToGrid = false;
 
@@ -127,7 +127,7 @@ angular.module('dmpApp')
          * Adds a function to the project data object
          * @param functionData - A function data structure
          */
-        function buildFunctionToProject(functionData) {
+        function buildFunctionToProject() {
 
             $scope.project.functions = [];
 
@@ -220,7 +220,9 @@ angular.module('dmpApp')
 
             $scope.gridItems = [];
 
-            if(typeof $scope.activeMapping.transformation.function.components !== 'undefined') {
+            if (typeof $scope.activeMapping.transformation !== 'undefined' &&
+                typeof $scope.activeMapping.transformation.function !== 'undefined' &&
+                typeof $scope.activeMapping.transformation.components !== 'undefined') {
 
                 angular.forEach($scope.activeMapping.transformation.function.components, function(value, key) {
 
@@ -249,6 +251,44 @@ angular.module('dmpApp')
             $scope.activeMapping.transformation =
                 typeof $scope.activeMapping.transformation !== 'undefined' ? $scope.activeMapping.transformation : createNewTransformation();
 
+            var mapRowComponents = function(component) {
+
+                var newComponent;
+
+                if(component.id && component.id > 0) {
+                    // get component from existing components
+                    newComponent = getComponent(component.id);
+
+                } else {
+
+                    //create new component
+                    newComponent = createNewComponent(component.function);
+
+                    angular.forEach(component.function.parameters, function (parameter, name) {
+                        newComponent.parameter_mappings[name] = parameter.data;
+                    });
+                }
+                return newComponent;
+            };
+
+            var chainRowComponents = function(component){
+
+                if(internalComponents.length > 0) {
+
+                    component.input_components = [{
+                        id : internalComponents[internalComponents.length-1].id
+                    }];
+
+                    internalComponents[internalComponents.length-1].output_components = [{
+                        id : component.id
+                    }];
+                }
+
+                internalComponents.push(component);
+            };
+
+
+
             // TODO: Expand to combine multiple input paths
             // for(var i = 0; i < $scope.gridsterOpts.maxRows; i++) {
             for(var i = 0; i < 1; i++) {
@@ -260,43 +300,11 @@ angular.module('dmpApp')
                 rowComponents = loDash.sortBy(rowComponents, 'positionY');
 
                 // replace array entry with original internal component oder generiere eine neue
-                rowComponents = loDash.map(rowComponents, function(component) {
-
-                    var newComponent;
-
-                    if(component.id && component.id > 0) {
-                        // get component from existing components
-                        newComponent = getComponent(component.id);
-
-                    } else {
-
-                        //create new component
-                        newComponent = createNewComponent(component.function);
-
-                        angular.forEach(component.function.parameters, function (parameter, name) {
-                            newComponent.parameter_mappings[name] = parameter.data;
-                        });
-                    }
-                    return newComponent;
-                });
+                rowComponents = loDash.map(rowComponents, mapRowComponents);
 
                 // kreiere verkettung aus array reihenfolge
 
-                angular.forEach(rowComponents, function(component){
-
-                    if(internalComponents.length > 0) {
-
-                        component.input_components = [{
-                            id : internalComponents[internalComponents.length-1].id
-                        }];
-
-                        internalComponents[internalComponents.length-1].output_components = [{
-                            id : component.id
-                        }];
-                    }
-
-                    internalComponents.push(component);
-                });
+                angular.forEach(rowComponents, chainRowComponents);
 
                 // füge aktuelle reihe zu internalComponents
                 $scope.activeMapping.transformation.function.components = internalComponents;
@@ -509,7 +517,7 @@ angular.module('dmpApp')
             }
         });
 
-        //** Start of sending tranformation to server
+        //** Start of sending transformation to server
 
         /**
          * Send all transformations to the server
