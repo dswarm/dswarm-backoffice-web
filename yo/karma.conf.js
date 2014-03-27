@@ -15,6 +15,7 @@ module.exports = function(config) {
         files : [
             'components/jquery/jquery.js',
             'components/jquery-ui/ui/jquery-ui.js',
+	    '../node_modules/jasmine-jquery/lib/jasmine-jquery.js',
             'components/lodash/dist/lodash.compat.js',
             'components/angular/angular.js',
             'components/angular-route/angular-route.js',

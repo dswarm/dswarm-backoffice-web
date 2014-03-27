@@ -42,9 +42,9 @@ def _update(tag, cmds, **kwargs):
 
 
 def _update_to_response(updater):
-    returncode, output = updater()
-    if returncode != 0:
-        return output, 400, {'X-Returncode': returncode}
+    return_code, output = updater()
+    if return_code != 0:
+	return output, 400, {'X-Returncode': return_code}
 
     return output, 200
 
