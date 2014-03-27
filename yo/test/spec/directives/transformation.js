@@ -4,7 +4,7 @@ describe('Directive: Transformation', function () {
     var element, scope, $rootScope, $compile, $timeout, $httpBackend;
     var elementHtml = '<transformation></transformation>';
 
-    var project, schema, attributePaths, data_resource, configuration, gridsterOpts;
+    var project, schema, attributePaths, data_resource, configuration, gridsterOpts, mockedFunctions;
 
 
     function cleanPath(path) {
@@ -299,6 +299,8 @@ describe('Directive: Transformation', function () {
 
     beforeEach(module('dmpApp'));
 
+    beforeEach(module('dmpApp', 'mockedFunctions'));
+
     beforeEach(module(function($provide) {
         $provide.value('ApiEndpoint', 'foo/');
     }));
@@ -311,6 +313,8 @@ describe('Directive: Transformation', function () {
         $httpBackend = $injector.get('$httpBackend');
 
         $injector.get('$templateCache').put('views/directives/transformation.html', '<div></div>');
+
+        mockedFunctions = $injector.get('mockFunctionsJSON');
 
         scope = $rootScope.$new();
         scope.project = project;
@@ -331,8 +335,7 @@ describe('Directive: Transformation', function () {
         var elScope = element.scope();
 
         expect(elScope.internalName).toBe('Transformation Logic Widget');
-        expect(elScope.activeMapping).toEqual({ _$components : [] });
-        expect(elScope.showSortable).toBeFalsy();
+        expect(elScope.activeMapping).toEqual({});
         expect(elScope.tabs).toEqual([]);
     });
 
@@ -368,7 +371,6 @@ describe('Directive: Transformation', function () {
         expect(mapping.id).toBe(13);
         expect(mapping._$connection_id).toBe(data.connection_id);
         expect(mapping.name).toBe(data.name);
-        expect(mapping._$components).toEqual([]);
 
         expect(mapping.transformation.name).toBe('transformation');
         expect(mapping.transformation.description).toBe('transformation');
@@ -396,8 +398,6 @@ describe('Directive: Transformation', function () {
             id: data.mapping_id,
             mappingId: data.mapping_id
         });
-
-        expect(elScope.showSortable).toBeTruthy();
 
         expect(spyee.cb).toHaveBeenCalledWith(data.mapping_id);
         expect(elScope.activeMapping).toBe(mapping);
@@ -434,7 +434,6 @@ describe('Directive: Transformation', function () {
             expect(mapping.id).toBe(13 + idx);
             expect(mapping._$connection_id).toBe(data.connection_id);
             expect(mapping.name).toBe(data.name);
-            expect(mapping._$components).toEqual([]);
 
             expect(mapping.transformation.name).toBe('transformation');
             expect(mapping.transformation.description).toBe('transformation');
@@ -472,8 +471,6 @@ describe('Directive: Transformation', function () {
                 id: data.mapping_id,
                 mappingId: data.mapping_id
             });
-
-            expect(elScope.showSortable).toBeTruthy();
 
             expect(spyee.cb).toHaveBeenCalledWith(data.mapping_id);
         });
@@ -658,5 +655,42 @@ describe('Directive: Transformation', function () {
         expect(elScope.gridsterOpts.maxRows).toBe(2);
 
     });
+
+    it('should build internal components on grid drop', function() {
+
+        var dragEl, dropEl;
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        var spyee = jasmine.createSpyObj('spyee', ['cb']);
+        elScope.$on('tabSwitch', function(evt, data) {
+            spyee.cb(data);
+        });
+
+        var data = connectionDatas[0];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        var _dragEl = angular.element('<span id="f2f447ff-562f-fe9b-10e4-e3cec2c97b1c">compose</span>');
+        elScope.child = mockedFunctions[0];
+
+        dragEl = $compile(_dragEl)(elScope);
+
+        var _dropEl = angular.element('<span><li style="margin: 0px; top: 20px; left: 444.5px; height: 121.5px; width: 121.5px;" id="ebc3de1c-c677-d393-997f-bda80ddebbd0"></li></span>');
+        elScope.item = {
+            positionX : 0,
+            positionY : 0,
+            placeholder : true
+        };
+
+        dropEl = $compile(_dropEl)(elScope);
+
+        elScope.dropped(dragEl,dropEl);
+
+        expect(elScope.activeMapping.transformation.function.components.length).toBe(1);
+
+    });
+
 
 });

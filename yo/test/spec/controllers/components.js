@@ -37,7 +37,7 @@ describe('Controller: ComponentsCtrl', function () {
             $rootScope.$digest();
             $httpBackend.flush();
 
-            expect(scope.functions.children.length).toBe(23);
+            expect(scope.functions.children.length).toBe(28);
 
         }
     );

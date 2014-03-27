@@ -6,11 +6,11 @@ angular.module('dmpApp')
 
         var activeComponentId = null,
             availableIds = [],
-        // Until a better idea comes up, limit to 6 items per row.
+        // TODO: Find better solution instead of hard limiting to 6 itemas per row
             gridMaxItemsPerRow = 6,
             isDraggingToGrid = false;
 
-        //** Gridster config goes here
+        /** Gridster config goes here */
         $scope.gridsterOpts = {
             margins: [20, 20],
             draggable: {
@@ -28,6 +28,7 @@ angular.module('dmpApp')
             containment : '.gridster'
         };
 
+        /** Gridster item access map */
         $scope.customItemMap = {
             sizeX: 1,
             sizeY: 1,
@@ -35,22 +36,20 @@ angular.module('dmpApp')
             col: 'item.positionY'
         };
 
+        /** Holds current grid items */
         $scope.gridItems = [];
-        $scope.inputItems = [];
-        $scope.outputItems = [];
-        //** End of Gridster config
 
         //** Start of directive init
+        /**
+         * Initializes vars etc.
+         */
         function init() {
             activeComponentId = '';
             availableIds = [];
-            $scope.activeMapping = { _$components : [] };
-            $scope.showSortable = false;
+            $scope.activeMapping = { };
             $scope.tabs = [];
 
             $scope.gridItems = [];
-            $scope.inputItems = [];
-            $scope.outputItems = [];
 
             $scope.gridsterOpts = angular.extend({}, $scope.gridsterOpts, {
                 minRows : 0,
@@ -70,6 +69,7 @@ angular.module('dmpApp')
             if (last) {
                 activate(last.id, true);
             }
+
         }
         init();
         PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel'], init);
@@ -87,7 +87,11 @@ angular.module('dmpApp')
         //** Init directive end
 
         //** Start to handle function drag/drops
-        var createDropPlaceholder = function() {
+
+        /**
+         * Generates placeholders inside the grid to show possible drop positions.
+         */
+        function createDropPlaceholder() {
 
             for(var j = 0; j < $scope.gridsterOpts.maxRows; j++) {
 
@@ -105,56 +109,286 @@ angular.module('dmpApp')
 
             }
             $scope.$digest();
-        };
-        var removeDropPlaceholder = function() {
-            $scope.gridItems = loDash.remove($scope.gridItems, function(item) { return !item.placeholder; });
-            $scope.$digest();
-        };
+        }
 
-        var dropToGrid = function(positionX, positionY, itemData) {
-            $scope.gridItems.push({
-                'positionX' : positionX,
-                'positionY' : positionY,
-                'function': itemData
+        /**
+         * Removes placeholders from grid
+         */
+        function removeDropPlaceholder() {
+            $scope.gridItems = loDash.remove($scope.gridItems,
+                function(item) {
+                    return !item.placeholder;
+                }
+            );
+            $scope.$digest();
+        }
+
+        /**
+         * Adds a function to the project data object
+         * @param functionData - A function data structure
+         */
+        function buildFunctionToProject(functionData) {
+
+            $scope.project.functions = [];
+
+            angular.forEach($scope.project.mappings, function(mapping) {
+
+                console.log(mapping);
+
+                angular.forEach(mapping.transformation.function.components, function(component) {
+
+                    console.log(component);
+
+                    if(loDash.indexOf($scope.project.functions, component.function) === -1) {
+                        $scope.project.functions.push(component.function);
+                    }
+
+                });
             });
 
-            // TODO: Update internal values
-            // createInternalComponentsFromGridItems()
-        };
+        }
 
-        $scope.$watch('gridItems', function() {
-            if(!isDraggingToGrid) {
-                // TODO: Update internal values
-                // createInternalComponentsFromGridItems()
-            }
-        }, true);
+        /**
+         * Handles a dropped element to a grid position
+         * @param positionX
+         * @param positionY
+         * @param itemData
+         */
+        function dropToGrid(positionX, positionY, itemData) {
 
-        PubSub.subscribe($rootScope, 'DRAG-START', function() {
-            isDraggingToGrid = true;
-            createDropPlaceholder();
-        });
+            addToGrid(positionX, positionY, itemData, (new Date().getTime()+3234)*-1);
 
-        PubSub.subscribe($rootScope, 'DRAG-END', function() {
-            isDraggingToGrid = false;
             removeDropPlaceholder();
-        });
+            isDraggingToGrid = false;
+            createInternalComponentsFromGridItems();
 
+            buildFunctionToProject();
+        }
+
+        /**
+         * Adds an element to a specific position inside the grid
+         * @param positionX - X position
+         * @param positionY - Y position
+         * @param itemData - The original data of the dropped fucntion
+         * @param id - Original id used to identify
+         */
+        function addToGrid(positionX, positionY, itemData, id) {
+
+            $scope.gridItems.push({
+                positionX : positionX,
+                positionY : positionY,
+                function: itemData,
+                id : id
+            });
+
+        }
+
+        /**
+         * Receives a drop of a dragged function from the list to the grid.
+         * @param dragEl - DOM element that has been dragged
+         * @param dropEl - DOM element that has been dropped
+         */
         $scope.dropped = function(dragEl, dropEl) {
             dropToGrid(angular.element(dropEl).scope().item.positionX, angular.element(dropEl).scope().item.positionY, angular.element(dragEl).scope().child);
         };
+
+        $scope.$watch('gridItems', function() {
+            if(isDraggingToGrid === false) {
+                createInternalComponentsFromGridItems();
+            }
+        }, true);
+
+        PubSub.subscribe($rootScope, ['DRAG-START'], function() {
+            isDraggingToGrid = true;
+            createDropPlaceholder();
+
+        });
+
+        PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
+            //removeDropPlaceholder();
+            isDraggingToGrid = false;
+        });
+
         //** End of function drag/drops handling
 
+        //** Start of grid creation
+
+        /**
+         * Builds visual grid from internal data structure
+         */
+        function createGridFromInternalComponents() {
+
+            $scope.gridItems = [];
+
+            if(typeof $scope.activeMapping.transformation.function.components !== 'undefined') {
+
+                angular.forEach($scope.activeMapping.transformation.function.components, function(value, key) {
+
+                    // TODO: Build along path
+
+                    if(value !== null) {
+                        addToGrid(0, key, value.function, value.id);
+                    }
+                });
+
+            }
+
+        }
+
+        /**
+         * Builds the components inside the project data structure from the
+         * visual grid representation.
+         */
+        function createInternalComponentsFromGridItems() {
+            var internalComponents = [];
+
+            if(!$scope.activeMapping.id) {
+                return;
+            }
+
+            $scope.activeMapping.transformation =
+                typeof $scope.activeMapping.transformation !== 'undefined' ? $scope.activeMapping.transformation : createNewTransformation();
+
+            // TODO: Expand to combine multiple input paths
+            // for(var i = 0; i < $scope.gridsterOpts.maxRows; i++) {
+            for(var i = 0; i < 1; i++) {
+
+                // get all in this row to array
+                var rowComponents = loDash.filter($scope.gridItems, {positionX : i});
+
+                // order by column
+                rowComponents = loDash.sortBy(rowComponents, 'positionY');
+
+                // replace array entry with original internal component oder generiere eine neue
+                rowComponents = loDash.map(rowComponents, function(component) {
+
+                    var newComponent;
+
+                    if(component.id && component.id > 0) {
+                        // get component from existing components
+                        newComponent = getComponent(component.id);
+
+                    } else {
+
+                        //create new component
+                        newComponent = createNewComponent(component.function);
+
+                        angular.forEach(component.function.parameters, function (parameter, name) {
+                            newComponent.parameter_mappings[name] = parameter.data;
+                        });
+                    }
+                    return newComponent;
+                });
+
+                // kreiere verkettung aus array reihenfolge
+
+                angular.forEach(rowComponents, function(component){
+
+                    if(internalComponents.length > 0) {
+
+                        component.input_components = [{
+                            id : internalComponents[internalComponents.length-1].id
+                        }];
+
+                        internalComponents[internalComponents.length-1].output_components = [{
+                            id : component.id
+                        }];
+                    }
+
+                    internalComponents.push(component);
+                });
+
+                // füge aktuelle reihe zu internalComponents
+                $scope.activeMapping.transformation.function.components = internalComponents;
+
+                // ermittle input_attribute_paths für aktuelle row
+                // TODO: Change to flexible multi input handling
+
+                if(typeof $scope.activeMapping.transformation.parameter_mappings === 'undefined') {
+                    $scope.activeMapping.transformation.parameter_mappings = {};
+                }
+
+                $scope.activeMapping.transformation.parameter_mappings['transformationInputString'] =
+                    $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes[0].uri;
+
+            }
+
+            // ermittle output_attripute_path für aktuelle row
+
+            $scope.activeMapping.transformation.parameter_mappings['transformationOutputVariable'] =
+                $scope.activeMapping.output_attribute_path.attribute_path.attributes[0].uri;
+
+        }
+
+        /**
+         * Extracts a component by id
+         * @param id - Component id to return
+         * @returns {*|Mixed}
+         */
+        function getComponent(id) {
+            return loDash.find($scope.activeMapping.transformation.function.components, { id : id});
+        }
+
+        /**
+         * Creates default component data structure around a given function
+         * @param func - Function object
+         * @returns {{id: number, name: (*|string|string|name|parser.name|exports.callee.object.name), description: (*|string|parser.description|.about.description|.info.description|exports.expected.description), function: *, parameter_mappings: {}, output_components: Array, input_components: Array}}
+         */
+        function createNewComponent(func) {
+
+            return {
+                id : (new Date().getTime()+Math.floor(Math.random()*1001))*-1,
+                name : func.name,
+                description : func.description,
+                function : func,
+                parameter_mappings : {},
+                output_components : [],
+                input_components : []
+            };
+
+        }
+
+        /**
+         * Creates a default data structure for a tranformation
+         * @param name - Optional given name
+         * @param description - Optional given description
+         * @returns {{name: , description: , function: {name: , description: , parameters: string[], type: string, components: Array}, parameter_mappings: {}}}
+         */
+        function createNewTransformation(name, description) {
+
+            name = typeof name !== 'undefined' ? name : 'transformation';
+            description = typeof description !== 'undefined' ? description : 'transformation';
+
+            return {
+                name : name,
+                description : description,
+                function : {
+                    name : name,
+                    description : description,
+                    //TODO: make flex, this only handles one input to transformation
+                    parameters : ['transformationInputString'],
+                    type : 'Transformation',
+                    components: []
+                },
+                parameter_mappings: { }
+            };
+        }
 
         //** Start of mapping activation and selection
+
+        /**
+         * Activates a mapping for editing
+         * @param id - Id to activate
+         * @param skipBroadcast - Should an activation event be send?
+         */
         function activate(id, skipBroadcast) {
-            $scope.showSortable = true;
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
                 $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
 
                 if(!$scope.activeMapping) {
-                    $scope.activeMapping = { _$components : [] };
+                    $scope.activeMapping = {};
                 }
 
                 activeComponentId = id;
@@ -163,15 +397,24 @@ angular.module('dmpApp')
                     PubSub.broadcast('connectionSwitched', { id: $scope.activeMapping._$connection_id });
                 }
 
-                //TODO: Update Grid to current tab
+                createGridFromInternalComponents();
 
             }
         }
 
+        /**
+         * Switches the UI Tab which mapping should be edited
+         * @param tab - Tab data from internal register
+         */
         $scope.switchTab = function(tab) {
             activate(tab.id);
         };
 
+        /**
+         * Formats an attribute path for output
+         * @param ap - Attribute path  data structure
+         * @returns {string}
+         */
         $scope.formatAttributePath = function (ap) {
             if (angular.isObject(ap) && angular.isDefined(ap.attributes)) {
                 return loDash.map(ap.attributes, 'name').join(' › ');
@@ -209,15 +452,7 @@ angular.module('dmpApp')
                             id :  data.mapping_id,
                             _$connection_id : data.connection_id,
                             name : data.name,
-                            transformation : {
-                                name : 'transformation',
-                                description : 'transformation',
-                                function : {
-                                    name : 'transformation',
-                                    type : 'Transformation',
-                                    components: []
-                                }
-                            },
+                            transformation : createNewTransformation(),
                             input_attribute_paths : [{
                                 type : 'MappingAttributePathInstance',
                                 name : 'input mapping attribute path instance',
@@ -229,8 +464,7 @@ angular.module('dmpApp')
                                 name : 'output mapping attribute path instance',
                                 id : (new Date().getTime()+2)*-1,
                                 attribute_path : outputAttributePaths[0]
-                            },
-                            _$components : []
+                            }
                         };
 
                     $scope.project.mappings.push(mapping);
@@ -240,11 +474,14 @@ angular.module('dmpApp')
 
                     activate(data.mapping_id, true);
                 }
+            } else {
+                $scope.activeMapping._$connection_id = data.connection_id;
             }
 
             $scope.gridsterOpts.maxRows =
                 $scope.gridsterOpts.minRows =
-                    $scope.gridsterOpts.maxGridRows = data.additionalInput.length +1;
+                    $scope.gridsterOpts.maxGridRows =
+                        $scope.gridsterOpts.gridHeight = data.additionalInput.length +1;
 
             if($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length+1) {
 
@@ -273,6 +510,11 @@ angular.module('dmpApp')
         });
 
         //** Start of sending tranformation to server
+
+        /**
+         * Send all transformations to the server
+         * @param tasks - Tranformations to send
+         */
         function sendTransformations(tasks) {
 
             var promises = loDash.map(tasks, function(task) {
@@ -293,6 +535,10 @@ angular.module('dmpApp')
 
         }
 
+        /**
+         * Send a single transformation to the server
+         * @param tab - Tranformation to send
+         */
         $scope.sendTransformation = function (tab) {
             if (activeComponentId === tab.id) {
 
@@ -310,6 +556,9 @@ angular.module('dmpApp')
             }
         };
 
+        /**
+         * This actually sends a Transformation
+         */
         $scope.sendTransformations = function () {
 
             var payload = {

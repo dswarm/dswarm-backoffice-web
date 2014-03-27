@@ -21,7 +21,7 @@
     "json3": "~3.3.0",
     "lodash": "~2.4.0",
     "ngprogress": "~1.0.3",
-    "angular-gridster": "chrode/angular-gridster#2421e9d1ed0a77c783caf6cd63e3de7a6901e5f5"
+    "angular-gridster" : "chrode/angular-gridster#913aa976500819ecddf2024b9332f1e74ffbf07e"
   },
   "devDependencies": {
     "angular-mocks": "1.2.13",
