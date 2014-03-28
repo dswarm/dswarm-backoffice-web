@@ -6,6 +6,7 @@ angular.module('dmpApp')
 
         var activeComponentId = null,
             availableIds = [],
+            gridItemMap = {},
         // TODO: Find better solution instead of hard limiting to 6 items per row
             gridMaxItemsPerRow = 6,
             isDraggingToGrid = false;
@@ -264,6 +265,10 @@ angular.module('dmpApp')
                     //create new component
                     newComponent = createNewComponent(component.function);
 
+                    // update component id of grid item
+                    gridItemMap[component.id] = newComponent.id;
+
+                    // TODO: this doesn't work
                     angular.forEach(component.function.parameters, function (parameter, name) {
                         newComponent.parameter_mappings[name] = parameter.data;
                     });
@@ -585,16 +590,18 @@ angular.module('dmpApp')
 
         //** Start handling filter
         $scope.onFunctionClick = function(component) {
-            PubSub.broadcast('handleEditConfig', component);
+            var newComponent = angular.copy(component);
+            newComponent.id = gridItemMap[component.id];
+            PubSub.broadcast('handleEditConfig', newComponent);
         };
 
-	PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
-	    angular.forEach($scope.activeMapping.transformation.function.components, function (comp, idx) {
-		if (comp.id === component.id) {
-		    $scope.activeMapping.transformation.function.components.splice(idx, 1, component);
-		}
-	    });
-	});
+        PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
+            angular.forEach($scope.activeMapping.transformation.function.components, function (comp) {
+                if (comp.id === component.id) {
+                    comp.parameter_mappings = component.parameter_mappings;
+                }
+            });
+        });
 
         $scope.onFilterClick = function(component) {
 
