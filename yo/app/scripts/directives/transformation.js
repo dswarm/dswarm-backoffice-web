@@ -588,6 +588,14 @@ angular.module('dmpApp')
             PubSub.broadcast('handleEditConfig', component);
         };
 
+	PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
+	    angular.forEach($scope.activeMapping.transformation.function.components, function (comp, idx) {
+		if (comp.id === component.id) {
+		    $scope.activeMapping.transformation.function.components.splice(idx, 1, component);
+		}
+	    });
+	});
+
         $scope.onFilterClick = function(component) {
 
             var childScope = $scope.$new();
