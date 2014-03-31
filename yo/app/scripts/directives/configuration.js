@@ -22,7 +22,12 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'handleEditConfig', function(args) {
             componentId = args.id;
-            $scope.component = angular.copy(args['function']);
+
+            angular.forEach(args.parameter_mappings, function (value, key) {
+                args.function.function_description.parameters[key].data = value;
+            });
+
+            $scope.component = args['function'];
         });
 
         $scope.onSaveClick = function() {
@@ -47,6 +52,10 @@ angular.module('dmpApp')
             PubSub.broadcast('handleConfigEdited', params);
         };
 
+        $scope.onCancelClick = function() {
+            $scope.component = null;
+            componentId = null;
+        };
     })
     .directive('configuration', function () {
         return {
