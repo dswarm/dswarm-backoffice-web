@@ -84,6 +84,8 @@ angular.module('dmpApp')
                     $scope.config.parameters = latestConfig.parameters;
                 }
             }
+
+            sendDataConfigUpdatedBroadcast();
         });
 
         $scope.onSaveClick = function() {
