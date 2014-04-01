@@ -116,6 +116,14 @@ angular.module('dmpApp')
             }
         }
 
+        function sendDataConfigUpdatedBroadcast() {
+            var config = getConfig();
+
+            PubSub.broadcast('dataConfigUpdated', {
+                config : config
+            });
+        }
+
         // do not preview more often that, say, every 200 msecs
         var fieldChanged = loDash.debounce(function(oldVal, newVal) {
             if (angular.equals(oldVal, newVal)) {
@@ -123,14 +131,11 @@ angular.module('dmpApp')
                 return;
             }
 
-            var config = getConfig();
+            sendDataConfigUpdatedBroadcast();
 
-            PubSub.broadcast('dataConfigUpdated', {
-                config : config
-            });
         }, 200);
 
-        $scope.onFieldChanged = fieldChanged;
+        $scope.onFieldChanged = sendDataConfigUpdatedBroadcast;
 
         $scope.$watch(allFields, fieldChanged, true);
 
