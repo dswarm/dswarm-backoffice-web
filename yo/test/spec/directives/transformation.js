@@ -523,7 +523,7 @@ describe('Directive: Transformation', function () {
 
         expect(elScope.tabs).toEqual([{
             title: mappingName,
-            active: false,
+            active: true,
             id: mappingId
         }]);
     });
@@ -720,9 +720,48 @@ describe('Directive: Transformation', function () {
 
         spyOn(PubSub, 'broadcast');
 
-        elScope.onFunctionClick('foo');
+        var dragEl, dropEl;
 
-        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', 'foo');
+        scope.$digest();
+        var elScope = element.scope();
+
+        var spyee = jasmine.createSpyObj('spyee', ['cb']);
+        elScope.$on('tabSwitch', function(evt, data) {
+            spyee.cb(data);
+        });
+
+        var data = connectionDatas[0];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        var _dragEl = angular.element('<span id="f2f447ff-562f-fe9b-10e4-e3cec2c97b1c">compose</span>');
+        elScope.child = mockedFunctions[0];
+
+        dragEl = $compile(_dragEl)(elScope);
+
+        var _dropEl = angular.element('<span><li style="margin: 0px; top: 20px; left: 444.5px; height: 121.5px; width: 121.5px;" id="ebc3de1c-c677-d393-997f-bda80ddebbd0"></li></span>');
+        elScope.item = {
+            positionX : 0,
+            positionY : 0,
+            placeholder : true,
+            id : 1
+        };
+
+        dropEl = $compile(_dropEl)(elScope);
+
+        elScope.dropped(dragEl,dropEl);
+
+        elScope.onFunctionClick(mockedFunctions[0]);
+
+        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', {
+            id: 1,
+            name: 'blacklist',
+            description: 'Blacklist filter',
+            function : mockedFunctions[0],
+            parameter_mappings: {},
+            output_components: [],
+            input_components: []
+        });
     }));
 
     it('should open a filter modal when the path component is clicked', inject(function($modal) {
