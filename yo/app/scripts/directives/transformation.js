@@ -386,6 +386,7 @@ angular.module('dmpApp')
                 $scope.$broadcast('tabSwitch', id);
 
                 $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
+                activateTab(id);
 
                 if(!$scope.activeMapping) {
                     $scope.activeMapping = {};
@@ -399,6 +400,19 @@ angular.module('dmpApp')
 
                 createGridFromInternalComponents();
 
+            }
+        }
+        function activateTab(tabId) {
+
+            var tabIndex = loDash.findIndex($scope.tabs, { 'id': tabId });
+
+            loDash.map($scope.tabs, function(tab) {
+                tab.active= false;
+                return tab;
+            });
+
+            if(tabIndex>= 0) {
+                $scope.tabs[tabIndex].active = true;
             }
         }
 
@@ -430,7 +444,7 @@ angular.module('dmpApp')
                 if (loDash.any($scope.project.mappings, { 'id' : data.mapping_id })) {
 
                     var idx = availableIds.indexOf(data.mapping_id);
-                    $scope.tabs[idx].active = true;
+                    activateTab(idx);
 
                     var midx = loDash.findIndex($scope.project.mappings, {id : data.mapping_id});
 
@@ -539,11 +553,10 @@ angular.module('dmpApp')
          * Send a single transformation to the server
          * @param tab - Tranformation to send
          */
-        $scope.sendTransformation = function (tab) {
-            if (activeComponentId === tab.id) {
+        $scope.sendTransformation = function () {
 
                 var payload = {
-                    name: tab.title,
+                    name: $scope.activeMapping.name,
                     description : 'A Transformation',
                     job: {
                         mappings : [$scope.activeMapping]
@@ -553,7 +566,6 @@ angular.module('dmpApp')
                 };
 
                 sendTransformations([payload]);
-            }
         };
 
         /**

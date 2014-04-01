@@ -2,17 +2,18 @@
     <h5>{{resourceName}}</h5>
 
     <div class="dataOuter">
-        <div ng-include src="dataInclude()"></div>
+        <div class="tabbable tabs-below">
+            <ul class="nav nav-tabs">
+                <li ng-repeat="record in records track by $index" ng-class="{active: selectedTab == $index}">
+                    <a ng-click="selectTab($index);">{{ $index +1 }}</a>
+                </li>
+            </ul>
+
+            <div ng-repeat="record in records"  class="tab-content">
+                <div ng-show="selectedTab == $index">
+                    <tree data="record.data"></tree>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <script type="text/ng-template" id="sourcedata">
-
-        <tabset ng-if="records">
-            <tab ng-repeat="record in records" heading="{{ record.id }}" active="$first" class="data-tab-heading">
-                <tree data="record.data"></tree>
-            </tab>
-        </tabset>
-
-    </script>
-
 </div>

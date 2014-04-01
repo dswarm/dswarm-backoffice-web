@@ -12,6 +12,12 @@ angular.module('dmpApp')
 
         $scope.resourceName = '';
 
+        $scope.selectedTab = 0;
+
+        $scope.selectTab = function(tab) {
+            $scope.selectedTab = tab;
+        };
+
         $scope.dataInclude = function() {
             return $scope.showData ? 'sourcedata' : '';
         };

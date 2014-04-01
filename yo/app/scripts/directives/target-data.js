@@ -4,9 +4,16 @@ angular.module('dmpApp')
     .controller('TargetDataCtrl', function ($scope, $http, $q, Util, loDash,  schemaParser, PubSub) {
         $scope.internalName = 'Target Data Widget';
 
+        $scope.selectedTab = 0;
+
+        $scope.selectTab = function(tab) {
+            $scope.selectedTab = tab;
+        };
+
         function mapToSchema(result, schema) {
             return schemaParser.parseFromDomainSchema(result, schema, true);
         }
+
 
         PubSub.subscribe($scope, 'transformationFinished', function(transformation) {
 

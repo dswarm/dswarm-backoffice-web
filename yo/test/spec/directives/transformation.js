@@ -465,9 +465,14 @@ describe('Directive: Transformation', function () {
             expect(actualInputMapping).toEqual(expectedInputMapping);
             expect(actualOutputMapping).toEqual(expectedOutputMapping);
 
+            var expectedActive = false;
+            if (idx === 1) {
+                expectedActive = true;
+            }
+
             expect(tab).toEqual({
                 title: data.name,
-                active: true,
+                active: expectedActive,
                 id: data.mapping_id,
                 mappingId: data.mapping_id
             });
@@ -549,21 +554,6 @@ describe('Directive: Transformation', function () {
         $httpBackend.flush();
 
         expect($window.alert).toHaveBeenCalledWith('foo bar');
-    }));
-
-    it('should not send anything for the wrong tab', inject(function(TaskResource) {
-        scope.$digest();
-        var elScope = element.scope();
-
-        var dataIdx = 0;
-        var data = connectionDatas[dataIdx];
-        $rootScope.$broadcast('connectionSelected', data);
-
-        spyOn(TaskResource, 'execute').andCallThrough();
-
-        elScope.sendTransformation({id: 9999});
-
-        expect(TaskResource.execute).not.toHaveBeenCalled();
     }));
 
     it('should send all transformations', inject(function(Util, TaskResource, PubSub) {

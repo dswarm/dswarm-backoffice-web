@@ -1,13 +1,19 @@
 <div>
     <span>{{ internalName }}</span>
     <button class="btn btn-success" type="button" ng-click="sendTransformations()" ng-class="{'disabled':tabs.length == 0}">Run all transformations</button>
-    <tabset>
-      <tab ng-repeat="tab in tabs" heading="{{ tab.title }}" active="tab.active" select="switchTab(tab)">
-        <button class="btn btn-primary" type="button" ng-click="sendTransformation(tab)">Run Transformation</button>
-      </tab>
-    </tabset>
+    <div class="tabbable tabs-below">
+        <ul class="nav nav-tabs">
+
+            <li ng-repeat="tab in tabs" ng-class="{active: tab.active}">
+                <a ng-click="switchTab(tab);">{{ tab.title }}</a>
+            </li>
+
+        </ul>
+    </div>
 
     <div class="transformation-container" ng-if="activeMapping.id">
+
+        <button class="btn btn-primary" type="button" ng-click="sendTransformation(activeMapping)">Run Transformation</button>
 
         <div class="transformation-inputs">
             <ul>
