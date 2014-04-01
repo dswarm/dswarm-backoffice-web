@@ -569,7 +569,7 @@ angular.module('dmpApp')
                 };
 
                 sendTransformations([payload]);
-        };
+            };
 
         /**
          * This actually sends a Transformation
