@@ -138,11 +138,7 @@ angular.module('dmpApp')
 
             angular.forEach($scope.project.mappings, function(mapping) {
 
-                console.log(mapping);
-
                 angular.forEach(mapping.transformation.function.components, function(component) {
-
-                    console.log(component);
 
                     if(loDash.indexOf($scope.project.functions, component.function) === -1) {
                         $scope.project.functions.push(component.function);
@@ -161,7 +157,7 @@ angular.module('dmpApp')
          */
         function dropToGrid(positionX, positionY, itemData) {
 
-            addToGrid(positionX, positionY, itemData, getId());
+            addToGrid(positionX, positionY, itemData, getId(itemData.id));
 
             removeDropPlaceholder();
             isDraggingToGrid = false;
