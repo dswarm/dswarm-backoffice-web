@@ -403,7 +403,7 @@ describe('Directive: Transformation', function () {
         expect(elScope.activeMapping).toBe(mapping);
     });
 
-    it('should switch tabs of more connections are mapped', function() {
+    it('should switch tabs when more connections are mapped', function() {
         scope.$digest();
         var elScope = element.scope();
 
@@ -441,16 +441,16 @@ describe('Directive: Transformation', function () {
             expect(mapping.transformation.function.type).toBe('Transformation');
             expect(mapping.transformation.function.components).toEqual([]);
 
-
+	    var expectedInputMapping;
             if(paths[2]) {
-                var expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
+		expectedInputMapping =[getMappingWithPath(attributePaths, {id: paths[0]}, {
                     name: 'input mapping attribute path instance'
                 }), getMappingWithPath(attributePaths, {id: paths[2]}, {
                     name: 'input mapping attribute path instance'
                 })];
 
             } else {
-                var expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
+		expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
                     name: 'input mapping attribute path instance'
                 })];
             }
@@ -494,6 +494,38 @@ describe('Directive: Transformation', function () {
         expect(elScope.formatAttributePath({})).toBe('');
         expect(elScope.formatAttributePath({attributes: {}})).toBe('');
         expect(elScope.formatAttributePath({attributes: []})).toBe('');
+    });
+
+    it('should restore the mappings when there was a previous project', function() {
+
+        var inputPaths = [getMappingWithPath(attributePaths, {id: 28}, {
+            name: 'input mapping attribute path instance'
+        })];
+        var outputPaths = getMappingWithPath(attributePaths, {id: 30}, {
+            name: 'output mapping attribute path instance'
+        });
+
+        var mappingId = connectionDatas[0].mapping_id;
+        var mappingName = connectionDatas[0].name;
+
+        var mapping = {
+            id: mappingId,
+            name: mappingName,
+            input_attribute_paths: inputPaths,
+            output_attribute_path: outputPaths
+        };
+
+        project.mappings = [mapping];
+
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(elScope.tabs).toEqual([{
+            title: mappingName,
+            active: false,
+            id: mappingId
+        }]);
     });
 
     it('should send transformations', inject(function(Util, TaskResource, PubSub) {
@@ -682,5 +714,29 @@ describe('Directive: Transformation', function () {
 
     });
 
+    it('should broadcast an \'handleEditConfig\' event when a component was clicked', inject(function(PubSub) {
+        scope.$digest();
+        var elScope = element.scope();
+
+        spyOn(PubSub, 'broadcast');
+
+        elScope.onFunctionClick('foo');
+
+        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', 'foo');
+    }));
+
+    it('should open a filter modal when the path component is clicked', inject(function($modal) {
+        var fakeModal = { result: { then: function(fn){ fn(); } } };
+        spyOn($modal, 'open').andReturn(fakeModal);
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        elScope.onFilterClick('foo');
+
+        expect($modal.open).toHaveBeenCalled();
+        expect($modal.open.calls[0].args[0].scope.currentComponent).toBe('foo');
+        expect($modal.open.calls[0].args[0].scope.component).toBe('foo');
+    }));
 
 });

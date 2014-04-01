@@ -7,6 +7,8 @@ angular.module('dmpApp')
 
         $scope.component = null;
 
+        var componentId = null;
+
         $scope.getPattern = function (pattern) {
             return pattern? new RegExp('^' + pattern + '$') : /.*/;
         };
@@ -19,13 +21,41 @@ angular.module('dmpApp')
         };
 
         PubSub.subscribe($scope, 'handleEditConfig', function(args) {
+            componentId = args.id;
+
+            angular.forEach(args.parameter_mappings, function (value, key) {
+                args.function.function_description.parameters[key].data = value;
+            });
+
             $scope.component = args['function'];
         });
 
         $scope.onSaveClick = function() {
+            if (componentId === null) {
+                return;
+            }
+
+            var params = {
+                id: componentId,
+                parameter_mappings: {}
+            };
+
+            angular.forEach($scope.component.function_description.parameters, function (paramDef, param) {
+                if (angular.isDefined(paramDef.data)) {
+                    params.parameter_mappings[param] = paramDef.data;
+                }
+            });
+
             $scope.component = null;
+            componentId = null;
+
+            PubSub.broadcast('handleConfigEdited', params);
         };
 
+        $scope.onCancelClick = function() {
+            $scope.component = null;
+            componentId = null;
+        };
     })
     .directive('configuration', function () {
         return {
