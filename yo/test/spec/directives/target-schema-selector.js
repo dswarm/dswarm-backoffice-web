@@ -37,8 +37,6 @@ describe('Controller: TargetSchemaSelectorCtrl', function () {
 
         $httpBackend.whenGET(templateUrl).respond('');
 
-        spyOn($rootScope, '$broadcast');
-
         var $controller = $injector.get('$controller');
 
         targetSchemaSelectorCtrl = function () {
