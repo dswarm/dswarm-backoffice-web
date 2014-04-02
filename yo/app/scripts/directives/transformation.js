@@ -530,26 +530,18 @@ angular.module('dmpApp')
 
         /**
          * Send all transformations to the server
-         * @param tasks - Tranformations to send
+	 * @param task - Transformations to send
+	 * @param persist - if true, the transformation result should be persisted by the backend
          */
-        function sendTransformations(tasks) {
+	function sendTransformations(task, persist) {
 
-            var promises = loDash.map(tasks, function(task) {
-                //noinspection JSUnresolvedVariable
-                return TaskResource.execute(Util.toJson(task)).$promise;
+	    TaskResource.execute({persist: !!persist}, Util.toJson(task)).$promise.then(function(result) {
+		console.log('transformation finished', result);
+		PubSub.broadcast('transformationFinished', result);
+	    }, function(resp) {
+		console.log(resp);
+		$window.alert(resp.message || resp.data.error);
             });
-
-            $q.all(promises)
-                .then(function(results) {
-                    loDash.forEach(results, function(result) {
-                        //dump(result);
-                        PubSub.broadcast('transformationFinished', result);
-                    });
-                }, function(resp) {
-                    console.log(resp);
-                    $window.alert(resp.message || resp.data.error);
-                });
-
         }
 
         /**
@@ -568,13 +560,13 @@ angular.module('dmpApp')
                     output_data_model : $scope.project.output_data_model
                 };
 
-                sendTransformations([payload]);
+		sendTransformations(payload, false);
             };
 
         /**
          * This actually sends a Transformation
          */
-        $scope.sendTransformations = function () {
+	$scope.sendTransformations = function (persist) {
 
             var payload = {
                 name: 'Transformations',
@@ -586,7 +578,7 @@ angular.module('dmpApp')
                 output_data_model : $scope.project.output_data_model
             };
 
-            sendTransformations([payload]);
+	    sendTransformations(payload, persist);
         };
         //** End of sending transformation to server
 

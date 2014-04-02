@@ -99,7 +99,7 @@ describe('Directive: SchemaList', function () {
         $httpBackend.verifyNoOutstandingExpectation();
     });
 
-    it('create the SchemaListCtrl from resources', function() {
+    xit('create the SchemaListCtrl from resources', function() {
         $httpBackend.expectGET('dmp/resources');
 
         scope1.$digest();
@@ -122,7 +122,7 @@ describe('Directive: SchemaList', function () {
     });
 
 
-    it('create the SchemaListCtrl from schemas', function() {
+    xit('create the SchemaListCtrl from schemas', function() {
         $httpBackend.expectGET('dmp/schemas');
 
         scope2.$digest();
