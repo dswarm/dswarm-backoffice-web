@@ -52,8 +52,6 @@ describe('Controller: ModelCtrl', function () {
 
         scope = $rootScope.$new();
 
-        spyOn($rootScope, '$broadcast');
-
         schema = $injector.get('mockSchemaJSON');
 
         $httpBackend.whenGET('/data/schema.json').respond(schema);
