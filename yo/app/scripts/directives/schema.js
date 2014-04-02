@@ -6,8 +6,6 @@ angular.module('dmpApp')
 
         $scope.handleOutputSelected = function(dataModel) {
 
-            /* jshint camelcase:false */
-
             $scope.setOutputSchema(dataModel);
         };
 

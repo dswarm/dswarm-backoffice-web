@@ -1,6 +1,13 @@
 <div>
     <span>{{ internalName }}</span>
-    <button class="btn btn-success" type="button" ng-click="sendTransformations()" ng-class="{'disabled':tabs.length == 0}">Run all transformations</button>
+    <button class="btn btn-success"
+	    ng-class="{'disabled':tabs.length == 0}"
+	    ng-click="sendTransformations()">
+	<i class="fa fa-play-circle fa-lg fa-fw"></i> Run all transformations</button>
+    <button class="btn btn-primary"
+	    ng-class="{'disabled':tabs.length == 0}"
+	    ng-click="sendTransformations(true)" >
+	<i class="fa fa-save fa-fw"></i> Save all transformations</button>
     <div class="tabbable tabs-below">
         <ul class="nav nav-tabs">
 
@@ -13,7 +20,7 @@
 
     <div class="transformation-container" ng-if="activeMapping.id">
 
-        <button class="btn btn-primary" type="button" ng-click="sendTransformation(activeMapping)">Run Transformation</button>
+	<button class="btn btn-default" ng-click="sendTransformation(activeMapping)">Run Transformation</button>
 
         <div class="transformation-inputs">
             <ul>

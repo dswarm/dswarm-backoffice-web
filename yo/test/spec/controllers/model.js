@@ -200,7 +200,7 @@ describe('Controller: ModelCtrl', function () {
 
         spyOn(PubSub, 'broadcast');
 
-        scope.setOutputSchema('foo');
+	scope.setOutputSchema({schema: 'foo'});
 
         expect(scope.project.output_data_model).toEqual({schema: 'foo'});
         expect(scope.project._$output_data_model_schema).toEqual('foo');

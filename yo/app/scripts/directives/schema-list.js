@@ -1,39 +1,29 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SchemaListCtrl', function ($scope, ResourceResource, SchemaResource, Util) {
+    .controller('SchemaListCtrl', function ($scope, DataModelResource, Util) {
 
         $scope.files = [];
 
-        if ($scope.from === 'resources') {
+	DataModelResource.query(function(results) {
 
-            ResourceResource.query(function(results) {
+	    //noinspection FunctionWithInconsistentReturnsJS
+	    $scope.files = Util.collect(results, function(dataModel) {
+		var schema = dataModel.schema;
+		if (schema && schema['attribute_paths'] && schema['attribute_paths'].length) {
 
-                //noinspection FunctionWithInconsistentReturnsJS
-                $scope.files = Util.collect(results, Util.mapResources(function(resource, config) {
-                    if (config && config['parameters'] && config['parameters']['storage_type'] === 'schema') {
-                        return resource;
-                    }
-                }));
+		    dataModel._$name = schema['name'] + ' (' + dataModel['name'] + ')';
+		    dataModel._$description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
+
+		    return dataModel;
+		}
             });
-        } else {
-
-            SchemaResource.query(function(results) {
-
-                //noinspection FunctionWithInconsistentReturnsJS
-                $scope.files = Util.collect(results, function(schema) {
-                    if (schema && schema['attribute_paths'] && schema['attribute_paths'].length) {
-                        schema._$description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;
-                        return schema;
-                    }
-                });
-            });
-        }
+	});
 
         $scope.schemaListOptions = {
             data: 'files',
             columnDefs: [
-                {field:'name', displayName:'Name'},
+		{field:'_$name', displayName:'Name'},
                 {field:'_$description', displayName:'Description '}
             ],
             enableColumnResize: false,
@@ -48,7 +38,6 @@ angular.module('dmpApp')
             replace: false,
             restrict: 'E',
             scope: {
-                from: '@',
                 items: '='
             },
             templateUrl: 'views/directives/schema-list.html',

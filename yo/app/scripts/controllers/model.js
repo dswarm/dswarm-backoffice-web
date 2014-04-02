@@ -52,8 +52,8 @@ angular.module('dmpApp')
 
         };
 
-        $scope.setOutputSchema = function(schema) {
-            $scope.setOutputDataModel({schema: schema});
+	$scope.setOutputSchema = function(dataModel) {
+	    $scope.setOutputDataModel(dataModel);
         };
 
         $scope.processOutputDataModel = function() {

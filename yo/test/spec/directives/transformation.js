@@ -532,7 +532,7 @@ describe('Directive: Transformation', function () {
         var taskResult = [
             {'foo': 'bar'}
         ];
-        $httpBackend.expectPOST('foo/tasks').respond(taskResult);
+	$httpBackend.expectPOST('foo/tasks?persist=false').respond(taskResult);
 
         scope.$digest();
         var elScope = element.scope();
@@ -558,7 +558,7 @@ describe('Directive: Transformation', function () {
         elScope.sendTransformation(elScope.tabs[dataIdx]);
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith(payloadJson);
+	expect(TaskResource.execute).toHaveBeenCalledWith({ persist : false }, payloadJson);
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
 
@@ -570,7 +570,7 @@ describe('Directive: Transformation', function () {
     }));
 
     it('should alert an error on wrong transformations', inject(function(TaskResource, $window) {
-        $httpBackend.expectPOST('foo/tasks').respond(500, {error: 'foo bar'});
+	$httpBackend.expectPOST('foo/tasks?persist=false').respond(500, {error: 'foo bar'});
 
         scope.$digest();
         var elScope = element.scope();
@@ -592,7 +592,7 @@ describe('Directive: Transformation', function () {
         var taskResult = [
             {'foo': 'bar'}
         ];
-        $httpBackend.expectPOST('foo/tasks').respond(taskResult);
+	$httpBackend.expectPOST('foo/tasks?persist=false').respond(taskResult);
 
         scope.$digest();
         var elScope = element.scope();
@@ -617,7 +617,7 @@ describe('Directive: Transformation', function () {
         elScope.sendTransformations();
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith(payloadJson);
+	expect(TaskResource.execute).toHaveBeenCalledWith({ persist : false }, payloadJson);
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
         expect(PubSub.broadcast.calls.length).toBe(1);
