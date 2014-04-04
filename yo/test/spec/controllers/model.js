@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ModelCtrl', function () {
+describe('Controller: ModelCtrl', function() {
     var $httpBackend, $rootScope, $q;
     var scope, modelCtrl, schema, expectModelCtrl, mockProjectJSON;
     var shouldRejectModal;
@@ -43,7 +43,7 @@ describe('Controller: ModelCtrl', function () {
     }));
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($injector) {
+    beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
         $q = $injector.get('$q');
@@ -68,14 +68,14 @@ describe('Controller: ModelCtrl', function () {
 
         var $controller = $injector.get('$controller');
 
-        modelCtrl = function (projectId) {
+        modelCtrl = function(projectId) {
             return $controller('ModelCtrl', {
                 '$scope': scope,
                 '$routeParams': {projectId: projectId}
             });
         };
 
-        expectModelCtrl = function (projectId) {
+        expectModelCtrl = function(projectId) {
             $httpBackend.expectGET('/dmp/projects');
             var ctrl = modelCtrl(projectId);
             $httpBackend.flush();
@@ -84,7 +84,7 @@ describe('Controller: ModelCtrl', function () {
 
     }));
 
-    afterEach(inject(function () {
+    afterEach(inject(function() {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     }));
@@ -98,12 +98,12 @@ describe('Controller: ModelCtrl', function () {
     xit('should remove source from set', function() {
 
         var source = {
-            name : 'foo',
-            resourceId : 1,
-            configId : 1,
-            schema : schema,
-            collapsed : true,
-            selected : true
+            name: 'foo',
+            resourceId: 1,
+            configId: 1,
+            schema: schema,
+            collapsed: true,
+            selected: true
         };
 
         modelCtrl();
@@ -121,13 +121,13 @@ describe('Controller: ModelCtrl', function () {
     xit('should send broadcast of selected source and set selected source value', function() {
 
         var source = {
-            name : 'foo',
-            dataModelId : 1,
-            schemaId : 1,
-            schema : schema,
-            collapsed : true,
-            selected : true
-        },
+                name: 'foo',
+                dataModelId: 1,
+                schemaId: 1,
+                schema: schema,
+                collapsed: true,
+                selected: true
+            },
             flag;
 
         runs(function() {
@@ -200,7 +200,7 @@ describe('Controller: ModelCtrl', function () {
 
         spyOn(PubSub, 'broadcast');
 
-	scope.setOutputSchema({schema: 'foo'});
+        scope.setOutputSchema({schema: 'foo'});
 
         expect(scope.project.output_data_model).toEqual({schema: 'foo'});
         expect(scope.project._$output_data_model_schema).toEqual('foo');

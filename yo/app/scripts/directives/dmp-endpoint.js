@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', function ($rootScope, $modal, $q, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub) {
+    .directive('dmpEndpoint', function($rootScope, $modal, $q, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub) {
         var sourceScope = null,
             elements = {},
             sourceMap = {},
@@ -76,7 +76,7 @@ angular.module('dmpApp')
 
                 jsP.on('click', onClick);
 
-                if(component.mappingId) {
+                if (component.mappingId) {
                     newConnection.mappingId = component.mappingId;
                 }
 
@@ -85,7 +85,7 @@ angular.module('dmpApp')
                     endpointLabel.set(newConnection, label);
                 }
 
-                if(active) {
+                if (active) {
                     activate(newConnection);
                 }
 
@@ -94,9 +94,9 @@ angular.module('dmpApp')
                 connectionDefer.resolve(newConnection);
             }
 
-            if(label === true) {
+            if (label === true) {
                 endpointLabel.ask().then(continuation, connectionDefer.reject);
-            } else if(typeof label === 'string') {
+            } else if (typeof label === 'string') {
                 continuation(label);
             } else {
                 continuation(null);
@@ -127,7 +127,7 @@ angular.module('dmpApp')
             var labelOverlay = newInputComponent.connection.getLabelOverlay();
             labelOverlay.addClass('mapping-label');
 
-            if(!baseComponent.additionalInput) {
+            if (!baseComponent.additionalInput) {
                 baseComponent.additionalInput = [];
             }
 
@@ -170,7 +170,7 @@ angular.module('dmpApp')
                 data = c;
             }
 
-            if(parentName) {
+            if (parentName) {
                 data.parentName = parentName;
             }
 
@@ -215,7 +215,7 @@ angular.module('dmpApp')
         }
 
         function onProjectDiscarded() {
-            endpointSelector.foreach(function (component) {
+            endpointSelector.foreach(function(component) {
 
                 removePlumbs(component);
 
@@ -230,7 +230,7 @@ angular.module('dmpApp')
 
         function removePlumbs(connection) {
 
-            angular.forEach(connection.endpoints, function (endpoint) {
+            angular.forEach(connection.endpoints, function(endpoint) {
                 jsP.deleteEndpoint(endpoint);
             });
 
@@ -241,17 +241,17 @@ angular.module('dmpApp')
 
             endpointSelector.reset();
 
-            angular.forEach(mappings, function (mapping) {
+            angular.forEach(mappings, function(mapping) {
 
                 var additionalInputPath = false;
 
-                angular.forEach(mapping.input_attribute_paths, function (input_attribute_path) {
+                angular.forEach(mapping.input_attribute_paths, function(input_attribute_path) {
 
                     var inputScopes = sourceMap[input_attribute_path.attribute_path.id] || [],
                         outputScopes = targetMap[mapping.output_attribute_path.attribute_path.id] || [];
 
-                    angular.forEach(inputScopes, function (inputScope) {
-                        angular.forEach(outputScopes, function (outputScope) {
+                    angular.forEach(inputScopes, function(inputScope) {
+                        angular.forEach(outputScopes, function(outputScope) {
                             var component = {
                                 dropEndpoint: null,
                                 scope: 'schema',
@@ -260,7 +260,7 @@ angular.module('dmpApp')
                                 mappingId: mapping.id
                             };
 
-                            if(!additionalInputPath) {
+                            if (!additionalInputPath) {
                                 connectComponent({component: component, sourceId: component.sourceId, targetId: component.targetId, sourceOptions: inputScope.opts, targetOptions: outputScope.opts, active: true, label: mapping.name});
                             } else {
 
@@ -342,7 +342,7 @@ angular.module('dmpApp')
             scope: true,
             restrict: 'A',
             replace: true,
-            compile: function (tElement, tAttrs) {
+            compile: function(tElement, tAttrs) {
                 var jspSourceOpts = tAttrs['jspSourceOptions'] || tAttrs['jsPlumbSourceOptions'],
                     jspSourceOptsWatch = function(scope) {
                         return scope.$eval(jspSourceOpts);
@@ -363,7 +363,7 @@ angular.module('dmpApp')
 
                     elements[scope.guid] = iElement;
 
-                    if(isSource) {
+                    if (isSource) {
 
                         // jsP.makeSource(iElement, null, sourceOpts);
                         // jsP.unmakeTarget(iElement);
@@ -373,7 +373,7 @@ angular.module('dmpApp')
                         });
                     }
 
-                    if(isTarget) {
+                    if (isTarget) {
 
                         // jsP.unmakeSource(iElement);
                         // jsP.makeTarget(iElement, null, targetOpts);

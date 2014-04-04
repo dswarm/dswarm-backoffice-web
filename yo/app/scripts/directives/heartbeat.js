@@ -20,7 +20,7 @@ angular.module('dmpApp')
                         $http(config)
                             .success(function heartbeatSuccess(data) {
                                 elem.removeClass('yellow red green');
-                                elem.addClass((data === expected)? 'green' : 'yellow');
+                                elem.addClass((data === expected) ? 'green' : 'yellow');
                             })
                             .error(function heartbeatError() {
                                 elem.removeClass('yellow green');

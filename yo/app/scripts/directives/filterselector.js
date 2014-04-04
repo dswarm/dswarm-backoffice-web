@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('filterSelector', function () {
+    .directive('filterSelector', function() {
         return {
             restrict: 'E',
             replace: true,
             scope: {
-                filters : '=',
-                update : '='
+                filters: '=',
+                update: '='
             },
             templateUrl: 'views/directives/filter-selector.html'
         };

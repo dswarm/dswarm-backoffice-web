@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataConfigPreviewResource', function (ResourceFactory) {
+    .factory('DataConfigPreviewResource', function(ResourceFactory) {
 
         return ResourceFactory.create('resources', function(url) {
             return {

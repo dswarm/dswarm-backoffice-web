@@ -12,7 +12,7 @@ angular.module('dmpApp')
                     params: {
                         atMost: '@atMost'
                     },
-                    transformResponse: function (data, headers) {
+                    transformResponse: function(data, headers) {
                         if (angular.lowercase(headers('content-type')) === 'application/json') {
                             var parsedData = JSON.parse(data),
                                 transformed = [];

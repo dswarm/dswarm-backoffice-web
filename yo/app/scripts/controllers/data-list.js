@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash, Neo4jEndpoint) {
+    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash, Neo4jEndpoint) {
 
         $scope.files = [];
         $scope.models = [];
@@ -30,15 +30,15 @@ angular.module('dmpApp')
         };
 
         $scope.onProjectDeleteClick = function(project) {
-	    ProjectResource.remove({id : project.id}, {}, function() {
+            ProjectResource.remove({id: project.id}, {}, function() {
                 $scope.updateGridData();
             });
         };
 
-	$scope.onProjectExportClick = function(project) {
-	    // TODO: call actual endpoint
-	    console.log('project export', project, 'neo4j is at', Neo4jEndpoint);
-	};
+        $scope.onProjectExportClick = function(project) {
+            // TODO: call actual endpoint
+            console.log('project export', project, 'neo4j is at', Neo4jEndpoint);
+        };
 
         $scope.updateGridData = function() {
 
@@ -46,7 +46,9 @@ angular.module('dmpApp')
 
                 $scope.files = results;
 
-            }, function() { $scope.files = ''; });
+            }, function() {
+                $scope.files = '';
+            });
 
             DataModelResource.query(function(results) {
 
@@ -56,13 +58,17 @@ angular.module('dmpApp')
 
                     return result;
                 });
-            }, function() { $scope.models = ''; });
+            }, function() {
+                $scope.models = '';
+            });
 
             ProjectResource.query(function(projects) {
 
                 $scope.projects = projects;
 
-            }, function() { $scope.projects = ''; });
+            }, function() {
+                $scope.projects = '';
+            });
 
         };
 
@@ -81,9 +87,9 @@ angular.module('dmpApp')
         $scope.modelListOptions = {
             data: 'models',
             columnDefs: [
-                {field:'name', displayName:'Name'},
-                {field:'description', displayName:'Description '},
-                {field:'storage_type', displayName:'Configured Data Storage Type'}
+                {field: 'name', displayName: 'Name'},
+                {field: 'description', displayName: 'Description '},
+                {field: 'storage_type', displayName: 'Configured Data Storage Type'}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedModel,
@@ -93,8 +99,8 @@ angular.module('dmpApp')
         $scope.projectListOptions = {
             data: 'projects',
             columnDefs: [
-                {field:'name', displayName:'Name'},
-                {field:'description', displayName:'Description '}
+                {field: 'name', displayName: 'Name'},
+                {field: 'description', displayName: 'Description '}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedProject,
@@ -102,7 +108,6 @@ angular.module('dmpApp')
         };
 
         $scope.updateGridData();
-
 
 
     });

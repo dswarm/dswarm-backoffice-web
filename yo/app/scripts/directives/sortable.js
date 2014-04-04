@@ -13,16 +13,16 @@
                     throw new Error('The "' + functionName + '" function does not exist, you need to load jQuery-UI');
                 }
 
-                return function (scope, iElement) {
+                return function(scope, iElement) {
                     var opts = angular.extend({},
                         options.options,
-                        scope.sortableCallbacks || {});
+                            scope.sortableCallbacks || {});
 
-                    $timeout(function () {
+                    $timeout(function() {
                         iElement[functionName].call(iElement, opts);
                         iElement['disableSelection']();
 
-                        iElement.bind('$destroy', function () {
+                        iElement.bind('$destroy', function() {
                             iElement[functionName].call(iElement, 'destroy');
                         });
                     }, 0, false);
@@ -61,10 +61,10 @@
                 revertDuration: 400
             }
         })
-        .directive('functionSortable', function (functionSortableOptions, $timeout) {
+        .directive('functionSortable', function(functionSortableOptions, $timeout) {
             return sortableFactory(functionSortableOptions, $timeout);
         })
-        .directive('componentMember', function (componentDraggableOptions, $timeout) {
+        .directive('componentMember', function(componentDraggableOptions, $timeout) {
             return sortableFactory(componentDraggableOptions, $timeout);
         });
 }());

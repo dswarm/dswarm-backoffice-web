@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpFileUpload', function () {
+    .directive('dmpFileUpload', function() {
         return {
             scope: true,
             link: function(scope, iElement) {

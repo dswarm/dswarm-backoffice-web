@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ComponentsCtrl', function ($scope, FunctionResource) {
+    .controller('ComponentsCtrl', function($scope, FunctionResource) {
         $scope.internalName = 'Function List Widget';
 
         /**
@@ -19,7 +19,7 @@ angular.module('dmpApp')
             $scope.functions.children = funs;
         });
     })
-    .directive('components', function () {
+    .directive('components', function() {
         return {
             restrict: 'E',
             replace: true,

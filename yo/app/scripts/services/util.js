@@ -12,18 +12,18 @@ angular.module('dmpApp')
  * Provide an injectable reference to the API endpoint
  */
     .factory('ApiEndpoint', function(ServiceUrls) {
-	return ServiceUrls.backend || '';
+        return ServiceUrls.backend || '';
     })
 /**
  * Provide an injectable reference to the NEO4j endpoint
  */
     .factory('Neo4jEndpoint', function(ServiceUrls) {
-	return ServiceUrls.neo || '';
+        return ServiceUrls.neo || '';
     })
 /**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', function (loDash, $q, $timeout) {
+    .factory('Util', function(loDash, $q, $timeout) {
 
         function latestBy(list, property) {
             var prop = property || 'id';
@@ -70,7 +70,9 @@ angular.module('dmpApp')
          * @returns {Array}
          */
         function collect(seq, func, thisObj) {
-            return loDash(seq).map(func, thisObj).filter(function(el) {return el !== undefined && el !== null;}).valueOf();
+            return loDash(seq).map(func, thisObj).filter(function(el) {
+                return el !== undefined && el !== null;
+            }).valueOf();
         }
 
         /**
@@ -145,7 +147,7 @@ angular.module('dmpApp')
             mapResources: mapResources,
             collect: collect,
             timedoutPromise: timedoutPromise,
-            toJson : toJson
+            toJson: toJson
         };
     })
 /**
@@ -174,12 +176,12 @@ angular.module('dmpApp')
  * For more concrete implementations, refer to
  * http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
  */
-    .factory('GUID', function(){
+    .factory('GUID', function() {
         /**
          * Random parts for GUID
          * @returns {string} guid part
          */
-        function s4(){
+        function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
                 .substring(1);

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: Transformation', function () {
+describe('Directive: Transformation', function() {
     var element, scope, $rootScope, $compile, $timeout, $httpBackend;
     var elementHtml = '<transformation></transformation>';
 
@@ -240,44 +240,56 @@ describe('Directive: Transformation', function () {
             resizable: {
                 enabled: false
             },
-            mobileBreakPoint : 100,
-            minRows : 0,
-            maxRows : 0
+            mobileBreakPoint: 100,
+            minRows: 0,
+            maxRows: 0
         };
     });
 
-    var connectionSources = [{
-        id: 42,
-        name: 'feld.nr',
-        path: [17, 18]
-    }, {
-        id: 43,
-        name: 'feld.type',
-        path: [17, 5]
-    }, {
-        id: 43,
-        name: 'feld.type',
-        path: [17, 5]
-    }];
-    var connectionTargets = [{
-        id: 1337,
-        name: 'feld.value',
-        path: [17, 14]
-    },{
-        id: 1338,
-        name: 'feld.ind',
-        path: [17, 19]
-    },{
-        id: 1338,
-        name: 'feld.ind',
-        path: [17, 19]
-    }];
-    var additionalTargets = [ [], [],
-        [{
-            id: 1339,
-            name: 'feld.additional',
-            path: [22]
-        }]
+    var connectionSources = [
+        {
+            id: 42,
+            name: 'feld.nr',
+            path: [17, 18]
+        },
+        {
+            id: 43,
+            name: 'feld.type',
+            path: [17, 5]
+        },
+        {
+            id: 43,
+            name: 'feld.type',
+            path: [17, 5]
+        }
+    ];
+    var connectionTargets = [
+        {
+            id: 1337,
+            name: 'feld.value',
+            path: [17, 14]
+        },
+        {
+            id: 1338,
+            name: 'feld.ind',
+            path: [17, 19]
+        },
+        {
+            id: 1338,
+            name: 'feld.ind',
+            path: [17, 19]
+        }
+    ];
+    var additionalTargets = [
+        [],
+        [],
+        [
+            {
+                id: 1339,
+                name: 'feld.additional',
+                path: [22]
+            }
+        ]
     ];
 
     var connectionDatas = _.map(_.zip(connectionSources, connectionTargets, additionalTargets), function(sourceTargetAdditional, idx) {
@@ -423,7 +435,11 @@ describe('Directive: Transformation', function () {
         expect(project.mappings.length).toBe(3);
         expect(elScope.tabs.length).toBe(3);
 
-        var expectedPaths = [[28, 30], [27, 29], [27, 29, 34]];
+        var expectedPaths = [
+            [28, 30],
+            [27, 29],
+            [27, 29, 34]
+        ];
 
         _.each(_.zip(project.mappings, connectionDatas, elScope.tabs, expectedPaths), function(mappingDataTabsPaths, idx) {
             var mapping = mappingDataTabsPaths[0],
@@ -441,16 +457,16 @@ describe('Directive: Transformation', function () {
             expect(mapping.transformation.function.type).toBe('Transformation');
             expect(mapping.transformation.function.components).toEqual([]);
 
-	    var expectedInputMapping;
-            if(paths[2]) {
-		expectedInputMapping =[getMappingWithPath(attributePaths, {id: paths[0]}, {
+            var expectedInputMapping;
+            if (paths[2]) {
+                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
                     name: 'input mapping attribute path instance'
                 }), getMappingWithPath(attributePaths, {id: paths[2]}, {
                     name: 'input mapping attribute path instance'
                 })];
 
             } else {
-		expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
+                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
                     name: 'input mapping attribute path instance'
                 })];
             }
@@ -521,18 +537,20 @@ describe('Directive: Transformation', function () {
         scope.$digest();
         var elScope = element.scope();
 
-        expect(elScope.tabs).toEqual([{
-            title: mappingName,
-            active: true,
-            id: mappingId
-        }]);
+        expect(elScope.tabs).toEqual([
+            {
+                title: mappingName,
+                active: true,
+                id: mappingId
+            }
+        ]);
     });
 
     it('should send transformations', inject(function(Util, TaskResource, PubSub) {
         var taskResult = [
             {'foo': 'bar'}
         ];
-	$httpBackend.expectPOST('foo/tasks?persist=false').respond(taskResult);
+        $httpBackend.expectPOST('foo/tasks?persist=false').respond(taskResult);
 
         scope.$digest();
         var elScope = element.scope();
@@ -558,7 +576,7 @@ describe('Directive: Transformation', function () {
         elScope.sendTransformation(elScope.tabs[dataIdx]);
         $httpBackend.flush();
 
-	expect(TaskResource.execute).toHaveBeenCalledWith({ persist : false }, payloadJson);
+        expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, payloadJson);
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
 
@@ -570,7 +588,7 @@ describe('Directive: Transformation', function () {
     }));
 
     it('should alert an error on wrong transformations', inject(function(TaskResource, $window) {
-	$httpBackend.expectPOST('foo/tasks?persist=false').respond(500, {error: 'foo bar'});
+        $httpBackend.expectPOST('foo/tasks?persist=false').respond(500, {error: 'foo bar'});
 
         scope.$digest();
         var elScope = element.scope();
@@ -592,7 +610,7 @@ describe('Directive: Transformation', function () {
         var taskResult = [
             {'foo': 'bar'}
         ];
-	$httpBackend.expectPOST('foo/tasks?persist=false').respond(taskResult);
+        $httpBackend.expectPOST('foo/tasks?persist=false').respond(taskResult);
 
         scope.$digest();
         var elScope = element.scope();
@@ -617,7 +635,7 @@ describe('Directive: Transformation', function () {
         elScope.sendTransformations();
         $httpBackend.flush();
 
-	expect(TaskResource.execute).toHaveBeenCalledWith({ persist : false }, payloadJson);
+        expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, payloadJson);
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
         expect(PubSub.broadcast.calls.length).toBe(1);
@@ -701,23 +719,20 @@ describe('Directive: Transformation', function () {
 
         var _dropEl = angular.element('<span><li style="margin: 0px; top: 20px; left: 444.5px; height: 121.5px; width: 121.5px;" id="ebc3de1c-c677-d393-997f-bda80ddebbd0"></li></span>');
         elScope.item = {
-            positionX : 0,
-            positionY : 0,
-            placeholder : true
+            positionX: 0,
+            positionY: 0,
+            placeholder: true
         };
 
         dropEl = $compile(_dropEl)(elScope);
 
-        elScope.dropped(dragEl,dropEl);
+        elScope.dropped(dragEl, dropEl);
 
         expect(elScope.activeMapping.transformation.function.components.length).toBe(1);
 
     });
 
     it('should broadcast an \'handleEditConfig\' event when a component was clicked', inject(function(PubSub) {
-        scope.$digest();
-        var elScope = element.scope();
-
         spyOn(PubSub, 'broadcast');
 
         var dragEl, dropEl;
@@ -741,15 +756,15 @@ describe('Directive: Transformation', function () {
 
         var _dropEl = angular.element('<span><li style="margin: 0px; top: 20px; left: 444.5px; height: 121.5px; width: 121.5px;" id="ebc3de1c-c677-d393-997f-bda80ddebbd0"></li></span>');
         elScope.item = {
-            positionX : 0,
-            positionY : 0,
-            placeholder : true,
-            id : 1
+            positionX: 0,
+            positionY: 0,
+            placeholder: true,
+            id: 1
         };
 
         dropEl = $compile(_dropEl)(elScope);
 
-        elScope.dropped(dragEl,dropEl);
+        elScope.dropped(dragEl, dropEl);
 
         elScope.onFunctionClick(mockedFunctions[0]);
 
@@ -757,7 +772,7 @@ describe('Directive: Transformation', function () {
             id: 1,
             name: 'blacklist',
             description: 'Blacklist filter',
-            function : mockedFunctions[0],
+            function: mockedFunctions[0],
             parameter_mappings: {},
             output_components: [],
             input_components: []
@@ -765,7 +780,9 @@ describe('Directive: Transformation', function () {
     }));
 
     it('should open a filter modal when the path component is clicked', inject(function($modal) {
-        var fakeModal = { result: { then: function(fn){ fn(); } } };
+        var fakeModal = { result: { then: function(fn) {
+            fn();
+        } } };
         spyOn($modal, 'open').andReturn(fakeModal);
 
         scope.$digest();

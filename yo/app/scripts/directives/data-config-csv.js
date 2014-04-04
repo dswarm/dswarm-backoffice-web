@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', function ($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
+    .controller('DataConfigCsvCtrl', function($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
 
-        function returnToData() { $location.path('/data/'); }
+        function returnToData() {
+            $location.path('/data/');
+        }
 
         var resource = null;
 
@@ -17,28 +19,28 @@ angular.module('dmpApp')
         $scope.config = {};
 
         $scope.presets = {
-            fileFormat : [
-                { name : 'Windows', 'row_delimiter' : '\\r\\n' },
-                { name : 'Linux' , 'row_delimiter' : '\\n' }
+            fileFormat: [
+                { name: 'Windows', 'row_delimiter': '\\r\\n' },
+                { name: 'Linux', 'row_delimiter': '\\n' }
             ],
-            encoding : [
-                { name : 'ISO-8859-1' },
-                { name : 'ISO-8859-15' },
-                { name : 'US-ASCII' },
-                { name : 'UTF-8' },
-                { name : 'UTF-16' },
-                { name : 'UTF-16LE' },
-                { name : 'UTF-16BE' },
-                { name : 'Unicode' },
-                { name : 'Windows-1252' }
+            encoding: [
+                { name: 'ISO-8859-1' },
+                { name: 'ISO-8859-15' },
+                { name: 'US-ASCII' },
+                { name: 'UTF-8' },
+                { name: 'UTF-16' },
+                { name: 'UTF-16LE' },
+                { name: 'UTF-16BE' },
+                { name: 'Unicode' },
+                { name: 'Windows-1252' }
             ],
 
-            parameters : {
-                'column_delimiter' : ',',
-                'escape_character' : '\\',
-                'quote_character' : '"',
-                'column_names' : 'columnN',
-                'storage_type' : 'csv'
+            parameters: {
+                'column_delimiter': ',',
+                'escape_character': '\\',
+                'quote_character': '"',
+                'column_names': 'columnN',
+                'storage_type': 'csv'
             }
 
         };
@@ -54,7 +56,7 @@ angular.module('dmpApp')
         }
 
         $scope.resourceId = 1;
-        if($routeParams.resourceId >= 0) {
+        if ($routeParams.resourceId >= 0) {
             $scope.resourceId = $routeParams.resourceId;
         }
 
@@ -103,7 +105,7 @@ angular.module('dmpApp')
 
         // When file format changes, update default row separator
         $scope.onFileFormatChanged = function() {
-            if($scope.config.parameters.fileFormat && $scope.config.parameters.fileFormat.rowSeperator) {
+            if ($scope.config.parameters.fileFormat && $scope.config.parameters.fileFormat.rowSeperator) {
                 $scope.config.parameters.rowSeperator = $scope.config.parameters.fileFormat.rowSeperator;
             }
         };
@@ -122,7 +124,7 @@ angular.module('dmpApp')
             var config = getConfig();
 
             PubSub.broadcast('dataConfigUpdated', {
-                config : config
+                config: config
             });
         }
 
@@ -142,7 +144,7 @@ angular.module('dmpApp')
         $scope.$watch(allFields, fieldChanged, true);
 
     })
-    .directive('dataconfigcsv', function () {
+    .directive('dataconfigcsv', function() {
         return {
             restrict: 'E',
             replace: true,

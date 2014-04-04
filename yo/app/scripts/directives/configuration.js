@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function ($scope, PubSub) {
+    .controller('ConfigurationCtrl', function($scope, PubSub) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -9,11 +9,11 @@ angular.module('dmpApp')
 
         var componentId = null;
 
-        $scope.getPattern = function (pattern) {
-            return pattern? new RegExp('^' + pattern + '$') : /.*/;
+        $scope.getPattern = function(pattern) {
+            return pattern ? new RegExp('^' + pattern + '$') : /.*/;
         };
 
-        $scope.formClasses = function (input, isOptional) {
+        $scope.formClasses = function(input, isOptional) {
             return {
                 'has-error': input.$invalid,
                 'has-success': !isOptional && input.$valid
@@ -23,7 +23,7 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'handleEditConfig', function(args) {
             componentId = args.id;
 
-            angular.forEach(args.parameter_mappings, function (value, key) {
+            angular.forEach(args.parameter_mappings, function(value, key) {
                 args.function.function_description.parameters[key].data = value;
             });
 
@@ -40,7 +40,7 @@ angular.module('dmpApp')
                 parameter_mappings: {}
             };
 
-            angular.forEach($scope.component.function_description.parameters, function (paramDef, param) {
+            angular.forEach($scope.component.function_description.parameters, function(paramDef, param) {
                 if (angular.isDefined(paramDef.data)) {
                     params.parameter_mappings[param] = paramDef.data;
                 }
@@ -57,7 +57,7 @@ angular.module('dmpApp')
             componentId = null;
         };
     })
-    .directive('configuration', function () {
+    .directive('configuration', function() {
         return {
             scope: true,
             restrict: 'E',

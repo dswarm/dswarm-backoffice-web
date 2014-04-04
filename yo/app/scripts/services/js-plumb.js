@@ -95,7 +95,7 @@ angular.module('dmpApp')
         jsPlumb.getCachedData = function(elId) {
 
             var $2 = $('#' + elId);
-            if($2 && !$2.is(':visible') && $2.parent().hasClass('tree-leaf')) {
+            if ($2 && !$2.is(':visible') && $2.parent().hasClass('tree-leaf')) {
 
                 $2.closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
                 elId = $2.closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
@@ -121,7 +121,7 @@ angular.module('dmpApp')
                 target: target
             }, jsPlumbOptions, opts || {}));
 
-            if(!source.data) {
+            if (!source.data) {
                 source = $(source);
             }
 
@@ -139,7 +139,7 @@ angular.module('dmpApp')
         function detach(connection, source, target) {
             if (connection && connection.source === source[0] && connection.target === target[0]) {
                 jsPlumb.detach(connection);
-                if(source.data) {
+                if (source.data) {
                     source.data('_outbound', null);
                 }
             }
@@ -272,19 +272,19 @@ angular.module('dmpApp')
 
         return {
             on: on,
-            connect:connect,
+            connect: connect,
             detach: detach,
             detachAll: detachAll,
             makeSource: makeSource,
             makeTarget: makeTarget,
             unmakeSource: unmakeSource,
             unmakeTarget: unmakeTarget,
-            repaintEverything : repaintEverything,
-            addEndpoint : addEndpoint,
-            removeAllEndpoints : removeAllEndpoints,
-            deleteEndpoint : deleteEndpoint,
-            getAllConnections : getAllConnections,
-            detachEveryConnection : detachEveryConnection,
-            reset : reset
+            repaintEverything: repaintEverything,
+            addEndpoint: addEndpoint,
+            removeAllEndpoints: removeAllEndpoints,
+            deleteEndpoint: deleteEndpoint,
+            getAllConnections: getAllConnections,
+            detachEveryConnection: detachEveryConnection,
+            reset: reset
         };
     });

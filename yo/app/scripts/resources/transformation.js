@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('TransformationResource', function (ResourceFactory) {
+    .factory('TransformationResource', function(ResourceFactory) {
 
         return ResourceFactory.create('transformations', function(_, baseUrl) {
             return {

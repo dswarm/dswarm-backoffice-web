@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('endpointSelector', function ($modal, $q, endpointLabel, loDash, Util) {
+    .factory('endpointSelector', function($modal, $q, endpointLabel, loDash, Util) {
 
         var activeComponent = null;
         var pool = [];
@@ -61,18 +61,18 @@ angular.module('dmpApp')
         function getTargetPoolComponents(component, scopes) {
 
             return Util.collect(pool, function(poolEntry) {
-                if(component.targetId === poolEntry.targetId) {
+                if (component.targetId === poolEntry.targetId) {
 
                     var sourceScope = scopes[component.sourceId].scope();
                     var targetScope = scopes[component.targetId].scope();
 
                     return {
-                        id : poolEntry.id,
+                        id: poolEntry.id,
                         label: endpointLabel.get(poolEntry),
                         sourceName: sourceScope.data.name,
                         sourceData: sourceScope.data,
-                        targetName : targetScope.data.name,
-                        targetData : targetScope.data
+                        targetName: targetScope.data.name,
+                        targetData: targetScope.data
                     };
                 }
                 return null;
@@ -81,11 +81,11 @@ angular.module('dmpApp')
 
         function activate(connection) {
 
-            if(endpointLabel.get(connection) === null) {
+            if (endpointLabel.get(connection) === null) {
                 return null;
             }
 
-            if(isConnectionAdditionalInput(connection)) {
+            if (isConnectionAdditionalInput(connection)) {
 
                 return activate(getTargetFromPool(connection.targetId));
             } else {
@@ -94,8 +94,8 @@ angular.module('dmpApp')
                     pool.push(connection);
                 }
 
-                if(!connection.mappingId) {
-                    connection.mappingId =  new Date().getTime()*-1;
+                if (!connection.mappingId) {
+                    connection.mappingId = new Date().getTime() * -1;
                 }
 
                 activeComponent = connection;
@@ -118,7 +118,7 @@ angular.module('dmpApp')
 
             if (isTargetInPool(component)) {
 
-                askForEndpoint(component, scopes).then(function (target) {
+                askForEndpoint(component, scopes).then(function(target) {
 
                     if (target !== null) {
                         defer.reject(angular.extend({mergeTo: target}, baseParams));
@@ -139,7 +139,7 @@ angular.module('dmpApp')
                 templateUrl: 'views/modals/dmp-endpoint-selector.html',
                 controller: 'DmpEndpointSelectorCtrl',
                 resolve: {
-                    endpointSet: function () {
+                    endpointSet: function() {
                         return getTargetPoolComponents(component, scopes);
                     }
                 }
