@@ -204,11 +204,16 @@ angular.module('dmpApp')
             isDraggingToGrid = true;
             createDropPlaceholder();
 
+            hideTransformationPlumbs();
         });
+
+        PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
 
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
             //removeDropPlaceholder();
             isDraggingToGrid = false;
+
+            showTransformationPlumbs();
         });
 
         //** End of function drag/drops handling
@@ -375,6 +380,14 @@ angular.module('dmpApp')
                 },
                 parameter_mappings: { }
             };
+        }
+
+        function hideTransformationPlumbs() {
+            console.log("hideTransformationPlumbs");
+        }
+
+        function showTransformationPlumbs() {
+            console.log("showTransformationPlumbs");
         }
 
         //** Start of mapping activation and selection
