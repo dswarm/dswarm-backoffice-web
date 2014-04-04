@@ -11,13 +11,13 @@ angular.module('dmpApp')
 /**
  * Provide an injectable reference to the API endpoint
  */
-    .factory('ApiEndpoint', function($window) {
-        return ($window && $window['dmp']) ? $window['dmp']['jsRoutes']['api'] : '';
+    .factory('ApiEndpoint', function(ServiceUrls) {
+	return ServiceUrls.backend || '';
     })
 /**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', function (loDash, ApiEndpoint, $q, $timeout) {
+    .factory('Util', function (loDash, $q, $timeout) {
 
         function latestBy(list, property) {
             var prop = property || 'id';
@@ -139,7 +139,6 @@ angular.module('dmpApp')
             mapResources: mapResources,
             collect: collect,
             timedoutPromise: timedoutPromise,
-            apiEndpoint: ApiEndpoint,
             toJson : toJson
         };
     })

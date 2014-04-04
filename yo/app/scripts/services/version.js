@@ -1,35 +1,18 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('buildInfo', function($http) {
-        var promise = $http.get('/data/version.json');
-        promise.get = function(cb) {
-            promise.success(function(resp) {
-                cb(resp.web, resp.api);
-            });
-        };
-
-        return promise;
-    })
-    .directive('appVersion', function ($window, buildInfo) {
+    .directive('appVersion', function (ProjectInfo) {
         return function(scope, iElement) {
-            buildInfo.get(function(infoWeb, infoApi) {
-                var text = [
-                    'Web:', infoWeb.revision,
-                    '--',
-                    'API:', infoApi.revision,
-                    'at',
-                    infoWeb.date
-                ],
-                    version = text.join(' ');
+	    var text = [
+		'Web:', ProjectInfo.versions.web.revision,
+		'--',
+		'API:', ProjectInfo.versions.backend.revision,
+		'at',
+		ProjectInfo.versions.web.date
+	    ],
+	    version = text.join(' ');
 
-                var dmp = $window['dmp'] || {};
-                dmp['version'] = version;
-                $window['dmp'] = dmp;
-
-                iElement.text(version);
-                iElement.attr('id', 'footer-build-information');
-            });
-
+	    iElement.text(version);
+	    iElement.attr('id', 'footer-build-information');
         };
     });

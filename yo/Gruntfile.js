@@ -30,12 +30,23 @@ module.exports = function (grunt) {
             test: 'test'
         },
 
-        options: {
-            apiUrl: {
-                dev: 'http://127.0.0.1:8087/dmp/',
-                prod: '/dmp/'
-            },
-            dmpProjectDir : process.env.DMP_HOME || '../../data-management-platform'
+	stage: {
+	    name: process.env.STAGE || 'development'
+	},
+
+	dmpProject: {
+	    backendDir: process.env.DMP_HOME || '../../data-management-platform',
+	    name: 'DMP 2000',
+	    versions: {
+                web: {
+                    revision: 'HEAD',
+                    date: 'latest'
+                },
+                backend: {
+                    revision: 'HEAD',
+                    date: 'latest'
+                }
+	    }
         },
 
         // Watches files for changes and runs tasks based on the changed files
@@ -60,7 +71,8 @@ module.exports = function (grunt) {
                 tasks: ['less']
             },
             gruntfile: {
-                files: ['Gruntfile.js']
+		files: ['Gruntfile.js'],
+		tasks: ['updateConfig']
             },
             livereload: {
                 options: {
@@ -74,45 +86,63 @@ module.exports = function (grunt) {
             }
         },
 
-        // write the template for JS API endpoint file
-        template: {
-            'api-server': {
-                'options': {
-                    'data': {
-                        'endpoint': '<%= options.apiUrl.dev %>'
+	ngconstant: {
+	    options: {
+		spaces: '    ',
+		name: 'dmpApp.config',
+		dest: '<%= yeoman.app %>/config.js',
+		wrap: '"use strict";\n\n {%= __ngModule %}',
+		constants: {
+		    ProjectInfo: {
+			title: '<%= dmpProject.name %>',
+			versions: '<%= dmpProject.versions %>'
                     }
-                },
-                'files': {
-                    '<%= yeoman.app %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
                 }
             },
-            'api-server-dist': {
-                'options': {
-                    'data': {
-                        'endpoint': '<%= options.apiUrl.prod %>'
+
+	    development: {
+		constants: {
+		    ServiceUrls: {
+			backend: 'http://127.0.0.1:8087/dmp/',
+			neo: 'http://127.0.0.1:7474/graph/'
                     }
+		}
+	    },
+
+	    unstable: {
+		options: {
+		    dest: '<%= yeoman.dist %>/config.js'
                 },
-                'files': {
-                    '<%= yeoman.dist %>/api.js': ['<%= yeoman.app %>/build/api.js.tpl']
+		constants: {
+		    ServiceUrls: {
+			backend: '/dmp/',
+			neo: 'http://194.95.145.12:7474/graph/'
+                    }
+                }
+            },
+
+            test: {
+                constants: {
+                    ServiceUrls: {
+                        backend: '/dmp/',
+                        neo: '/graph/'
+		    }
                 }
             }
         },
 
         // provide the output of 'git describe' for other tasks
         'git-describe': {
-            _opts: {
-                output: '<%= yeoman.app %>/data/version.json'
-            },
             build: {
                 options: {
-                    infoKey: 'web',
+		    versionsKey: 'web',
                     cwd: '.'
                 }
             },
             parent: {
                 options: {
-                    infoKey: 'api',
-                    cwd: '<%= options.dmpProjectDir %>'
+		    versionsKey: 'backend',
+		    cwd: '<%= dmpProject.backendDir %>'
                 }
             }
         },
@@ -516,33 +546,30 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('revision', 'generate a version.js file, based on the output of git-describe', function () {
-        var buildInfo = {}
-            , tasks = [
+	var tasks = [
                 'git-describe:build',
                 'git-describe:parent'
-            ]
-            , repoCount = tasks.length
-            , describedRepos = 0;
+	    ],
+	    executionsLeft = tasks.length;
 
-        grunt.event.many('git-describe', repoCount, function (rev, opts) {
-            describedRepos += 1;
-            buildInfo[opts.infoKey] = {
-                version: grunt.config('pkg.version'),
+	grunt.event.many('git-describe', executionsLeft, function (rev, opts) {
+	    grunt.config(['dmpProject', 'versions', opts.versionsKey], {
                 revision: rev[0],
                 date: grunt.template.today()
-            };
-
-            if (describedRepos >= repoCount) {
-                grunt.file.write(grunt.config('git-describe._opts.output'), JSON.stringify(buildInfo));
-            }
+	    });
         });
 
         grunt.task.run(tasks);
     });
 
     grunt.registerTask('updateRevision', [
-        'revision:dist',
+	'revision',
         'copy:rev'
+    ]);
+
+    grunt.registerTask('updateConfig', [
+	'revision',
+	'ngconstant:' + grunt.config.get('stage').name
     ]);
 
     grunt.registerTask('printConfig', 'print the complete configuration', function() {
@@ -558,7 +585,7 @@ module.exports = function (grunt) {
             'clean:server',
             'less',
             'bowerInstall',
-            'template:api-server',
+            'updateConfig',
             'copy:styles',
             'autoprefixer',
             'connect:' + (target === 'debug' ? 'ide-debug' : 'livereload'),
@@ -577,6 +604,7 @@ module.exports = function (grunt) {
             'less',
             'copy:styles',
             'autoprefixer',
+            'ngconstant:test',
             'connect:test',
             target === 'ci' ? 'karma:ci' : 'karma:unit'
         ]);
@@ -588,8 +616,7 @@ module.exports = function (grunt) {
             'less',
             'bowerInstall',
             'useminPrepare',
-            target === 'local' ? 'template:api-server' : 'template:api-server-dist',
-            'revision:dist',
+            'updateConfig',
             'copy:styles',
             'imagemin',
             'svgmin',

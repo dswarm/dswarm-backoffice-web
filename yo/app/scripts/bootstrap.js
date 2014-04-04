@@ -45,8 +45,8 @@ angular.module('dmpApp')
         localStorageServiceProvider.setPrefix('dmp');
         localStorageServiceProvider.setNotify(false, false);
     }])
-    .run(['$rootScope', '$location', '$window', function($rootScope, $location) {
-        $rootScope.projectName = 'DMP 2000';
+    .run(['$rootScope', '$location', 'ProjectInfo', function($rootScope, $location, ProjectInfo) {
+	$rootScope.projectName = ProjectInfo.title;
 
         if($location.path().indexOf("model") !== -1) {
             $location.path('/data/');
