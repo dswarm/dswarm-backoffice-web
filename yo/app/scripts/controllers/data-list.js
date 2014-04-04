@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash) {
+    .controller('DataListCtrl', function ($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash, Neo4jEndpoint) {
 
         $scope.files = [];
         $scope.models = [];
@@ -30,10 +30,15 @@ angular.module('dmpApp')
         };
 
         $scope.onProjectDeleteClick = function(project) {
-            ProjectResource.remove({id : project[0].id}, {}, function() {
+	    ProjectResource.remove({id : project.id}, {}, function() {
                 $scope.updateGridData();
             });
         };
+
+	$scope.onProjectExportClick = function(project) {
+	    // TODO: call actual endpoint
+	    console.log('project export', project, 'neo4j is at', Neo4jEndpoint);
+	};
 
         $scope.updateGridData = function() {
 

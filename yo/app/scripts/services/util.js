@@ -15,6 +15,12 @@ angular.module('dmpApp')
 	return ServiceUrls.backend || '';
     })
 /**
+ * Provide an injectable reference to the NEO4j endpoint
+ */
+    .factory('Neo4jEndpoint', function(ServiceUrls) {
+	return ServiceUrls.neo || '';
+    })
+/**
  * Provide utility functions for miscellaneous operations
  */
     .factory('Util', function (loDash, $q, $timeout) {
