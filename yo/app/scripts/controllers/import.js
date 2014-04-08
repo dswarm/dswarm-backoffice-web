@@ -6,7 +6,7 @@ angular.module('dmpApp')
             return $window.humanize.filesize(text);
         };
     })
-    .controller('ImportCtrl', function($scope, $location, ngProgress, ApiEndpoint) {
+    .controller('ImportCtrl', function($scope, $location, fileUpload, ApiEndpoint) {
 
         $scope.data = {};
         $scope.meta = {};
@@ -14,44 +14,19 @@ angular.module('dmpApp')
         $scope.submitForm = function() {
             var f = $scope.data.file;
             if (angular.isDefined(f) && $scope.data.name) {
-                (function(theFile, name, description) {
-                    var data = new FormData()
-                        , xhr = new XMLHttpRequest();
-
-                    xhr.onloadstart = function() {
-                        ngProgress.start();
-                    };
-
-                    xhr.upload.addEventListener('progress', function(evt) {
-                        if (evt.loaded < evt.total) {
-                            ngProgress.set(100 * (evt.loaded / evt.total));
-                        }
-                    }, false);
-
-                    xhr.onerror = function(err) {
-                        ngProgress.complete();
-                        console.log('error', err);
-                    };
-
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                            ngProgress.complete();
-                            if (Math.floor(xhr.status / 100) === 2) {
-                                var resp = JSON.parse(xhr.responseText),
-                                    respId = resp['id'];
-
-                                $location.path('/data/' + respId);
-                            }
-                        }
-                    };
-
-                    data.append('file', theFile, theFile.name);
-                    data.append('name', name);
-                    data.append('description', description);
-
-                    xhr.open('POST', ApiEndpoint + 'resources', true);
-                    xhr.send(data);
-                })(f, $scope.data.name, $scope.data.description);
+                fileUpload({
+                    file: f,
+                    params: {
+                        name: $scope.data.name,
+                        description: $scope.data.description
+                    },
+                    fileUrl: ApiEndpoint + 'resources'
+                }).then(function(resp) {
+                    var respId = resp['id'];
+                    $location.path('/data/' + respId);
+                }).catch(function(err) {
+                    console.log('file upload error', err);
+                });
             }
         };
 
