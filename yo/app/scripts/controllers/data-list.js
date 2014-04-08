@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, loDash, Neo4jEndpoint) {
+    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, fileDownload, loDash, Neo4jEndpoint) {
 
         $scope.files = [];
         $scope.models = [];
@@ -38,6 +38,12 @@ angular.module('dmpApp')
         $scope.onProjectExportClick = function(project) {
             // TODO: call actual endpoint
             console.log('project export', project, 'neo4j is at', Neo4jEndpoint);
+        };
+
+        $scope.onExportAllClick = function(format) {
+            var fileUrl = Neo4jEndpoint + 'rdf/getall?format=' + encodeURIComponent(format);
+
+            fileDownload(fileUrl);
         };
 
         $scope.updateGridData = function() {
