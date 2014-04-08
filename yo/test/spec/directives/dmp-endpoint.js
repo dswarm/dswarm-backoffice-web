@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: DmpEndpoint', function () {
+describe('Directive: DmpEndpoint', function() {
     var $rootScope, $compile;
     var sourceScope, targetScope, elementSource, elementTarget;
     var elementHtmlSource = '<div dmp-endpoint jsp-source-options="opts"></div>';
@@ -49,67 +49,69 @@ describe('Directive: DmpEndpoint', function () {
     }));
 
     it('should create the JsPlumb connections for the source', inject(function() {
-	sourceScope.$digest();
-	var elScope = elementSource.scope();
+        sourceScope.$digest();
+        var elScope = elementSource.scope();
 
-	elementSource.trigger('click');
+        elementSource.trigger('click');
 
-	expect(elScope.isSelected).toBe(true);
+        expect(elScope.isSelected).toBe(true);
     }));
 
     it('should de-select the source connector, if clicked twice', inject(function() {
-	sourceScope.$digest();
-	var elScope = elementSource.scope();
+        sourceScope.$digest();
+        var elScope = elementSource.scope();
 
-	elementSource.trigger('click');
+        elementSource.trigger('click');
 
-	expect(elScope.isSelected).toBe(true);
+        expect(elScope.isSelected).toBe(true);
 
 
-	elementSource.trigger('click');
+        elementSource.trigger('click');
 
-	expect(elScope.isSelected).toBe(false);
+        expect(elScope.isSelected).toBe(false);
     }));
 
     it('should de-select the other source connectors, if clicked on another source', inject(function() {
         sourceScope.$digest();
-	var elScope = elementSource.scope();
+        var elScope = elementSource.scope();
 
-	elementSource.trigger('click');
+        elementSource.trigger('click');
 
-	expect(elScope.isSelected).toBe(true);
+        expect(elScope.isSelected).toBe(true);
 
 
-	var anotherScope = $rootScope.$new();
-	anotherScope.data = { _$path_id: 20 };
-	anotherScope.opts = { foo: 'baz' };
-	var anotherElement = $compile(angular.element(elementHtmlSource))(anotherScope);
-	anotherScope.$digest();
-	var anotherElScope = anotherElement.scope();
+        var anotherScope = $rootScope.$new();
+        anotherScope.data = { _$path_id: 20 };
+        anotherScope.opts = { foo: 'baz' };
+        var anotherElement = $compile(angular.element(elementHtmlSource))(anotherScope);
+        anotherScope.$digest();
+        var anotherElScope = anotherElement.scope();
 
-	anotherElement.trigger('click');
+        anotherElement.trigger('click');
 
-	expect(elScope.isSelected).toBe(false);
-	expect(anotherElScope.isSelected).toBe(true);
+        expect(elScope.isSelected).toBe(false);
+        expect(anotherElScope.isSelected).toBe(true);
     }));
 
     it('should do nothing on target click if there was no source selected', function() {
 
         targetScope.$digest();
-	elementTarget.trigger('click');
+        elementTarget.trigger('click');
     });
 
     it('should connect a source and a target together', inject(function($q, endpointSelector) {
-	var fakePromise = {then: function() { return fakePromise; }};
+        var fakePromise = {then: function() {
+            return fakePromise;
+        }};
 
-	spyOn(endpointSelector, 'connectionParamPromise').andReturn(fakePromise);
+        spyOn(endpointSelector, 'connectionParamPromise').andReturn(fakePromise);
 
-	sourceScope.$digest();
-	targetScope.$digest();
+        sourceScope.$digest();
+        targetScope.$digest();
 
-	elementSource.trigger('click');
-	elementTarget.trigger('click');
+        elementSource.trigger('click');
+        elementTarget.trigger('click');
 
-	expect(endpointSelector.connectionParamPromise).toHaveBeenCalled();
+        expect(endpointSelector.connectionParamPromise).toHaveBeenCalled();
     }));
 });

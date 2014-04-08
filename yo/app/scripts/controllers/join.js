@@ -22,26 +22,27 @@ angular.module('dmpApp')
              */
             function MappingComponentFactory(name) {
                 switch (name) {
-                case 'mapper':
-                    var nextId = getId(name)
-                      , componentId = name + '-' + nextId;
-                    return {
-                        description: 'a fine Join Mapper',
-                        name: 'Join Mapper ' + (nextId + 1),
-                        id: componentId,
-                        data: {
-                            name: 'mapper.' + componentId
-                        }
-                    };
-                default:
-                    return null;
+                    case 'mapper':
+                        var nextId = getId(name)
+                            , componentId = name + '-' + nextId;
+                        return {
+                            description: 'a fine Join Mapper',
+                            name: 'Join Mapper ' + (nextId + 1),
+                            id: componentId,
+                            data: {
+                                name: 'mapper.' + componentId
+                            }
+                        };
+                    default:
+                        return null;
                 }
             }
+
             return MappingComponentFactory;
         })();
 
 
-        $scope.joinItem = function (action) {
+        $scope.joinItem = function(action) {
             var component = mappingComponentFactory(action);
             if (component) {
                 $scope.mappingComponents.push(component);

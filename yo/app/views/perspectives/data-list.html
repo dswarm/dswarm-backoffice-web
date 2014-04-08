@@ -73,5 +73,6 @@
     Selected project ({{ selectedProject.0.name }}):
 
     <a href="#/model/{{ selectedProject.0.id }}" class="btn btn-primary">Load for modelling</a>
-    <a ng-click="onProjectDeleteClick(selectedProject)" class="btn btn-default">Delete</a>
+    <a ng-click="onProjectExportClick(selectedProject[0])" class="btn btn-default">Export</a>
+    <a ng-click="onProjectDeleteClick(selectedProject[0])" class="btn btn-danger">Delete</a>
 </span>

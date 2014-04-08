@@ -16,16 +16,16 @@ angular.module('dmpApp')
             scope.$watch(iAttrs.connectWhen, function(source) {
                 if (!drawn && source) {
                     var connectWith = scope.$eval(iAttrs.connectWith);
-                    angular.forEach(connectWith, function (defined, selector) {
+                    angular.forEach(connectWith, function(defined, selector) {
                         if (defined && (defined.length || angular.isObject(defined))) {
                             var target = iElement.siblings(selector);
                             connectWithSources.push(iElement);
                             if (target.length) {
-                                $timeout(function () {
+                                $timeout(function() {
                                     var opts = {
                                         anchors: [
                                             [0, 1, 0, 1, -4, -9],
-                                            [0, 0, 0, -1,-4, -9]
+                                            [0, 0, 0, -1, -4, -9]
                                         ],
                                         connector: 'Straight',
                                         endpoint: 'Blank',
@@ -60,13 +60,13 @@ angular.module('dmpApp')
             });
         };
 
-        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'changeOutputModel'], function () {
+        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'changeOutputModel'], function() {
             angular.forEach(connectWithSources, function(source) {
                 jsP.detachAll(source);
             });
         });
 
-        PubSub.subscribe($rootScope, 'paintPlumbs', function () {
+        PubSub.subscribe($rootScope, 'paintPlumbs', function() {
             doLink(scope, iElement, iAttrs);
         });
 
@@ -77,14 +77,14 @@ angular.module('dmpApp')
             }
         };
     })
-    .directive('dmpConnectible', function ($timeout, jsP) {
+    .directive('dmpConnectible', function($timeout, jsP) {
         return {
             restrict: 'A',
             scope: true,
             controller: ['$scope', '$element', function($scope, $element) {
                 $scope.$element = $element;
             }],
-            link: function (scope, iElement) {
+            link: function(scope, iElement) {
                 scope.$on('tabSwitch', function() {
                     jsP.detachAll(scope.$element);
                 });

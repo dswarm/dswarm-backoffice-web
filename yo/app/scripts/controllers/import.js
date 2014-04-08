@@ -6,29 +6,29 @@ angular.module('dmpApp')
             return $window.humanize.filesize(text);
         };
     })
-    .controller('ImportCtrl', function ($scope, $location, ngProgress, ApiEndpoint) {
+    .controller('ImportCtrl', function($scope, $location, ngProgress, ApiEndpoint) {
 
         $scope.data = {};
         $scope.meta = {};
 
-        $scope.submitForm = function () {
+        $scope.submitForm = function() {
             var f = $scope.data.file;
             if (angular.isDefined(f) && $scope.data.name) {
                 (function(theFile, name, description) {
                     var data = new FormData()
                         , xhr = new XMLHttpRequest();
 
-                    xhr.onloadstart = function () {
+                    xhr.onloadstart = function() {
                         ngProgress.start();
                     };
 
-                    xhr.upload.addEventListener('progress', function (evt) {
+                    xhr.upload.addEventListener('progress', function(evt) {
                         if (evt.loaded < evt.total) {
                             ngProgress.set(100 * (evt.loaded / evt.total));
                         }
                     }, false);
 
-                    xhr.onerror = function (err) {
+                    xhr.onerror = function(err) {
                         ngProgress.complete();
                         console.log('error', err);
                     };

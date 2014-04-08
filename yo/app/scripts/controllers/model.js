@@ -12,18 +12,18 @@ angular.module('dmpApp')
 
         // Mock project data for angular data handling
         $scope.project = {
-            id : 0,
-            name : '',
-            description : '',
-            mappings : [],
-            functions : [],
-            input_data_model : {},
-            _$input_data_model_schema : {},
-            output_data_model : {},
-            _$output_data_model_schema : {}
+            id: 0,
+            name: '',
+            description: '',
+            mappings: [],
+            functions: [],
+            input_data_model: {},
+            _$input_data_model_schema: {},
+            output_data_model: {},
+            _$output_data_model_schema: {}
         };
 
-        $scope.$project_saved_state =  {};
+        $scope.$project_saved_state = {};
 
         $scope.isOutputDataModelLoaded = false;
 
@@ -35,7 +35,7 @@ angular.module('dmpApp')
 
         $scope.setOutputDataModel = function(dataModel) {
 
-            if($scope.project.output_data_model) {
+            if ($scope.project.output_data_model) {
                 $scope.removeMappings();
             }
 
@@ -52,13 +52,13 @@ angular.module('dmpApp')
 
         };
 
-	$scope.setOutputSchema = function(dataModel) {
-	    $scope.setOutputDataModel(dataModel);
+        $scope.setOutputSchema = function(dataModel) {
+            $scope.setOutputDataModel(dataModel);
         };
 
         $scope.processOutputDataModel = function() {
 
-            if(loDash.size($scope.project.output_data_model) > 0) {
+            if (loDash.size($scope.project.output_data_model) > 0) {
 
                 $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
@@ -126,7 +126,7 @@ angular.module('dmpApp')
 
             $scope.project = project;
 
-            if($scope.project.input_data_model) {
+            if ($scope.project.input_data_model) {
                 $scope.processInputDataModel();
             }
 
@@ -201,7 +201,7 @@ angular.module('dmpApp')
                 templateUrl: 'views/controllers/confirm-discard-draft.html'
             });
 
-            modalInstance.result.then(function () {
+            modalInstance.result.then(function() {
 
                 $scope.projectIsDraft = false;
                 var projectId = $scope.project.id;
@@ -213,7 +213,7 @@ angular.module('dmpApp')
                     $scope.closeAlert(idx);
                 });
 
-            }, function () {
+            }, function() {
 
                 if (angular.isDefined(idx) && $scope.alerts.length > idx) {
                     $scope.alerts[idx].busy = false;
@@ -228,14 +228,14 @@ angular.module('dmpApp')
 
         $scope.$watch(function() {
 
-            if(latestSave === $scope.project) {
+            if (latestSave === $scope.project) {
                 return false;
             }
 
             return $scope.project.id + ':' + Util.toJson($scope.project);
         }, function(newValue, oldValue) {
 
-            if(newValue === false) {
+            if (newValue === false) {
                 return;
             }
 
@@ -253,7 +253,7 @@ angular.module('dmpApp')
         }, true);
 
 
-        $scope.$on('$locationChangeStart', function () {
+        $scope.$on('$locationChangeStart', function() {
             jsP.detachEveryConnection({});
         });
 

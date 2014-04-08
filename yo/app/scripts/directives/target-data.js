@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl', function ($scope, $http, $q, Util, loDash,  schemaParser, PubSub) {
+    .controller('TargetDataCtrl', function($scope, $http, $q, Util, loDash, schemaParser, PubSub) {
         $scope.internalName = 'Target Data Widget';
 
         $scope.selectedTab = 0;
@@ -35,7 +35,7 @@ angular.module('dmpApp')
         });
 
     })
-    .directive('targetData', function () {
+    .directive('targetData', function() {
         return {
             scope: true,
             restrict: 'E',

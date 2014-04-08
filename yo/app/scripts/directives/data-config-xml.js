@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', function ($scope, $location, $routeParams, DataModelResource, ResourceResource, Util, ngProgress) {
+    .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, DataModelResource, ResourceResource, Util, ngProgress) {
 
         var resource = null;
         $scope.resourceId = $routeParams.resourceId;
@@ -9,10 +9,10 @@ angular.module('dmpApp')
         $scope.selectedSet = [];
 
         $scope.config = {
-            name : 'xml',
-            description : 'xml with id ' + $scope.resourceId,
-            parameters : {
-                'storage_type' : 'xml'
+            name: 'xml',
+            description: 'xml with id ' + $scope.resourceId,
+            parameters: {
+                'storage_type': 'xml'
             }
         };
 
@@ -51,8 +51,8 @@ angular.module('dmpApp')
 
             var model = {
                 'data_resource': resource,
-                'name'         : resource.name,
-                'description'  : resource.description,
+                'name': resource.name,
+                'description': resource.description,
                 'configuration': getConfig()
             };
 
@@ -65,11 +65,11 @@ angular.module('dmpApp')
         };
 
         $scope.onCancelClick = function() {
-            $location.path( '/data/' );
+            $location.path('/data/');
         };
 
     })
-    .directive('dataconfigxml', function () {
+    .directive('dataconfigxml', function() {
         return {
             restrict: 'E',
             replace: false,

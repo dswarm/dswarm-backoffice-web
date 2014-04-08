@@ -19,7 +19,7 @@ angular.module('dmpApp').
  *  At the moment, there is no notion of un-subscribing.
  *
  */
-    factory('PubSub', function ($rootScope) {
+    factory('PubSub', function($rootScope) {
         /**
          * broadcasts a message to a specific channel
          * @param channel {String}

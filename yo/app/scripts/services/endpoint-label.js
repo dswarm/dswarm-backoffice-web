@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('endpointLabel', function ($modal, $q) {
+    .factory('endpointLabel', function($modal, $q) {
 
         function valid(label) {
             return angular.isString(label) && label.length >= 5;
@@ -56,18 +56,17 @@ angular.module('dmpApp')
                 }]
             });
 
-            modalInstance.result.then(function (label) {
+            modalInstance.result.then(function(label) {
 
                 if (valid(label)) {
                     labelDefer.resolve(label);
                 } else {
                     labelDefer.reject('invalid');
                 }
-            }, function (reason) {
+            }, function(reason) {
 
                 labelDefer.reject(reason);
             });
-
 
 
             return labelDefer.promise;

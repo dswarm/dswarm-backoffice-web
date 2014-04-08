@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('MappingComponentConfigCtrl', function ($scope, PubSub) {
+    .controller('MappingComponentConfigCtrl', function($scope, PubSub) {
 
         $scope.internalName = 'Mapping Component Config Widget';
 
@@ -22,13 +22,13 @@ angular.module('dmpApp')
             $scope.targetSchemaSelectorShouldBeOpen = false;
         };
 
-        $scope.close = function () {
+        $scope.close = function() {
             $scope.mappingComponentConfigShouldBeOpen = false;
         };
 
         function addIncoming(data) {
 
-            if(!$scope.incomingPool[data.$$hashKey]) {
+            if (!$scope.incomingPool[data.$$hashKey]) {
                 $scope.incomingPool[data.$$hashKey] = [];
             }
 
@@ -42,20 +42,18 @@ angular.module('dmpApp')
 
             $scope.mappingComponentConfigShouldBeOpen = true;
 
-            angular.forEach(mappings[0], function(value){
+            angular.forEach(mappings[0], function(value) {
                 addIncoming(value.sourceData);
             });
 
             $scope.outgoingPool = mappings[1];
 
 
-
         });
 
 
-
     })
-    .directive('mappingComponentConfig', function () {
+    .directive('mappingComponentConfig', function() {
         return {
             restrict: 'E',
             replace: false,

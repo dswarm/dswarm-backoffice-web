@@ -1,6 +1,7 @@
 /yo/app/api.js
-coverage-*.json
+/yo/app/config.js
 /yo/app/data/version.json
-KarmaChrome
-
 yo/stdout
+
+coverage-*.json
+KarmaChrome

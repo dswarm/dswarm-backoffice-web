@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function ($scope, $window, $modal, $q, $rootScope, PubSub, loDash, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, PubSub, loDash, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -19,13 +19,13 @@ angular.module('dmpApp')
             resizable: {
                 enabled: false
             },
-            mobileBreakPoint : 100,
-            minRows : 0,
-            maxRows : 0,
-            maxGridRows : 0,
-            maxColumns : gridMaxItemsPerRow,
-            noFloatingUp : true,
-            containment : '.gridster'
+            mobileBreakPoint: 100,
+            minRows: 0,
+            maxRows: 0,
+            maxGridRows: 0,
+            maxColumns: gridMaxItemsPerRow,
+            noFloatingUp: true,
+            containment: '.gridster'
         };
 
         /** Gridster item access map */
@@ -57,9 +57,9 @@ angular.module('dmpApp')
             $scope.gridItems = [];
 
             $scope.gridsterOpts = angular.extend({}, $scope.gridsterOpts, {
-                minRows : 0,
-                maxRows : 0,
-                maxGridRows : 0
+                minRows: 0,
+                maxRows: 0,
+                maxGridRows: 0
             });
 
             // restore mappings if a previous project was loaded from a draft
@@ -76,6 +76,7 @@ angular.module('dmpApp')
             }
 
         }
+
         init();
         PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel'], init);
 
@@ -98,15 +99,15 @@ angular.module('dmpApp')
          */
         function createDropPlaceholder() {
 
-            for(var j = 0; j < $scope.gridsterOpts.maxRows; j++) {
+            for (var j = 0; j < $scope.gridsterOpts.maxRows; j++) {
 
-                for(var i = 0; i < gridMaxItemsPerRow; i++) {
+                for (var i = 0; i < gridMaxItemsPerRow; i++) {
 
-                    if(loDash.findIndex($scope.gridItems, { positionY: i, positionX: j  }) < 0) {
+                    if (loDash.findIndex($scope.gridItems, { positionY: i, positionX: j  }) < 0) {
                         $scope.gridItems.push({
                             positionX: j,
                             positionY: i,
-                            placeholder : true
+                            placeholder: true
                         });
 
                     }
@@ -130,7 +131,6 @@ angular.module('dmpApp')
 
         /**
          * Adds a function to the project data object
-         * @param functionData - A function data structure
          */
         function buildFunctionToProject() {
 
@@ -140,7 +140,7 @@ angular.module('dmpApp')
 
                 angular.forEach(mapping.transformation.function.components, function(component) {
 
-                    if(loDash.indexOf($scope.project.functions, component.function) === -1) {
+                    if (loDash.indexOf($scope.project.functions, component.function) === -1) {
                         $scope.project.functions.push(component.function);
                     }
 
@@ -176,10 +176,10 @@ angular.module('dmpApp')
         function addToGrid(positionX, positionY, itemData, id) {
 
             $scope.gridItems.push({
-                positionX : positionX,
-                positionY : positionY,
+                positionX: positionX,
+                positionY: positionY,
                 function: itemData,
-                id : id
+                id: id
             });
 
         }
@@ -194,7 +194,7 @@ angular.module('dmpApp')
         };
 
         $scope.$watch('gridItems', function() {
-            if(isDraggingToGrid === false) {
+            if (isDraggingToGrid === false) {
                 createInternalComponentsFromGridItems();
             }
             isDraggingToGrid = null;
@@ -235,7 +235,7 @@ angular.module('dmpApp')
 
                     // TODO: Build along path
 
-                    if(value !== null) {
+                    if (value !== null) {
                         addToGrid(0, key, value.function, value.id);
                     }
                 });
@@ -251,7 +251,7 @@ angular.module('dmpApp')
         function createInternalComponentsFromGridItems() {
             var internalComponents = [];
 
-            if(!$scope.activeMapping.id) {
+            if (!$scope.activeMapping.id) {
                 return;
             }
 
@@ -275,13 +275,17 @@ angular.module('dmpApp')
                 if (result.length > 0) {
                     var last = loDash.last(result);
 
-                    component.input_components = [{
-                        id: last.id
-                    }];
+                    component.input_components = [
+                        {
+                            id: last.id
+                        }
+                    ];
 
-                    last.output_components = [{
-                        id: component.id
-                    }];
+                    last.output_components = [
+                        {
+                            id: component.id
+                        }
+                    ];
                 }
 
                 result.push(component);
@@ -291,10 +295,10 @@ angular.module('dmpApp')
 
             // TODO: Expand to combine multiple input paths
             // for(var i = 0; i < $scope.gridsterOpts.maxRows; i++) {
-            for(var i = 0; i < 1; i++) {
+            for (var i = 0; i < 1; i++) {
 
                 // get all in this row to array
-                var rowComponents = loDash.filter($scope.gridItems, {positionX : i});
+                var rowComponents = loDash.filter($scope.gridItems, {positionX: i});
 
                 // order by column
                 rowComponents = loDash.sortBy(rowComponents, 'positionY');
@@ -311,7 +315,7 @@ angular.module('dmpApp')
                 // ermittle input_attribute_paths für aktuelle row
                 // TODO: Change to flexible multi input handling
 
-                if(typeof $scope.activeMapping.transformation.parameter_mappings === 'undefined') {
+                if (typeof $scope.activeMapping.transformation.parameter_mappings === 'undefined') {
                     $scope.activeMapping.transformation.parameter_mappings = {};
                 }
 
@@ -330,10 +334,10 @@ angular.module('dmpApp')
         /**
          * Extracts a component by id
          * @param id - Component id to return
-         * @returns {*|Mixed}
+         * @returns {*}
          */
         function getComponent(id) {
-            return loDash.find($scope.activeMapping.transformation.function.components, { id : id});
+            return loDash.find($scope.activeMapping.transformation.function.components, { id: id});
         }
 
         /**
@@ -345,13 +349,13 @@ angular.module('dmpApp')
         function createNewComponent(func, id) {
 
             return {
-                id : id,
-                name : func.name,
-                description : func.description,
-                function : func,
-                parameter_mappings : {},
-                output_components : [],
-                input_components : []
+                id: id,
+                name: func.name,
+                description: func.description,
+                function: func,
+                parameter_mappings: {},
+                output_components: [],
+                input_components: []
             };
 
         }
@@ -368,14 +372,14 @@ angular.module('dmpApp')
             description = typeof description !== 'undefined' ? description : 'transformation';
 
             return {
-                name : name,
-                description : description,
-                function : {
-                    name : name,
-                    description : description,
+                name: name,
+                description: description,
+                function: {
+                    name: name,
+                    description: description,
                     //TODO: make flex, this only handles one input to transformation
-                    parameters : ['transformationInputString'],
-                    type : 'Transformation',
+                    parameters: ['transformationInputString'],
+                    type: 'Transformation',
                     components: []
                 },
                 parameter_mappings: { }
@@ -401,10 +405,10 @@ angular.module('dmpApp')
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
-                $scope.activeMapping =  $scope.project.mappings[availableIds.indexOf(id)];
+                $scope.activeMapping = $scope.project.mappings[availableIds.indexOf(id)];
                 activateTab(id);
 
-                if(!$scope.activeMapping) {
+                if (!$scope.activeMapping) {
                     $scope.activeMapping = {};
                 }
 
@@ -418,16 +422,17 @@ angular.module('dmpApp')
 
             }
         }
+
         function activateTab(tabId) {
 
             var tabIndex = loDash.findIndex($scope.tabs, { 'id': tabId });
 
             loDash.map($scope.tabs, function(tab) {
-                tab.active= false;
+                tab.active = false;
                 return tab;
             });
 
-            if(tabIndex>= 0) {
+            if (tabIndex >= 0) {
                 $scope.tabs[tabIndex].active = true;
             }
         }
@@ -445,7 +450,7 @@ angular.module('dmpApp')
          * @param ap - Attribute path  data structure
          * @returns {string}
          */
-        $scope.formatAttributePath = function (ap) {
+        $scope.formatAttributePath = function(ap) {
             if (angular.isObject(ap) && angular.isDefined(ap.attributes)) {
                 return loDash.map(ap.attributes, 'name').join(' › ');
             }
@@ -457,12 +462,12 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
             if (activeComponentId !== data.mapping_id) {
-                if (loDash.any($scope.project.mappings, { 'id' : data.mapping_id })) {
+                if (loDash.any($scope.project.mappings, { 'id': data.mapping_id })) {
 
                     var idx = availableIds.indexOf(data.mapping_id);
                     activateTab(idx);
 
-                    var midx = loDash.findIndex($scope.project.mappings, {id : data.mapping_id});
+                    var midx = loDash.findIndex($scope.project.mappings, {id: data.mapping_id});
 
                     $scope.project.mappings[midx]._$connection_id = data.connection_id;
 
@@ -479,27 +484,29 @@ angular.module('dmpApp')
                         }),
 
                         mapping = {
-                            id :  data.mapping_id,
-                            _$connection_id : data.connection_id,
-                            name : data.name,
-                            transformation : createNewTransformation(),
-                            input_attribute_paths : [{
-                                type : 'MappingAttributePathInstance',
-                                name : 'input mapping attribute path instance',
-                                id : (new Date().getTime()+1)*-1,
-                                attribute_path : inputAttributePaths[0]
-                            }],
-                            output_attribute_path : {
-                                type : 'MappingAttributePathInstance',
-                                name : 'output mapping attribute path instance',
-                                id : (new Date().getTime()+2)*-1,
-                                attribute_path : outputAttributePaths[0]
+                            id: data.mapping_id,
+                            _$connection_id: data.connection_id,
+                            name: data.name,
+                            transformation: createNewTransformation(),
+                            input_attribute_paths: [
+                                {
+                                    type: 'MappingAttributePathInstance',
+                                    name: 'input mapping attribute path instance',
+                                    id: (new Date().getTime() + 1) * -1,
+                                    attribute_path: inputAttributePaths[0]
+                                }
+                            ],
+                            output_attribute_path: {
+                                type: 'MappingAttributePathInstance',
+                                name: 'output mapping attribute path instance',
+                                id: (new Date().getTime() + 2) * -1,
+                                attribute_path: outputAttributePaths[0]
                             }
                         };
 
                     $scope.project.mappings.push(mapping);
 
-                    $scope.tabs.push( { title: data.name, active: true, id: data.mapping_id, mappingId : data.mapping_id } );
+                    $scope.tabs.push({ title: data.name, active: true, id: data.mapping_id, mappingId: data.mapping_id });
                     availableIds.push(data.mapping_id);
 
                     activate(data.mapping_id, true);
@@ -511,19 +518,19 @@ angular.module('dmpApp')
             $scope.gridsterOpts.maxRows =
                 $scope.gridsterOpts.minRows =
                     $scope.gridsterOpts.maxGridRows =
-                        $scope.gridsterOpts.gridHeight = data.additionalInput.length +1;
+                        $scope.gridsterOpts.gridHeight = data.additionalInput.length + 1;
 
-            if($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length+1) {
+            if ($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length + 1) {
 
                 angular.forEach(data.additionalInput, function(input) {
                     angular.forEach($scope.project.input_data_model.schema.attribute_paths, function(path) {
-                        if(loDash.findIndex(path.attributes, { 'id': input.path[0] }) >= 0) {
+                        if (loDash.findIndex(path.attributes, { 'id': input.path[0] }) >= 0) {
 
                             $scope.activeMapping.input_attribute_paths.push({
-                                type : 'MappingAttributePathInstance',
-                                name : 'input mapping attribute path instance',
-                                id : (new Date().getTime()+1)*-1,
-                                attribute_path : path
+                                type: 'MappingAttributePathInstance',
+                                name: 'input mapping attribute path instance',
+                                id: (new Date().getTime() + 1) * -1,
+                                attribute_path: path
                             });
 
                         }
@@ -534,7 +541,7 @@ angular.module('dmpApp')
             }
 
 
-            if($scope.$$phase !== '$digest') {
+            if ($scope.$$phase !== '$digest') {
                 $scope.$digest();
             }
         });
@@ -543,55 +550,54 @@ angular.module('dmpApp')
 
         /**
          * Send all transformations to the server
-	 * @param task - Transformations to send
-	 * @param persist - if true, the transformation result should be persisted by the backend
+         * @param task - Transformations to send
+         * @param persist - if true, the transformation result should be persisted by the backend
          */
-	function sendTransformations(task, persist) {
+        function sendTransformations(task, persist) {
 
-	    TaskResource.execute({persist: !!persist}, Util.toJson(task)).$promise.then(function(result) {
-		console.log('transformation finished', result);
-		PubSub.broadcast('transformationFinished', result);
-	    }, function(resp) {
-		console.log(resp);
-		$window.alert(resp.message || resp.data.error);
+            TaskResource.execute({persist: !!persist}, Util.toJson(task)).$promise.then(function(result) {
+                console.log('transformation finished', result);
+                PubSub.broadcast('transformationFinished', result);
+            }, function(resp) {
+                console.log(resp);
+                $window.alert(resp.message || resp.data.error);
             });
         }
 
         /**
          * Send a single transformation to the server
-         * @param tab - Tranformation to send
          */
-        $scope.sendTransformation = function () {
+        $scope.sendTransformation = function() {
 
-                var payload = {
-                    name: $scope.activeMapping.name,
-                    description : 'A Transformation',
-                    job: {
-                        mappings : [$scope.activeMapping]
-                    },
-                    input_data_model :$scope.project.input_data_model,
-                    output_data_model : $scope.project.output_data_model
-                };
-
-		sendTransformations(payload, false);
+            var payload = {
+                name: $scope.activeMapping.name,
+                description: 'A Transformation',
+                job: {
+                    mappings: [$scope.activeMapping]
+                },
+                input_data_model: $scope.project.input_data_model,
+                output_data_model: $scope.project.output_data_model
             };
+
+            sendTransformations(payload, false);
+        };
 
         /**
          * This actually sends a Transformation
          */
-	$scope.sendTransformations = function (persist) {
+        $scope.sendTransformations = function(persist) {
 
             var payload = {
                 name: 'Transformations',
-                description : 'Transformations',
+                description: 'Transformations',
                 job: {
-                    mappings : $scope.project.mappings
+                    mappings: $scope.project.mappings
                 },
-                input_data_model :$scope.project.input_data_model,
-                output_data_model : $scope.project.output_data_model
+                input_data_model: $scope.project.input_data_model,
+                output_data_model: $scope.project.output_data_model
             };
 
-	    sendTransformations(payload, persist);
+            sendTransformations(payload, persist);
         };
         //** End of sending transformation to server
 
@@ -602,7 +608,7 @@ angular.module('dmpApp')
         };
 
         PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
-            angular.forEach($scope.activeMapping.transformation.function.components, function (comp) {
+            angular.forEach($scope.activeMapping.transformation.function.components, function(comp) {
                 if (comp.id === component.id) {
                     comp.parameter_mappings = component.parameter_mappings;
                 }
@@ -622,7 +628,7 @@ angular.module('dmpApp')
                 scope: childScope
             });
 
-            modalInstance.result.then(function () { });
+            modalInstance.result.then(angular.noop);
 
         };
 
@@ -630,9 +636,9 @@ angular.module('dmpApp')
 
 
     })
-    .directive('transformation', function () {
+    .directive('transformation', function() {
         return {
-            scope : true,
+            scope: true,
             restrict: 'E',
             replace: false,
             templateUrl: 'views/directives/transformation.html',

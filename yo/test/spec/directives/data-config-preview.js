@@ -15,11 +15,6 @@ describe('Controller: DataConfigPreviewCtrl', function () {
                     fn.apply(thisArg, arguments);
                 };
             }
-        },
-        dmp: {
-            jsRoutes: {
-                api: ''
-            }
         }
     };
 
@@ -39,7 +34,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
         scope = $rootScope.$new();
 
-        $httpBackend.whenPOST('resources/1/configurationpreview').respond($jsonResponse);
+        $httpBackend.whenPOST('/dmp/resources/1/configurationpreview').respond($jsonResponse);
 
         var $controller = $injector.get('$controller');
         dataConfigPreviewCtrl = function () {

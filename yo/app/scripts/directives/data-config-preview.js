@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', function ($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
+    .controller('DataConfigPreviewCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -14,7 +14,7 @@ angular.module('dmpApp')
 
         $scope.previewOptions = {
             data: 'previewResult',
-            columnDefs : 'colDefs',
+            columnDefs: 'colDefs',
             enableRowSelection: false,
             enableColumnResize: true
         };
@@ -30,7 +30,7 @@ angular.module('dmpApp')
                 var currentResultElement = {};
 
                 angular.forEach(element, function(value, key) {
-                    currentResultElement[key.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi,'')] = value;
+                    currentResultElement[key.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi, '')] = value;
                 });
 
                 $scope.previewResult.push(currentResultElement);
@@ -41,7 +41,7 @@ angular.module('dmpApp')
 
                 var currentColDefElement = {};
 
-                currentColDefElement.field = value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi,'');
+                currentColDefElement.field = value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi, '');
                 currentColDefElement.displayName = value;
 
                 $scope.colDefs.push(currentColDefElement);
@@ -53,7 +53,7 @@ angular.module('dmpApp')
 
             $scope.runningUpdate = {};
 
-            if(Object.keys($scope.nextUpdate).length > 0) {
+            if (Object.keys($scope.nextUpdate).length > 0) {
 
                 // Multiple too fast config previews are tripping the response handling.
                 $timeout(function() {
@@ -69,7 +69,7 @@ angular.module('dmpApp')
 
         $scope.dataConfigUpdated = function(config) {
 
-            if(Object.keys($scope.runningUpdate).length > 0) {
+            if (Object.keys($scope.runningUpdate).length > 0) {
 
                 $scope.nextUpdate = config;
 
@@ -84,7 +84,7 @@ angular.module('dmpApp')
 
                 var resourceId = $routeParams.resourceId;
 
-                if(config.resourceId) {
+                if (config.resourceId) {
                     resourceId = config.resourceId;
                 }
 
@@ -112,10 +112,12 @@ angular.module('dmpApp')
 
                             var map = loDash.map;
 
-                            $scope.colDefs = [{
-                                field: 'line',
-                                displayName: lines['name'] + ' (' + lines['description'] + ')'
-                            }];
+                            $scope.colDefs = [
+                                {
+                                    field: 'line',
+                                    displayName: lines['name'] + ' (' + lines['description'] + ')'
+                                }
+                            ];
 
                             $scope.previewResult = map(lines['lines'], function(line) {
                                 return { line: line };
@@ -137,7 +139,7 @@ angular.module('dmpApp')
         });
 
     })
-    .directive('dataconfigpreview', function () {
+    .directive('dataconfigpreview', function() {
         return {
             restrict: 'E',
             replace: true,

@@ -14,11 +14,11 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
-            if($(data.targetData).attr('id') === $scope.id) {
+            if ($(data.targetData).attr('id') === $scope.id) {
                 incomingPool[data.id] = data;
             }
 
-            if($(data.sourceData).attr('id') === $scope.id) {
+            if ($(data.sourceData).attr('id') === $scope.id) {
                 outgoingPool[data.id] = data;
             }
 

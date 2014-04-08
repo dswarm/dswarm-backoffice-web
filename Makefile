@@ -1,4 +1,5 @@
 PORT=9999
+STAGE=unstable
 
 all: install
 .PHONY: all
@@ -53,7 +54,7 @@ yo/publish:
 
 
 dist: yo/Gruntfile.js clean install | yo/publish
-	cd yo && grunt build
+	cd yo && STAGE=${STAGE} grunt build
 	rsync --delete --verbose --recursive yo/dist/ yo/publish
 .PHONY: dist
 

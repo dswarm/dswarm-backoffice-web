@@ -6,16 +6,16 @@
 module.exports = function(config) {
     config.set({
         // base path, that will be used to resolve files and exclude
-        basePath : 'app/',
+        basePath: 'app/',
 
         // testing framework to use (jasmine/mocha/qunit/...)
         frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
-        files : [
+        files: [
             'components/jquery/jquery.js',
             'components/jquery-ui/ui/jquery-ui.js',
-	    '../node_modules/jasmine-jquery/lib/jasmine-jquery.js',
+            '../node_modules/jasmine-jquery/lib/jasmine-jquery.js',
             'components/lodash/dist/lodash.compat.js',
             'components/angular/angular.js',
             'components/angular-route/angular-route.js',
@@ -31,6 +31,7 @@ module.exports = function(config) {
             'components/jsPlumb/dist/js/jquery.jsPlumb-1.5.5.js',
             'components/angular-grid/ng-grid-2.0.7.debug.js',
             'components/angular-gridster/app/scripts/gridster.js',
+            'config.js',
             'scripts/*.js',
             'scripts/**/*.js',
 
@@ -42,11 +43,11 @@ module.exports = function(config) {
         ],
 
         // list of files to exclude
-        exclude : [],
+        exclude: [],
 
         // test results reporter to use
         // possible values: dots || progress || growl
-        reporters : ['progress', 'junit', 'coverage'],
+        reporters: ['progress', 'junit', 'coverage'],
 
         // web server port
         //port : 8080,
@@ -55,14 +56,14 @@ module.exports = function(config) {
         //runnerPort : 9100,
 
         // enable / disable colors in the output (reporters and logs)
-        colors : true,
+        colors: true,
 
         // level of logging
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-        logLevel : config.LOG_INFO,
+        logLevel: config.LOG_INFO,
 
         // enable / disable watching file and executing tests whenever any file changes
-        autoWatch : true,
+        autoWatch: true,
 
         // Start these browsers, currently available:
         // - Chrome
@@ -72,30 +73,33 @@ module.exports = function(config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers : [process.env.KARMA_BROWSER || 'Chrome'],
+        browsers: [process.env.KARMA_BROWSER || 'Chrome'],
 
         // If browser does not capture in given timeout [ms], kill it
-        captureTimeout : 5000,
+        captureTimeout: 5000,
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
-        singleRun : false,
+        singleRun: false,
 
-        junitReporter : {
+        junitReporter: {
             outputFile: '../target/unit.xml',
             suite: 'unit'
         },
 
-        preprocessors : {
+        preprocessors: {
             '**/*.html': ['ng-html2js'],
             'scripts/**/*.js': ['coverage']
         },
 
         coverageReporter: {
-            reporters: [{
-                type: 'html',
-                dir: '../target/coverage/'
-            }, { type: 'text' }]
+            reporters: [
+                {
+                    type: 'html',
+                    dir: '../target/coverage/'
+                },
+                { type: 'text' }
+            ]
         },
 
         customLaunchers: {
