@@ -146,6 +146,14 @@ angular.module('dmpApp')
         }
 
         /**
+         * Detach original function
+         * @param connection
+         */
+        function detachOriginal(connection) {
+            jsPlumb.detach(connection);
+        }
+
+        /**
          * Detach all connections that were bound to the given element.
          * TODO: this fires an event. capture event and fire a custom one, maybe?
          * @param element {jqLite|jQuery}
@@ -285,6 +293,7 @@ angular.module('dmpApp')
             deleteEndpoint: deleteEndpoint,
             getAllConnections: getAllConnections,
             detachEveryConnection: detachEveryConnection,
-            reset: reset
+            reset: reset,
+            detachOriginal: detachOriginal
         };
     });

@@ -25,7 +25,11 @@
         <div class="transformation-inputs">
             <ul>
                 <li ng-repeat="iap in activeMapping.input_attribute_paths" class="count{{activeMapping.input_attribute_paths.length}}">
-                    <span>{{ formatAttributePath(iap.attribute_path) }}</span>
+                    <span
+                        js-plumb-connector
+                        js-plumb-connector-options="jsPlumbOpts"
+                        js-plumb-connector-ident-type="transformation-input"
+                        js-plumb-connector-ident-item="iap.attribute_path">{{ formatAttributePath(iap.attribute_path) }}</span>
                 </li>
             </ul>
         </div>
@@ -33,7 +37,11 @@
         <div class="transformation-output">
             <ul>
                 <li>
-                    <span>{{ formatAttributePath(activeMapping.output_attribute_path.attribute_path) }}</span>
+                    <span
+                        js-plumb-connector
+                        js-plumb-connector-options="jsPlumbOpts"
+                        js-plumb-connector-ident-type="transformation-output"
+                        js-plumb-connector-ident-item="activeMapping.output_attribute_path.attribute_path">{{ formatAttributePath(activeMapping.output_attribute_path.attribute_path) }}</span>
                 </li>
             </ul>
         </div>
@@ -47,6 +55,17 @@
                     <span ng-if="!item.placeholder">
                         <li gridster-item="customItemMap" ng-class="{'gridster-preview': item.placeholder}" ng-click="onFunctionClick(item)">
                             {{item.function.name}}
+
+                            <i class="glyphicon glyphicon-unchecked"
+                               ng-click="onMultipleComponentInputAdd(item)"
+                               js-plumb-connector
+                               js-plumb-connector-options="jsPlumbOpts"
+                               js-plumb-connector-ident-type="component"
+                               js-plumb-connector-ident-item="item.id"></i>
+
+                            <span ng-if="item.multiple">
+                                <i class="glyphicon glyphicon-unchecked" ng-click="onMultipleComponentInputAdd(item)"></i>
+                            </span>
                         </li>
                     </span>
                 </span>

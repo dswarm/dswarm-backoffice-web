@@ -28,6 +28,33 @@ angular.module('dmpApp')
             containment: '.gridster'
         };
 
+        $scope.jsPlumbOpts = {
+            scope: 'schema',
+            container: 'transformation',
+            anchor: 'Continuous',
+            endpoint: ['Dot', {
+                radius: 5,
+                cssClass: 'source-endpoint'
+            }],
+            connectorOverlays: [
+                ['Arrow', {
+                    location: 1,
+                    width: 10,
+                    length: 12,
+                    foldback: 0.75
+                }]
+            ],
+            connector: 'StateMachine',
+            connectorStyle: {
+                strokeStyle: 'black',
+                lineWidth: 3
+            },
+            paintStyle: {
+                fillStyle: 'black',
+                lineWidth: 3
+            }
+        };
+
         /** Gridster item access map */
         $scope.customItemMap = {
             sizeX: 1,
@@ -91,6 +118,18 @@ angular.module('dmpApp')
         }
 
         //** Init directive end
+
+        //** Start functions to create plumbs
+
+        function hideTransformationPlumbs() {
+            PubSub.broadcast('jsp-connector-disconnect', { type: 'transformation' });
+        }
+
+        function showTransformationPlumbs() {
+            PubSub.broadcast('jsp-connector-connect', { type: 'transformation' });
+
+        }
+        //** End functions to create plumbs
 
         //** Start to handle function drag/drops
 
@@ -157,7 +196,7 @@ angular.module('dmpApp')
          */
         function dropToGrid(positionX, positionY, itemData) {
 
-            addToGrid(positionX, positionY, itemData, getId(itemData.id));
+            addToGrid(positionX, positionY, itemData, getId());
 
             removeDropPlaceholder();
             isDraggingToGrid = false;
@@ -249,7 +288,7 @@ angular.module('dmpApp')
          * visual grid representation.
          */
         function createInternalComponentsFromGridItems() {
-            var internalComponents = [];
+            var allInternalComponents = [];
 
             if (!$scope.activeMapping.id) {
                 return;
@@ -293,12 +332,25 @@ angular.module('dmpApp')
                 return result;
             };
 
-            // TODO: Expand to combine multiple input paths
-            // for(var i = 0; i < $scope.gridsterOpts.maxRows; i++) {
-            for (var i = 0; i < 1; i++) {
+            for(var i = 0; i < $scope.gridsterOpts.maxRows; i++) {
+                var internalComponents = [];
+
+                 // ermittle input_attribute_paths für aktuelle row
+                if(typeof $scope.activeMapping.transformation.parameter_mappings === 'undefined') {
+                    $scope.activeMapping.transformation.parameter_mappings = {};
+                }
+
+                // das äußere mapping auf parameter
+                $scope.activeMapping.transformation.parameter_mappings['transformationInputString'+i] =
+                    $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes[0].uri;
+
+                // speichere verfügbare parameter
+                if(loDash.indexOf($scope.activeMapping.transformation.function.parameters, 'transformationInputString'+i) === -1) {
+                    $scope.activeMapping.transformation.function.parameters[i] = 'transformationInputString'+i;
+                }
 
                 // get all in this row to array
-                var rowComponents = loDash.filter($scope.gridItems, {positionX: i});
+                var rowComponents = loDash.filter($scope.gridItems, {positionX : i});
 
                 // order by column
                 rowComponents = loDash.sortBy(rowComponents, 'positionY');
@@ -306,21 +358,18 @@ angular.module('dmpApp')
                 // replace array entry with original internal component oder generiere eine neue
                 rowComponents = loDash.map(rowComponents, mapRowComponents);
 
-                // kreiere verkettung aus array reihenfolge
-                internalComponents = loDash.reduce(rowComponents, chainRowComponents, internalComponents);
-
-                // füge aktuelle reihe zu internalComponents
-                $scope.activeMapping.transformation.function.components = internalComponents;
-
-                // ermittle input_attribute_paths für aktuelle row
-                // TODO: Change to flexible multi input handling
-
-                if (typeof $scope.activeMapping.transformation.parameter_mappings === 'undefined') {
-                    $scope.activeMapping.transformation.parameter_mappings = {};
+                // inputParameter auf die entsprechende reihe
+                if(rowComponents.length > 0) {
+                    rowComponents[0].parameter_mappings['inputString'] = 'transformationInputString'+i;
                 }
 
-                $scope.activeMapping.transformation.parameter_mappings['transformationInputString'] =
-                    $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes[0].uri;
+                 // kreiere verkettung aus array reihenfolge
+                internalComponents = loDash.reduce(rowComponents, chainRowComponents, internalComponents);
+
+                allInternalComponents = allInternalComponents.concat(internalComponents);
+
+                // füge aktuelle reihe zu internalComponents
+                $scope.activeMapping.transformation.function.components = allInternalComponents;
 
             }
 
@@ -378,20 +427,12 @@ angular.module('dmpApp')
                     name: name,
                     description: description,
                     //TODO: make flex, this only handles one input to transformation
-                    parameters: ['transformationInputString'],
+                    parameters: ['transformationInputString0'],
                     type: 'Transformation',
                     components: []
                 },
                 parameter_mappings: { }
             };
-        }
-
-        function hideTransformationPlumbs() {
-            console.log("hideTransformationPlumbs");
-        }
-
-        function showTransformationPlumbs() {
-            console.log("showTransformationPlumbs");
         }
 
         //** Start of mapping activation and selection
