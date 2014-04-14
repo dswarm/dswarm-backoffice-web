@@ -222,21 +222,148 @@ angular.module('dmpApp')
 
             $scope.gridItems = [];
 
+            function ensureComponentProperties(component) {
+                if (!component.parameter_mappings) {
+                    component.parameter_mappings = {};
+                }
+                if (!component.input_components) {
+                    component.input_components = [];
+                }
+                if (!component.output_components) {
+                    component.output_components = [];
+                }
+            }
+
+            function getInputString(component, idx) {
+                return component.parameter_mappings['inputString'] || ('input' + idx);
+            }
+
+            function walkChainedComponents(result, components, pool) {
+                var nextLevel = loDash(components).pluck('output_components').flatten().pluck('id').value();
+
+                if (loDash.isEmpty(nextLevel)) {
+                    return result;
+                }
+
+                var nextComponents = loDash.map(nextLevel, function(id) {
+                    return pool[id];
+                });
+
+                result.push.apply(result, nextComponents);
+
+                return walkChainedComponents(result, nextComponents, pool);
+            }
+
             if (typeof $scope.activeMapping.transformation !== 'undefined' &&
                 typeof $scope.activeMapping.transformation.function !== 'undefined' &&
                 typeof $scope.activeMapping.transformation.function.components !== 'undefined') {
 
-                angular.forEach($scope.activeMapping.transformation.function.components, function(value, key) {
+                var transformation = $scope.activeMapping.transformation;
 
-                    // TODO: Build along path
+                loDash.forEach(transformation.function.components, ensureComponentProperties);
 
-                    if (value !== null) {
-                        addToGrid(0, key, value.function, value.id);
-                    }
+                var componentPool = loDash.zipObject(loDash.map(transformation.function.components, function(component) {
+                    return [component.id, component];
+                }));
+
+                var componentRows = loDash(transformation.function.components)
+                    .filter({input_components: []})
+                    .map(function(component, idx) {
+                        return [
+                            getInputString(component, idx),
+                            walkChainedComponents([component], [component], componentPool)
+                        ];
+                    })
+                    .zipObject()
+                    .value();
+
+                var rowComponents = loDash($scope.activeMapping.input_attribute_paths)
+                    .map(function(ap) {
+                        var varName = buildVariableName(ap.attribute_path.attributes);
+
+                        if (componentRows.hasOwnProperty(varName)) {
+                            var components = componentRows[varName];
+                            delete componentRows[varName];
+                            return [components];
+                        } else {
+                            return [];
+                        }
+                    })
+                    .flatten(true)
+                    .value();
+
+                // randomly assign components rows that had no inputString setting
+                loDash.forEach(componentRows, function(components) {
+                    rowComponents.push(components);
                 });
 
+                loDash.forEach(rowComponents, function(components, posX) {
+                    loDash.forEach(components, function(component, posY) {
+                        if (component !== null) {
+                            addToGrid(posX, posY, component.function, component.id);
+                        }
+                    });
+                });
             }
 
+        }
+
+        /**
+         * Lookup a component in the projects pool, optionally creating a new one
+         * @param component
+         * @returns {*}
+         */
+        function resolveComponent(component) {
+
+            var newComponent = getComponent(component.id);
+
+            if (newComponent) {
+                return newComponent;
+            }
+
+            return createNewComponent(component.function, component.id);
+        }
+
+        /**
+         * Chain a string of components together by setting their (in|out)put_components
+         * This is a aggregation function that is meant to be used by loDash.reduce or the like
+         * @param result
+         * @param component
+         * @returns {*}
+         */
+        function chainRowComponents(result, component) {
+
+            if (result.length > 0) {
+                var last = loDash.last(result);
+
+                component.input_components = [
+                    {
+                        id: last.id
+                    }
+                ];
+
+                last.output_components = [
+                    {
+                        id: component.id
+                    }
+                ];
+            }
+
+            result.push(component);
+
+            return result;
+        }
+
+        function buildAttributeName(attributes, property, delimiter) {
+            return loDash.pluck(attributes, property).join(delimiter);
+        }
+
+        function buildUriReference(attributes) {
+            return buildAttributeName(attributes, 'uri', '\u001E');
+        }
+
+        function buildVariableName(attributes) {
+            return buildAttributeName(attributes, 'name', '_');
         }
 
         /**
@@ -244,53 +371,28 @@ angular.module('dmpApp')
          * visual grid representation.
          */
         function createInternalComponentsFromGridItems() {
-            var internalComponents = [];
 
             if (!$scope.activeMapping.id) {
                 return;
             }
 
-            if (angular.isUndefined($scope.activeMapping.transformation)) {
-                $scope.activeMapping.transformation = createNewTransformation();
+            var transformation = $scope.activeMapping.transformation;
+
+            if (angular.isUndefined(transformation)) {
+                transformation = createNewTransformation();
+                $scope.activeMapping.transformation = transformation;
             }
 
-            var mapRowComponents = function(component) {
-
-                var newComponent = getComponent(component.id);
-
-                if (newComponent) {
-                    return newComponent;
-                }
-
-                return createNewComponent(component.function, component.id);
+            var deleteInputStringParameterMapping = function(component) {
+                delete component.parameter_mappings['inputString'];
             };
 
-            var chainRowComponents = function(result, component) {
-
-                if (result.length > 0) {
-                    var last = loDash.last(result);
-
-                    component.input_components = [
-                        {
-                            id: last.id
-                        }
-                    ];
-
-                    last.output_components = [
-                        {
-                            id: component.id
-                        }
-                    ];
-                }
-
-                result.push(component);
-
-                return result;
-            };
+            if (angular.isUndefined(transformation.parameter_mappings)) {
+                transformation.parameter_mappings = {};
+            }
 
             // TODO: Expand to combine multiple input paths
-            // for(var i = 0; i < $scope.gridsterOpts.maxRows; i++) {
-            for (var i = 0; i < 1; i++) {
+            var rowComponents = loDash.times($scope.gridsterOpts.maxRows, function(i) {
 
                 // get all in this row to array
                 var rowComponents = loDash.filter($scope.gridItems, {positionX: i});
@@ -298,32 +400,35 @@ angular.module('dmpApp')
                 // order by column
                 rowComponents = loDash.sortBy(rowComponents, 'positionY');
 
-                // replace array entry with original internal component oder generiere eine neue
-                rowComponents = loDash.map(rowComponents, mapRowComponents);
+                // replace array entry with original internal component oder generate a new one
+                rowComponents = loDash.map(rowComponents, resolveComponent);
 
-                // kreiere verkettung aus array reihenfolge
-                internalComponents = loDash.reduce(rowComponents, chainRowComponents, internalComponents);
+                // delete eventual existing 'inputString' mappings
+                loDash.forEach(rowComponents, deleteInputStringParameterMapping);
 
-                // füge aktuelle reihe zu internalComponents
-                $scope.activeMapping.transformation.function.components = internalComponents;
+                var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
 
-                // ermittle input_attribute_paths für aktuelle row
-                // TODO: Change to flexible multi input handling
+                // create a simple name for this input_attribute_path
+                var varName = buildAttributeName(inputAttributes, 'name', '_');
 
-                if (typeof $scope.activeMapping.transformation.parameter_mappings === 'undefined') {
-                    $scope.activeMapping.transformation.parameter_mappings = {};
+                // create the fq-uri for this input_attribute_path
+                transformation.parameter_mappings[varName] = buildUriReference(inputAttributes);
+
+                transformation.function.parameters.push(varName);
+
+                if (rowComponents.length > 0) {
+                    rowComponents[0].parameter_mappings['inputString'] = varName;
                 }
 
-                $scope.activeMapping.transformation.parameter_mappings['transformationInputString'] =
-                    $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes[0].uri;
+                // chain the row together
+                return loDash.reduce(rowComponents, chainRowComponents, []);
+            });
 
-            }
+            transformation.function.components = loDash.flatten(rowComponents);
 
-            // ermittle output_attripute_path für aktuelle row
+            var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
 
-            $scope.activeMapping.transformation.parameter_mappings['transformationOutputVariable'] =
-                $scope.activeMapping.output_attribute_path.attribute_path.attributes[0].uri;
-
+            transformation.parameter_mappings['transformationOutputVariable'] = buildUriReference(outputAttributes);
         }
 
         /**
@@ -373,7 +478,7 @@ angular.module('dmpApp')
                     name: name,
                     description: description,
                     //TODO: make flex, this only handles one input to transformation
-                    parameters: ['transformationInputString'],
+                    parameters: [],
                     type: 'Transformation',
                     components: []
                 },
