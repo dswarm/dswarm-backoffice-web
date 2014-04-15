@@ -306,6 +306,8 @@ angular.module('dmpApp')
          */
         function createGridFromInternalComponents() {
 
+            hideTransformationPlumbs();
+
             $scope.gridsterOpts.maxRows =
                 $scope.gridsterOpts.minRows =
                     $scope.gridsterOpts.maxGridRows =
@@ -327,6 +329,11 @@ angular.module('dmpApp')
                 });
 
             }
+
+            $timeout(function() {
+                hideTransformationPlumbs();
+                showTransformationPlumbs();
+            }, 100);
 
         }
 
@@ -540,10 +547,6 @@ angular.module('dmpApp')
             hideTransformationPlumbs();
 
             activate(tab.id);
-
-            $timeout(function() {
-                showTransformationPlumbs();
-            }, 1);
 
         };
 
