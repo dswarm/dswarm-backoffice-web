@@ -218,7 +218,6 @@ angular.module('dmpApp')
 
         }
 
-        PubSub.subscribe($scope, 'paintPlumbs', showTransformationPlumbs);
         //** End functions to create plumbs
 
         //** Start to handle function drag/drops
