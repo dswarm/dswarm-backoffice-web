@@ -65,6 +65,18 @@ angular.module('dmpApp')
 
         /** Holds current grid items */
         $scope.gridItems = [];
+        $scope.transformationStateError = '';
+
+        $scope.activeMapping = {};
+        $scope.output_attribute_paths = [];
+        $scope.$watch('activeMapping', function() {
+
+            if(typeof $scope.activeMapping.output_attribute_path !== 'undefined') {
+
+                $scope.output_attribute_paths = [$scope.activeMapping.output_attribute_path];
+
+            }
+        }, true);
 
         function getId(optId) {
             return angular.isDefined(optId) ? optId
@@ -106,7 +118,6 @@ angular.module('dmpApp')
 
         init();
         PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel'], init);
-        PubSub.subscribe($scope, 'paintPlumbs', showTransformationPlumbs);
 
         // show draft banner
         if ($scope.projectIsDraft) {
@@ -123,21 +134,23 @@ angular.module('dmpApp')
         //** Start functions to create plumbs
 
         function hideTransformationPlumbs() {
+            $scope.transformationStateError = '';
+
             PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
         }
 
         function showTransformationPlumbs() {
 
-            var j = 0;
+            var j = 0,
+                connectOptions = { type : 'transformation' };
+
+            $scope.transformationStateError = '';
 
             angular.forEach($scope.activeMapping.input_attribute_paths, function(iap) {
 
-                var connectOptions = {
-                    source: {
-                        type : 'transformation-input',
-                        id : iap.attribute_path.id
-                    },
-                    type : 'transformation'
+                connectOptions.source = {
+                    type : 'transformation-input',
+                    id : iap.attribute_path.id
                 };
 
                 for (var i = 0; i < gridMaxItemsPerRow; i++) {
@@ -168,8 +181,44 @@ angular.module('dmpApp')
 
             });
 
+            if($scope.activeMapping.input_attribute_paths.length > 1) {
+                $scope.transformationStateError = 'Mehr als ein möglicher Output-Weg. Bitte mit concat verringern';
+
+            } else {
+
+                if($scope.gridItems.length === 0) {
+
+                    connectOptions.source =  {
+                        type : 'transformation-input',
+                        id : $scope.activeMapping.input_attribute_paths[0].attribute_path.id
+                    };
+
+                } else {
+
+                    var firstRow = loDash.filter($scope.gridItems, { positionX: 0 });
+                    firstRow = loDash.sortBy(firstRow, 'positionY');
+
+                    var firstRowLastItem = loDash.last(firstRow);
+
+                    connectOptions.source =  {
+                        type : 'component',
+                        id : firstRowLastItem.id
+                    };
+
+                }
+
+                connectOptions.target = {
+                    type : 'transformation-output',
+                    id : $scope.activeMapping.output_attribute_path.attribute_path.id
+                };
+
+                PubSub.broadcast('jsp-connector-connect', connectOptions);
+
+            }
 
         }
+
+        PubSub.subscribe($scope, 'paintPlumbs', showTransformationPlumbs);
         //** End functions to create plumbs
 
         //** Start to handle function drag/drops

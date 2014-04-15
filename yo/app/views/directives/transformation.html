@@ -22,6 +22,8 @@
 
 	<button class="btn btn-default" ng-click="sendTransformation(activeMapping)">Run Transformation</button>
 
+    <div class="previewOptionsError" ng-if="transformationStateError">{{transformationStateError}}</div>
+
         <div class="transformation-inputs">
             <ul>
                 <li ng-repeat="iap in activeMapping.input_attribute_paths" class="count{{activeMapping.input_attribute_paths.length}}">
@@ -36,12 +38,12 @@
 
         <div class="transformation-output">
             <ul>
-                <li>
+                <li ng-repeat="oap in output_attribute_paths">
                     <span
                         js-plumb-connector
                         js-plumb-connector-options="jsPlumbOpts"
                         js-plumb-connector-ident-type="transformation-output"
-                        js-plumb-connector-ident-item="activeMapping.output_attribute_path.attribute_path.id">{{ formatAttributePath(activeMapping.output_attribute_path.attribute_path) }}</span>
+                        js-plumb-connector-ident-item="oap.attribute_path.id">{{ formatAttributePath(oap.attribute_path) }}</span>
                 </li>
             </ul>
         </div>
