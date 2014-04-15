@@ -73,6 +73,25 @@
     Selected project ({{ selectedProject.0.name }}):
 
     <a href="#/model/{{ selectedProject.0.id }}" class="btn btn-primary">Load for modelling</a>
-    <a ng-click="onProjectExportClick(selectedProject[0])" class="btn btn-default">Export</a>
+    <!--<a ng-click="onProjectExportClick(selectedProject[0])" class="btn btn-default">Export</a>-->
     <a ng-click="onProjectDeleteClick(selectedProject[0])" class="btn btn-danger">Delete</a>
 </span>
+
+<hr>
+<h3>Export Data</h3>
+
+<div class="btn-group text-center">
+    <button type="button" class="btn btn-primary" ng-click="onExportAllClick('application/n-quads')">Export All Data</button>
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a class="btn" ng-click="onExportAllClick('application/n-quads')">N-Quads</a></li>
+        <li class="divider"></li>
+        <li><a class="btn disabled">JSON-LD</a></li>
+        <li><a class="btn disabled">TriG</a></li>
+    </ul>
+</div>
+<hr>
+
