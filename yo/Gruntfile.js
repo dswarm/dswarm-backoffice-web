@@ -603,16 +603,22 @@ module.exports = function(grunt) {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
 
-        grunt.task.run([
+        var tasks = [
             'clean:server',
             'less',
             'bowerInstall',
             'updateConfig',
             'copy:styles',
-            'autoprefixer',
-            'connect:' + (target === 'debug' ? 'ide-debug' : 'livereload'),
-            'watch'
-        ]);
+            'autoprefixer'
+        ];
+
+        if (target === 'debug') {
+            tasks.push('connect:ide-debug:keepalive');
+        } else {
+            tasks.push('connect:livereload', 'watch');
+        }
+
+        grunt.task.run(tasks);
     });
 
     grunt.registerTask('server', function() {
