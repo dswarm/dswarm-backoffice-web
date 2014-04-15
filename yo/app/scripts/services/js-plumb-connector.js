@@ -91,21 +91,29 @@ angular.module('dmpApp')
 
         function onConnectorDisonnect(options) {
 
-            var connections = loDash.filter(connectorConnectionMap, { type: options.type });
+            if(typeof options.type === 'string') {
+                options.type = [ options.type ];
+            }
 
-            angular.forEach(connections, function(connection) {
-                jsP.detachOriginal(connection.connection);
+            angular.forEach(options.type, function(type) {
+
+                var connections = loDash.filter(connectorConnectionMap, { type: type });
+
+                angular.forEach(connections, function(connection) {
+                    jsP.detachOriginal(connection.connection);
+                });
+
+                connectorConnectionMap = loDash.rest(connectorConnectionMap, { type: type });
+
+                var endpoints = loDash.filter(connectorEndpointMap, { type: type });
+
+                angular.forEach(endpoints, function(endpoint) {
+                    jsP.deleteEndpoint(endpoint.endpoint);
+                });
+
+                connectorEndpointMap = loDash.rest(connectorEndpointMap, { type: type });
+
             });
-
-            connectorConnectionMap = loDash.rest(connectorConnectionMap, { type: options.type });
-
-            var endpoints = loDash.filter(connectorEndpointMap, { type: options.type });
-
-            angular.forEach(endpoints, function(endpoint) {
-                jsP.deleteEndpoint(endpoint.endpoint);
-            });
-
-            connectorEndpointMap = loDash.rest(connectorEndpointMap, { type: options.type });
 
         }
 

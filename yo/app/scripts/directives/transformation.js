@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, PubSub, loDash, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -127,7 +127,45 @@ angular.module('dmpApp')
         }
 
         function showTransformationPlumbs() {
-            //PubSub.broadcast('jsp-connector-connect', { type: 'transformation' });
+
+            var j = 0;
+
+            angular.forEach($scope.activeMapping.input_attribute_paths, function(iap) {
+
+                var connectOptions = {
+                    source: {
+                        type : 'transformation-input',
+                        id : iap.attribute_path.id
+                    },
+                    type : 'transformation'
+                };
+
+                for (var i = 0; i < gridMaxItemsPerRow; i++) {
+
+                    var currentGridItemIndex = loDash.findIndex($scope.gridItems, { positionY: i, positionX: j  });
+
+                    if (currentGridItemIndex >= 0) {
+
+                        connectOptions.target = {
+                            type : 'component',
+                            id : $scope.gridItems[currentGridItemIndex].id
+                        };
+
+                        PubSub.broadcast('jsp-connector-connect', connectOptions);
+
+                        connectOptions.source = {
+                            type : 'component',
+                            id : $scope.gridItems[currentGridItemIndex].id
+                        };
+
+                    }
+
+                }
+
+                j++;
+
+            });
+
 
         }
         //** End functions to create plumbs
@@ -250,10 +288,13 @@ angular.module('dmpApp')
         PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
 
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
-            //removeDropPlaceholder();
+            removeDropPlaceholder();
             isDraggingToGrid = false;
 
-            showTransformationPlumbs();
+            $timeout(function() {
+                showTransformationPlumbs();
+            }, 100);
+
         });
 
         //** End of function drag/drops handling
@@ -495,7 +536,15 @@ angular.module('dmpApp')
          * @param tab - Tab data from internal register
          */
         $scope.switchTab = function(tab) {
+
+            hideTransformationPlumbs();
+
             activate(tab.id);
+
+            $timeout(function() {
+                showTransformationPlumbs();
+            }, 1);
+
         };
 
         /**
