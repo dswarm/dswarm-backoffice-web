@@ -463,6 +463,7 @@ button.open-schema-col-selector {
   margin-top: -20px;
   background: #ffffff;
   padding: 5px;
+  border: 1px dotted black;
 }
 
 .transformation-output li {
@@ -491,4 +492,8 @@ button.open-schema-col-selector {
 
 .transformation-inputs li.count5 {
   height: 20%;
+}
+
+.transformation-inputs, .transformation-output, ._jsPlumb_connector, ._jsPlumb_endpoint {
+  z-index: 1000;
 }

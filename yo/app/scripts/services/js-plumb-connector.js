@@ -83,8 +83,8 @@ angular.module('dmpApp')
 
         function onConnectorConnect(options) {
 
-            var target = loDash.filter(connectorMap, { 'ident': { type: options.target.type, item: options.target.id} });
-            var source = loDash.filter(connectorMap, { 'ident': { type: options.target.type, item: options.source.id} });
+            var target = loDash.filter(connectorMap, { 'ident': { type: options.target.type, id: options.target.id} });
+            var source = loDash.filter(connectorMap, { 'ident': { type: options.source.type, id: options.source.id} });
 
             createConnection([source[0].scope.guid, target[0].scope.guid], target[0].options, options.type);
         }
@@ -126,6 +126,16 @@ angular.module('dmpApp')
                         return scope.$eval(jsPlumbConnectorIdentItem);
                     };
 
+                function pushConnectorMap(elem) {
+                    var connectorMapIndex = loDash.findIndex(connectorMap, {ident : { type: elem.ident.type, id: elem.ident.id }});
+
+                    if(connectorMapIndex < 0) {
+                        connectorMap.push(elem);
+                    } else {
+                        connectorMap[connectorMapIndex] = elem;
+                    }
+                };
+
                 return function(scope, iElement) {
                     var options = jsPlumbConnectorOptionsWatch(scope),
                         identItem = jsPlumbConnectorIdentItemWatch(scope);
@@ -144,7 +154,7 @@ angular.module('dmpApp')
                         }
                     };
 
-                    connectorMap.push(elem);
+                    pushConnectorMap(elem);
 
                 };
             }

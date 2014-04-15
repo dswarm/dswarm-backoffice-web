@@ -44,7 +44,7 @@ angular.module('dmpApp')
                     foldback: 0.75
                 }]
             ],
-            connector: 'StateMachine',
+            connector: 'Straight',
             connectorStyle: {
                 strokeStyle: 'black',
                 lineWidth: 3
@@ -106,6 +106,7 @@ angular.module('dmpApp')
 
         init();
         PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel'], init);
+        PubSub.subscribe($scope, 'paintPlumbs', showTransformationPlumbs);
 
         // show draft banner
         if ($scope.projectIsDraft) {
@@ -122,11 +123,11 @@ angular.module('dmpApp')
         //** Start functions to create plumbs
 
         function hideTransformationPlumbs() {
-            PubSub.broadcast('jsp-connector-disconnect', { type: 'transformation' });
+            PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
         }
 
         function showTransformationPlumbs() {
-            PubSub.broadcast('jsp-connector-connect', { type: 'transformation' });
+            //PubSub.broadcast('jsp-connector-connect', { type: 'transformation' });
 
         }
         //** End functions to create plumbs
@@ -264,6 +265,11 @@ angular.module('dmpApp')
          */
         function createGridFromInternalComponents() {
 
+            $scope.gridsterOpts.maxRows =
+                $scope.gridsterOpts.minRows =
+                    $scope.gridsterOpts.maxGridRows =
+                        $scope.gridsterOpts.gridHeight = $scope.activeMapping.input_attribute_paths.length;
+
             $scope.gridItems = [];
 
             if (typeof $scope.activeMapping.transformation !== 'undefined' &&
@@ -310,7 +316,6 @@ angular.module('dmpApp')
             };
 
             var chainRowComponents = function(result, component) {
-
                 if (result.length > 0) {
                     var last = loDash.last(result);
 
@@ -346,6 +351,11 @@ angular.module('dmpApp')
 
                 // speichere verfügbare parameter
                 if(loDash.indexOf($scope.activeMapping.transformation.function.parameters, 'transformationInputString'+i) === -1) {
+
+                    if(typeof $scope.activeMapping.transformation.function.parameters === 'undefined') {
+                        $scope.activeMapping.transformation.function.parameters = [];
+                    }
+
                     $scope.activeMapping.transformation.function.parameters[i] = 'transformationInputString'+i;
                 }
 
@@ -443,6 +453,7 @@ angular.module('dmpApp')
          * @param skipBroadcast - Should an activation event be send?
          */
         function activate(id, skipBroadcast) {
+
             if (activeComponentId !== id) {
                 $scope.$broadcast('tabSwitch', id);
 
@@ -462,6 +473,7 @@ angular.module('dmpApp')
                 createGridFromInternalComponents();
 
             }
+
         }
 
         function activateTab(tabId) {
@@ -555,11 +567,6 @@ angular.module('dmpApp')
             } else {
                 $scope.activeMapping._$connection_id = data.connection_id;
             }
-
-            $scope.gridsterOpts.maxRows =
-                $scope.gridsterOpts.minRows =
-                    $scope.gridsterOpts.maxGridRows =
-                        $scope.gridsterOpts.gridHeight = data.additionalInput.length + 1;
 
             if ($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length + 1) {
 
