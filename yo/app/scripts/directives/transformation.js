@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, PubSub, loDash, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -151,7 +151,9 @@ angular.module('dmpApp')
                             id : $scope.gridItems[currentGridItemIndex].id
                         };
 
-                        PubSub.broadcast('jsp-connector-connect', connectOptions);
+                        var newConnectOptions = angular.copy(connectOptions);
+
+                        PubSub.broadcast('jsp-connector-connect', newConnectOptions);
 
                         connectOptions.source = {
                             type : 'component',
@@ -235,7 +237,7 @@ angular.module('dmpApp')
          */
         function dropToGrid(positionX, positionY, itemData) {
 
-            addToGrid(positionX, positionY, itemData, getId(itemData.id));
+            addToGrid(positionX, positionY, itemData, getId());
 
             removeDropPlaceholder();
             isDraggingToGrid = false;
@@ -302,16 +304,24 @@ angular.module('dmpApp')
         //** Start of grid creation
 
         /**
+         * Sets the height of the grid with all needed parameters for gridster
+         * @param height
+         */
+        function setGridHeight(height) {
+            $scope.gridsterOpts.maxRows =
+                $scope.gridsterOpts.minRows =
+                    $scope.gridsterOpts.maxGridRows =
+                        $scope.gridsterOpts.gridHeight = height;
+        }
+
+        /**
          * Builds visual grid from internal data structure
          */
         function createGridFromInternalComponents() {
 
             hideTransformationPlumbs();
 
-            $scope.gridsterOpts.maxRows =
-                $scope.gridsterOpts.minRows =
-                    $scope.gridsterOpts.maxGridRows =
-                        $scope.gridsterOpts.gridHeight = $scope.activeMapping.input_attribute_paths.length;
+            setGridHeight($scope.activeMapping.input_attribute_paths.length);
 
             $scope.gridItems = [];
 
@@ -512,6 +522,10 @@ angular.module('dmpApp')
                 // create the fq-uri for this input_attribute_path
                 transformation.parameter_mappings[varName] = buildUriReference(inputAttributes);
 
+                if(typeof transformation.function.parameters === 'undefined') {
+                    transformation.function.parameters = [];
+                }
+
                 transformation.function.parameters.push(varName);
 
                 if (rowComponents.length > 0) {
@@ -704,6 +718,8 @@ angular.module('dmpApp')
             } else {
                 $scope.activeMapping._$connection_id = data.connection_id;
             }
+
+            setGridHeight(data.additionalInput.length + 1);
 
             if ($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length + 1) {
 

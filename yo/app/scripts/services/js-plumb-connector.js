@@ -91,6 +91,10 @@ angular.module('dmpApp')
 
         function onConnectorDisonnect(options) {
 
+            if(connectorConnectionMap.length === 0) {
+                return;
+            }
+
             if(typeof options.type === 'string') {
                 options.type = [ options.type ];
             }
@@ -117,8 +121,15 @@ angular.module('dmpApp')
 
         }
 
+        function onProjectDraftDiscarded() {
+            connectorMap = [];
+            connectorEndpointMap = [];
+            connectorConnectionMap = [];
+        }
+
         PubSub.subscribe($rootScope, 'jsp-connector-connect', onConnectorConnect);
         PubSub.subscribe($rootScope, 'jsp-connector-disconnect', onConnectorDisonnect);
+        PubSub.subscribe($rootScope, 'projectDraftDiscarded', onProjectDraftDiscarded);
 
         return {
             scope: true,
@@ -134,15 +145,19 @@ angular.module('dmpApp')
                         return scope.$eval(jsPlumbConnectorIdentItem);
                     };
 
-                function pushConnectorMap(elem) {
-                    var connectorMapIndex = loDash.findIndex(connectorMap, {ident : { type: elem.ident.type, id: elem.ident.id }});
+                connectorMap = [];
+                connectorEndpointMap = [];
+                connectorConnectionMap = [];
 
+                function pushConnectorMap(elem) {
+
+                    var connectorMapIndex = loDash.findIndex(connectorMap, {ident : { type: elem.ident.type, id: elem.ident.id }});
                     if(connectorMapIndex < 0) {
                         connectorMap.push(elem);
                     } else {
                         connectorMap[connectorMapIndex] = elem;
                     }
-                };
+                }
 
                 return function(scope, iElement) {
                     var options = jsPlumbConnectorOptionsWatch(scope),

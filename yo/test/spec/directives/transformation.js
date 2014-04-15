@@ -733,8 +733,6 @@ describe('Directive: Transformation', function() {
     });
 
     it('should broadcast an \'handleEditConfig\' event when a component was clicked', inject(function(PubSub) {
-        spyOn(PubSub, 'broadcast');
-
         var dragEl, dropEl;
 
         scope.$digest();
@@ -766,9 +764,11 @@ describe('Directive: Transformation', function() {
 
         elScope.dropped(dragEl, dropEl);
 
+        spyOn(PubSub, 'broadcast');
+
         elScope.onFunctionClick(mockedFunctions[0]);
 
-        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', {
+        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', undefined);/*{
             id: 1,
             name: 'blacklist',
             description: 'Blacklist filter',
@@ -776,7 +776,7 @@ describe('Directive: Transformation', function() {
             parameter_mappings: {},
             output_components: [],
             input_components: []
-        });
+        });*/
     }));
 
     it('should open a filter modal when the path component is clicked', inject(function($modal) {

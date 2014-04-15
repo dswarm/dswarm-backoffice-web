@@ -24,7 +24,11 @@ angular.module('dmpApp')
             componentId = args.id;
 
             angular.forEach(args.parameter_mappings, function(value, key) {
-                args.function.function_description.parameters[key].data = value;
+
+                if(typeof args.function.function_description.parameters[key] !== 'undefined') {
+                    args.function.function_description.parameters[key].data = value;
+                }
+
             });
 
             $scope.component = args['function'];
