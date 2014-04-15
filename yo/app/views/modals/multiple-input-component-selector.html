@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <button type="button" ng-click="$dismiss('cancel')" class="close" foo="col-sm-1 text-center" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 class="modal-title" foo="col-sm-11 pull-top">Add this component to current component</h3>
+</div>
+<div class="modal-body">
+    <div>
+        <p>Select component: </p>
+        <div class="gridStyle" ng-grid="endpointListOptions"></div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" ng-click="$close(selectedSet)" class="btn btn-info" ng-if="selectedSet.length > 0">Add selected component</button>
+    <button type="button" ng-click="$dismiss('cancel')" class="btn btn-default pull-left">Cancel</button>
+</div>
