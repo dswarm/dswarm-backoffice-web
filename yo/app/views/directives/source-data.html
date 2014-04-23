@@ -5,7 +5,7 @@
         <div class="tabbable tabs-below">
             <ul class="nav nav-tabs">
                 <li ng-repeat="record in records track by $index" ng-class="{active: selectedTab == $index}">
-                    <a ng-click="selectTab($index);" tooltip-trigger="click" tooltip-placement="right" tooltip="{{ record.id }}">{{ $index +1 }}</a>
+                    <a ng-click="selectTab($index);" tooltip-trigger="dblclick" tooltip-placement="right" tooltip="{{ record.id }}">{{ $index +1 }}</a>
                 </li>
             </ul>
 
