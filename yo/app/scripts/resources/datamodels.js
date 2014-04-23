@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('DataModelResource', function(ResourceFactory) {
+    .factory('DataModelResource', function(ResourceFactory, loDash) {
 
         return ResourceFactory.create('datamodels', function(baseUrl) {
             return {
@@ -14,13 +14,13 @@ angular.module('dmpApp')
                     },
                     transformResponse: function(data, headers) {
                         if (angular.lowercase(headers('content-type')) === 'application/json') {
-                            var parsedData = JSON.parse(data),
-                                transformed = [];
-                            angular.forEach(parsedData, function(blob, rid) {
-                                blob.recordId = rid;
-                                transformed.push(blob);
+                            var parsedData = JSON.parse(data);
+                            data = loDash.map(parsedData, function(blob, recordId) {
+                                return {
+                                    id: recordId,
+                                    data: blob
+                                };
                             });
-                            data = transformed;
                         }
                         return data;
                     },

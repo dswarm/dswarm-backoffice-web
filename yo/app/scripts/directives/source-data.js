@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SourceDataCtrl', function($scope, schemaParser, DataModelResource, PubSub, loDash) {
+    .controller('SourceDataCtrl', function($scope, gdmParser, DataModelResource, PubSub, loDash) {
+
         $scope.internalName = 'Source Data Widget';
 
         $scope.data = {};
@@ -29,7 +30,7 @@ angular.module('dmpApp')
             }
 
             function getSchema(record) {
-                return schemaParser.parseFromDomainSchema(record, dataModel.schema);
+                return gdmParser.parse(record, dataModel.schema);
             }
 
             $scope.schema = dataModel.schema;
@@ -44,8 +45,8 @@ angular.module('dmpApp')
 
                 $scope.records = loDash.map(dataResult, function(record) {
                     return {
-                        id: record.recordId,
-                        data: getSchema(record)
+                        id: record.id,
+                        data: getSchema(record.data)
                     };
                 });
 
