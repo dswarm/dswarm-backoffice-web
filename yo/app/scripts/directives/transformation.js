@@ -78,6 +78,26 @@ angular.module('dmpApp')
             }
         }, true);
 
+        var getOutputVariable = (function() {
+            var template = '__TRANSFORMATION_OUTPUT_VARIABLE__',
+                counter = 0,
+                outVariablesPool = {};
+
+            function getOutputVariable(mapping) {
+                if (loDash.has(outVariablesPool, mapping.id)) {
+                    return outVariablesPool[mapping.id];
+                }
+
+                var variableName = template + (++counter);
+                outVariablesPool[mapping.id] = variableName;
+
+                return variableName;
+            }
+
+            return getOutputVariable;
+        }());
+
+
         function getId(optId) {
             return angular.isDefined(optId) ? optId
                 : (new Date().getTime() + Math.floor(Math.random() * 1001)) * -1;
@@ -588,7 +608,9 @@ angular.module('dmpApp')
 
             var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
 
-            transformation.parameter_mappings['transformationOutputVariable'] = buildUriReference(outputAttributes);
+            var transformationOutputVariable = getOutputVariable($scope.activeMapping);
+
+            transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
         }
 
         /**
