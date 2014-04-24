@@ -13,7 +13,7 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'components/jquery/jquery.js',
+            'components/jquery/dist/jquery.js',
             'components/jquery-ui/ui/jquery-ui.js',
             '../node_modules/jasmine-jquery/lib/jasmine-jquery.js',
             'components/lodash/dist/lodash.compat.js',
@@ -29,7 +29,7 @@ module.exports = function(config) {
             'components/humanize/humanize.js',
             'components/ngprogress/build/ngProgress.js',
             'components/jsPlumb/dist/js/jquery.jsPlumb-1.5.5.js',
-            'components/angular-grid/ng-grid-2.0.7.debug.js',
+            'components/angular-grid/ng-grid-2.0.9.debug.js',
             'components/angular-gridster/app/scripts/gridster.js',
             'config.js',
             'scripts/*.js',
