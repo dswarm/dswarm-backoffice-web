@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
+    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, schemaParser, PubSub, mapping) {
 
         $scope.internalName = 'Filter Widget';
+
+        $scope.activeMapping = mapping;
 
         if (!$scope.activeMapping._$filters) {
             $scope.activeMapping._$filters = [];
@@ -30,36 +32,36 @@ angular.module('dmpApp')
 
         $scope.update = function() {
 
-            var inputfilterCollection = [];
+            var inputFilterCollection = [];
 
             angular.forEach($scope.activeMapping._$filters, function(filter) {
 
-                filter.inputfilters = schemaParser.getData(filter.filter, '');
+                filter.inputFilters = schemaParser.getData(filter.filter, '');
 
-                inputfilterCollection = inputfilterCollection.concat(filter.inputfilters);
+                inputFilterCollection = inputFilterCollection.concat(filter.inputFilters);
 
-                if (filter.inputfilters) {
+                if (filter.inputFilters) {
                     filter.name = '';
                 }
 
-                var countInputfilter = 0;
-                angular.forEach(filter.inputfilters, function(inputfilter) {
+                var countInputFilter = 0;
+                angular.forEach(filter.inputFilters, function(inputfilter) {
                     if (filter.name.length > 0) {
                         filter.name += ', ';
                     }
                     filter.name += inputfilter.title;
 
-                    countInputfilter++;
+                    countInputFilter++;
                 });
-                if (countInputfilter === 0) {
+                if (countInputFilter === 0) {
                     filter.name = 'new filter';
                 }
 
             });
 
-            if (inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
+            if (inputFilterCollection && inputFilterCollection[0] !== undefined && inputFilterCollection.length > 0) {
                 $scope.dataSource.isFiltered = true;
-                $scope.dataSource = schemaParser.filterData($scope.dataSource, inputfilterCollection);
+                $scope.dataSource = schemaParser.filterData($scope.dataSource, inputFilterCollection);
 
             } else {
                 $scope.dataSource.isFiltered = false;
@@ -73,7 +75,7 @@ angular.module('dmpApp')
 
             $scope.activeMapping._$filters.push({
                 filter: schemaParser.fromDomainSchema($scope.dataSchema, true),
-                inputfilters: [],
+                inputFilters: [],
                 name: 'new filter'
             });
 

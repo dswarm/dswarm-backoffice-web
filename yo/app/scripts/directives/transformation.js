@@ -1092,21 +1092,20 @@ angular.module('dmpApp')
             });
         });
 
-        $scope.onFilterClick = function(component) {
-
-            var childScope = $scope.$new();
-            childScope.component = component;
-
-            $scope.currentComponent = component;
+        $scope.onFilterClick = function() {
 
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/filter.html',
                 controller: 'FilterCtrl',
-                scope: childScope
+                windowClass: 'wide',
+                resolve: {
+                    mapping: function() {
+                        return $scope.activeMapping;
+                    }
+                }
             });
 
             modalInstance.result.then(angular.noop);
-
         };
 
         //** End handling filter
