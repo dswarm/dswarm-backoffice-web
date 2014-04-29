@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                 constants: {
                     ServiceUrls: {
                         backend: 'http://127.0.0.1:8087/dmp/',
-                        neo: 'http://127.0.0.1:7474/graph/'
+                        neo: 'http://127.0.0.1:8087/dmp/'
                     }
                 }
             },
@@ -116,7 +116,7 @@ module.exports = function(grunt) {
                 constants: {
                     ServiceUrls: {
                         backend: '/dmp/',
-                        neo: 'http://194.95.145.12:7474/graph/'
+                        neo: '/dmp/'
                     }
                 }
             },
