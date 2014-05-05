@@ -20,6 +20,7 @@
         <i class="glyphicon glyphicon-edit filter-key-icon filter-key-source"
            ng-if="isSource"
            ng-style="{color:isSelected?'slategrey':''}"
+           ng-click="onFilterKeyClick(data)"
            test-name="data"></i>
 
         <i class="glyphicon glyphicon-unchecked jsPanchorIcon"

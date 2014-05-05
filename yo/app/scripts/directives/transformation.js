@@ -1092,21 +1092,34 @@ angular.module('dmpApp')
             });
         });
 
+
+        PubSub.subscribe($scope, 'FilterKeySelected', function(data) {
+            console.log('on filter key selected', data);
+            openFilter($scope.activeMapping, data);
+        });
+
         $scope.onFilterClick = function() {
 
+            openFilter($scope.activeMapping, null);
+        };
+
+        function openFilter(mapping, attributePath) {
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/filter.html',
                 controller: 'FilterCtrl',
                 windowClass: 'wide',
                 resolve: {
                     mapping: function() {
-                        return $scope.activeMapping;
+                        return mapping;
+                    },
+                    attributePath: function() {
+                        return attributePath;
                     }
                 }
             });
 
             modalInstance.result.then(angular.noop);
-        };
+        }
 
         //** End handling filter
 

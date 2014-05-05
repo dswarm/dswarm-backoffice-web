@@ -440,18 +440,13 @@ angular.module('dmpApp').
          * @param filters
          * @returns {*}
          */
-        function filterData(data, filters) {
+        function filterData(data, filters, matchFn) {
 
-            var matchCount = 0;
-
-            angular.forEach(filters, function(filter) {
-                matchCount += matchFilter(data, filter);
-            });
-
-            data.filterNoMatch = (matchCount !== filters.length);
-
-            return data;
-
+            return loDash.reduce(filters, function(d, filter) {
+                return matchFilter(d, filter, matchFn || function(a, b) {
+                    return a === b;
+                });
+            }, data) || {};
         }
 
         /**
@@ -460,8 +455,8 @@ angular.module('dmpApp').
          * @param filter
          * @returns {number}
          */
-        function matchFilter(data, filter) {
-            return matchPath(data, filter.path, filter.title);
+        function matchFilter(data, filter, matchFn) {
+            return matchPath(data, filter.path, filter.title, matchFn);
         }
 
         /**
@@ -469,9 +464,10 @@ angular.module('dmpApp').
          * @param data
          * @param path
          * @param matchdata
+         * @param matchFn
          * @returns {number}
          */
-        function matchPath(data, path, matchdata) {
+        function matchPath(data, path, matchdata, matchFn) {
 
             var pathArray = path.split('.');
 
@@ -479,40 +475,30 @@ angular.module('dmpApp').
                 data.name = '';
             }
 
-            if (data.name.toString === pathArray[0].toString) {
-                pathArray.shift();
+            if (data.name.toString() === pathArray[0].toString() || data.name.toString() === (pathArray[0] + '...')) {
+                if (data.name.toString() !== (pathArray[0] + '...')) {
+                    pathArray.shift();
+                }
 
                 if (data.children) {
 
-                    var childData = 0;
+                    var children = loDash(data.children).map(function(child) {
+                        return matchPath(child, pathArray.join('.'), matchdata, matchFn);
+                    }).filter(function(child) {
+                        return !!child;
+                    }).valueOf();
 
-                    angular.forEach(data.children, function(child) {
-
-                        childData += matchPath(child, pathArray.join('.'), matchdata);
-
-                    });
-
-                    return childData;
-
-
-                } else {
-                    if (data.title === matchdata) {
-
-                        data.leafmatchedFilter = true;
-                        return 1;
-
-                    } else {
-                        data.leafmatchedFilter = false;
-                        return 0;
+                    if (children && children.length) {
+                        data.children = children;
+                        return data;
                     }
 
+                } else {
+                    if (matchFn(data.title, matchdata)) {
+                        return data;
+                    }
                 }
-
-            } else {
-                return 0;
             }
-
-
         }
 
         return {

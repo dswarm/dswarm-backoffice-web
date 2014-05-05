@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, schemaParser, PubSub, mapping) {
+    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, loDash, gdmParser, schemaParser, PubSub, mapping, attributePath) {
 
         $scope.internalName = 'Filter Widget';
 
@@ -15,13 +15,37 @@ angular.module('dmpApp')
         $scope.dataSchema = {};
         $scope.dataLoaded = false;
 
+        var orignalSource = {};
+
 
         PubSub.subscribe($scope, 'returnLoadData', function(args) {
 
             if (args.record) {
+                var schema = angular.copy(args.schema);
+                var path = attributePath ? attributePath.attribute_path_id : null;
 
-                $scope.dataSource = args.record.data;
-                $scope.dataSchema = args.schema;
+                if (path) {
+                    var exactPath = loDash.find(schema.attribute_paths, { id: path });
+
+                    if (angular.isDefined(exactPath)) {
+                        var exactAttributes = exactPath.attributes;
+
+                        schema.attribute_paths = loDash.filter(schema.attribute_paths, function(ap) {
+
+                            return loDash.every(exactAttributes, function(a, i) {
+
+                                return ap.attributes[i] && ap.attributes[i].id === a.id;
+                            });
+                        });
+                    }
+                }
+
+                schema.name = schema.name || '';
+
+                orignalSource = gdmParser.parse(args.record.data, schema);
+
+                $scope.dataSource = orignalSource;
+                $scope.dataSchema = schema;
                 $scope.dataLoaded = true;
 
             }
@@ -61,9 +85,12 @@ angular.module('dmpApp')
 
             if (inputFilterCollection && inputFilterCollection[0] !== undefined && inputFilterCollection.length > 0) {
                 $scope.dataSource.isFiltered = true;
-                $scope.dataSource = schemaParser.filterData($scope.dataSource, inputFilterCollection);
+                $scope.dataSource = schemaParser.filterData(angular.copy(orignalSource), inputFilterCollection, function(a, b) {
+                    return a.indexOf(b) >= 0;
+                });
 
             } else {
+                $scope.dataSource = orignalSource;
                 $scope.dataSource.isFiltered = false;
                 $scope.dataSource.filterNoMatch = false;
             }
