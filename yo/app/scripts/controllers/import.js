@@ -21,9 +21,8 @@ angular.module('dmpApp')
                         description: $scope.data.description
                     },
                     fileUrl: ApiEndpoint + 'resources'
-                }).then(function(resp) {
-                    var respId = resp['id'];
-                    $location.path('/data/' + respId);
+                }).then(function() {
+                    $location.path('/data/');
                 }).catch(function(err) {
                     console.log('file upload error', err);
                 });
