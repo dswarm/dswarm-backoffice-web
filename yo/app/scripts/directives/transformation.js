@@ -937,6 +937,7 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
+            // TODO: extract existing filters
             if (activeComponentId !== data.mapping_id) {
                 if (loDash.any($scope.project.mappings, { 'id': data.mapping_id })) {
 
@@ -1078,7 +1079,7 @@ angular.module('dmpApp')
         };
         //** End of sending transformation to server
 
-        //** Start handling filter
+        //** Start of configuring components
         $scope.onFunctionClick = function(component) {
             var newComponent = angular.copy(getComponent(component.id));
             PubSub.broadcast('handleEditConfig', newComponent);
@@ -1091,19 +1092,25 @@ angular.module('dmpApp')
                 }
             });
         });
+        //** End of configuring components
 
-
+        //** Start handling filter
+        // dectivated until further notice
         PubSub.subscribe($scope, 'FilterKeySelected', function(data) {
-            console.log('on filter key selected', data);
-            openFilter($scope.activeMapping, data);
+            // TODO: get a IAP instance from somewhere
+            openFilter($scope.activeMapping, data.attributePathId, null);
         });
 
-        $scope.onFilterClick = function() {
+        $scope.onFilterClick = function(iap) {
 
-            openFilter($scope.activeMapping, null);
+            openFilter($scope.activeMapping, iap.attribute_path.id, iap);
         };
 
-        function openFilter(mapping, attributePath) {
+        function openFilter(mapping, attributePathId, IAPInstance) {
+            if (!IAPInstance._$filters) {
+                IAPInstance._$filters = [];
+            }
+
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/filter.html',
                 controller: 'FilterCtrl',
@@ -1112,15 +1119,37 @@ angular.module('dmpApp')
                     mapping: function() {
                         return mapping;
                     },
-                    attributePath: function() {
-                        return attributePath;
+                    attributePathId: function() {
+                        return attributePathId;
+                    },
+                    filters: function() {
+                        return IAPInstance._$filters;
                     }
                 }
             });
 
-            modalInstance.result.then(angular.noop);
-        }
 
+            modalInstance.result.then(function() {
+                var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function(filter) {
+                    return Util.collect(filter.inputFilters, function(f) {
+                        var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, {id: f.apId});
+                        if (path) {
+                            path = buildUriReference(path.attributes);
+                            // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
+                            return [path, f.title];
+                        }
+                    });
+                }), true);
+
+                var expression = JSON.stringify(loDash.zipObject(filters));
+                // expression = expression.replace(new RegExp('\"', 'g'), '&quot;');
+
+                IAPInstance.filter = {
+                    id: getId(),
+                    expression: expression
+                };
+            });
+        }
         //** End handling filter
 
         $scope.isMultiple = function(item) {

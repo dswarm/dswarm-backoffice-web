@@ -1,50 +1,49 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, loDash, gdmParser, schemaParser, PubSub, mapping, attributePath) {
+    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, loDash, gdmParser, schemaParser, PubSub, mapping, attributePathId, filters) {
 
         $scope.internalName = 'Filter Widget';
 
         $scope.activeMapping = mapping;
-
-        if (!$scope.activeMapping._$filters) {
-            $scope.activeMapping._$filters = [];
-        }
+        $scope.filters = filters;
 
         $scope.dataSource = {};
         $scope.dataSchema = {};
         $scope.dataLoaded = false;
 
-        var orignalSource = {};
+        var originalSource = {};
 
+        function restrictSchema(schema, pathId) {
+            var exactPath = loDash.find(schema.attribute_paths, { id: pathId });
+
+            if (angular.isDefined(exactPath)) {
+                var exactAttributes = exactPath.attributes;
+
+                schema.attribute_paths = loDash.filter(schema.attribute_paths, function(ap) {
+
+                    return loDash.every(exactAttributes, function(a, i) {
+
+                        return ap.attributes[i] && ap.attributes[i].id === a.id;
+                    });
+                });
+            }
+        }
 
         PubSub.subscribe($scope, 'returnLoadData', function(args) {
 
             if (args.record) {
                 var schema = angular.copy(args.schema);
-                var path = attributePath ? attributePath.attribute_path_id : null;
-
-                if (path) {
-                    var exactPath = loDash.find(schema.attribute_paths, { id: path });
-
-                    if (angular.isDefined(exactPath)) {
-                        var exactAttributes = exactPath.attributes;
-
-                        schema.attribute_paths = loDash.filter(schema.attribute_paths, function(ap) {
-
-                            return loDash.every(exactAttributes, function(a, i) {
-
-                                return ap.attributes[i] && ap.attributes[i].id === a.id;
-                            });
-                        });
-                    }
-                }
+                // deactivated until further notice
+//                if (attributePathId) {
+//                    restrictSchema(schema, attributePathId);
+//                }
 
                 schema.name = schema.name || '';
 
-                orignalSource = gdmParser.parse(args.record.data, schema);
+                originalSource = gdmParser.parse(args.record.data, schema);
 
-                $scope.dataSource = orignalSource;
+                $scope.dataSource = originalSource;
                 $scope.dataSchema = schema;
                 $scope.dataLoaded = true;
 
@@ -58,7 +57,7 @@ angular.module('dmpApp')
 
             var inputFilterCollection = [];
 
-            angular.forEach($scope.activeMapping._$filters, function(filter) {
+            angular.forEach(filters, function(filter) {
 
                 filter.inputFilters = schemaParser.getData(filter.filter, '');
 
@@ -85,12 +84,12 @@ angular.module('dmpApp')
 
             if (inputFilterCollection && inputFilterCollection[0] !== undefined && inputFilterCollection.length > 0) {
                 $scope.dataSource.isFiltered = true;
-                $scope.dataSource = schemaParser.filterData(angular.copy(orignalSource), inputFilterCollection, function(a, b) {
+                $scope.dataSource = schemaParser.filterData(angular.copy(originalSource), inputFilterCollection, function(a, b) {
                     return a.indexOf(b) >= 0;
                 });
 
             } else {
-                $scope.dataSource = orignalSource;
+                $scope.dataSource = originalSource;
                 $scope.dataSource.isFiltered = false;
                 $scope.dataSource.filterNoMatch = false;
             }
@@ -100,7 +99,7 @@ angular.module('dmpApp')
 
         $scope.addFilter = function() {
 
-            $scope.activeMapping._$filters.push({
+            filters.push({
                 filter: schemaParser.fromDomainSchema($scope.dataSchema, true),
                 inputFilters: [],
                 name: 'new filter'
@@ -112,7 +111,7 @@ angular.module('dmpApp')
             $modalInstance.dismiss('cancel');
         };
 
-        $scope.onSaveClick = function() {
+        $scope.save = function() {
             $modalInstance.close();
         };
 

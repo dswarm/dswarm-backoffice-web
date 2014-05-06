@@ -591,28 +591,31 @@ module.exports = function(grunt) {
         grunt.log.writeln(JSON.stringify(grunt.config(), null, 2));
     });
 
-    grunt.registerTask('serve', 'start the development server', function(target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'connect:dist:keepalive']);
-        }
+    grunt.registerTask('serve:dist', 'start a production server', [
+        'build',
+        'connect:dist:keepalive'
+    ]);
 
-        var tasks = [
-            'clean:server',
-            'less',
-            'bowerInstall',
-            'updateConfig',
-            'copy:styles',
-            'autoprefixer'
-        ];
+    grunt.registerTask('serve:debug', 'start an IDE-debug friendly development server', [
+        'clean:server',
+        'less',
+        'bowerInstall',
+        'updateConfig',
+        'copy:styles',
+        'autoprefixer',
+        'connect:ide-debug:keepalive'
+    ]);
 
-        if (target === 'debug') {
-            tasks.push('connect:ide-debug:keepalive');
-        } else {
-            tasks.push('connect:livereload', 'watch');
-        }
-
-        grunt.task.run(tasks);
-    });
+    grunt.registerTask('serve', 'start a development server', [
+      'clean:server',
+      'less',
+      'bowerInstall',
+      'updateConfig',
+      'copy:styles',
+      'autoprefixer',
+      'connect:livereload',
+      'watch'
+    ]);
 
     grunt.registerTask('server', function() {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');

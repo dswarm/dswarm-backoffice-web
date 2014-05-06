@@ -426,7 +426,7 @@ angular.module('dmpApp').
             } else {
 
                 if (data.title) {
-                    return { 'title': data.title, 'name': data.name, 'path': path };
+                    return { 'title': data.title, 'name': data.name, 'path': path, apId: data._$path_id };
                 }
                 else {
                     return '';
@@ -438,6 +438,7 @@ angular.module('dmpApp').
          *
          * @param data
          * @param filters
+         * @param matchFn
          * @returns {*}
          */
         function filterData(data, filters, matchFn) {
@@ -453,6 +454,7 @@ angular.module('dmpApp').
          *
          * @param data
          * @param filter
+         * @param matchFn
          * @returns {number}
          */
         function matchFilter(data, filter, matchFn) {
