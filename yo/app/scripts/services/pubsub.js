@@ -36,21 +36,48 @@ angular.module('dmpApp').
          * @param callback {Function(*, event)}
          */
         function subscribe(scp, channel, callback) {
+
+            if(!scp._off) {
+                scp._off = {};
+            }
+
             if (angular.isArray(channel)) {
                 angular.forEach(channel, function(chan) {
-                    scp.$on(chan, function(event, data) {
+                    scp._off[chan] = scp.$on(chan, function(event, data) {
                         callback(data, event);
                     });
                 });
             } else {
-                scp.$on(channel, function(event, data) {
+                scp._off[channel] = scp.$on(channel, function(event, data) {
                     callback(data, event);
                 });
             }
         }
 
+        /**
+         * unsubscribes a channel or array of channels
+         * @param scp
+         * @param channel
+         * @returns {*}
+         */
+        function unsubscribe(scp, channel) {
+
+            if(scp._off) {
+
+                if (angular.isArray(channel)) {
+                    angular.forEach(channel, function(chan) {
+                        scp._off[chan]();
+                    });
+                } else {
+                    scp._off[channel]();
+                }
+
+            }
+        }
+
         return {
             broadcast: broadcast,
-            subscribe: subscribe
+            subscribe: subscribe,
+            unsubscribe: unsubscribe
         };
     });

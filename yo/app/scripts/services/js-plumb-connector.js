@@ -86,7 +86,9 @@ angular.module('dmpApp')
             var target = loDash.filter(connectorMap, { 'ident': { type: options.target.type, id: options.target.id} });
             var source = loDash.filter(connectorMap, { 'ident': { type: options.source.type, id: options.source.id} });
 
-            createConnection([source[0].scope.guid, target[0].scope.guid], target[0].options, options.type);
+            if(target[0] && source[0]) {
+                createConnection([source[0].scope.guid, target[0].scope.guid], target[0].options, options.type);
+            }
         }
 
         function onConnectorDisonnect(options) {
@@ -126,6 +128,10 @@ angular.module('dmpApp')
             connectorEndpointMap = [];
             connectorConnectionMap = [];
         }
+
+        $rootScope.$on('$locationChangeStart', function() {
+            jsP.detachEveryConnection({});
+        });
 
         PubSub.subscribe($rootScope, 'jsp-connector-connect', onConnectorConnect);
         PubSub.subscribe($rootScope, 'jsp-connector-disconnect', onConnectorDisonnect);

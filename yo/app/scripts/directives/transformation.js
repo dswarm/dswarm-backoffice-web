@@ -65,12 +65,12 @@ angular.module('dmpApp')
 
         /** Holds current grid items */
         $scope.gridItems = [];
+        $scope.gridItemConnections = [];
         $scope.transformationStateError = '';
 
         $scope.activeMapping = {};
         $scope.output_attribute_paths = [];
         $scope.$watch('activeMapping', function() {
-
             if(typeof $scope.activeMapping.output_attribute_path !== 'undefined') {
 
                 $scope.output_attribute_paths = [$scope.activeMapping.output_attribute_path];
@@ -114,6 +114,7 @@ angular.module('dmpApp')
             $scope.tabs = [];
 
             $scope.gridItems = [];
+            $scope.gridItemConnections = [];
 
             $scope.gridsterOpts = angular.extend({}, $scope.gridsterOpts, {
                 minRows: 0,
@@ -201,7 +202,33 @@ angular.module('dmpApp')
 
             });
 
-            if($scope.activeMapping.input_attribute_paths.length > 1) {
+            angular.forEach($scope.gridItemConnections, function(itemConnection) {
+
+                if(itemConnection.source.type === 'attribute_path_instance') {
+                    connectOptions.source = {
+                        type : 'transformation-input',
+                        id : itemConnection.source.data.attribute_path.id
+                    };
+                } else {
+                    connectOptions.source = {
+                        type : 'component',
+                        id : itemConnection.source.data.id
+                    };
+                }
+
+                connectOptions.target = {
+                    type : 'component',
+                    id : itemConnection.target.id
+                };
+
+                var newConnectOptions = angular.copy(connectOptions);
+
+                PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+
+
+            });
+
+            if( ( $scope.activeMapping.input_attribute_paths.length > 1 ) && ( getOpenEndedComponents(-1).length > 1 ) ) {
                 $scope.transformationStateError = 'Mehr als ein möglicher Output-Weg. Bitte mit concat verringern';
 
             } else {
@@ -358,6 +385,7 @@ angular.module('dmpApp')
         PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
 
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
+
             removeDropPlaceholder();
             isDraggingToGrid = false;
 
@@ -366,6 +394,16 @@ angular.module('dmpApp')
             }, 100);
 
         });
+
+        function unsubscribePlumbEvents() {
+            PubSub.unsubscribe($rootScope, ['GRIDSTER-DRAG-START']);
+            PubSub.unsubscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END']);
+        }
+
+        $rootScope.$on('$locationChangeStart', function() {
+            unsubscribePlumbEvents();
+        });
+
 
         //** End of function drag/drops handling
 
@@ -409,12 +447,65 @@ angular.module('dmpApp')
                 return component.parameter_mappings['inputString'] || ('input' + idx);
             }
 
+            var walkChainedComponentsRegister = [],
+                gridItemConnectionsRegister = [];
+
+
             function walkChainedComponents(result, components, pool) {
-                var nextLevel = loDash(components).pluck('output_components').flatten().pluck('id').value();
+                var nextLevel = loDash(components).pluck('output_components').flatten().pluck('id').value(),
+                    connectComponents;
+
+                // if a component has multiple inputs another connector needs to be created
+                if(loDash.indexOf(walkChainedComponentsRegister, nextLevel[0]) > -1) {
+
+                    connectComponents = loDash.map(nextLevel, function(id) {
+                        return pool[id];
+                    });
+
+                    var connectComponentSource = loDash.filter(result, function(cp) {
+
+                        return loDash.any(connectComponents[0].input_components, {id: cp.id});
+                    });
+
+                    gridItemConnectionsRegister.push({
+                        target : connectComponents,
+                        source : connectComponentSource,
+                        type : 'griditem'
+                    });
+
+                    // end of the line.
+                    nextLevel = [];
+                } else {
+
+                    connectComponents = loDash.map(nextLevel, function(id) {
+                        return pool[id];
+                    });
+
+                    angular.forEach(connectComponents, function(connectComponent) {
+                        if(connectComponent.parameter_mappings.inputString && connectComponent.parameter_mappings.inputString.length > 0) {
+
+                            var inputString = connectComponent.parameter_mappings.inputString.split(',');
+
+                            angular.forEach(inputString, function(input_variable) {
+
+                                gridItemConnectionsRegister.push({
+                                    target : connectComponents,
+                                    source : input_variable,
+                                    type : 'attribute_path_instance'
+                                });
+
+                            });
+
+                        }
+                    });
+
+                }
 
                 if (loDash.isEmpty(nextLevel)) {
                     return result;
                 }
+
+                walkChainedComponentsRegister = walkChainedComponentsRegister.concat(nextLevel);
 
                 var nextComponents = loDash.map(nextLevel, function(id) {
                     return pool[id];
@@ -475,13 +566,72 @@ angular.module('dmpApp')
                         }
                     });
                 });
+
+                if(gridItemConnectionsRegister.length > 0) {
+
+                    angular.forEach(gridItemConnectionsRegister, function(gridItemConnectionsRegisterItem) {
+
+                        var targetComponent = getGridItemFromComponentId(gridItemConnectionsRegisterItem.target[0].id),
+                            connectionSource;
+
+                        if(gridItemConnectionsRegisterItem.type === 'griditem') {
+
+                            var sourceComponent = getGridItemFromComponentId(gridItemConnectionsRegisterItem.source[0].id);
+
+                            connectionSource = {
+                                name: sourceComponent.function.name,
+                                type: 'griditem',
+                                data: sourceComponent
+                            };
+
+                        } else {
+
+                            var sourceIap = getIapByVariableName(gridItemConnectionsRegisterItem.source);
+
+                            connectionSource = {
+                                name: gridItemConnectionsRegisterItem.source,
+                                type: 'attribute_path_instance',
+                                data: sourceIap
+                            };
+
+                        }
+
+                        addGridItemConnections(
+                            connectionSource,
+                            targetComponent
+                        );
+
+                    });
+
+                }
+
             }
 
             $timeout(function() {
-                hideTransformationPlumbs();
                 showTransformationPlumbs();
             }, 100);
 
+        }
+
+
+        function getIapByVariableName(varName) {
+
+            if(!$scope.activeMapping.transformation.parameter_mappings[varName]) {
+                return null;
+            }
+
+            return loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
+                return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
+            });
+        }
+
+        /**
+         * Returns component from gridItems by component id
+         * @param componentId
+         * @returns {*|Mixed}
+         */
+        function getGridItemFromComponentId(componentId) {
+            return loDash.find($scope.gridItems, { id : componentId}) ;
         }
 
         /**
@@ -567,7 +717,6 @@ angular.module('dmpApp')
                 transformation.parameter_mappings = {};
             }
 
-            // TODO: Expand to combine multiple input paths
             var rowComponents = loDash.times($scope.gridsterOpts.maxRows, function(i) {
 
                 // get all in this row to array
@@ -594,7 +743,9 @@ angular.module('dmpApp')
                     transformation.function.parameters = [];
                 }
 
-                transformation.function.parameters.push(varName);
+                if(loDash.indexOf(transformation.function.parameters, varName) > -1) {
+                    transformation.function.parameters.push(varName);
+                }
 
                 if (rowComponents.length > 0) {
                     rowComponents[0].parameter_mappings['inputString'] = varName;
@@ -611,6 +762,43 @@ angular.module('dmpApp')
             var transformationOutputVariable = getOutputVariable($scope.activeMapping);
 
             transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
+
+            angular.forEach($scope.gridItemConnections, function(itemConnection) {
+
+                var componentIndex;
+
+                if(itemConnection.source.type === 'griditem') {
+
+                    componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
+                    $scope.activeMapping.transformation.function.components[componentIndex].input_components.push({id : itemConnection.source.data.id });
+
+                    componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.source.data.id});
+                    $scope.activeMapping.transformation.function.components[componentIndex].output_components.push({id : itemConnection.target.id });
+
+                } else {
+
+                    // iap
+
+                    componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
+
+                    if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
+
+                        var inputString = $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.split(',');
+
+                        if(loDash.indexOf(inputString, itemConnection.source.name) === -1) {
+
+                            inputString.push(itemConnection.source.name);
+
+                            $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = inputString.join(',');
+                        }
+
+                    } else {
+                        $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = itemConnection.source.name;
+                    }
+
+                }
+
+            });
         }
 
         /**
@@ -659,7 +847,6 @@ angular.module('dmpApp')
                 function: {
                     name: name,
                     description: description,
-                    //TODO: make flex, this only handles one input to transformation
                     parameters: [],
                     type: 'Transformation',
                     components: []
@@ -716,7 +903,7 @@ angular.module('dmpApp')
          * @param tab - Tab data from internal register
          */
         $scope.switchTab = function(tab) {
-            activate(tab.id);
+            activate(tab.id, false);
         };
 
         /**
@@ -789,21 +976,24 @@ angular.module('dmpApp')
                 $scope.activeMapping._$connection_id = data.connection_id;
             }
 
-            setGridHeight(data.additionalInput.length + 1);
-
             if ($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length + 1) {
 
                 angular.forEach(data.additionalInput, function(input) {
                     angular.forEach($scope.project.input_data_model.schema.attribute_paths, function(path) {
                         if (loDash.findIndex(path.attributes, { 'id': input.path[0] }) >= 0) {
 
-                            $scope.activeMapping.input_attribute_paths.push({
-                                type: 'MappingAttributePathInstance',
-                                name: 'input mapping attribute path instance',
-                                id: (new Date().getTime() + 1) * -1,
-                                attribute_path: path
+                            var alreadyInIap = loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
+                                return input_attribute_path.attribute_path.id === path.id;
                             });
 
+                            if(loDash.isUndefined(alreadyInIap)) {
+                                $scope.activeMapping.input_attribute_paths.push({
+                                    type: 'MappingAttributePathInstance',
+                                    name: 'input mapping attribute path instance',
+                                    id: (new Date().getTime() + 1) * -1,
+                                    attribute_path: path
+                                });
+                            }
                         }
                     });
 
@@ -811,6 +1001,7 @@ angular.module('dmpApp')
 
             }
 
+            setGridHeight($scope.activeMapping.input_attribute_paths.length);
 
             if ($scope.$$phase !== '$digest') {
                 $scope.$digest();
@@ -904,6 +1095,130 @@ angular.module('dmpApp')
         };
 
         //** End handling filter
+
+        $scope.isMultiple = function(item) {
+            return (item.function.name === 'concat');
+        };
+
+        /**
+         * Returns all open ends
+         * @param excludeRow Row to exclude from open end findings. E.g. current row
+         * @returns {Array}
+         */
+        function getOpenEndedComponents(excludeRow) {
+
+            excludeRow = loDash.isNull(excludeRow) ? -1 : excludeRow;
+
+            var openEndedComponents = [];
+
+            // find all ends if there is more than one possibility
+
+            if ( $scope.activeMapping.input_attribute_paths.length > 1 ) {
+
+                angular.forEach($scope.activeMapping.input_attribute_paths, function(path, row) {
+
+                    if(row !== excludeRow) {
+                        var currentRowItems = loDash.find($scope.gridItems, {positionX : row});
+
+                        if(!currentRowItems || currentRowItems.length === 0) {
+
+                            var thisOpenEnded = true;
+
+                            angular.forEach($scope.activeMapping.transformation.function.components, function(component) {
+                                if(component.parameter_mappings.inputString && component.parameter_mappings.inputString.length > 0) {
+
+                                    var inputString = component.parameter_mappings.inputString.split(',');
+
+                                    if(loDash.indexOf(inputString, $scope.activeMapping.input_attribute_paths[row].attribute_path.attributes[0].name) > -1) {
+                                        thisOpenEnded = false;
+                                    }
+                                }
+                            });
+
+                            if(thisOpenEnded) {
+                                openEndedComponents.push({
+                                    name : $scope.activeMapping.input_attribute_paths[row].attribute_path.attributes[0].name,
+                                    type : 'attribute_path_instance',
+                                    data : $scope.activeMapping.input_attribute_paths[row]
+                                });
+                            }
+
+                        } else {
+
+                            loDash.last(loDash.sortBy(currentRowItems, 'positionY'));
+
+                            var currentRowIndexInGridItemConnection = loDash.findIndex($scope.gridItemConnections, function(gridItemConnection) {
+                                return gridItemConnection.source.data.id === currentRowItems.id;
+                            });
+
+                            if(currentRowIndexInGridItemConnection === -1) {
+                                openEndedComponents.push({
+                                    name : currentRowItems.function.name,
+                                    type : 'griditem',
+                                    data : currentRowItems
+                                });
+                            }
+
+                        }
+                    }
+
+                });
+
+            }
+
+            return openEndedComponents;
+        }
+
+        /**
+         * Adds additional grid item connections to register
+         * @param source object
+         * @param target
+         */
+        function addGridItemConnections(source, target) {
+
+            $scope.gridItemConnections.push({source : source, target : target});
+
+            createInternalComponentsFromGridItems();
+        }
+
+        /**
+         *
+         * @param currentItem
+         * @returns {modalInstance.result|*}
+         */
+        function askMultipleComponentInput(currentItem) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/modals/multiple-input-component-selector.html',
+                controller: 'MultipleInputComponentSelectorCtrl',
+                resolve: {
+                    componentSet: function() {
+                        return getOpenEndedComponents(currentItem.positionX);
+                    }
+                }
+            });
+
+            return modalInstance.result;
+        }
+
+        /**
+         * Function when
+         * @param currentItem The current item
+         */
+        $scope.onMultipleComponentInputAdd = function(currentItem) {
+
+            askMultipleComponentInput(currentItem).then(function(component) {
+
+                hideTransformationPlumbs();
+
+                addGridItemConnections(component[0], currentItem);
+
+                $timeout(function() {
+                    showTransformationPlumbs();
+                }, 100);
+            });
+
+        };
 
 
     })
