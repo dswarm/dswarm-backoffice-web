@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 
         dmpProject: {
             backendDir: process.env.DMP_HOME || '../../data-management-platform',
-            name: 'DMP 2000',
+            name: 'd:swarm',
             versions: {
                 web: {
                     revision: 'HEAD',
