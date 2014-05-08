@@ -661,6 +661,9 @@ angular.module('dmpApp')
          */
         function chainRowComponents(result, component) {
 
+            component.input_components =
+                component.output_components = [];
+
             if (result.length > 0) {
                 var last = loDash.last(result);
 
