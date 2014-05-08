@@ -406,7 +406,8 @@ angular.module('dmpApp')
             $scope.gridsterOpts.maxRows =
                 $scope.gridsterOpts.minRows =
                     $scope.gridsterOpts.maxGridRows =
-                        $scope.gridsterOpts.gridHeight = height;
+                        $scope.gridsterOpts.minGridRows =
+                            $scope.gridsterOpts.gridHeight = height;
         }
 
         /**
