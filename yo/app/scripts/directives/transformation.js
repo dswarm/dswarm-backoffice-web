@@ -140,6 +140,20 @@ angular.module('dmpApp')
             PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
         }
 
+        var showTransformationPlumbsTimeout = null;
+
+        function showTransformationPlumbsInit() {
+
+            if(showTransformationPlumbsTimeout) {
+                $timeout.cancel(showTransformationPlumbsTimeout);
+            }
+
+            showTransformationPlumbsTimeout = $timeout(function() {
+                showTransformationPlumbs();
+            }, 100);
+
+        }
+
         function showTransformationPlumbs() {
 
             var j = 0,
@@ -415,9 +429,7 @@ angular.module('dmpApp')
             removeDropPlaceholder();
             isDraggingToGrid = false;
 
-            $timeout(function() {
-                showTransformationPlumbs();
-            }, 100);
+            showTransformationPlumbsInit();
 
         });
 
@@ -648,9 +660,7 @@ angular.module('dmpApp')
 
             }
 
-            $timeout(function() {
-                showTransformationPlumbs();
-            }, 100);
+            showTransformationPlumbsInit();
 
         }
 
@@ -1068,7 +1078,7 @@ angular.module('dmpApp')
 
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
 
-            showTransformationPlumbs();
+            showTransformationPlumbsInit();
 
             if ($scope.$$phase !== '$digest') {
                 $scope.$digest();
@@ -1280,9 +1290,8 @@ angular.module('dmpApp')
 
                 addGridItemConnections(component[0], currentItem);
 
-                $timeout(function() {
-                    showTransformationPlumbs();
-                }, 100);
+                showTransformationPlumbsInit();
+
             });
 
         };
