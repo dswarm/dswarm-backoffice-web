@@ -926,6 +926,8 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
+            hideTransformationPlumbs();
+
             if (activeComponentId !== data.mapping_id) {
                 if (loDash.any($scope.project.mappings, { 'id': data.mapping_id })) {
 
@@ -1006,6 +1008,8 @@ angular.module('dmpApp')
             }
 
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
+
+            showTransformationPlumbs();
 
             if ($scope.$$phase !== '$digest') {
                 $scope.$digest();
@@ -1179,6 +1183,8 @@ angular.module('dmpApp')
          * @param target
          */
         function addGridItemConnections(source, target) {
+
+            console.log("addGridItemConnections");
 
             $scope.gridItemConnections.push({source : source, target : target});
 
