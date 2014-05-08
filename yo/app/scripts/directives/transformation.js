@@ -8,7 +8,7 @@ angular.module('dmpApp')
             availableIds = [],
         // TODO: Find better solution instead of hard limiting to 6 items per row
             gridMaxItemsPerRow = 6,
-            isDraggingToGrid = null;
+            isDraggingToGrid = false;
 
         /** Gridster config goes here */
         $scope.gridsterOpts = {
@@ -360,7 +360,6 @@ angular.module('dmpApp')
             if (isDraggingToGrid === false) {
                 createInternalComponentsFromGridItems();
             }
-            isDraggingToGrid = null;
         }, true);
 
         PubSub.subscribe($rootScope, ['DRAG-START'], function() {
@@ -373,6 +372,8 @@ angular.module('dmpApp')
         PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
 
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
+
+            isDraggingToGrid = false;
 
             removeDropPlaceholder();
             isDraggingToGrid = false;
@@ -1183,8 +1184,6 @@ angular.module('dmpApp')
          * @param target
          */
         function addGridItemConnections(source, target) {
-
-            console.log("addGridItemConnections");
 
             $scope.gridItemConnections.push({source : source, target : target});
 
