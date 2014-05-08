@@ -195,40 +195,6 @@ angular.module('dmpApp')
                 j++;
 
             });
-            if( ( $scope.activeMapping.input_attribute_paths.length > 1 ) && ( getOpenEndedComponents(-1).length > 1 ) ) {
-                $scope.transformationStateError = 'Mehr als ein möglicher Output-Weg. Bitte mit concat verringern';
-
-            } else {
-
-                if($scope.gridItems.length === 0) {
-
-                    connectOptions.source =  {
-                        type : 'transformation-input',
-                        id : $scope.activeMapping.input_attribute_paths[0].attribute_path.id
-                    };
-
-                } else {
-
-                    var firstRow = loDash.filter($scope.gridItems, { positionX: 0 });
-                    firstRow = loDash.sortBy(firstRow, 'positionY');
-
-                    var firstRowLastItem = loDash.last(firstRow);
-
-                    connectOptions.source =  {
-                        type : 'component',
-                        id : firstRowLastItem.id
-                    };
-
-                }
-
-                connectOptions.target = {
-                    type : 'transformation-output',
-                    id : $scope.activeMapping.output_attribute_path.attribute_path.id
-                };
-
-                PubSub.broadcast('jsp-connector-connect', connectOptions);
-
-            }
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
                 if(itemConnection.source.type === 'attribute_path_instance') {
@@ -251,7 +217,6 @@ angular.module('dmpApp')
                 var newConnectOptions = angular.copy(connectOptions);
 
                 PubSub.broadcast('jsp-connector-connect', newConnectOptions);
-
 
             });
 
