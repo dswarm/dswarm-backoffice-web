@@ -330,7 +330,15 @@ angular.module('dmpApp')
          * @param positionY
          * @param itemData
          */
-        function dropToGrid(positionX, positionY, itemData) {
+        function dropToGrid(positionX, positionY, itemDataOriginal) {
+
+            var itemData = angular.copy(itemDataOriginal);
+
+            if(!itemData.hasOwnProperty('function_description')) {
+                itemData.function_description = angular.copy(itemData);
+            }
+
+            itemData.name = getId()*-1;
 
             addToGrid(positionX, positionY, itemData, getId());
 
@@ -488,11 +496,15 @@ angular.module('dmpApp')
 
                             angular.forEach(inputString, function(input_variable) {
 
-                                gridItemConnectionsRegister.push({
-                                    target : connectComponents,
-                                    source : input_variable,
-                                    type : 'attribute_path_instance'
-                                });
+                                if(input_variable.indexOf('component') === -1) {
+
+                                    gridItemConnectionsRegister.push({
+                                        target : connectComponents,
+                                        source : input_variable,
+                                        type : 'attribute_path_instance'
+                                    });
+
+                                }
 
                             });
 
@@ -659,6 +671,9 @@ angular.module('dmpApp')
          */
         function chainRowComponents(result, component) {
 
+            component.input_components =
+                component.output_components = [];
+
             if (result.length > 0) {
                 var last = loDash.last(result);
 
@@ -765,36 +780,36 @@ angular.module('dmpApp')
 
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
-                var componentIndex;
+                var componentIndex,
+                    componentName = itemConnection.source.name;
+
+                if(itemConnection.source.type === 'griditem') {
+                    componentName = 'component' + itemConnection.source.data.function.name;
+                }
+
+                componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
+
+                if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
+
+                    var inputString = $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.split(',');
+
+                    if(loDash.indexOf(inputString, componentName) === -1) {
+
+                        inputString.push(componentName);
+
+                        $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = inputString.join(',');
+                    }
+
+                } else {
+                    $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = componentName;
+                }
 
                 if(itemConnection.source.type === 'griditem') {
 
-                    componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
                     $scope.activeMapping.transformation.function.components[componentIndex].input_components.push({id : itemConnection.source.data.id });
 
                     componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.source.data.id});
                     $scope.activeMapping.transformation.function.components[componentIndex].output_components.push({id : itemConnection.target.id });
-
-                } else {
-
-                    // iap
-
-                    componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
-
-                    if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
-
-                        var inputString = $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.split(',');
-
-                        if(loDash.indexOf(inputString, itemConnection.source.name) === -1) {
-
-                            inputString.push(itemConnection.source.name);
-
-                            $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = inputString.join(',');
-                        }
-
-                    } else {
-                        $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = itemConnection.source.name;
-                    }
 
                 }
 
@@ -1097,7 +1112,7 @@ angular.module('dmpApp')
         //** End handling filter
 
         $scope.isMultiple = function(item) {
-            return (item.function.name === 'concat');
+            return (item.function.function_description.name === 'concat');
         };
 
         /**
@@ -1153,7 +1168,7 @@ angular.module('dmpApp')
 
                             if(currentRowIndexInGridItemConnection === -1) {
                                 openEndedComponents.push({
-                                    name : currentRowItems.function.name,
+                                    name : currentRowItems.function.function_description.name,
                                     type : 'griditem',
                                     data : currentRowItems
                                 });

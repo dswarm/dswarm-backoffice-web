@@ -6,7 +6,7 @@
     <ul ng-show="functions.show" class="tree-list">
       <li ng-repeat="child in functions.children | filter: { type: 'Function' } track by $index" class="function">
         <span x-draggable="true">
-            {{ child.name }}
+            {{ child.function_description.name }}
         </span>
       </li>
     </ul>
