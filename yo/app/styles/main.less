@@ -121,34 +121,35 @@ svg.mapping-active {
     width: 95%;
   }
 
-  .isFiltered .tree-list .tree-leaf {
-    opacity : 0.25;
-  }
-
-  .isFiltered .tree-list .tree-leaf.leafmatchedFilter {
-    opacity : 1;
-  }
-
-
-  .isFiltered .tree-list li.isFilterMatch {
-    opacity : 1;
-  }
-
-  .filterMatch {
-    display: none;
-  }
-
-  .filterNoMatch {
-    display: block;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    background: red;
-    color: white;
-    padding: 2px;
-  }
-
 }
+
+.filterMatch {
+  display: none;
+}
+
+.filterNoMatch {
+  display: block;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background: red;
+  color: white;
+  padding: 2px;
+}
+
+.tree-leaf.leafmatchedFilter {
+    font-weight: bold;
+    color: red;
+
+    .data-sample {
+        color: currentcolor;
+    }
+}
+
+.tree-child.leafmatchedFilter {
+    color: red;
+}
+
 
 .form-control-inline {
   width: 50px;

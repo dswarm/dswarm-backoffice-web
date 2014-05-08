@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, loDash, gdmParser, schemaParser, PubSub, mapping, attributePathId, filters) {
+    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, mapping, attributePathId, filters) {
 
         $scope.internalName = 'Filter Widget';
 
@@ -14,6 +14,8 @@ angular.module('dmpApp')
 
         var originalSource = {};
 
+        // deactivated until further notice
+        /* jshint ignore:start */
         function restrictSchema(schema, pathId) {
             var exactPath = loDash.find(schema.attribute_paths, { id: pathId });
 
@@ -29,70 +31,15 @@ angular.module('dmpApp')
                 });
             }
         }
-
-        PubSub.subscribe($scope, 'returnLoadData', function(args) {
-
-            if (args.record) {
-                var schema = angular.copy(args.schema);
-                // deactivated until further notice
-//                if (attributePathId) {
-//                    restrictSchema(schema, attributePathId);
-//                }
-
-                schema.name = schema.name || '';
-
-                originalSource = gdmParser.parse(args.record.data, schema);
-
-                $scope.dataSource = originalSource;
-                $scope.dataSchema = schema;
-                $scope.dataLoaded = true;
-
-            }
-
-        });
-
-        PubSub.broadcast('getLoadData', {});
+        /* jshint ignore:end */
 
         $scope.update = function() {
 
-            var inputFilterCollection = [];
+            var inputFilterCollection = filterHelper.buildFilterInputs(filters);
 
-            angular.forEach(filters, function(filter) {
-
-                filter.inputFilters = schemaParser.getData(filter.filter, '');
-
-                inputFilterCollection = inputFilterCollection.concat(filter.inputFilters);
-
-                if (filter.inputFilters) {
-                    filter.name = '';
-                }
-
-                var countInputFilter = 0;
-                angular.forEach(filter.inputFilters, function(inputfilter) {
-                    if (filter.name.length > 0) {
-                        filter.name += ', ';
-                    }
-                    filter.name += inputfilter.title;
-
-                    countInputFilter++;
-                });
-                if (countInputFilter === 0) {
-                    filter.name = 'new filter';
-                }
-
+            filterHelper.annotateMatches($scope.dataSource, inputFilterCollection, function(a, b) {
+                return a === b;
             });
-
-            if (inputFilterCollection && inputFilterCollection[0] !== undefined && inputFilterCollection.length > 0) {
-                $scope.dataSource.isFiltered = true;
-                $scope.dataSource = schemaParser.filterData(angular.copy(originalSource), inputFilterCollection, function(a, b) {
-                    return a.indexOf(b) >= 0;
-                });
-
-            } else {
-                $scope.dataSource = originalSource;
-                $scope.dataSource.isFiltered = false;
-                $scope.dataSource.filterNoMatch = false;
-            }
 
             return true;
         };
@@ -114,5 +61,27 @@ angular.module('dmpApp')
         $scope.save = function() {
             $modalInstance.close();
         };
+
+        PubSub.ask($scope, 'getLoadData', {}, 'returnLoadData', function(args) {
+
+            if (args.record) {
+                var schema = angular.copy(args.schema);
+                // deactivated until further notice
+//                if (attributePathId) {
+//                    restrictSchema(schema, attributePathId);
+//                }
+
+                schema.name = schema.name || '';
+
+                originalSource = gdmParser.parse(args.record.data, schema);
+
+                $scope.dataSource = originalSource;
+                $scope.dataSchema = schema;
+
+                $scope.update();
+
+                $scope.dataLoaded = true;
+            }
+        });
 
     });

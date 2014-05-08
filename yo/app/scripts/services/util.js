@@ -119,6 +119,9 @@ angular.module('dmpApp')
                     val = '$DOCUMENT';
                 } else if (value.$evalAsync && value.$watch) {
                     val = '$SCOPE';
+                } else if (angular.isArray(value) && value.length === 0) {
+                    // the backend doesn't like empty arrays
+                    val = undefined;
                 }
             }
             return val;

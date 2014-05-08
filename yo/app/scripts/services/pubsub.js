@@ -75,9 +75,20 @@ angular.module('dmpApp').
             }
         }
 
+        function ask(scope, send, args, reply, onReceive) {
+            subscribe(scope, reply, function() {
+                var a = [].slice.call(arguments);
+                onReceive.apply(null, a);
+
+                unsubscribe(scope, reply);
+            });
+            broadcast(send, args);
+        }
+
         return {
             broadcast: broadcast,
             subscribe: subscribe,
-            unsubscribe: unsubscribe
+            unsubscribe: unsubscribe,
+            ask: ask
         };
     });

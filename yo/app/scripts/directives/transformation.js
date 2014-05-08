@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, schemaParser, filterHelper, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -104,6 +104,13 @@ angular.module('dmpApp')
         }
 
         //** Start of directive init
+        function getSchema() {
+            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true);
+            s.name = s.name || '';
+
+            return s;
+        }
+
         /**
          * Initializes vars etc.
          */
@@ -123,18 +130,36 @@ angular.module('dmpApp')
             });
 
             // restore mappings if a previous project was loaded from a draft
-            loDash.forEach($scope.project.mappings, function(mapping) {
+            var last = loDash.reduce($scope.project.mappings, function(previous, mapping) {
+
+                loDash.forEach(mapping.input_attribute_paths, function(iap) {
+                    if (iap.filter) {
+                        var schema = getSchema(),
+                            expression = angular.fromJson(iap.filter.expression),
+
+                            filter = filterHelper.applyFilter(schema, expression),
+
+                            iapFilter = {
+                                filter: filter,
+                                name: iap.filter.name
+                            };
+
+                        filterHelper.buildFilterInputs([iapFilter]);
+
+                        // all existing they're merged into one filter now, this might be good or not?
+                        iap._$filters = [iapFilter];
+                    }
+                });
 
                 $scope.tabs.push({ title: mapping.name, active: false, id: mapping.id });
                 availableIds.push(mapping.id);
-            });
 
-            var last = loDash.last($scope.project.mappings);
+                return mapping;
+            }, null);
 
             if (last) {
                 activate(last.id, true);
             }
-
         }
 
         init();
@@ -937,7 +962,6 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
-            // TODO: extract existing filters
             if (activeComponentId !== data.mapping_id) {
                 if (loDash.any($scope.project.mappings, { 'id': data.mapping_id })) {
 
@@ -1144,10 +1168,14 @@ angular.module('dmpApp')
                 var expression = JSON.stringify(loDash.zipObject(filters));
                 // expression = expression.replace(new RegExp('\"', 'g'), '&quot;');
 
-                IAPInstance.filter = {
-                    id: getId(),
-                    expression: expression
-                };
+                if (IAPInstance.filter) {
+                    IAPInstance.filter.expression = expression;
+                } else {
+                    IAPInstance.filter = {
+                        id: getId(),
+                        expression: expression
+                    };
+                }
             });
         }
         //** End handling filter
