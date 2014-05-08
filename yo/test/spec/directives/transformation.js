@@ -14,7 +14,7 @@ describe('Directive: Transformation', function() {
         var expectedId = -new Date();
 
         expect(Math.abs(id - expectedId)).toBeGreaterThan(-1);
-        expect(Math.abs(id - expectedId)).toBeLessThan(20);
+        expect(Math.abs(id - expectedId)).toBeLessThan(100);
 
         delete ip.id;
         return ip;
@@ -788,11 +788,12 @@ describe('Directive: Transformation', function() {
         scope.$digest();
         var elScope = element.scope();
 
-        elScope.onFilterClick('foo');
+        elScope.onFilterClick({'attribute_path': {id: 'foo'}});
 
         expect($modal.open).toHaveBeenCalled();
-        expect($modal.open.calls[0].args[0].scope.currentComponent).toBe('foo');
-        expect($modal.open.calls[0].args[0].scope.component).toBe('foo');
+        expect($modal.open.calls[0].args[0].resolve.mapping()).toEqual({});
+        expect($modal.open.calls[0].args[0].resolve.attributePathId()).toBe('foo');
+        expect($modal.open.calls[0].args[0].resolve.filters()).toEqual([]);
     }));
 
 });

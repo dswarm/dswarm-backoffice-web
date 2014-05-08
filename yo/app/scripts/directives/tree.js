@@ -98,6 +98,19 @@ angular.module('dmpApp')
             }
         };
 
+        $scope.onFilterKeyClick = function(data) {
+            console.log(data);
+            if (angular.isDefined(data._$path_id)) {
+                PubSub.broadcast('FilterKeySelected', {
+                    id: data.id,
+                    attribute_path_id: data._$path_id,
+                    name: data.name,
+                    uri: data.uri
+                });
+            }
+
+        };
+
         $scope.expandCollapse = function(data) {
             data.$show = !$scope.isLeaf(data) && !data.$show;
 

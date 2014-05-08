@@ -1,6 +1,4 @@
-<div class="filters modal-dialog">
-  <div class="modal-content" ng-if="dataLoaded">
-
+<div ng-if="dataLoaded">
     <div class="modal-header">
         <h3>filters for {{component.payload.name}}</h3>
         <button class="btn btn-warning cancel" ng-click="addFilter()">add filter</button>
@@ -16,18 +14,16 @@
                     </li>
                 </ul>
 
-                <filter-data data="dataSource"/>
+                <filter-data data="dataSource"></filter-data>
 
             </div>
 
-            <filter-selector filters="activeMapping.$filters" update="update" />
+            <filter-selector filters="filters" update="update" ></filter-selector>
 
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-warning cancel" ng-click="close()">Ok</button>
+        <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
     </div>
-
-   </div>
 
 </div>

@@ -43,6 +43,7 @@ angular.module('dmpApp')
 
             }, function(dataResult) {
 
+                $scope.originalRecords = dataResult;
                 $scope.records = loDash.map(dataResult, function(record) {
                     return {
                         id: record.id,
@@ -64,7 +65,7 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'getLoadData', function() {
 
             PubSub.broadcast('returnLoadData', {
-                record: $scope.records[0],
+                record: $scope.originalRecords[0],
                 schema: $scope.schema
             });
 

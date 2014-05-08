@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, schemaParser, filterHelper, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -104,6 +104,13 @@ angular.module('dmpApp')
         }
 
         //** Start of directive init
+        function getSchema() {
+            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true);
+            s.name = s.name || '';
+
+            return s;
+        }
+
         /**
          * Initializes vars etc.
          */
@@ -123,18 +130,36 @@ angular.module('dmpApp')
             });
 
             // restore mappings if a previous project was loaded from a draft
-            loDash.forEach($scope.project.mappings, function(mapping) {
+            var last = loDash.reduce($scope.project.mappings, function(previous, mapping) {
+
+                loDash.forEach(mapping.input_attribute_paths, function(iap) {
+                    if (iap.filter) {
+                        var schema = getSchema(),
+                            expression = angular.fromJson(iap.filter.expression),
+
+                            filter = filterHelper.applyFilter(schema, expression),
+
+                            iapFilter = {
+                                filter: filter,
+                                name: iap.filter.name
+                            };
+
+                        filterHelper.buildFilterInputs([iapFilter]);
+
+                        // all existing they're merged into one filter now, this might be good or not?
+                        iap._$filters = [iapFilter];
+                    }
+                });
 
                 $scope.tabs.push({ title: mapping.name, active: false, id: mapping.id });
                 availableIds.push(mapping.id);
-            });
 
-            var last = loDash.last($scope.project.mappings);
+                return mapping;
+            }, null);
 
             if (last) {
                 activate(last.id, true);
             }
-
         }
 
         init();
@@ -1078,7 +1103,7 @@ angular.module('dmpApp')
         };
         //** End of sending transformation to server
 
-        //** Start handling filter
+        //** Start of configuring components
         $scope.onFunctionClick = function(component) {
             var newComponent = angular.copy(getComponent(component.id));
             PubSub.broadcast('handleEditConfig', newComponent);
@@ -1091,24 +1116,68 @@ angular.module('dmpApp')
                 }
             });
         });
+        //** End of configuring components
 
-        $scope.onFilterClick = function(component) {
+        //** Start handling filter
+        // dectivated until further notice
+        PubSub.subscribe($scope, 'FilterKeySelected', function(data) {
+            // TODO: get a IAP instance from somewhere
+            openFilter($scope.activeMapping, data.attributePathId, null);
+        });
 
-            var childScope = $scope.$new();
-            childScope.component = component;
+        $scope.onFilterClick = function(iap) {
 
-            $scope.currentComponent = component;
+            openFilter($scope.activeMapping, iap.attribute_path.id, iap);
+        };
+
+        function openFilter(mapping, attributePathId, IAPInstance) {
+            if (!IAPInstance._$filters) {
+                IAPInstance._$filters = [];
+            }
 
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/filter.html',
                 controller: 'FilterCtrl',
-                scope: childScope
+                windowClass: 'wide',
+                resolve: {
+                    mapping: function() {
+                        return mapping;
+                    },
+                    attributePathId: function() {
+                        return attributePathId;
+                    },
+                    filters: function() {
+                        return IAPInstance._$filters;
+                    }
+                }
             });
 
-            modalInstance.result.then(angular.noop);
 
-        };
+            modalInstance.result.then(function() {
+                var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function(filter) {
+                    return Util.collect(filter.inputFilters, function(f) {
+                        var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, {id: f.apId});
+                        if (path) {
+                            path = buildUriReference(path.attributes);
+                            // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
+                            return [path, f.title];
+                        }
+                    });
+                }), true);
 
+                var expression = JSON.stringify(loDash.zipObject(filters));
+                // expression = expression.replace(new RegExp('\"', 'g'), '&quot;');
+
+                if (IAPInstance.filter) {
+                    IAPInstance.filter.expression = expression;
+                } else {
+                    IAPInstance.filter = {
+                        id: getId(),
+                        expression: expression
+                    };
+                }
+            });
+        }
         //** End handling filter
 
         $scope.isMultiple = function(item) {
