@@ -14,7 +14,7 @@ describe('Directive: Transformation', function() {
         var expectedId = -new Date();
 
         expect(Math.abs(id - expectedId)).toBeGreaterThan(-1);
-        expect(Math.abs(id - expectedId)).toBeLessThan(10);
+        expect(Math.abs(id - expectedId)).toBeLessThan(20);
 
         delete ip.id;
         return ip;

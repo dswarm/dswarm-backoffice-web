@@ -312,6 +312,12 @@ angular.module('dmpApp')
          */
         function dropToGrid(positionX, positionY, itemData) {
 
+            if(!itemData.hasOwnProperty('function_description')) {
+                itemData.function_description = angular.copy(itemData);
+            }
+
+            itemData.name = getId()*-1;
+
             addToGrid(positionX, positionY, itemData, getId());
 
             removeDropPlaceholder();
@@ -1142,7 +1148,7 @@ angular.module('dmpApp')
 
                             if(currentRowIndexInGridItemConnection === -1) {
                                 openEndedComponents.push({
-                                    name : currentRowItems.function.name,
+                                    name : currentRowItems.function.function_description.name,
                                     type : 'griditem',
                                     data : currentRowItems
                                 });
