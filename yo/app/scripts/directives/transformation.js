@@ -8,7 +8,7 @@ angular.module('dmpApp')
             availableIds = [],
         // TODO: Find better solution instead of hard limiting to 6 items per row
             gridMaxItemsPerRow = 6,
-            isDraggingToGrid = null;
+            isDraggingToGrid = false;
 
         /** Gridster config goes here */
         $scope.gridsterOpts = {
@@ -405,7 +405,6 @@ angular.module('dmpApp')
             if (isDraggingToGrid === false) {
                 createInternalComponentsFromGridItems();
             }
-            isDraggingToGrid = null;
         }, true);
 
         PubSub.subscribe($rootScope, ['DRAG-START'], function() {
@@ -418,6 +417,8 @@ angular.module('dmpApp')
         PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
 
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
+
+            isDraggingToGrid = false;
 
             removeDropPlaceholder();
             isDraggingToGrid = false;
@@ -450,7 +451,8 @@ angular.module('dmpApp')
             $scope.gridsterOpts.maxRows =
                 $scope.gridsterOpts.minRows =
                     $scope.gridsterOpts.maxGridRows =
-                        $scope.gridsterOpts.gridHeight = height;
+                        $scope.gridsterOpts.minGridRows =
+                            $scope.gridsterOpts.gridHeight = height;
         }
 
         /**
@@ -962,6 +964,8 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
 
+            hideTransformationPlumbs();
+
             if (activeComponentId !== data.mapping_id) {
                 if (loDash.any($scope.project.mappings, { 'id': data.mapping_id })) {
 
@@ -1042,6 +1046,8 @@ angular.module('dmpApp')
             }
 
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
+
+            showTransformationPlumbs();
 
             if ($scope.$$phase !== '$digest') {
                 $scope.$digest();
