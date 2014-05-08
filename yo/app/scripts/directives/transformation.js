@@ -226,33 +226,6 @@ angular.module('dmpApp')
                 j++;
 
             });
-
-            angular.forEach($scope.gridItemConnections, function(itemConnection) {
-
-                if(itemConnection.source.type === 'attribute_path_instance') {
-                    connectOptions.source = {
-                        type : 'transformation-input',
-                        id : itemConnection.source.data.attribute_path.id
-                    };
-                } else {
-                    connectOptions.source = {
-                        type : 'component',
-                        id : itemConnection.source.data.id
-                    };
-                }
-
-                connectOptions.target = {
-                    type : 'component',
-                    id : itemConnection.target.id
-                };
-
-                var newConnectOptions = angular.copy(connectOptions);
-
-                PubSub.broadcast('jsp-connector-connect', newConnectOptions);
-
-
-            });
-
             if( ( $scope.activeMapping.input_attribute_paths.length > 1 ) && ( getOpenEndedComponents(-1).length > 1 ) ) {
                 $scope.transformationStateError = 'Mehr als ein möglicher Output-Weg. Bitte mit concat verringern';
 
@@ -285,6 +258,70 @@ angular.module('dmpApp')
                 };
 
                 PubSub.broadcast('jsp-connector-connect', connectOptions);
+
+            }
+            angular.forEach($scope.gridItemConnections, function(itemConnection) {
+
+                if(itemConnection.source.type === 'attribute_path_instance') {
+                    connectOptions.source = {
+                        type : 'transformation-input',
+                        id : itemConnection.source.data.attribute_path.id
+                    };
+                } else {
+                    connectOptions.source = {
+                        type : 'component',
+                        id : itemConnection.source.data.id
+                    };
+                }
+
+                connectOptions.target = {
+                    type : 'component',
+                    id : itemConnection.target.id
+                };
+
+                var newConnectOptions = angular.copy(connectOptions);
+
+                PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+
+
+            });
+
+            if($scope.activeMapping.input_attribute_paths) {
+
+                if( ( $scope.activeMapping.input_attribute_paths.length > 1 ) && ( getOpenEndedComponents(-1).length > 1 ) ) {
+                    $scope.transformationStateError = 'Mehr als ein möglicher Output-Weg. Bitte mit concat verringern';
+
+                } else {
+
+                    if($scope.gridItems.length === 0) {
+
+                        connectOptions.source =  {
+                            type : 'transformation-input',
+                            id : $scope.activeMapping.input_attribute_paths[0].attribute_path.id
+                        };
+
+                    } else {
+
+                        var firstRow = loDash.filter($scope.gridItems, { positionX: 0 });
+                        firstRow = loDash.sortBy(firstRow, 'positionY');
+
+                        var firstRowLastItem = loDash.last(firstRow);
+
+                        connectOptions.source =  {
+                            type : 'component',
+                            id : firstRowLastItem.id
+                        };
+
+                    }
+
+                    connectOptions.target = {
+                        type : 'transformation-output',
+                        id : $scope.activeMapping.output_attribute_path.attribute_path.id
+                    };
+
+                    PubSub.broadcast('jsp-connector-connect', connectOptions);
+
+                }
 
             }
 
@@ -698,8 +735,8 @@ angular.module('dmpApp')
          */
         function chainRowComponents(result, component) {
 
-            component.input_components =
-                component.output_components = [];
+            component.input_components = [];
+            component.output_components = [];
 
             if (result.length > 0) {
                 var last = loDash.last(result);
@@ -715,6 +752,26 @@ angular.module('dmpApp')
                         id: component.id
                     }
                 ];
+
+                if(!component.parameter_mappings.inputString) {
+
+                    component.parameter_mappings.inputString = 'component' + last.function.name;
+
+                } else {
+
+                    var inputString = component.parameter_mappings.inputString.split(','),
+                        componentName = 'component' + last.function.name;
+
+                    if(loDash.indexOf(inputString, componentName) === -1) {
+
+                        inputString.push(componentName);
+
+                        component.parameter_mappings.inputString = inputString.join(',');
+
+                    }
+
+                }
+
             }
 
             result.push(component);
