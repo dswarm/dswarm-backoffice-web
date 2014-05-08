@@ -607,14 +607,14 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('serve', 'start a development server', [
-      'clean:server',
-      'less',
-      'bowerInstall',
-      'updateConfig',
-      'copy:styles',
-      'autoprefixer',
-      'connect:livereload',
-      'watch'
+        'clean:server',
+        'less',
+        'bowerInstall',
+        'updateConfig',
+        'copy:styles',
+        'autoprefixer',
+        'connect:livereload',
+        'watch'
     ]);
 
     grunt.registerTask('server', function() {

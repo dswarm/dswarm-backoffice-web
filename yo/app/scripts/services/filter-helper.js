@@ -138,10 +138,11 @@ angular.module('dmpApp').
         function annotateMatches(source, filters, matcher) {
             if (filters && filters.length && filters[0]) {
                 source.isFiltered = true;
+                source.filterNoMatch = false;
                 filterData(source, filters, matcher);
             } else {
                 source.isFiltered = false;
-                source.filterNoMatch = false;
+                source.filterNoMatch = true;
                 walkDataDFS(source, function(child) {
                     child.leafmatchedFilter = false;
                 });

@@ -224,6 +224,10 @@ angular.module('dmpApp').
         }
 
         return {
-            parse: parseFromDomainSchema
+            parse: parseFromDomainSchema,
+            parseAny: parseAny,
+            parseString: parseString,
+            parseObject: parseObject,
+            parseArray: parseArray
         };
     });
