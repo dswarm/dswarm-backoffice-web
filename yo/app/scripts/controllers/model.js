@@ -183,7 +183,7 @@ angular.module('dmpApp')
                 if (mapping.transformation &&
                     mapping.transformation.function &&
                     mapping.transformation.function.components &&
-                    mapping.transformation.function.components.components.length === 0) {
+                    mapping.transformation.function.components.length === 0) {
 
                     delete mapping.transformation;
                 }
