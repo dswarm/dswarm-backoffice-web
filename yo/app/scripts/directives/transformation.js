@@ -373,15 +373,14 @@ angular.module('dmpApp')
          */
         function dropToGrid(positionX, positionY, itemDataOriginal) {
 
-            var itemData = angular.copy(itemDataOriginal);
+            var itemData = angular.copy(itemDataOriginal),
+                itemName = 'component' + getId()*-1;
 
             if(!itemData.hasOwnProperty('function_description')) {
                 itemData.function_description = angular.copy(itemData);
             }
 
-            itemData.name = 'component' + getId()*-1;
-
-            addToGrid(positionX, positionY, itemData, getId());
+            addToGrid(positionX, positionY, itemData, itemName, getId());
 
             removeDropPlaceholder();
             isDraggingToGrid = false;
@@ -397,12 +396,13 @@ angular.module('dmpApp')
          * @param itemData - The original data of the dropped fucntion
          * @param id - Original id used to identify
          */
-        function addToGrid(positionX, positionY, itemData, id) {
+        function addToGrid(positionX, positionY, itemData, itemName, id) {
 
             $scope.gridItems.push({
                 positionX: positionX,
                 positionY: positionY,
                 function: itemData,
+                name : itemName,
                 id: id
             });
 
@@ -615,7 +615,7 @@ angular.module('dmpApp')
                 loDash.forEach(rowComponents, function(components, posX) {
                     loDash.forEach(components, function(component, posY) {
                         if (component !== null) {
-                            addToGrid(posX, posY, component.function, component.id);
+                            addToGrid(posX, posY, component.function, component.name, component.id);
                         }
                     });
                 });
@@ -698,7 +698,7 @@ angular.module('dmpApp')
                 return newComponent;
             }
 
-            return createNewComponent(component.function, component.id);
+            return createNewComponent(component);
         }
 
         /**
@@ -730,12 +730,12 @@ angular.module('dmpApp')
 
                 if(!component.parameter_mappings.inputString) {
 
-                    component.parameter_mappings.inputString = 'component' + last.function.name;
+                    component.parameter_mappings.inputString = last.name;
 
                 } else {
 
                     var inputString = component.parameter_mappings.inputString.split(','),
-                        componentName = 'component' + last.function.name;
+                        componentName = last.name;
 
                     if(loDash.indexOf(inputString, componentName) === -1) {
 
@@ -843,7 +843,7 @@ angular.module('dmpApp')
                     componentName = itemConnection.source.name;
 
                 if(itemConnection.source.type === 'griditem') {
-                    componentName = 'component' + itemConnection.source.data.function.name;
+                    componentName = itemConnection.source.data.name;
                 }
 
                 componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
@@ -886,17 +886,16 @@ angular.module('dmpApp')
 
         /**
          * Creates default component data structure around a given function
-         * @param func - Function object
-         * @param id {number} - the ID to use
-         * @returns {{id: number, name: (*|string|string|name|parser.name|exports.callee.object.name), description: (*|string|parser.description|.about.description|.info.description|exports.expected.description), function: *, parameter_mappings: {}, output_components: Array, input_components: Array}}
+         * @param component {*} Internal object
+         * @returns {{id: (*|$scope.file.id|.lines.params.id|exports.expected.id|exports.config.id|id), name: (*|string|name|jasmine-node.spec-requirejs.requirejs.sut.name|parser.name|exports.callee.object.name), description: (*|string|parser.description|.about.description|.info.description|exports.expected.description), function: (*|map.function|exports.function|mout.src.index.function|objectTypes.function|Function), parameter_mappings: {}, output_components: Array, input_components: Array}}
          */
-        function createNewComponent(func, id) {
+        function createNewComponent(component) {
 
             return {
-                id: id,
-                name: func.name,
-                description: func.description,
-                function: func,
+                id: component.id,
+                name: component.name,
+                description: component.description,
+                function: component.function,
                 parameter_mappings: {},
                 output_components: [],
                 input_components: []
