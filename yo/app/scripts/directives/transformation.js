@@ -334,7 +334,7 @@ angular.module('dmpApp')
                 itemData.function_description = angular.copy(itemData);
             }
 
-            itemData.name = getId()*-1;
+            itemData.name = 'component' + getId()*-1;
 
             addToGrid(positionX, positionY, itemData, getId());
 
