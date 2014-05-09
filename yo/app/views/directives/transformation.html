@@ -29,6 +29,7 @@
             <ul>
                 <li ng-repeat="iap in activeMapping.input_attribute_paths" class="count{{activeMapping.input_attribute_paths.length}}">
                     <span
+                        class="input-attribute-path-badge"
                         ng-click="onFilterClick(iap)"
                         js-plumb-connector
                         js-plumb-connector-options="jsPlumbOpts"
