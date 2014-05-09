@@ -172,6 +172,25 @@ angular.module('dmpApp')
             return false;
         }
 
+        /**
+         * workaround backend requirements for DD-447
+         * that is, the backend can't really deal with empty transformations
+         * and we need to not send this, if it is empty
+         */
+        function prepareProject() {
+            var project = angular.copy($scope.project);
+            loDash.forEach(project.mappings, function(mapping) {
+                if (mapping.transformation &&
+                    mapping.transformation.function &&
+                    mapping.transformation.function.components &&
+                    mapping.transformation.function.components.components.length === 0) {
+
+                    delete mapping.transformation;
+                }
+            });
+            return project;
+        }
+
         $scope.onSaveProjectClick = function(idx) {
 
             if (blocked(idx)) {
@@ -182,7 +201,9 @@ angular.module('dmpApp')
 
             discardProjectDraft($scope.project.id);
 
-            ProjectResource.update({ id: $scope.project.id }, Util.toJson($scope.project), function(project) {
+            var projectToSend = Util.toJson(prepareProject());
+
+            ProjectResource.update({ id: $scope.project.id }, projectToSend, function(project) {
 
                 latestSave = project;
 
