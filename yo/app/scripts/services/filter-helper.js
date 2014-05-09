@@ -18,7 +18,16 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-    factory('filterHelper', function(loDash) {
+    factory('filterHelper', function(loDash, Util) {
+
+        var pathDelimiter = '\u001E';
+
+        function makeForAll(singleFn) {
+            return function(xs, arg) {
+                var matcher = loDash.partial(singleFn, arg);
+                return loDash.any(xs, matcher);
+            };
+        }
 
         /**
          * constructs a list of filtered schemas from a list of
@@ -71,7 +80,7 @@ angular.module('dmpApp').
 
             function mapFilter(filter) {
 
-                filter.inputFilters = getData(filter.filter, '');
+                filter.inputFilters = getData(filter.filter);
                 filter.name = createFilterName(filter.inputFilters);
 
                 return filter.inputFilters;
@@ -89,50 +98,29 @@ angular.module('dmpApp').
          * @param returnData {*}
          * @returns {*}
          */
-        function getData(data, path, returnData) {
+        function getData(data) {
 
-            if (data.children) {
-
-                if (!returnData) {
-                    returnData = [];
-                }
-
-                angular.forEach(data.children, function(child) {
-
-                    var tempData,
-                        subpath = path;
-
-                    if (child.children) {
-
-                        if (subpath.length > 0) {
-                            subpath = subpath + '.';
-                        }
-
-                        subpath = subpath + data.name;
-
+            function loop(d, p) {
+                if (d.hasChildren || (d.children && d.children.length)) {
+                    var paths = loDash.flatten(Util.collect(d.children, function(c) {
+                        return loop(c, p.concat([d.name]));
+                    }), true);
+                    if (!loDash.isEmpty(paths)) {
+                        return paths;
                     }
-
-                    tempData = getData(child, subpath, returnData);
-
-                    if (tempData && tempData.title) {
-                        tempData.path += '.' + data.name + '.' + tempData.name;
-
-                        returnData.push(tempData);
+                } else {
+                    if (d.title) {
+                        return {
+                            title: d.title,
+                            name: d.name,
+                            path: p.concat([d.name]).join(pathDelimiter),
+                            apId: d._$path_id
+                        };
                     }
-                });
-
-                if (returnData.length > 0) {
-                    return returnData;
-                }
-            } else {
-
-                if (data.title) {
-                    return { 'title': data.title, 'name': data.name, 'path': path, apId: data._$path_id };
-                }
-                else {
-                    return '';
                 }
             }
+
+            return loop(data, []);
         }
 
         function annotateMatches(source, filters, matcher) {
@@ -162,58 +150,52 @@ angular.module('dmpApp').
             walk(data);
         }
 
-        /**
-         *
-         * @param data
-         * @param filters
-         * @param matchFn
-         * @returns {*}
-         */
         function filterData(data, filters, matchFn) {
+            var titles = loDash.map(filters, 'title'),
+                paths = loDash.zip(loDash.map(filters, function(filter) {
+                    return filter.path.split(pathDelimiter);
+                })),
 
-            loDash.forEach(filters, function(filter) {
-                matchFilter(data, filter, matchFn);
-            });
-        }
+                matchesTitle = loDash.partial(makeForAll(matchFn), titles),
 
-        /**
-         *
-         * @param data
-         * @param filter
-         * @param matchFn
-         */
-        function matchFilter(data, filter, matchFn) {
-            matchPath(data, filter.path, filter.title, matchFn);
+                matchesPath = makeForAll(function(name, path) {
+                    return (name === path || name === (path + '...'));
+                }),
+
+                shouldAdvance = makeForAll(function(name, path) {
+                    return name !== (path + '...');
+                });
+
+            matchPath(data, paths, matchesTitle, matchesPath, shouldAdvance);
         }
 
         /**
          *
          * @param data
          * @param path
-         * @param matchdata
-         * @param matchFn
+         * @param shouldAdvance
+         * @param matchesTitle
+         * @param matchesPath
          */
-        function matchPath(data, path, matchdata, matchFn) {
+        function matchPath(data, path, matchesTitle, matchesPath, shouldAdvance) {
 
-            var pathArray = path.split('.');
-
-            if (data.name === null || typeof data.name === 'undefined') {
-                data.name = '';
-            }
-
+            var name = (data.name === null || typeof data.name === 'undefined') ? '' : data.name.toString();
             var matches = false;
-            if (data.name.toString() === pathArray[0].toString() || data.name.toString() === (pathArray[0] + '...')) {
-                if (data.name.toString() !== (pathArray[0] + '...')) {
-                    pathArray.shift();
-                }
+
+            if (matchesPath(path[0], name)) {
 
                 if (data.children) {
+                    var subPath = path;
+                    if (shouldAdvance(path[0], name)) {
+                        subPath = path.slice(1);
+                    }
+
                     var allMatches = loDash.map(data.children, function(child) {
-                        return matchPath(child, pathArray.join('.'), matchdata, matchFn);
+                        return matchPath(child, subPath, matchesTitle, matchesPath, shouldAdvance);
                     });
                     matches = loDash.any(allMatches);
                 } else {
-                    matches = matchFn(data.title, matchdata);
+                    matches = matchesTitle(data.title);
                 }
             }
 
