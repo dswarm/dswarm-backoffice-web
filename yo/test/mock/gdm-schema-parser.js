@@ -85,11 +85,11 @@ angular.module('mockedSchemas', [])
                 "id": 3,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     },
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
                         "name": "nr"
                     }
                 ]
@@ -98,11 +98,11 @@ angular.module('mockedSchemas', [])
                 "id": 4,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     },
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
                         "name": "ind"
                     }
                 ]
@@ -111,7 +111,7 @@ angular.module('mockedSchemas', [])
                 "id": 1,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     }
                 ]
@@ -120,11 +120,11 @@ angular.module('mockedSchemas', [])
                 "id": 2,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     },
                     {
-                        "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                         "name": "type"
                     }
                 ]
@@ -133,15 +133,15 @@ angular.module('mockedSchemas', [])
                 "id": 7,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     },
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
                         "name": "tf"
                     },
                     {
-                        "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                         "name": "type"
                     }
                 ]
@@ -150,7 +150,7 @@ angular.module('mockedSchemas', [])
                 "id": 8,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
                         "name": "status"
                     }
                 ]
@@ -159,11 +159,11 @@ angular.module('mockedSchemas', [])
                 "id": 5,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     },
                     {
-                        "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                         "name": "value"
                     }
                 ]
@@ -172,11 +172,11 @@ angular.module('mockedSchemas', [])
                 "id": 6,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
                         "name": "feld"
                     },
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
                         "name": "tf"
                     }
                 ]
@@ -185,7 +185,7 @@ angular.module('mockedSchemas', [])
                 "id": 11,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
                         "name": "typ"
                     }
                 ]
@@ -194,7 +194,7 @@ angular.module('mockedSchemas', [])
                 "id": 9,
                 "attributes": [
                     {
-                        "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
                         "name": "mabVersion"
                     }
                 ]
@@ -203,14 +203,14 @@ angular.module('mockedSchemas', [])
                 "id": 10,
                 "attributes": [
                     {
-                        "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                         "name": "type"
                     }
                 ]
             }
         ],
         "record_class": {
-            "id": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
+            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
             "name": "datensatzType"
         }
     })
