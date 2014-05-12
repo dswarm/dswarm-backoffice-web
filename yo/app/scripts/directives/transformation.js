@@ -369,7 +369,7 @@ angular.module('dmpApp')
          * Handles a dropped element to a grid position
          * @param positionX
          * @param positionY
-         * @param itemData
+         * @param itemDataOriginal
          */
         function dropToGrid(positionX, positionY, itemDataOriginal) {
 
@@ -615,7 +615,16 @@ angular.module('dmpApp')
                 loDash.forEach(rowComponents, function(components, posX) {
                     loDash.forEach(components, function(component, posY) {
                         if (component !== null) {
-                            addToGrid(posX, posY, component.function, component.name, component.id);
+                            var realPosX = posX,
+                                realPosY = posY;
+                            if (component.description) {
+                                try {
+                                    var pos = angular.fromJson(component.description);
+                                    realPosX = pos.x;
+                                    realPosY = pos.y;
+                                } catch (ignore) {}
+                            }
+                            addToGrid(realPosX, realPosY, component.function, component.name, component.id);
                         }
                     });
                 });
@@ -691,14 +700,19 @@ angular.module('dmpApp')
          * @returns {*}
          */
         function resolveComponent(component) {
+            var storedComponent;
 
-            var newComponent = getComponent(component.id);
-
-            if (newComponent) {
-                return newComponent;
+            storedComponent = getComponent(component.id);
+            if (!storedComponent) {
+                storedComponent = createNewComponent(component);
             }
 
-            return createNewComponent(component);
+            storedComponent.description = angular.toJson({
+                x: component.positionX,
+                y: component.positionY
+            });
+
+            return storedComponent;
         }
 
         /**
