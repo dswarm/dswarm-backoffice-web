@@ -58,7 +58,9 @@ angular.module('dmpApp')
 
             DataModelResource.query(function(results) {
 
-                $scope.models = loDash.map(results, function(result) {
+                $scope.models = loDash.filter(results, 'data_resource');
+
+                $scope.models = loDash.map($scope.models, function(result) {
 
                     result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
 
