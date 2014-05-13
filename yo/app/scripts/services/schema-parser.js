@@ -18,7 +18,7 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-    factory('schemaParser', function(loDash) {
+    factory('schemaParser', function(loDash, Util) {
 
         /**
          * Maps from DMP domain schema to json Schema and then uses mapData
@@ -29,90 +29,124 @@ angular.module('dmpApp').
          *
          * @param domainSchema  {{id: Number, name: String, attribute_paths: Array}}
          * @param editableTitle {Boolean=}
-         * @returns {{name: String, $show: boolean}}
+         * @returns {*}
          */
         function fromDomainSchema(domainSchema, editableTitle) {
 
-            var data = {name: domainSchema.name, $show: true, editableTitle: editableTitle};
+            var base = {name: domainSchema.name || ''},
+                extra = {$show: true, editableTitle: !!editableTitle},
+                paths = prepare(domainSchema),
+                cache = generateTreeCache(paths);
 
-            var make = function(obj) {
-                return angular.extend({$show: true, hasChildren: false, editableTitle: editableTitle}, obj);
-            };
+            return createSchemaItem(cache.children, cache.order, base, extra);
+        }
 
-            var merge = function(container, newChildren) {
-                var index = loDash.zipObject(loDash.map(container.children, function(c, idx) {
-                    return [c.id, idx];
-                }));
+        /**
+         * return a list of all attribute path's attributes (a list of list of attributes, if you will)
+         * @param schema
+         * @returns {*}
+         */
+        function prepare(schema) {
 
-                loDash.forEach(newChildren, function(item) {
-                    if (index.hasOwnProperty(item.id)) {
-                        var child = container.children[index[item.id]];
-                        child.children = (child.children || []).concat(item.children || []);
-                        child.hasChildren = child.children.length > 0;
-                    } else {
-                        item.hasChildren = item.children && item.children.length > 0;
-                        container.children.push(item);
-                    }
+            var originalPaths = schema.attribute_paths;
+
+            return loDash.map(originalPaths, function(attributePath) {
+
+                return loDash.forEach(attributePath.attributes, function(attribute) {
+                    attribute._$path_id = attributePath.id;
                 });
-
-                container.hasChildren = container.children.length > 0;
-            };
-
-            var loop = function(attribs, obj) {
-                var props = angular.extend({children: []}, obj);
-
-                var cache = {};
-
-                angular.forEach(attribs, function(val) {
-                    if (angular.isUndefined(val)) {
-                        return;
-                    }
-
-                    var path = loDash.map(val, 'id');
-                    if (path.length > 1) {
-
-                        var newVal = val.slice(1);
-                        var name = path[0];
-                        if (!cache.hasOwnProperty(name)) {
-                            cache[name] = {id: name, uri: val[0].uri, name: val[0].name, children: []};
-                        }
-
-                        var parsed = loop([newVal]);
-
-                        merge(cache[name], parsed.children);
-//                    cache[name].children = cache[name].children.concat(parsed.children);
-                    } else if (angular.isObject(val[0])) {
-                        props.children.push(make(val[0]));
-                    }
-                });
-
-                if (!loDash.isEmpty(cache)) {
-                    merge(props, cache);
-                }
-
-                return props;
-            };
-
-            var paths = domainSchema['attribute_paths'];
-            var attrs = loDash.map(paths, function(attribute_path) {
-
-                if (attribute_path.id) {
-                    angular.forEach(attribute_path.attributes, function(attribute) {
-
-                        attribute._$path_id = attribute_path.id;
-
-                    });
-                }
-
-                return attribute_path.attributes;
             });
-            if (attrs.length) {
-                angular.extend(data, loop(attrs));
+        }
+
+        /**
+         * generate a cache structure for the tree, providing parsing order of elements and
+         * producing the relevant tree structure.
+         *
+         * @param attributePaths
+         * @returns {{order: Array, children: {}}}
+         */
+        function generateTreeCache(attributePaths) {
+            var cache = {},
+                order = [];
+
+            loDash.forEach(attributePaths, function(path) {
+                addToCache(cache, order, path);
+            });
+
+            return {
+                order: order,
+                children: cache
+            };
+        }
+
+        /**
+         * adds a list of attributes to a cache.
+         * the attributes are interpreted as being in a kind of hierarchical order, that is,
+         *  each index represents a new level
+         *
+         * @param cache
+         * @param order
+         * @param attributes
+         */
+        function addToCache(cache, order, attributes) {
+            if (attributes.length > 0) {
+
+                var head = attributes[0],
+                    tail = attributes.slice(1),
+                    elem;
+
+                if (!loDash.has(cache, head.uri)) {
+
+                    cache[head.uri] = elem = {
+                        id: head.id,
+                        uri: head.uri,
+                        name: head.name,
+                        order: [],
+                        children: {}
+                    };
+                    order.push(head.uri);
+                } else {
+                    elem = cache[head.uri];
+                }
+                if (tail.length === 0) {
+                    elem._$path_id = head._$path_id;
+                }
+
+                addToCache(elem.children, elem.order, tail);
+            }
+        }
+
+        /**
+         * recursively cleans up the tree structure and creates proper schema tree items
+         * @param cache
+         * @param order
+         * @param item
+         * @param extra
+         * @returns {*}
+         */
+        function createSchemaItem(cache, order, item, extra) {
+            //noinspection FunctionWithInconsistentReturnsJS
+            var children = Util.collect(order, function(uri) {
+                var child = cache[uri];
+                if (child) {
+                    return createSchemaItem(child.children, child.order, child, extra);
+                }
+            });
+
+            delete item.children;
+            delete item.order;
+
+            angular.extend(item, extra);
+
+            if (loDash.isEmpty(children)) {
+                item.hasChildren = false;
+                return item;
+            } else {
+                item.hasChildren = true;
+                item.children = children;
             }
 
-            data.hasChildren = data.children && data.children.length > 0;
-
-            return data;
+            return item;
         }
 
         return {
