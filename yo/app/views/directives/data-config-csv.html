@@ -60,26 +60,31 @@
 
                     <div class="col-md-3">
 
-                                <span class="label-inline">
+                                <label class="label-inline">
                                     <input type="checkbox" ng-model-onblur ng-model="ignoreLinesActivate">
                                     Ignore first
                                     <input type="text" ng-model="config.parameters.ignore_lines" style="width: 50px" class="form-control form-control-inline" ng-disabled="!ignoreLinesActivate">
                                     line(s) at beginning of file
-                                </span>
+                                </label>
 
-                                <span class="label-inline">
+                                <label class="label-inline">
                                     <input type="checkbox" ng-model-onblur ng-model="discardRowsActivate">
                                     Discard initial
                                     <input type="text" ng-model-onblur ng-model="config.parameters.discard_rows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!discardRowsActivate">
                                     row(s) of data
-                                </span>
+                                </label>
 
-                                <span class="label-inline">
+                                <label class="label-inline">
                                     <input type="checkbox" ng-model-onblur ng-model="atMostRowsActivate">
                                     Load at most
                                     <input type="text" ng-model-onblur ng-model="config.parameters.at_most_rows" style="width: 50px" class="form-control form-control-inline" ng-disabled="!atMostRowsActivate">
                                     row(s) of data
-                                </span>
+                                </label>
+
+                                <label class="label-inline">
+                                    <input type="checkbox" ng-model-onblur ng-model="config.parameters.first_row_is_headings">
+                                    The first row contains column headings
+                                </label>
 
                         <br />
 
