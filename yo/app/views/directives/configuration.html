@@ -77,6 +77,17 @@
           <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
         </div>
 
+        <div ng-switch-when="sortable" class="configurationSortable">
+            <label class="control-label">
+                {{ key }}
+            </label>
+            <ul ui-sortable ng-model="parameter.data" class="list">
+                <li ng-repeat="item in parameter.data" class="item">
+                    {{item.text}}
+                </li>
+            </ul>
+        </div>
+
         <div ng-switch-default ng-class="formClasses(compForm.input, parameter.optional)">
           <label class="control-label">
             {{ key }}<span

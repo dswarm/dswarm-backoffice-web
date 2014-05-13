@@ -242,26 +242,30 @@ angular.module('dmpApp')
             });
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
-                if(itemConnection.source.type === 'attribute_path_instance') {
-                    connectOptions.source = {
-                        type : 'transformation-input',
-                        id : itemConnection.source.data.attribute_path.id
-                    };
-                } else {
-                    connectOptions.source = {
+                if(itemConnection.source.data) {
+
+                    if(itemConnection.source.type === 'attribute_path_instance') {
+                        connectOptions.source = {
+                            type : 'transformation-input',
+                            id : itemConnection.source.data.attribute_path.id
+                        };
+                    } else {
+                        connectOptions.source = {
+                            type : 'component',
+                            id : itemConnection.source.data.id
+                        };
+                    }
+
+                    connectOptions.target = {
                         type : 'component',
-                        id : itemConnection.source.data.id
+                        id : itemConnection.target.id
                     };
+
+                    var newConnectOptions = angular.copy(connectOptions);
+
+                    PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+
                 }
-
-                connectOptions.target = {
-                    type : 'component',
-                    id : itemConnection.target.id
-                };
-
-                var newConnectOptions = angular.copy(connectOptions);
-
-                PubSub.broadcast('jsp-connector-connect', newConnectOptions);
 
             });
 
@@ -1162,7 +1166,15 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
             angular.forEach($scope.activeMapping.transformation.function.components, function(comp) {
+
                 if (comp.id === component.id) {
+                    if(component.parameter_mappings.inputStringSorting) {
+                        component.parameter_mappings.inputString = loDash.flatten(component.parameter_mappings.inputStringSorting, 'id');
+                        component.parameter_mappings.inputString = component.parameter_mappings.inputString.join(',');
+
+                        delete component.parameter_mappings.inputStringSorting;
+                    }
+
                     comp.parameter_mappings = component.parameter_mappings;
                 }
             });
@@ -1283,6 +1295,7 @@ angular.module('dmpApp')
                             loDash.last(loDash.sortBy(currentRowItems, 'positionY'));
 
                             var currentRowIndexInGridItemConnection = loDash.findIndex($scope.gridItemConnections, function(gridItemConnection) {
+                                if(loDash.isNull(gridItemConnection.source.data)) { return false; }
                                 return gridItemConnection.source.data.id === currentRowItems.id;
                             });
 

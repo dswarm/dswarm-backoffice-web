@@ -8,7 +8,7 @@ angular.module('dmpApp', [
     'ngRoute', 'ngResource',
 
     // AngularUI Modules
-    'ui.utils', 'ui.bootstrap', 'ui.bootstrap.tabs', 'ui.bootstrap.modal',
+    'ui.utils', 'ui.bootstrap', 'ui.bootstrap.tabs', 'ui.bootstrap.modal', 'ui.sortable',
 
     // 3rd Party
     'ngProgress', 'ngGrid', 'LocalStorageModule', 'gridster'

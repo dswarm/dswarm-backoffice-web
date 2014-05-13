@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, PubSub) {
+    .controller('ConfigurationCtrl', function($scope, PubSub, loDash) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -30,6 +30,23 @@ angular.module('dmpApp')
                 }
 
             });
+
+            if(args.parameter_mappings.inputString && args.parameter_mappings.inputString.split(',').length > 1) {
+                var inputString = args.parameter_mappings.inputString.split(',');
+
+                var parameterItems = loDash.map(inputString, function(part) {
+                    return {
+                        text : getComponentNameByVarName(part),
+                        id : part
+                    };
+                });
+
+                args.function.function_description.parameters['inputStringSorting'] = {
+                    type : 'sortable',
+                    data : parameterItems
+                };
+
+            }
 
             $scope.component = args['function'];
         });
@@ -60,6 +77,46 @@ angular.module('dmpApp')
             $scope.component = null;
             componentId = null;
         };
+
+        /**
+         * Finds the readable component name from both possible registers by teh component var name
+         * @param varName
+         * @returns {*}
+         */
+        function getComponentNameByVarName(varName) {
+
+            var name = '';
+
+            angular.forEach($scope.project.mappings, function(mapping) {
+
+                angular.forEach(mapping.input_attribute_paths, function(input_attribute_path) {
+
+                    angular.forEach(input_attribute_path.attribute_path.attributes, function(attribute) {
+                        if(attribute.name === varName) {
+                            name = attribute.name;
+                        }
+                    });
+
+                });
+
+                if(name.length > 0) {
+                    return;
+                }
+
+                angular.forEach(mapping.transformation.function.components, function(component) {
+                    if(component.name === varName) {
+                        name = component.function.name;
+                    }
+                });
+
+
+            });
+
+
+            return angular.copy(name);
+
+        }
+
     })
     .directive('configuration', function() {
         return {
