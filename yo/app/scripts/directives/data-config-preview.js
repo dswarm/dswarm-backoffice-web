@@ -19,6 +19,12 @@ angular.module('dmpApp')
             enableColumnResize: true
         };
 
+        var keyRegex = new RegExp('[`~!@#$%^&*()_|+\\-=?;:\'",.<>\\n\\t\\r\\{\\}\\[\\]\\\\/ ]', 'gi');
+
+        function normalizeKey(key) {
+            return key.replace(keyRegex, '');
+        }
+
         $scope.gridInclude = function() {
             return $scope.showGrid ? 'previewgrid' : '';
         };
@@ -30,7 +36,7 @@ angular.module('dmpApp')
                 var currentResultElement = {};
 
                 angular.forEach(element, function(value, key) {
-                    currentResultElement[key.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi, '')] = value;
+                    currentResultElement[normalizeKey(key)] = value;
                 });
 
                 $scope.previewResult.push(currentResultElement);
@@ -41,7 +47,7 @@ angular.module('dmpApp')
 
                 var currentColDefElement = {};
 
-                currentColDefElement.field = value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gi, '');
+                currentColDefElement.field = normalizeKey(value);
                 currentColDefElement.displayName = value;
 
                 $scope.colDefs.push(currentColDefElement);
