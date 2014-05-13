@@ -103,6 +103,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
                 'column_delimiter' : ',',
                 'escape_character' : '\\',
                 'quote_character' : '"',
+                first_row_is_headings : true,
                 'column_names' : 'columnN',
                 'storage_type' : 'csv'
             }
@@ -113,6 +114,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
                 'column_delimiter' : ',',
                 'escape_character' : '\\',
                 'quote_character' : '"',
+                first_row_is_headings : true,
                 'column_names' : 'columnN',
                 'storage_type' : 'csv'
             }
