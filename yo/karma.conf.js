@@ -31,6 +31,7 @@ module.exports = function(config) {
             'components/jsPlumb/dist/js/jquery.jsPlumb-1.5.5.js',
             'components/angular-grid/ng-grid-2.0.9.debug.js',
             'components/angular-gridster/app/scripts/gridster.js',
+            'components/angular-ui-sortable/sortable.js',
             'config.js',
             'scripts/*.js',
             'scripts/**/*.js',
