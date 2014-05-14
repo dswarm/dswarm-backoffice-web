@@ -1349,6 +1349,15 @@ angular.module('dmpApp')
             return openEndedComponents;
         }
 
+
+        /**
+         * Are there any open ended components?
+         * @returns {boolean}
+         */
+        $scope.hasOpenEndedComponents = function() {
+            return (getOpenEndedComponents(-1).length > 1);
+        }
+
         /**
          * Adds additional grid item connections to register
          * @param source object
