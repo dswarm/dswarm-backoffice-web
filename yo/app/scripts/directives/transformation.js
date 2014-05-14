@@ -1106,11 +1106,11 @@ angular.module('dmpApp')
                         }
                     })[0];
 
-                    var alreadyInIap = pathInSchema && loDash.find($scope.activeMapping.input_attribute_paths, function(iap) {
+                    var alreadyInIap = pathInSchema && loDash.any($scope.activeMapping.input_attribute_paths, function(iap) {
                         return iap.attribute_path.id === pathInSchema.id;
                     });
 
-                    if(pathInSchema && loDash.isUndefined(alreadyInIap)) {
+                    if(pathInSchema && !alreadyInIap) {
                         $scope.activeMapping.input_attribute_paths.push({
                             type: 'MappingAttributePathInstance',
                             name: 'input mapping attribute path instance',
