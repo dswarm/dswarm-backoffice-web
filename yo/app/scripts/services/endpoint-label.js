@@ -33,7 +33,8 @@ angular.module('dmpApp')
         }
 
         function ask(promptText, helpText) {
-            var text = promptText || 'Name this connection',
+            var text = promptText || 'Name this mapping',
+                buttonText = text,
                 help = helpText || 'The name has to be at least 5 characters long';
 
             var labelDefer = $q.defer();
@@ -42,6 +43,7 @@ angular.module('dmpApp')
                 templateUrl: 'views/modals/re-label-connection.html',
                 controller: ['$scope', function($scope) {
                     $scope.text = text;
+                    $scope.buttonText = buttonText;
                     $scope.help = help;
 
                     $scope.isValid = function(label) {

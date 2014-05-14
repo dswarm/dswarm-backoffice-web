@@ -1,15 +1,15 @@
 'use strict';
 
 describe('Directive TargetData', function () {
-    var element, scope, $rootScope, $compile, schemaParserSpy;
+    var element, scope, $rootScope, $compile, gdmParserSpy;
     var elementHtml = '<target-data></target-data>';
 
     beforeEach(module('dmpApp'));
 
     beforeEach(module(function($provide) {
-        schemaParserSpy = jasmine.createSpyObj('schemaParser', ['parseFromDomainSchema']);
-        schemaParserSpy['parseFromDomainSchema'].andReturn('parsed');
-        $provide.value('schemaParser', schemaParserSpy);
+        gdmParserSpy = jasmine.createSpyObj('gdmParser', ['parse']);
+        gdmParserSpy['parse'].andReturn('parsed');
+        $provide.value('gdmParser', gdmParserSpy);
     }));
 
     // Initialize the controller and a mock scope
@@ -42,7 +42,7 @@ describe('Directive TargetData', function () {
 
         $rootScope.$broadcast('transformationFinished', 'transformation');
 
-        expect(schemaParserSpy.parseFromDomainSchema).toHaveBeenCalledWith('transformation', 'schema', true);
+        expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation', 'schema', true);
         expect(elScope.records).toBeUndefined();
         expect(elScope.data).toBe('parsed');
     });
@@ -59,8 +59,8 @@ describe('Directive TargetData', function () {
             record_data: 'transformation2'
         }]);
 
-        expect(schemaParserSpy.parseFromDomainSchema).toHaveBeenCalledWith('transformation1', 'schema', true);
-        expect(schemaParserSpy.parseFromDomainSchema).toHaveBeenCalledWith('transformation2', 'schema', true);
+        expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation1', 'schema', true);
+        expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation2', 'schema', true);
         expect(elScope.data).toBeUndefined();
         expect(elScope.records).toEqual([{
             id: 1,
@@ -95,11 +95,11 @@ describe('Directive TargetData', function () {
             record_data: 'transformation6'
         }]);
 
-        expect(schemaParserSpy.parseFromDomainSchema).toHaveBeenCalledWith('transformation1', 'schema', true);
-        expect(schemaParserSpy.parseFromDomainSchema).toHaveBeenCalledWith('transformation2', 'schema', true);
-        expect(schemaParserSpy.parseFromDomainSchema).toHaveBeenCalledWith('transformation3', 'schema', true);
+        expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation1', 'schema', true);
+        expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation2', 'schema', true);
+        expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation3', 'schema', true);
 
-        expect(schemaParserSpy.parseFromDomainSchema.calls.length).toBe(3);
+        expect(gdmParserSpy.parse.calls.length).toBe(3);
 
         expect(elScope.data).toBeUndefined();
         expect(elScope.records).toEqual([{

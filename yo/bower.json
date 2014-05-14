@@ -5,12 +5,13 @@
     "angular": "1.2.13",
     "angular-bootstrap": "~0.10.0",
     "angular-cookies": "1.2.13",
-    "angular-grid": "~2.0.7",
+    "angular-grid": "avantgarde-labs/ng-grid#2.0.9-1",
     "angular-local-storage": "*",
     "angular-resource": "1.2.13",
     "angular-route": "1.2.13",
     "angular-sanitize": "1.2.13",
     "angular-ui-utils": "~0.1.1",
+    "angular-ui-sortable": "~0.12.6",
     "bootstrap": "~3.1.1",
     "es5-shim": "~2.1.0",
     "font-awesome": "~4.0.0",
@@ -21,7 +22,7 @@
     "json3": "~3.3.0",
     "lodash": "~2.4.0",
     "ngprogress": "~1.0.3",
-    "angular-gridster" : "chrode/angular-gridster#7d0576d740cfc16a31040766189c8ab94801b9f7"
+    "angular-gridster": "chrode/angular-gridster#7d0576d740cfc16a31040766189c8ab94801b9f7"
   },
   "devDependencies": {
     "angular-mocks": "1.2.13",
@@ -36,10 +37,17 @@
   ],
   "overrides": {
     "font-awesome": {
-      "main": ["css/font-awesome.css"]
+      "main": [
+        "css/font-awesome.css"
+      ]
     },
     "jsPlumb": {
-      "main": ["./dist/js/jquery.jsPlumb-1.5.5.js"]
+      "main": [
+        "./dist/js/jquery.jsPlumb-1.5.5.js"
+      ]
     }
+  },
+  "resolutions": {
+    "jquery": "^1.8.0"
   }
 }

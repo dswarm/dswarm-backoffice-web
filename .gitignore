@@ -1,7 +1,10 @@
 /yo/app/api.js
 /yo/app/config.js
 /yo/app/data/version.json
+/yo/app/test_out/
 yo/stdout
 
 coverage-*.json
 KarmaChrome
+
+.idea/

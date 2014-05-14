@@ -18,45 +18,7 @@ angular.module('dmpApp').
  * * getData returns all title data. most useful in combination
  *           with with the editableTitle flag
  */
-    factory('schemaParser', function(loDash) {
-
-        /**
-         * Maps from json-schema to the internal tree model.  Since json-schema
-         *   already is very tree-ish, there is nothing much to do but renaming
-         *   some properties and apply recursion all the way down.
-         *
-         * @param name {String}  The name of the current property, that is
-         *   enumerated on.
-         * @param container {Object}  The definition of the current property.
-         *   A json-schema is usually like "Property": { ... (definition) }
-         *   and `name' and `container' are just that.
-         * @param editableTitle {Boolean}
-         * @returns {{name: String, $show: boolean}}
-         */
-        function mapData(name, container, editableTitle) {
-
-            var data = {'name': name, '$show': true, 'editableTitle': editableTitle},
-                itemsSetName = 'properties';
-
-            if (!container['properties'] && container['items']) {
-                itemsSetName = 'items';
-            }
-
-            if (container[itemsSetName]) {
-                var children = [];
-
-                angular.forEach(container[itemsSetName], function(val, key) {
-                    children.push(mapData(key, val, editableTitle));
-                });
-
-                data['children'] = children;
-            }
-
-            data.hasChildren = (data['children'] && data['children'].length > 0);
-
-            return data;
-        }
-
+    factory('schemaParser', function(loDash, Util) {
 
         /**
          * Maps from DMP domain schema to json Schema and then uses mapData
@@ -67,465 +29,127 @@ angular.module('dmpApp').
          *
          * @param domainSchema  {{id: Number, name: String, attribute_paths: Array}}
          * @param editableTitle {Boolean=}
-         * @returns {{name: String, $show: boolean}}
+         * @returns {*}
          */
         function fromDomainSchema(domainSchema, editableTitle) {
 
-            var data = {name: domainSchema.name, $show: true, editableTitle: editableTitle};
+            var base = {name: domainSchema.name || ''},
+                extra = {$show: true, editableTitle: !!editableTitle},
+                paths = prepare(domainSchema),
+                cache = generateTreeCache(paths);
 
-            var make = function(obj) {
-                return angular.extend({$show: true, hasChildren: false, editableTitle: editableTitle}, obj);
-            };
-
-            var merge = function(container, newChildren) {
-                var index = loDash.zipObject(loDash.map(container.children, function(c, idx) {
-                    return [c.id, idx];
-                }));
-
-                loDash.forEach(newChildren, function(item) {
-                    if (index.hasOwnProperty(item.id)) {
-                        var child = container.children[index[item.id]];
-                        child.children = (child.children || []).concat(item.children || []);
-                        child.hasChildren = child.children.length > 0;
-                    } else {
-                        item.hasChildren = item.children && item.children.length > 0;
-                        container.children.push(item);
-                    }
-                });
-
-                container.hasChildren = container.children.length > 0;
-            };
-
-            var loop = function(attribs, obj) {
-                var props = angular.extend({children: []}, obj);
-
-                var cache = {};
-
-                angular.forEach(attribs, function(val) {
-                    if (angular.isUndefined(val)) {
-                        return;
-                    }
-
-                    var path = loDash.map(val, 'id');
-                    if (path.length > 1) {
-
-                        var newVal = val.slice(1);
-                        var name = path[0];
-                        if (!cache.hasOwnProperty(name)) {
-                            cache[name] = {id: name, uri: val[0].uri, name: val[0].name, children: []};
-                        }
-
-                        var parsed = loop([newVal]);
-
-                        merge(cache[name], parsed.children);
-//                    cache[name].children = cache[name].children.concat(parsed.children);
-                    } else if (angular.isObject(val[0])) {
-                        props.children.push(make(val[0]));
-                    }
-                });
-
-                if (!loDash.isEmpty(cache)) {
-                    merge(props, cache);
-                }
-
-                return props;
-            };
-
-            var paths = domainSchema['attribute_paths'];
-            var attrs = loDash.map(paths, function(attribute_path) {
-
-                if (attribute_path.id) {
-                    angular.forEach(attribute_path.attributes, function(attribute) {
-
-                        attribute._$path_id = attribute_path.id;
-
-                    });
-                }
-
-                return attribute_path.attributes;
-            });
-            if (attrs.length) {
-                angular.extend(data, loop(attrs));
-            }
-
-            data.hasChildren = data.children && data.children.length > 0;
-
-            return data;
+            return createSchemaItem(cache.children, cache.order, base, extra);
         }
 
         /**
-         * Parse in input record based on a schema, that is a domain schema.
-         * This will call `fromDomainSchmema` to gen an internal representation
-         * of the schema and will then transform it into something json-schema-esque.
+         * return a list of all attribute path's attributes (a list of list of attributes, if you will)
+         * @param schema
+         * @returns {*}
+         */
+        function prepare(schema) {
+
+            var originalPaths = schema.attribute_paths;
+
+            return loDash.map(originalPaths, function(attributePath) {
+
+                return loDash.forEach(attributePath.attributes, function(attribute) {
+                    attribute._$path_id = attributePath.id;
+                });
+            });
+        }
+
+        /**
+         * generate a cache structure for the tree, providing parsing order of elements and
+         * producing the relevant tree structure.
          *
-         * @param record        {Object}
-         * @param schemaResult  {Object}
-         * @param dontParseSchema {boolean=}
-         * @returns {*}
+         * @param attributePaths
+         * @returns {{order: Array, children: {}}}
          */
-        function parseFromDomainSchema(record, schemaResult, dontParseSchema) {
-            var schema = dontParseSchema ? schemaResult : fromDomainSchema(schemaResult);
+        function generateTreeCache(attributePaths) {
+            var cache = {},
+                order = [];
 
-            var data = {title: schema.name, type: 'object'};
+            loDash.forEach(attributePaths, function(path) {
+                addToCache(cache, order, path);
+            });
 
-            var shortNames = {};
-
-            var loop = function(children) {
-
-                var properties = {};
-                angular.forEach(children, function(child) {
-                    var key = child.uri || child.name;
-                    if (child.hasChildren) {
-                        properties[key] = {type: 'object'};
-                        properties[key].properties = loop(child.children);
-                    } else {
-                        properties[key] = {type: 'string'};
-                    }
-                    shortNames[key] = child.name;
-                });
-
-                return properties;
+            return {
+                order: order,
+                children: cache
             };
-
-            data.properties = loop(schema.children);
-
-            return parseAny(record, schema.name, data, function(item) {
-                var base = {};
-                if (shortNames[item.name]) {
-                    base['name'] = shortNames[item.name];
-                }
-                return base;
-            });
         }
 
         /**
-         * creates a leaf item
-         * @param name {String}
-         * @param children {Object}
-         * @param title {String=} (optional)
-         * @param extra {Object|Function=} (optional)
-         * @returns {*}
+         * adds a list of attributes to a cache.
+         * the attributes are interpreted as being in a kind of hierarchical order, that is,
+         *  each index represents a new level
+         *
+         * @param cache
+         * @param order
+         * @param attributes
          */
-        function makeItem(name, children, title, extra) {
-            var item = {'name': name, '$show': true};
-            if (children && children.length) {
-                item['children'] = children;
-            }
-            if (title) {
-                item['title'] = title;
-            }
+        function addToCache(cache, order, attributes) {
+            if (attributes.length > 0) {
 
-            if (angular.isFunction(extra)) {
+                var head = attributes[0],
+                    tail = attributes.slice(1),
+                    elem;
 
-                return angular.extend(item, extra(item));
-            } else {
+                if (!loDash.has(cache, head.uri)) {
 
-                return angular.extend(extra || {}, item);
-            }
-        }
-
-        /**
-         * creates leafs from object type
-         * @param container {*}
-         * @param name {String}
-         * @param properties {Object}
-         * @param extra {*}
-         * @returns {*}
-         */
-        function parseObject(container, name, properties, extra) {
-            if (angular.isArray(container)) {
-                return parseArray(container, name, {
-                    type: 'object',
-                    properties: properties
-                }, extra);
-            }
-            var ary = [],
-                hasText = false,
-                hasMatch = false;
-
-            angular.forEach(properties, function(val, key) {
-                if (container[key]) {
-                    hasMatch = true;
-                    var it = parseAny(container[key], key, val, extra);
-                    if (it) {
-                        ary.push(it);
-                        if (key === '#text') {
-                            hasText = true;
-                        }
-                    }
-                }
-            });
-
-            // make #text optional
-            if (!hasText && container['#text']) {
-                var itString = parseString(container['#text'], name, extra);
-                if (itString) {
-                    hasText = true;
-                    ary.push(itString);
-                }
-
-            }
-
-            // no properties found? try to be forgiving
-            if (!hasMatch && !hasText && loDash.keys(properties).length === 1) {
-                angular.forEach(properties, function(val, key) {
-                    var it = parseAny(container, key, val, extra);
-                    if (it) {
-                        ary.push(it);
-                    }
-                });
-            }
-
-            if (ary.length === 1 && ary[0].name === name) {
-                return ary[0];
-            }
-
-            return makeItem(name, ary, null, extra);
-        }
-
-        /**
-         * creates leafs from array type
-         * @param container {*}
-         * @param name {String}
-         * @param properties {Object}
-         * @param extra {*}
-         * @returns {*}
-         */
-        function parseArray(container, name, properties, extra) {
-            var ary = [];
-            angular.forEach(container, function(item) {
-                // nested properties may be due to xsd parsing
-                // if there is only one children equally named as the current container, traverse into it
-                while (loDash.isEqual(loDash.keys(properties), [name])) {
-                    properties = properties[name];
-                }
-
-                var it = parseAny(item, name, properties, extra);
-                if (it) {
-                    ary.push(it);
-                }
-            });
-            return makeItem(name, ary, null, extra);
-        }
-
-        /**
-         *  creates leafs from string type
-         * @param container {*}
-         * @param name {String}
-         * @param extra {*}
-         * @returns {*}
-         */
-        function parseString(container, name, extra) {
-            var xtra = angular.isFunction(extra) ? function(i) {
-                return angular.extend(extra(i), {leaf: true});
-            } : angular.extend(extra || {}, {leaf: true});
-
-            if (angular.isString(container)) {
-                return makeItem(name, null, container.trim(), xtra);
-            }
-
-            if (container['#text'] && container['#text'].trim()) {
-                return makeItem(name, null, container['#text'].trim(), xtra);
-            }
-
-            if (angular.isArray(container)) {
-                var ary = [];
-                angular.forEach(container, function(item) {
-                    var it = parseString(item, name, extra);
-                    if (it) {
-                        ary.push(it);
-                    }
-                });
-                return makeItem(name, ary, null, extra);
-            }
-        }
-
-        /**
-         * creates leafs from enum type
-         * @param container {*}
-         * @param name {String}
-         * @param enumeration {String}
-         * @returns {*}
-         */
-        function parseEnum(container, name, enumeration) {
-            if (enumeration.indexOf(container) !== -1) {
-                return makeItem(name, null, container);
-            }
-        }
-
-        /**
-         * dispatches current leaf to correct parser
-         * @param container {*}
-         * @param name {String}
-         * @param obj {*}
-         * @param extra {*}
-         * @returns {*}
-         */
-        function parseAny(container, name, obj, extra) {
-
-            if (obj['type'] === 'object') {
-                return parseObject(container, name, obj['properties'], extra);
-            }
-            if (obj['type'] === 'array') {
-                if (angular.isArray(container)) {
-                    return parseArray(container, name, obj['items'], extra);
+                    cache[head.uri] = elem = {
+                        id: head.id,
+                        uri: head.uri,
+                        name: head.name,
+                        order: [],
+                        children: {}
+                    };
+                    order.push(head.uri);
                 } else {
-                    return parseObject(container, name, obj['items'], extra);
+                    elem = cache[head.uri];
                 }
-            }
-            if (obj['type'] === 'string') {
-                return parseString(container, name, extra);
-            }
-            if (obj['enum']) {
-                return parseEnum(container, name, obj['enum']);
-            }
-        }
-
-        /**
-         * takes input data object and returns title data as array
-         * @param data {*}
-         * @param path {*}
-         * @param returnData {*}
-         * @returns {*}
-         */
-        function getData(data, path, returnData) {
-
-            if (data.children) {
-
-                if (!returnData) {
-                    returnData = [];
+                if (tail.length === 0) {
+                    elem._$path_id = head._$path_id;
                 }
 
-                angular.forEach(data.children, function(child) {
-
-                    var tempData,
-                        subpath = path;
-
-                    if (child.children) {
-
-                        if (subpath.length > 0) {
-                            subpath = subpath + '.';
-                        }
-
-                        subpath = subpath + data.name;
-
-                    }
-
-                    tempData = getData(child, subpath, returnData);
-
-                    if (tempData && tempData.title) {
-                        tempData.path += '.' + data.name + '.' + tempData.name;
-
-                        returnData.push(tempData);
-                    }
-                });
-
-                if (returnData.length > 0) {
-                    return returnData;
-                }
-            } else {
-
-                if (data.title) {
-                    return { 'title': data.title, 'name': data.name, 'path': path };
-                }
-                else {
-                    return '';
-                }
+                addToCache(elem.children, elem.order, tail);
             }
         }
 
         /**
-         *
-         * @param data
-         * @param filters
+         * recursively cleans up the tree structure and creates proper schema tree items
+         * @param cache
+         * @param order
+         * @param item
+         * @param extra
          * @returns {*}
          */
-        function filterData(data, filters) {
-
-            var matchCount = 0;
-
-            angular.forEach(filters, function(filter) {
-                matchCount += matchFilter(data, filter);
+        function createSchemaItem(cache, order, item, extra) {
+            //noinspection FunctionWithInconsistentReturnsJS
+            var children = Util.collect(order, function(uri) {
+                var child = cache[uri];
+                if (child) {
+                    return createSchemaItem(child.children, child.order, child, extra);
+                }
             });
 
-            data.filterNoMatch = (matchCount !== filters.length);
+            delete item.children;
+            delete item.order;
 
-            return data;
+            angular.extend(item, extra);
 
-        }
-
-        /**
-         *
-         * @param data
-         * @param filter
-         * @returns {number}
-         */
-        function matchFilter(data, filter) {
-            return matchPath(data, filter.path, filter.title);
-        }
-
-        /**
-         *
-         * @param data
-         * @param path
-         * @param matchdata
-         * @returns {number}
-         */
-        function matchPath(data, path, matchdata) {
-
-            var pathArray = path.split('.');
-
-            if (data.name === null || typeof data.name === 'undefined') {
-                data.name = '';
-            }
-
-            if (data.name.toString === pathArray[0].toString) {
-                pathArray.shift();
-
-                if (data.children) {
-
-                    var childData = 0;
-
-                    angular.forEach(data.children, function(child) {
-
-                        childData += matchPath(child, pathArray.join('.'), matchdata);
-
-                    });
-
-                    return childData;
-
-
-                } else {
-                    if (data.title === matchdata) {
-
-                        data.leafmatchedFilter = true;
-                        return 1;
-
-                    } else {
-                        data.leafmatchedFilter = false;
-                        return 0;
-                    }
-
-                }
-
+            if (loDash.isEmpty(children)) {
+                item.hasChildren = false;
+                return item;
             } else {
-                return 0;
+                item.hasChildren = true;
+                item.children = children;
             }
 
-
+            return item;
         }
 
         return {
-            mapData: mapData,
-            fromDomainSchema: fromDomainSchema,
-            parseFromDomainSchema: parseFromDomainSchema,
-            makeItem: makeItem,
-            parseObject: parseObject,
-            parseArray: parseArray,
-            parseString: parseString,
-            parseEnum: parseEnum,
-            parseAny: parseAny,
-            getData: getData,
-            filterData: filterData
+            fromDomainSchema: fromDomainSchema
         };
     });

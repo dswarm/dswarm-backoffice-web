@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, schemaParser, filterHelper, TaskResource, Util) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -78,12 +78,39 @@ angular.module('dmpApp')
             }
         }, true);
 
+        var getOutputVariable = (function() {
+            var template = '__TRANSFORMATION_OUTPUT_VARIABLE__',
+                counter = 0,
+                outVariablesPool = {};
+
+            function getOutputVariable(mapping) {
+                if (loDash.has(outVariablesPool, mapping.id)) {
+                    return outVariablesPool[mapping.id];
+                }
+
+                var variableName = template + (++counter);
+                outVariablesPool[mapping.id] = variableName;
+
+                return variableName;
+            }
+
+            return getOutputVariable;
+        }());
+
+
         function getId(optId) {
             return angular.isDefined(optId) ? optId
                 : (new Date().getTime() + Math.floor(Math.random() * 1001)) * -1;
         }
 
         //** Start of directive init
+        function getSchema() {
+            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true);
+            s.name = s.name || '';
+
+            return s;
+        }
+
         /**
          * Initializes vars etc.
          */
@@ -103,18 +130,36 @@ angular.module('dmpApp')
             });
 
             // restore mappings if a previous project was loaded from a draft
-            loDash.forEach($scope.project.mappings, function(mapping) {
+            var last = loDash.reduce($scope.project.mappings, function(previous, mapping) {
+
+                loDash.forEach(mapping.input_attribute_paths, function(iap) {
+                    if (iap.filter) {
+                        var schema = getSchema(),
+                            expression = angular.fromJson(iap.filter.expression),
+
+                            filter = filterHelper.applyFilter(schema, expression),
+
+                            iapFilter = {
+                                filter: filter,
+                                name: iap.filter.name
+                            };
+
+                        filterHelper.buildFilterInputs([iapFilter]);
+
+                        // all existing they're merged into one filter now, this might be good or not?
+                        iap._$filters = [iapFilter];
+                    }
+                });
 
                 $scope.tabs.push({ title: mapping.name, active: false, id: mapping.id });
                 availableIds.push(mapping.id);
-            });
 
-            var last = loDash.last($scope.project.mappings);
+                return mapping;
+            }, null);
 
             if (last) {
                 activate(last.id, true);
             }
-
         }
 
         init();
@@ -197,26 +242,30 @@ angular.module('dmpApp')
             });
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
-                if(itemConnection.source.type === 'attribute_path_instance') {
-                    connectOptions.source = {
-                        type : 'transformation-input',
-                        id : itemConnection.source.data.attribute_path.id
-                    };
-                } else {
-                    connectOptions.source = {
+                if(itemConnection.source.data) {
+
+                    if(itemConnection.source.type === 'attribute_path_instance') {
+                        connectOptions.source = {
+                            type : 'transformation-input',
+                            id : itemConnection.source.data.attribute_path.id
+                        };
+                    } else {
+                        connectOptions.source = {
+                            type : 'component',
+                            id : itemConnection.source.data.id
+                        };
+                    }
+
+                    connectOptions.target = {
                         type : 'component',
-                        id : itemConnection.source.data.id
+                        id : itemConnection.target.id
                     };
+
+                    var newConnectOptions = angular.copy(connectOptions);
+
+                    PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+
                 }
-
-                connectOptions.target = {
-                    type : 'component',
-                    id : itemConnection.target.id
-                };
-
-                var newConnectOptions = angular.copy(connectOptions);
-
-                PubSub.broadcast('jsp-connector-connect', newConnectOptions);
 
             });
 
@@ -324,7 +373,7 @@ angular.module('dmpApp')
          * Handles a dropped element to a grid position
          * @param positionX
          * @param positionY
-         * @param itemData
+         * @param itemDataOriginal
          */
         function dropToGrid(positionX, positionY, itemDataOriginal) {
 
@@ -468,17 +517,7 @@ angular.module('dmpApp')
 
                     var connectComponentSource = loDash.filter(result, function(cp) {
 
-                        var isComponent = false;
-
-                        angular.forEach(connectComponents[0].input_components, function(input_component) {
-
-                            if(input_component.id === cp.id) {
-                                isComponent = true;
-                            }
-                        });
-
-                        return isComponent;
-
+                        return loDash.any(connectComponents[0].input_components, {id: cp.id});
                     });
 
                     gridItemConnectionsRegister.push({
@@ -580,7 +619,16 @@ angular.module('dmpApp')
                 loDash.forEach(rowComponents, function(components, posX) {
                     loDash.forEach(components, function(component, posY) {
                         if (component !== null) {
-                            addToGrid(posX, posY, component.function, component.name, component.id);
+                            var realPosX = posX,
+                                realPosY = posY;
+                            if (component.description) {
+                                try {
+                                    var pos = angular.fromJson(component.description);
+                                    realPosX = pos.x;
+                                    realPosY = pos.y;
+                                } catch (ignore) {}
+                            }
+                            addToGrid(realPosX, realPosY, component.function, component.name, component.id);
                         }
                     });
                 });
@@ -630,6 +678,11 @@ angular.module('dmpApp')
         }
 
 
+        /**
+         * Returns the IAP by giving the varname
+         * @param varName
+         * @returns {*}
+         */
         function getIapByVariableName(varName) {
 
             if(!$scope.activeMapping.transformation.parameter_mappings[varName]) {
@@ -639,6 +692,21 @@ angular.module('dmpApp')
             return loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
                 return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
             });
+        }
+
+        /**
+         * Returns a iap varName by giving a iap index position
+         * @param index
+         * @returns {Mixed|string|undefined|*}
+         */
+        function getIapVariableNameByIndex(index) {
+
+            var input_attribute_path = $scope.activeMapping.input_attribute_paths[index];
+
+            return loDash.findKey($scope.activeMapping.transformation.parameter_mappings, function(parameter_mapping) {
+                return input_attribute_path.attribute_path.attributes[0].uri === parameter_mapping;
+            });
+
         }
 
         /**
@@ -656,14 +724,19 @@ angular.module('dmpApp')
          * @returns {*}
          */
         function resolveComponent(component) {
+            var storedComponent;
 
-            var newComponent = getComponent(component.id);
-
-            if (newComponent) {
-                return newComponent;
+            storedComponent = getComponent(component.id);
+            if (!storedComponent) {
+                storedComponent = createNewComponent(component);
             }
 
-            return createNewComponent(component);
+            storedComponent.description = angular.toJson({
+                x: component.positionX,
+                y: component.positionY
+            });
+
+            return storedComponent;
         }
 
         /**
@@ -798,7 +871,9 @@ angular.module('dmpApp')
 
             var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
 
-            transformation.parameter_mappings['transformationOutputVariable'] = buildUriReference(outputAttributes);
+            var transformationOutputVariable = getOutputVariable($scope.activeMapping);
+
+            transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
 
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
@@ -836,7 +911,6 @@ angular.module('dmpApp')
                 }
 
             });
-
         }
 
         /**
@@ -1104,7 +1178,7 @@ angular.module('dmpApp')
         };
         //** End of sending transformation to server
 
-        //** Start handling filter
+        //** Start of configuring components
         $scope.onFunctionClick = function(component) {
             var newComponent = angular.copy(getComponent(component.id));
             PubSub.broadcast('handleEditConfig', newComponent);
@@ -1112,29 +1186,85 @@ angular.module('dmpApp')
 
         PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
             angular.forEach($scope.activeMapping.transformation.function.components, function(comp) {
+
                 if (comp.id === component.id) {
+                    if(component.parameter_mappings.inputStringSorting) {
+                        component.parameter_mappings.inputString = loDash.flatten(component.parameter_mappings.inputStringSorting, 'id');
+                        component.parameter_mappings.inputString = component.parameter_mappings.inputString.join(',');
+
+                        delete component.parameter_mappings.inputStringSorting;
+                    } else {
+                        if(comp.parameter_mappings.inputString && comp.parameter_mappings.inputString.length > 0) {
+                            component.parameter_mappings.inputString = comp.parameter_mappings.inputString;
+                        }
+                    }
+
                     comp.parameter_mappings = component.parameter_mappings;
                 }
             });
         });
+        //** End of configuring components
 
-        $scope.onFilterClick = function(component) {
+        //** Start handling filter
+        // dectivated until further notice
+        PubSub.subscribe($scope, 'FilterKeySelected', function(data) {
+            // TODO: get a IAP instance from somewhere
+            openFilter($scope.activeMapping, data.attributePathId, null);
+        });
 
-            var childScope = $scope.$new();
-            childScope.component = component;
+        $scope.onFilterClick = function(iap) {
 
-            $scope.currentComponent = component;
+            openFilter($scope.activeMapping, iap.attribute_path.id, iap);
+        };
+
+        function openFilter(mapping, attributePathId, IAPInstance) {
+            if (!IAPInstance._$filters) {
+                IAPInstance._$filters = [];
+            }
 
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/filter.html',
                 controller: 'FilterCtrl',
-                scope: childScope
+                windowClass: 'wide',
+                resolve: {
+                    mapping: function() {
+                        return mapping;
+                    },
+                    attributePathId: function() {
+                        return attributePathId;
+                    },
+                    filters: function() {
+                        return IAPInstance._$filters;
+                    }
+                }
             });
 
-            modalInstance.result.then(angular.noop);
 
-        };
+            modalInstance.result.then(function() {
+                var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function(filter) {
+                    return Util.collect(filter.inputFilters, function(f) {
+                        var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, {id: f.apId});
+                        if (path) {
+                            path = buildUriReference(path.attributes);
+                            // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
+                            return [path, f.title];
+                        }
+                    });
+                }), true);
 
+                var expression = JSON.stringify(loDash.zipObject(filters));
+                // expression = expression.replace(new RegExp('\"', 'g'), '&quot;');
+
+                if (IAPInstance.filter) {
+                    IAPInstance.filter.expression = expression;
+                } else {
+                    IAPInstance.filter = {
+                        id: getId(),
+                        expression: expression
+                    };
+                }
+            });
+        }
         //** End handling filter
 
         $scope.isMultiple = function(item) {
@@ -1189,6 +1319,7 @@ angular.module('dmpApp')
                             loDash.last(loDash.sortBy(currentRowItems, 'positionY'));
 
                             var currentRowIndexInGridItemConnection = loDash.findIndex($scope.gridItemConnections, function(gridItemConnection) {
+                                if(loDash.isNull(gridItemConnection.source.data)) { return false; }
                                 return gridItemConnection.source.data.id === currentRowItems.id;
                             });
 

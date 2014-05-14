@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TargetDataCtrl', function($scope, $http, $q, Util, loDash, schemaParser, PubSub) {
+    .controller('TargetDataCtrl', function($scope, $http, $q, Util, loDash, gdmParser, PubSub) {
         $scope.internalName = 'Target Data Widget';
 
         $scope.selectedTab = 0;
@@ -11,7 +11,7 @@ angular.module('dmpApp')
         };
 
         function mapToSchema(result, schema) {
-            return schemaParser.parseFromDomainSchema(result, schema, true);
+            return gdmParser.parse(result, schema, true);
         }
 
 

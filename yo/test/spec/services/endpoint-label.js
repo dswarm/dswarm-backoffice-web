@@ -187,7 +187,7 @@ describe('Service: endpointLabel', function () {
         endpointLabel.ask();
         $rootScope.$digest();
 
-        expect($document.find('#test-text').text()).toBe('Name this connection');
+        expect($document.find('#test-text').text()).toBe('Name this mapping');
         expect($document.find('#test-help').text()).toBe('The name has to be at least 5 characters long');
     }));
 

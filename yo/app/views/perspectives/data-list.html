@@ -9,13 +9,14 @@
 
     <span class="dropdown">
 
-        <a class="dropdown-toggle"><button class="btn btn-default">Edit configuration</button></a>
+        <a class="dropdown-toggle"><button class="btn btn-default">Configure ...</button></a>
 
         <ul class="dropdown-menu">
             <li>
-                <a href="#/data-config/{{ selectedSet.0.id }}/csv">... as CSV</a>
-                <a href="#/data-config/{{ selectedSet.0.id }}/xml">... as XML</a>
-                <a href="#/data-config/{{ selectedSet.0.id }}/schema">... as Schema</a>
+                <a href="#/data-config/{{ selectedSet.0.id }}/csv">as CSV</a>
+                <a href="#/data-config/{{ selectedSet.0.id }}/xml">as XML</a>
+                <!-- DD-435 -->
+                <!--<a href="#/data-config/{{ selectedSet.0.id }}/schema">as Schema</a>-->
             </li>
         </ul>
 
@@ -29,20 +30,6 @@
 <span ng-if="selectedModel.length" class="selected-set-options">
     Selected data set ({{ selectedModel.0.data_resource.name }}):
     <a ng-href="#/data-config/{{ selectedModel.0.data_resource.id }}/{{ selectedModel.0.configuration.parameters.storage_type }}"><button class="btn btn-default">Show details</button></a>
-
-    <span class="dropdown">
-
-        <a class="dropdown-toggle"><button class="btn btn-default">Edit configuration</button></a>
-
-        <ul class="dropdown-menu">
-            <li>
-                <a href="#/data-config/{{ selectedModel.0.data_resource.id }}/csv">... as CSV</a>
-                <a href="#/data-config/{{ selectedModel.0.data_resource.id }}/xml">... as XML</a>
-                <a href="#/data-config/{{ selectedModel.0.data_resource.id }}/schema">... as Schema</a>
-            </li>
-        </ul>
-
-    </span>
 
     <span class="dropdown">
 

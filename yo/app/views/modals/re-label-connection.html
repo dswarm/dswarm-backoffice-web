@@ -15,7 +15,7 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
                 <button type="reset" ng-click="$dismiss()" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                <button type="submit" ng-disabled="!isValid(label)" ng-click="close(label)" class="btn btn-primary pull-right">Name that connection</button>
+                <button type="submit" ng-disabled="!isValid(label)" ng-click="close(label)" class="btn btn-primary pull-right">{{ buttonText }}</button>
             </div>
         </div>
     </form>

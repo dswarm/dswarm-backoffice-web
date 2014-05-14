@@ -34,7 +34,10 @@ describe('Controller: FilterCtrl', function () {
         var $controller = $injector.get('$controller');
         FilterCtrl = $controller('FilterCtrl', {
             '$scope': scope,
-            '$modalInstance': modalInstance
+            '$modalInstance': modalInstance,
+            'mapping': scope.activeMapping,
+            'attributePathId': 1,
+            'filters': scope.activeMapping._$filters
         });
 
     }));
@@ -56,7 +59,7 @@ describe('Controller: FilterCtrl', function () {
 
     it('should have filter input data with no match', function() {
         scope.update();
-        expect(scope.dataSource['filterNoMatch']).toBe(true);
+        expect(scope.dataSource['filterNoMatch']).toBe(false);
 
     });
 

@@ -19,8 +19,9 @@
     </div>
 
     <div class="transformation-container" ng-if="activeMapping.id">
+    <span>Click an input badge to apply a filter</span>
 
-	<button class="btn btn-default" ng-click="sendTransformation(activeMapping)">Run Transformation</button>
+    <button class="btn btn-default" ng-click="sendTransformation(activeMapping)">Run this Transformation</button>
 
     <div class="previewOptionsError" ng-if="transformationStateError">{{transformationStateError}}</div>
 
@@ -28,6 +29,8 @@
             <ul>
                 <li ng-repeat="iap in activeMapping.input_attribute_paths" class="count{{activeMapping.input_attribute_paths.length}}">
                     <span
+                        class="input-attribute-path-badge"
+                        ng-click="onFilterClick(iap)"
                         js-plumb-connector
                         js-plumb-connector-options="jsPlumbOpts"
                         js-plumb-connector-ident-type="transformation-input"

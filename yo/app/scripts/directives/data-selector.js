@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataSelectorCtrl', function($scope, $http, $q, schemaParser, PubSub) {
+    .controller('DataSelectorCtrl', function($scope, PubSub) {
 
         $scope.internalName = 'Data Selector Widget';
 

@@ -1,6 +1,7 @@
 <div>
 
-    <schemalist from="resources" ></schemalist>
+    <!-- DD-435 -->
+    <!--<schemalist from="resources" ></schemalist>-->
 
     <form role="form" style="margin-top: 2em; margin-bottom: 2em" name="dataConfigXmlForm">
         <div class="form-group" ng-class="{'has-error':dataConfigXmlForm.xmlRecordTagInput.$error.required}">
@@ -15,22 +16,23 @@
                        ng-required="true"
                        ng-model="config.parameters.record_tag">
             </label>
-            <p class="help-block">The name of the tag, that denotes a record. </p>
+            <p class="help-block">The name of the tag that denotes a record.</p>
         </div>
-        <div class="form-group">
-            <label class="control-label">XML Namespace
-                <span ng-show="dataConfigXmlForm.xmlNamespaceInput.$error.required"
-                      class="pull-right">required <i
-                        class="glyphicon glyphicon-exclamation-sign"></i></span>
-                <input type="text" class="form-control"
-                       name="xmlNamespaceInput"
-                       id="xmlNamespaceInput"
-                       placeholder="XML Namespace"
-                       ng-required="false"
-                       ng-model="config.parameters.xml_namespace">
-            </label>
-            <p class="help-block">The namespace of the root document, e.g. http://www.ddb.de/professionell/mabxml/mabxml-1.xsd</p>
-        </div>
+        <!-- DD-435 -->
+        <!--<div class="form-group">-->
+            <!--<label class="control-label">XML Namespace-->
+                <!--<span ng-show="dataConfigXmlForm.xmlNamespaceInput.$error.required"-->
+                      <!--class="pull-right">required <i-->
+                        <!--class="glyphicon glyphicon-exclamation-sign"></i></span>-->
+                <!--<input type="text" class="form-control"-->
+                       <!--name="xmlNamespaceInput"-->
+                       <!--id="xmlNamespaceInput"-->
+                       <!--placeholder="XML Namespace"-->
+                       <!--ng-required="false"-->
+                       <!--ng-model="config.parameters.xml_namespace">-->
+            <!--</label>-->
+            <!--<p class="help-block">The namespace of the root document, e.g. http://www.ddb.de/professionell/mabxml/mabxml-1.xsd</p>-->
+        <!--</div>-->
 
         <span class="selected-set-options">
             <button type="button" ng-click="onSaveClick()" class="btn btn-default">Save</button>

@@ -2,7 +2,7 @@
 'use strict';
 
 var SERVER_PORT = 9999;
-var OPEN_TO_THE_WORLD = true;
+var OPEN_TO_THE_WORLD = false;
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 
         dmpProject: {
             backendDir: process.env.DMP_HOME || '../../data-management-platform',
-            name: 'DMP 2000',
+            name: 'd:swarm',
             versions: {
                 web: {
                     revision: 'HEAD',
@@ -103,8 +103,8 @@ module.exports = function(grunt) {
             development: {
                 constants: {
                     ServiceUrls: {
-                        backend: 'http://194.95.144.18:8087/dmp/',
-                        neo: 'http://194.95.144.18:7474/graph/'
+                        backend: 'http://127.0.0.1:8087/dmp/',
+                        neo: 'http://127.0.0.1:8087/dmp/'
                     }
                 }
             },
@@ -116,7 +116,7 @@ module.exports = function(grunt) {
                 constants: {
                     ServiceUrls: {
                         backend: '/dmp/',
-                        neo: 'http://194.95.145.12:7474/graph/'
+                        neo: '/dmp/'
                     }
                 }
             },
@@ -151,7 +151,7 @@ module.exports = function(grunt) {
         connect: {
             options: {
                 port: SERVER_PORT,
-                hostname: OPEN_TO_THE_WORLD ? '194.95.144.18' : 'localhost',
+                hostname: OPEN_TO_THE_WORLD ? '0.0.0.0' : 'localhost',
                 livereload: 35729
             },
             livereload: {
@@ -400,13 +400,6 @@ module.exports = function(grunt) {
             }
         },
 
-        // Replace Google CDN references
-        cdnify: {
-            dist: {
-                html: ['<%= yeoman.dist %>/*.html']
-            }
-        },
-
         // Copies remaining files to places other tasks can use
         copy: {
             dist: {
@@ -598,28 +591,31 @@ module.exports = function(grunt) {
         grunt.log.writeln(JSON.stringify(grunt.config(), null, 2));
     });
 
-    grunt.registerTask('serve', 'start the development server', function(target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'connect:dist:keepalive']);
-        }
+    grunt.registerTask('serve:dist', 'start a production server', [
+        'build',
+        'connect:dist:keepalive'
+    ]);
 
-        var tasks = [
-            'clean:server',
-            'less',
-            'bowerInstall',
-            'updateConfig',
-            'copy:styles',
-            'autoprefixer'
-        ];
+    grunt.registerTask('serve:debug', 'start an IDE-debug friendly development server', [
+        'clean:server',
+        'less',
+        'bowerInstall',
+        'updateConfig',
+        'copy:styles',
+        'autoprefixer',
+        'connect:ide-debug:keepalive'
+    ]);
 
-        if (target === 'debug') {
-            tasks.push('connect:ide-debug:keepalive');
-        } else {
-            tasks.push('connect:livereload', 'watch');
-        }
-
-        grunt.task.run(tasks);
-    });
+    grunt.registerTask('serve', 'start a development server', [
+        'clean:server',
+        'less',
+        'bowerInstall',
+        'updateConfig',
+        'copy:styles',
+        'autoprefixer',
+        'connect:livereload',
+        'watch'
+    ]);
 
     grunt.registerTask('server', function() {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
@@ -653,7 +649,6 @@ module.exports = function(grunt) {
             'concat',
             'ngmin',
             'copy:dist',
-            'cdnify',
             'cssmin',
             'uglify:' + (target === 'local' ? 'local' : 'generated'),
             'rev',

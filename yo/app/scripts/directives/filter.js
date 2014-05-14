@@ -1,79 +1,54 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, schemaParser, PubSub) {
+    .controller('FilterCtrl', function($scope, $http, $q, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, mapping, attributePathId, filters) {
 
         $scope.internalName = 'Filter Widget';
 
-        if (!$scope.activeMapping._$filters) {
-            $scope.activeMapping._$filters = [];
-        }
+        $scope.activeMapping = mapping;
+        $scope.filters = filters;
 
         $scope.dataSource = {};
         $scope.dataSchema = {};
         $scope.dataLoaded = false;
 
+        var originalSource = {};
 
-        PubSub.subscribe($scope, 'returnLoadData', function(args) {
+        // deactivated until further notice
+        /* jshint ignore:start */
+        function restrictSchema(schema, pathId) {
+            var exactPath = loDash.find(schema.attribute_paths, { id: pathId });
 
-            if (args.record) {
+            if (angular.isDefined(exactPath)) {
+                var exactAttributes = exactPath.attributes;
 
-                $scope.dataSource = args.record.data;
-                $scope.dataSchema = args.schema;
-                $scope.dataLoaded = true;
+                schema.attribute_paths = loDash.filter(schema.attribute_paths, function(ap) {
 
+                    return loDash.every(exactAttributes, function(a, i) {
+
+                        return ap.attributes[i] && ap.attributes[i].id === a.id;
+                    });
+                });
             }
-
-        });
-
-        PubSub.broadcast('getLoadData', {});
+        }
+        /* jshint ignore:end */
 
         $scope.update = function() {
 
-            var inputfilterCollection = [];
+            var inputFilterCollection = filterHelper.buildFilterInputs(filters);
 
-            angular.forEach($scope.activeMapping._$filters, function(filter) {
-
-                filter.inputfilters = schemaParser.getData(filter.filter, '');
-
-                inputfilterCollection = inputfilterCollection.concat(filter.inputfilters);
-
-                if (filter.inputfilters) {
-                    filter.name = '';
-                }
-
-                var countInputfilter = 0;
-                angular.forEach(filter.inputfilters, function(inputfilter) {
-                    if (filter.name.length > 0) {
-                        filter.name += ', ';
-                    }
-                    filter.name += inputfilter.title;
-
-                    countInputfilter++;
-                });
-                if (countInputfilter === 0) {
-                    filter.name = 'new filter';
-                }
-
+            filterHelper.annotateMatches($scope.dataSource, inputFilterCollection, function(a, b) {
+                return a === b;
             });
-
-            if (inputfilterCollection && inputfilterCollection[0] !== undefined && inputfilterCollection.length > 0) {
-                $scope.dataSource.isFiltered = true;
-                $scope.dataSource = schemaParser.filterData($scope.dataSource, inputfilterCollection);
-
-            } else {
-                $scope.dataSource.isFiltered = false;
-                $scope.dataSource.filterNoMatch = false;
-            }
 
             return true;
         };
 
         $scope.addFilter = function() {
 
-            $scope.activeMapping._$filters.push({
+            filters.push({
                 filter: schemaParser.fromDomainSchema($scope.dataSchema, true),
-                inputfilters: [],
+                inputFilters: [],
                 name: 'new filter'
             });
 
@@ -83,8 +58,30 @@ angular.module('dmpApp')
             $modalInstance.dismiss('cancel');
         };
 
-        $scope.onSaveClick = function() {
+        $scope.save = function() {
             $modalInstance.close();
         };
+
+        PubSub.ask($scope, 'getLoadData', {}, 'returnLoadData', function(args) {
+
+            if (args.record) {
+                var schema = angular.copy(args.schema);
+                // deactivated until further notice
+//                if (attributePathId) {
+//                    restrictSchema(schema, attributePathId);
+//                }
+
+                schema.name = schema.name || '';
+
+                originalSource = gdmParser.parse(args.record.data, schema);
+
+                $scope.dataSource = originalSource;
+                $scope.dataSchema = schema;
+
+                $scope.update();
+
+                $scope.dataLoaded = true;
+            }
+        });
 
     });
