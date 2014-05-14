@@ -699,6 +699,7 @@ angular.module('dmpApp')
          * @param index
          * @returns {Mixed|string|undefined|*}
          */
+        /* jshint ignore:start */
         function getIapVariableNameByIndex(index) {
 
             var input_attribute_path = $scope.activeMapping.input_attribute_paths[index];
@@ -708,6 +709,7 @@ angular.module('dmpApp')
             });
 
         }
+        /* jshint ignore:end */
 
         /**
          * Returns component from gridItems by component id
@@ -1091,27 +1093,32 @@ angular.module('dmpApp')
 
             if ($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length + 1) {
 
-                angular.forEach(data.additionalInput, function(input) {
-                    angular.forEach($scope.project.input_data_model.schema.attribute_paths, function(path) {
-                        if (loDash.findIndex(path.attributes, { 'id': input.path[0] }) >= 0) {
-
-                            var alreadyInIap = loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
-                                return input_attribute_path.attribute_path.id === path.id;
-                            });
-
-                            if(loDash.isUndefined(alreadyInIap)) {
-                                $scope.activeMapping.input_attribute_paths.push({
-                                    type: 'MappingAttributePathInstance',
-                                    name: 'input mapping attribute path instance',
-                                    id: (new Date().getTime() + 1) * -1,
-                                    attribute_path: path
-                                });
-                            }
-                        }
-                    });
-
+                var shortPaths = loDash.map($scope.project.input_data_model.schema.attribute_paths, function(ap) {
+                    return [loDash.map(ap.attributes, 'id'), ap];
                 });
 
+                angular.forEach(data.additionalInput, function(input) {
+
+                    //noinspection FunctionWithInconsistentReturnsJS
+                    var pathInSchema = Util.collect(shortPaths, function(sp) {
+                        if (loDash.isEqual(sp[0], input.path)) {
+                            return sp[1];
+                        }
+                    })[0];
+
+                    var alreadyInIap = pathInSchema && loDash.any($scope.activeMapping.input_attribute_paths, function(iap) {
+                        return iap.attribute_path.id === pathInSchema.id;
+                    });
+
+                    if(pathInSchema && !alreadyInIap) {
+                        $scope.activeMapping.input_attribute_paths.push({
+                            type: 'MappingAttributePathInstance',
+                            name: 'input mapping attribute path instance',
+                            id: (new Date().getTime() + 1) * -1,
+                            attribute_path: pathInSchema
+                        });
+                    }
+                });
             }
 
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
