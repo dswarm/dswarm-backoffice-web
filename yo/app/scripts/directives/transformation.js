@@ -785,6 +785,14 @@ angular.module('dmpApp')
 
                 }
 
+            } else {
+
+                if(!component.parameter_mappings.inputString) {
+
+                    var gridItem = getGridItemFromComponentId(component.id);
+                    component.parameter_mappings.inputString = getIapVariableNameByIndex(gridItem.positionX);
+
+                }
             }
 
             result.push(component);
