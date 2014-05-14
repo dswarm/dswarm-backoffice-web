@@ -678,6 +678,11 @@ angular.module('dmpApp')
         }
 
 
+        /**
+         * Returns the IAP by giving the varname
+         * @param varName
+         * @returns {*}
+         */
         function getIapByVariableName(varName) {
 
             if(!$scope.activeMapping.transformation.parameter_mappings[varName]) {
@@ -687,6 +692,21 @@ angular.module('dmpApp')
             return loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
                 return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
             });
+        }
+
+        /**
+         * Returns a iap varName by giving a iap index position
+         * @param index
+         * @returns {Mixed|string|undefined|*}
+         */
+        function getIapVariableNameByIndex(index) {
+
+            var input_attribute_path = $scope.activeMapping.input_attribute_paths[index];
+
+            return loDash.findKey($scope.activeMapping.transformation.parameter_mappings, function(parameter_mapping) {
+                return input_attribute_path.attribute_path.attributes[0].uri === parameter_mapping;
+            });
+
         }
 
         /**
@@ -1173,6 +1193,10 @@ angular.module('dmpApp')
                         component.parameter_mappings.inputString = component.parameter_mappings.inputString.join(',');
 
                         delete component.parameter_mappings.inputStringSorting;
+                    } else {
+                        if(comp.parameter_mappings.inputString && comp.parameter_mappings.inputString.length > 0) {
+                            component.parameter_mappings.inputString = comp.parameter_mappings.inputString;
+                        }
                     }
 
                     comp.parameter_mappings = component.parameter_mappings;
