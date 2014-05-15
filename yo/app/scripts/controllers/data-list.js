@@ -25,12 +25,15 @@ angular.module('dmpApp')
 
             ProjectResource.save({}, project, function() {
                 $scope.updateGridData();
+                newProject.name = '';
+                newProject.description = '';
             });
 
         };
 
         $scope.onProjectDeleteClick = function(project) {
             ProjectResource.remove({id: project.id}, {}, function() {
+                $scope.selectedProject = [];
                 $scope.updateGridData();
             });
         };
