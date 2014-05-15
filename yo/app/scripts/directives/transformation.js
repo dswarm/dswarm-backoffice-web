@@ -699,7 +699,6 @@ angular.module('dmpApp')
          * @param index
          * @returns {Mixed|string|undefined|*}
          */
-        /* jshint ignore:start */
         function getIapVariableNameByIndex(index) {
 
             var input_attribute_path = $scope.activeMapping.input_attribute_paths[index];
@@ -709,7 +708,6 @@ angular.module('dmpApp')
             });
 
         }
-        /* jshint ignore:end */
 
         /**
          * Returns component from gridItems by component id
