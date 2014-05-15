@@ -57,3 +57,12 @@ body {
   //  height: percentage((2 / @box-rows));
   height: 480px;
 }
+
+.generate-layers(7);
+
+.generate-layers(@n, @i: 1) when (@i <= @n) {
+  .layer@{i} {
+    padding-left: (@i - 1) * 10px;
+  }
+  .generate-layers(@n, (@i + 1));
+}
