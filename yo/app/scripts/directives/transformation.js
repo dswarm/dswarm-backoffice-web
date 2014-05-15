@@ -403,7 +403,7 @@ angular.module('dmpApp')
          */
         function addToGrid(positionX, positionY, itemData, itemName, id) {
 
-            console.log('addToGrid [' + itemName + '] position X = ', positionX);
+            console.log('addToGrid [' + itemName + '] position X = ', positionX, 'position Y = ', positionY);
 
             $scope.gridItems.push({
                 positionX: positionX,
@@ -631,8 +631,8 @@ angular.module('dmpApp')
                     rowComponents.push(components);
                 });
 
-                loDash.forEach(rowComponents, function(components, posX) {
-                    loDash.forEach(components, function(component, posY) {
+                var addToGridCalls = loDash.flatten(loDash.map(rowComponents, function(components, posX) {
+                    return loDash.map(components, function(component, posY) {
                         if (component !== null) {
                             var realPosX = posX,
                                 realPosY = posY;
@@ -640,15 +640,23 @@ angular.module('dmpApp')
                                 try {
                                     var pos = angular.fromJson(component.description);
 
-                                    console.log('walkChainedComponents [' + component.name + ':' + component.function.name + '] position X = ', pos.x);
-
                                     realPosX = loDash.has(inputAPRows, pos.x) ? inputAPRows[pos.x] : posX;
                                     realPosY = pos.y;
+
+                                    console.log('walkChainedComponents [' + component.name + ':' + component.function.name + '] position X = ', realPosX, 'postion Y = ', realPosY);
                                 } catch (ignore) {}
                             }
-                            addToGrid(realPosX, realPosY, component.function, component.name, component.id);
+                            return {
+                                x: realPosX,
+                                y: realPosY,
+                                args: [realPosX, realPosY, component.function, component.name, component.id]
+                            };
                         }
                     });
+                }), true);
+                var sortedCalls = loDash.sortBy(addToGridCalls, ['x', 'y']);
+                loDash.forEach(sortedCalls, function(call) {
+                    addToGrid.apply(null, call.args);
                 });
 
                 if(gridItemConnectionsRegister.length > 0) {
@@ -752,7 +760,7 @@ angular.module('dmpApp')
                 storedComponent = createNewComponent(component);
             }
 
-            console.log('resolveComponent [' + component.name + ':' + component.function.name + '] position X = ', component.positionX);
+            console.log('resolveComponent [' + component.name + ':' + component.function.name + '] position X = ', component.positionX, 'postion Y = ', component.positionY);
 
             storedComponent.description = angular.toJson({
                 x: component.positionX,
