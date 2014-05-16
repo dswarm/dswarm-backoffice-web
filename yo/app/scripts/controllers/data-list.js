@@ -33,7 +33,7 @@ angular.module('dmpApp')
 
         $scope.onProjectDeleteClick = function(project) {
             ProjectResource.remove({id: project.id}, {}, function() {
-                $scope.selectedProject = [];
+                $scope.selectedProject.length = 0;
                 $scope.updateGridData();
             });
         };
