@@ -157,9 +157,6 @@ angular.module('dmpApp')
                 return mapping;
             }, null);
 
-            if (last) {
-                activate(last.id, true);
-            }
         }
 
         init();
@@ -189,7 +186,7 @@ angular.module('dmpApp')
 
         function showTransformationPlumbsInit() {
 
-            if(showTransformationPlumbsTimeout) {
+            if(showTransformationPlumbsTimeout && showTransformationPlumbsTimeout.then) {
                 $timeout.cancel(showTransformationPlumbsTimeout);
             }
 
