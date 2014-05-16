@@ -58,11 +58,15 @@ body {
   height: 480px;
 }
 
-.generate-layers(7);
+.layer1 {
+  padding-left: 0;
+}
 
-.generate-layers(@n, @i: 1) when (@i <= @n) {
+.generate-layers(17);
+
+.generate-layers(@n, @i: 2) when (@i <= @n) {
   .layer@{i} {
-    padding-left: (@i - 1) * 10px;
+    padding-left: 20px;
   }
   .generate-layers(@n, (@i + 1));
 }
