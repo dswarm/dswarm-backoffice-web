@@ -1321,7 +1321,7 @@ angular.module('dmpApp')
 
                             if(thisOpenEnded) {
                                 openEndedComponents.push({
-                                    name : $scope.activeMapping.input_attribute_paths[row].attribute_path.attributes[0].name,
+                                    name : buildAttributeName($scope.activeMapping.input_attribute_paths[row].attribute_path.attributes, 'name', ' › '),
                                     type : 'attribute_path_instance',
                                     data : $scope.activeMapping.input_attribute_paths[row]
                                 });
