@@ -903,27 +903,31 @@ angular.module('dmpApp')
 
                 componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
 
-                if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
+                if(componentIndex > 0) {
 
-                    var inputString = $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.split(',');
+                    if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
 
-                    if(loDash.indexOf(inputString, componentName) === -1) {
+                        var inputString = $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.split(',');
 
-                        inputString.push(componentName);
+                        if(loDash.indexOf(inputString, componentName) === -1) {
 
-                        $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = inputString.join(',');
+                            inputString.push(componentName);
+
+                            $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = inputString.join(',');
+                        }
+
+                    } else {
+                        $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = componentName;
                     }
 
-                } else {
-                    $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = componentName;
-                }
+                    if(itemConnection.source.type === 'griditem') {
 
-                if(itemConnection.source.type === 'griditem') {
+                        $scope.activeMapping.transformation.function.components[componentIndex].input_components.push({id : itemConnection.source.data.id });
 
-                    $scope.activeMapping.transformation.function.components[componentIndex].input_components.push({id : itemConnection.source.data.id });
+                        componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.source.data.id});
+                        $scope.activeMapping.transformation.function.components[componentIndex].output_components.push({id : itemConnection.target.id });
 
-                    componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.source.data.id});
-                    $scope.activeMapping.transformation.function.components[componentIndex].output_components.push({id : itemConnection.target.id });
+                    }
 
                 }
 
@@ -995,6 +999,7 @@ angular.module('dmpApp')
                 $scope.$broadcast('tabSwitch', id);
 
                 $scope.activeMapping = $scope.project.mappings[availableIds.indexOf(id)];
+                $scope.gridItemConnections = [];
                 activateTab(id);
 
                 if (!$scope.activeMapping) {
