@@ -114,7 +114,7 @@ angular.module('dmpApp')
                 val = undefined;
             } else if (key === 'parameter_mappings') {
                 val = loDash.mapValues(value, function(v) {
-                    return v.toString();
+                    return v !== null ? typeof v !== 'undefined' ? v.toString() : null : v;
                 });
             } else if (value) {
                 if (value.document && value.location && value.alert && value.setInterval) {
