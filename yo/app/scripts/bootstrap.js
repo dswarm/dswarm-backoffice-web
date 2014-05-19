@@ -48,10 +48,6 @@ angular.module('dmpApp')
     .run(['$rootScope', '$location', 'ProjectInfo', function($rootScope, $location, ProjectInfo) {
         $rootScope.projectName = ProjectInfo.title;
 
-        if ($location.path().indexOf('model') !== -1) {
-            $location.path('/data/');
-        }
-
         $rootScope.$on('$routeChangeSuccess', function(event, current) {
             $rootScope.viewTitle = current.title;
             $rootScope.activeTarget = current.slug;
