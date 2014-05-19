@@ -540,7 +540,7 @@ describe('Directive: Transformation', function() {
         expect(elScope.tabs).toEqual([
             {
                 title: mappingName,
-                active: true,
+                active: false,
                 id: mappingId
             }
         ]);

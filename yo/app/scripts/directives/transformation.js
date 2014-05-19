@@ -130,7 +130,7 @@ angular.module('dmpApp')
             });
 
             // restore mappings if a previous project was loaded from a draft
-            var last = loDash.reduce($scope.project.mappings, function(previous, mapping) {
+            loDash.forEach($scope.project.mappings, function(mapping) {
 
                 loDash.forEach(mapping.input_attribute_paths, function(iap) {
                     if (iap.filter) {
@@ -153,10 +153,7 @@ angular.module('dmpApp')
 
                 $scope.tabs.push({ title: mapping.name, active: false, id: mapping.id });
                 availableIds.push(mapping.id);
-
-                return mapping;
-            }, null);
-
+            });
         }
 
         init();
@@ -1360,7 +1357,7 @@ angular.module('dmpApp')
          */
         $scope.hasOpenEndedComponents = function() {
             return (getOpenEndedComponents(-1).length > 1);
-        }
+        };
 
         /**
          * Adds additional grid item connections to register
