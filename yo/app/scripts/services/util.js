@@ -112,6 +112,10 @@ angular.module('dmpApp')
 
             if (typeof key === 'string' && (key.charAt(0) === '$' || (key.charAt(0) === '_' && key.charAt(1) === '$'))) {
                 val = undefined;
+            } else if (key === 'parameter_mappings') {
+                val = loDash.mapValues(value, function(v) {
+                    return v.toString();
+                });
             } else if (value) {
                 if (value.document && value.location && value.alert && value.setInterval) {
                     val = '$WINDOW';
