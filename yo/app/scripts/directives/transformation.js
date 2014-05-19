@@ -260,7 +260,9 @@ angular.module('dmpApp')
 
                     var newConnectOptions = angular.copy(connectOptions);
 
-                    PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+                    if(getIapIndexById(newConnectOptions.source.id) !== itemConnection.target.positionX) {
+                        PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+                    }
 
                 }
 
@@ -694,7 +696,7 @@ angular.module('dmpApp')
         /**
          * Returns a iap varName by giving a iap index position
          * @param index
-         * @returns {Mixed|string|undefined|*}
+         * @returns {string}
          */
         function getIapVariableNameByIndex(index) {
 
@@ -702,6 +704,19 @@ angular.module('dmpApp')
 
             return loDash.findKey($scope.activeMapping.transformation.parameter_mappings, function(parameter_mapping) {
                 return input_attribute_path.attribute_path.attributes[0].uri === parameter_mapping;
+            });
+
+        }
+
+        /**
+         * Returns the Index from iap VarName
+         * @param varName
+         * @returns {number}
+         */
+        function getIapIndexById(id) {
+
+            return loDash.findIndex($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
+                return input_attribute_path.attribute_path.id === id;
             });
 
         }
