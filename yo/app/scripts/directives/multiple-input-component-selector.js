@@ -11,7 +11,7 @@ angular.module('dmpApp')
         $scope.endpointListOptions = {
             data: 'componentSet',
             columnDefs: [
-                {field: 'name', displayName: 'Name'}
+                {field: 'display', displayName: 'Name'}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedSet,

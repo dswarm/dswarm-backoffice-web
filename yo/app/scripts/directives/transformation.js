@@ -1029,7 +1029,7 @@ angular.module('dmpApp')
          */
         $scope.formatAttributePath = function(ap) {
             if (angular.isObject(ap) && angular.isDefined(ap.attributes)) {
-                return loDash.map(ap.attributes, 'name').join(' › ');
+                return buildAttributeName(ap.attributes, 'name', ' › ');
             }
             return '';
         };
@@ -1318,7 +1318,8 @@ angular.module('dmpApp')
 
                             if(thisOpenEnded) {
                                 openEndedComponents.push({
-                                    name : buildAttributeName($scope.activeMapping.input_attribute_paths[row].attribute_path.attributes, 'name', ' › '),
+                                    display : $scope.formatAttributePath($scope.activeMapping.input_attribute_paths[row].attribute_path),
+                                    name : buildVariableName($scope.activeMapping.input_attribute_paths[row].attribute_path.attributes),
                                     type : 'attribute_path_instance',
                                     data : $scope.activeMapping.input_attribute_paths[row]
                                 });
@@ -1335,6 +1336,7 @@ angular.module('dmpApp')
 
                             if(currentRowIndexInGridItemConnection === -1) {
                                 openEndedComponents.push({
+                                    display : currentRowItems.function.function_description.name,
                                     name : currentRowItems.function.function_description.name,
                                     type : 'griditem',
                                     data : currentRowItems
