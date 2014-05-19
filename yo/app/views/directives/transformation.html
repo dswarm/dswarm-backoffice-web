@@ -68,7 +68,7 @@
                                js-plumb-connector-ident-type="component"
                                js-plumb-connector-ident-item="item.id"></i>
 
-                            <span ng-if="isMultiple(item)">
+                            <span ng-if="isMultiple(item) && hasOpenEndedComponents()">
                                 <i class="glyphicon glyphicon-plus" ng-click="onMultipleComponentInputAdd(item)"></i>
                             </span>
                         </li>

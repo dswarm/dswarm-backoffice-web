@@ -157,9 +157,6 @@ angular.module('dmpApp')
                 return mapping;
             }, null);
 
-            if (last) {
-                activate(last.id, true);
-            }
         }
 
         init();
@@ -189,7 +186,7 @@ angular.module('dmpApp')
 
         function showTransformationPlumbsInit() {
 
-            if(showTransformationPlumbsTimeout) {
+            if(showTransformationPlumbsTimeout && showTransformationPlumbsTimeout.then) {
                 $timeout.cancel(showTransformationPlumbsTimeout);
             }
 
@@ -1352,6 +1349,15 @@ angular.module('dmpApp')
             }
 
             return openEndedComponents;
+        }
+
+
+        /**
+         * Are there any open ended components?
+         * @returns {boolean}
+         */
+        $scope.hasOpenEndedComponents = function() {
+            return (getOpenEndedComponents(-1).length > 1);
         }
 
         /**
