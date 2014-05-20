@@ -143,7 +143,9 @@ angular.module('dmpApp').
                 return item;
             } else {
                 item.hasChildren = true;
-                item.children = children;
+                item.children = loDash.sortBy(children, function(child) {
+                    return +child.hasChildren;
+                });
             }
 
             return item;
