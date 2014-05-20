@@ -908,7 +908,7 @@ angular.module('dmpApp')
 
                 componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
 
-                if(componentIndex > 0) {
+                if(componentIndex >= 0) {
 
                     if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
 
