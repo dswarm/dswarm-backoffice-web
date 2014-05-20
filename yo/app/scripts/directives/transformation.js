@@ -530,6 +530,11 @@ angular.module('dmpApp')
                         return pool[id];
                     });
 
+                    // Multiple inputs in first col
+                    if(nextLevel.length === 0 && loDash.indexOf(walkChainedComponentsRegister, components[0].id) === -1) {
+                        connectComponents = [pool[components[0].id]];
+                    }
+
                     angular.forEach(connectComponents, function(connectComponent) {
                         if(connectComponent.parameter_mappings.inputString && connectComponent.parameter_mappings.inputString.length > 0) {
 
@@ -903,7 +908,7 @@ angular.module('dmpApp')
 
                 componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
 
-                if(componentIndex > 0) {
+                if(componentIndex >= 0) {
 
                     if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
 
