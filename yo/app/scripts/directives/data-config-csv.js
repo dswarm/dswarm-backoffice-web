@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', function($scope, $routeParams, $location, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub) {
+    .controller('DataConfigCsvCtrl', function($scope, $routeParams, $location, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub) {
 
         function returnToData() {
+            $scope.saving = false;
+            ngProgress.complete();
             $location.path('/data/');
         }
 
@@ -49,6 +51,8 @@ angular.module('dmpApp')
         };
 
         $scope.config.parameters = $scope.presets.parameters;
+
+        $scope.saving = false;
 
         function getConfig() {
             var config = angular.copy($scope.config);
@@ -113,19 +117,27 @@ angular.module('dmpApp')
         }
 
         $scope.onSaveClick = function() {
+            if (!$scope.saving) {
+                $scope.saving = true;
+                ngProgress.start();
 
-            if (mode === 'create' && resource !== null) {
-                var model = {
-                    'data_resource': resource,
-                    'configuration': getConfig()
-                };
+                if (mode === 'create' && resource !== null) {
+                    var model = {
+                        'data_resource': resource,
+                        'configuration': getConfig()
+                    };
 
-                DataModelResource.save({}, model, returnToData);
-                dataModel.configuration = getConfig();
-                DataModelResource.save({id: dataModel.id}, dataModel, returnToData);
-            } else if (mode === 'edit' && dataModel !== null) {
-                var configuration = getConfig();
-                ConfigurationResource.update({id: configuration.id}, configuration, returnToData);
+                    DataModelResource.save({}, model, returnToData, function() {
+                        $scope.saving = false;
+                        ngProgress.complete();
+                    });
+                } else if (mode === 'edit' && dataModel !== null) {
+                    var configuration = getConfig();
+                    ConfigurationResource.update({id: configuration.id}, configuration, returnToData, function() {
+                        $scope.saving = false;
+                        ngProgress.complete();
+                    });
+                }
             }
         };
 
