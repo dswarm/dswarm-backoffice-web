@@ -85,6 +85,10 @@ angular.module('dmpApp')
             return (data.$show ? true : false);
         };
 
+        $scope.isTempoDisabled = function() {
+            return $scope.layer >= 3;
+        };
+
         $scope.layerClass = function() {
             return 'layer' + $scope.layer;
         };
