@@ -103,11 +103,13 @@ angular.module('dmpApp')
                     return;
                 }
 
-                angular.forEach(mapping.transformation.function.components, function(component) {
-                    if(component.name === varName) {
-                        name = component.function.name;
-                    }
-                });
+                if(mapping.transformation) {
+                    angular.forEach(mapping.transformation.function.components, function(component) {
+                        if(component.name === varName) {
+                            name = component.function.name;
+                        }
+                    });
+                }
 
 
             });
