@@ -530,6 +530,11 @@ angular.module('dmpApp')
                         return pool[id];
                     });
 
+                    // Multiple inputs in first col
+                    if(nextLevel.length === 0 && loDash.indexOf(walkChainedComponentsRegister, components[0].id) === -1) {
+                        connectComponents = [pool[components[0].id]];
+                    }
+
                     angular.forEach(connectComponents, function(connectComponent) {
                         if(connectComponent.parameter_mappings.inputString && connectComponent.parameter_mappings.inputString.length > 0) {
 
