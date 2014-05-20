@@ -3,5 +3,5 @@
 angular.module('dmpApp')
     .controller('DataObjectCtrl', function($scope, $routeParams, FileResource) {
 
-        $scope.file = FileResource.get({id: $routeParams.id});
+        $scope.file = FileResource.get({id: $routeParams.resourceId});
     });
