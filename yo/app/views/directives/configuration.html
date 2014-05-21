@@ -9,7 +9,7 @@
 
   <form role="form" ng-submit="onSaveClick()" name="componentForm">
 
-    <div class="form-group" ng-repeat="(key,parameter) in component.function_description.parameters">
+    <div class="form-group" ng-repeat="parameter in component.parameters">
       <ng-form name="compForm" ng-switch on="parameter.type">
 
         <div ng-switch-when="repeat">
@@ -35,7 +35,7 @@
         <div ng-switch-when="select"
              ng-class="formClasses(compForm.input, parameter.optional)">
           <label class="control-label">
-            {{ key }}<span
+            {{ parameter.key }}<span
               ng-show="compForm.input.$error.required"
               class="pull-right">required <i
               class="glyphicon glyphicon-exclamation-sign"></i></span>
@@ -50,7 +50,7 @@
         </div>
 
         <div ng-switch-when="radio">
-          <span>{{ key }}<span
+          <span>{{ parameter.key }}<span
               ng-show="compForm.input.$error.required"
               class="pull-right">required <i
               class="glyphicon glyphicon-exclamation-sign"></i></span></span>
@@ -68,7 +68,7 @@
         <div ng-switch-when="checkbox" class="checkbox"
              ng-class="formClasses(compForm.input, parameter.optional)">
           <label class="control-label">
-            {{ key }}<span
+            {{ parameter.key }}<span
               ng-show="compForm.input.$error.required"
               class="pull-right">required <i
               class="glyphicon glyphicon-exclamation-sign"></i></span>
@@ -79,7 +79,7 @@
 
         <div ng-switch-when="sortable" class="configurationSortable">
             <label class="control-label">
-                {{ key }}
+                {{ parameter.key }}
             </label>
             <ul ui-sortable ng-model="parameter.data" class="list">
                 <li ng-repeat="item in parameter.data" class="item">
@@ -90,7 +90,7 @@
 
         <div ng-switch-default ng-class="formClasses(compForm.input, parameter.optional)">
           <label class="control-label">
-            {{ key }}<span
+            {{ parameter.key }}<span
               ng-show="compForm.input.$error.required"
               class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
             <input type="{{parameter.type}}"
