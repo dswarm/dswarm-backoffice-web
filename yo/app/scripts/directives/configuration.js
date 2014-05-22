@@ -49,14 +49,24 @@ angular.module('dmpApp')
             }
 
             var component = args['function'];
-            var parameterOrder = component.parameters;
+            var parameterOrder = angular.copy(component.parameters);
             var parameterPool = component.function_description.parameters;
 
-            component.parameters = loDash.map(parameterOrder, function(parameterKey) {
+            var orderedParameters = loDash.map(parameterOrder, function(parameterKey) {
                 var param = parameterPool[parameterKey];
+                delete parameterPool[parameterKey];
+
                 param.key = parameterKey;
                 return param;
             });
+
+            var additionalParameters = loDash.map(parameterPool, function(param, parameterKey) {
+                param.key = parameterKey;
+                return param;
+            });
+
+            orderedParameters.push.apply(orderedParameters, additionalParameters);
+            component.parameters = orderedParameters;
 
             $scope.component = component;
         });
