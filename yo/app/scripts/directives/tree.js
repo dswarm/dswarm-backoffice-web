@@ -94,7 +94,7 @@ angular.module('dmpApp')
         };
 
         $scope.handleClick = function(evt, data) {
-            if ($scope.isLeaf(data)) {
+            if ($scope.isLeaf(data) && !$scope.isTempoDisabled()) {
                 $scope.$emit('leafClicked', {
                     event: evt,
                     data: data
@@ -116,7 +116,7 @@ angular.module('dmpApp')
         };
 
         $scope.expandCollapse = function(data) {
-            data.$show = !$scope.isLeaf(data) && !data.$show;
+            data.$show = $scope.isLeaf(data) || !data.$show;
 
             $timeout(function() {
                 PubSub.broadcast('schemaCanvasUpdated', {});
