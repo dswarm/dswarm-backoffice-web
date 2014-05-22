@@ -55,7 +55,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
         dataConfigPreviewCtrl();
 
-        scope.dataConfigUpdated({"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}});
+        scope.dataConfigUpdated({"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}}, 1);
 
         $rootScope.$digest();
         $httpBackend.flush();
@@ -68,7 +68,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
         dataConfigPreviewCtrl();
 
-        scope.nextUpdate = {"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}};
+        scope.nextUpdate = [{"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}}, 1];
 
         scope.checkNextConfigUpdate();
 

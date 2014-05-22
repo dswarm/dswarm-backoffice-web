@@ -60,8 +60,8 @@ describe('schemaParser tests', function (){
         var actual = schemaParser.fromDomainSchema(mabSchema);
 
         expect(actual.children.length).toEqual(5);
-        expect(actual.children[3]._$path_id).toEqual(9);
-        expect(actual.children[0].children.length).toEqual(5);
+        expect(_.pluck(actual.children, '_$path_id')).toEqual([8, 11, 9, 10, 1]);
+        expect(_.last(actual.children).children.length).toEqual(5);
     });
 
 

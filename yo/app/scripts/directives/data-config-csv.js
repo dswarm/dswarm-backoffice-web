@@ -1,13 +1,17 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', function($scope, $routeParams, $location, loDash, DataModelResource, ResourceResource, PubSub) {
+    .controller('DataConfigCsvCtrl', function($scope, $routeParams, $location, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub) {
 
         function returnToData() {
+            $scope.saving = false;
+            ngProgress.complete();
             $location.path('/data/');
         }
 
         var resource = null;
+        var dataModel = null;
+        var mode = $routeParams.dataModelId ? 'edit' : 'create';
 
         var allFields = 'config.parameters',
             allTickableFields = {
@@ -46,6 +50,10 @@ angular.module('dmpApp')
 
         };
 
+        $scope.config.parameters = $scope.presets.parameters;
+
+        $scope.saving = false;
+
         function getConfig() {
             var config = angular.copy($scope.config);
             angular.forEach(allTickableFields, function(trigger, field) {
@@ -56,50 +64,81 @@ angular.module('dmpApp')
             return config;
         }
 
-        $scope.resourceId = 1;
-        if ($routeParams.resourceId >= 0) {
-            $scope.resourceId = $routeParams.resourceId;
+        function extractFromConfig(configuration, reuseIdentifiers) {
+
+            if (reuseIdentifiers) {
+                $scope.config.name = configuration.name;
+                $scope.config.description = configuration.description;
+                $scope.config.id = configuration.id;
+            }
+
+            angular.forEach(allTickableFields, function(ticker, param) {
+                var varName = param.substring(param.lastIndexOf('.') + 1);
+                if (angular.isDefined(configuration.parameters[varName]) && +configuration.parameters[varName] > 0) {
+                    $scope[ticker] = true;
+                }
+            });
+
+            $scope.config.parameters = configuration.parameters;
         }
 
-        $scope.config.parameters = $scope.presets.parameters;
+        function extractFromResource(dataResource) {
+            if (dataResource.configurations) {
 
-        ResourceResource.get({ id: $scope.resourceId }, function(result) {
-
-            resource = result;
-
-            if (result.configurations) {
-
-                var latestConfig = loDash.max(result.configurations, 'id');
+                var latestConfig = loDash.max(dataResource.configurations, 'id');
 
                 if (angular.isObject(latestConfig)) {
 
-                    $scope.config.name = latestConfig.name;
-                    $scope.config.description = latestConfig.description;
-                    $scope.config.id = latestConfig.id;
-
-                    angular.forEach(allTickableFields, function(ticker, param) {
-                        var varName = param.substring(param.lastIndexOf('.') + 1);
-                        if (angular.isDefined(latestConfig.parameters[varName]) && +latestConfig.parameters[varName] > 0) {
-                            $scope[ticker] = true;
-                        }
-                    });
-
-                    $scope.config.parameters = latestConfig.parameters;
+                    extractFromConfig(latestConfig);
                 }
             }
+        }
 
-            sendDataConfigUpdatedBroadcast();
-        });
+        if (mode === 'create' && $routeParams.resourceId) {
+            var resourceId = Math.max(1, +$routeParams.resourceId);
+            $scope.resourceId = resourceId;
+
+            ResourceResource.get({ id: resourceId }, function(result) {
+                resource = result;
+                extractFromResource(resource);
+                sendDataConfigUpdatedBroadcast();
+            });
+        } else if (mode === 'edit' && $routeParams.dataModelId) {
+            var dataModelId = Math.max(1, +$routeParams.dataModelId);
+
+            DataModelResource.get({id: dataModelId }, function(result) {
+                dataModel = result;
+                resource = result.data_resource;
+                $scope.resourceId = resource.id;
+
+                extractFromConfig(result.configuration, true);
+                sendDataConfigUpdatedBroadcast();
+            });
+        }
 
         $scope.onSaveClick = function() {
+            if (!$scope.saving) {
+                $scope.saving = true;
+                ngProgress.start();
 
-            var model = {
-                'data_resource': resource,
-                'configuration': getConfig()
-            };
+                if (mode === 'create' && resource !== null) {
+                    var model = {
+                        'data_resource': resource,
+                        'configuration': getConfig()
+                    };
 
-            DataModelResource.save({}, model, returnToData);
-
+                    DataModelResource.save({}, model, returnToData, function() {
+                        $scope.saving = false;
+                        ngProgress.complete();
+                    });
+                } else if (mode === 'edit' && dataModel !== null) {
+                    var configuration = getConfig();
+                    ConfigurationResource.update({id: configuration.id}, configuration, returnToData, function() {
+                        $scope.saving = false;
+                        ngProgress.complete();
+                    });
+                }
+            }
         };
 
         $scope.onCancelClick = returnToData;
@@ -122,11 +161,14 @@ angular.module('dmpApp')
         }
 
         function sendDataConfigUpdatedBroadcast() {
-            var config = getConfig();
+            if (resource !== null) {
+                var config = getConfig();
 
-            PubSub.broadcast('dataConfigUpdated', {
-                config: config
-            });
+                PubSub.broadcast('dataConfigUpdated', {
+                    config: config,
+                    resourceId: resource.id
+                });
+            }
         }
 
         // do not preview more often that, say, every 200 msecs

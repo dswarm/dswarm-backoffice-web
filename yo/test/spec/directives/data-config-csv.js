@@ -141,9 +141,6 @@ describe('Controller: DataConfigCsvCtrl', function () {
         var elScope = scope.$$childHead;
         expect(elScope.resourceId).toBe(42);
         expect(elScope.config).toEqual({
-            id: 1337,
-            name: 'foo',
-            description: 'Lorem ipsum dolor sit amet.',
             parameters: {
                 ignore_lines: 0,
                 discard_rows: 2,
@@ -204,11 +201,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
                     quote_character: "\\\"",
                     column_names: "columnN",
                     storage_type: "csv"
-                },
-                "name": "foo",
-                "description": "Lorem ipsum dolor sit amet.",
-                "id": 1337
-            }
+                }
+            },
+            resourceId: 42
         });
     });
 
@@ -237,11 +232,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
                     quote_character: "\\\"",
                     column_names: "columnN",
                     storage_type: "csv"
-                },
-                "name": "foo",
-                "description": "Lorem ipsum dolor sit amet.",
-                "id": 1337
-            }
+                }
+            },
+            resourceId: 42
         });
     });
 
@@ -269,10 +262,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
             name: $jsonResponseGet.name,
             description: $jsonResponseGet.description,
             configuration: {
-                name: config.name,
-                description: config.description,
-                parameters: config.parameters,
-                id: config.id
+                parameters: config.parameters
             }
         });
 

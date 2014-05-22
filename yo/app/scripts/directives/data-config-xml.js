@@ -16,6 +16,8 @@ angular.module('dmpApp')
             }
         };
 
+        $scope.saving = false;
+
         function getConfig() {
             var config = angular.copy($scope.config);
 
@@ -47,21 +49,26 @@ angular.module('dmpApp')
         }));
 
         $scope.onSaveClick = function() {
-            ngProgress.start();
+            if (!$scope.saving) {
+                $scope.saving = true;
+                ngProgress.start();
 
-            var model = {
-                'data_resource': resource,
-                'name': resource.name,
-                'description': resource.description,
-                'configuration': getConfig()
-            };
+                var model = {
+                    'data_resource': resource,
+                    'name': resource.name,
+                    'description': resource.description,
+                    'configuration': getConfig()
+                };
 
-            DataModelResource.save({}, model, function() {
-                ngProgress.complete();
-                $location.path('/data/');
-            }, function() {
-                ngProgress.complete();
-            });
+                DataModelResource.save({}, model, function() {
+                    ngProgress.complete();
+                    $scope.saving = false;
+                    $location.path('/data/');
+                }, function() {
+                    $scope.saving = false;
+                    ngProgress.complete();
+                });
+            }
         };
 
         $scope.onCancelClick = function() {

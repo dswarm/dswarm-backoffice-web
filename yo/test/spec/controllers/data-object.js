@@ -20,8 +20,8 @@ describe('Controller: DataObjectCtrl', function () {
         $httpBackend = $injector.get('$httpBackend');
         $rootScope = $injector.get('$rootScope');
 
-        var $resource = $injector.get('$resource')
-            , fileResource = $resource('/dmp/resources/:id');
+        var $resource = $injector.get('$resource'),
+            fileResource = $resource('/dmp/resources/:id');
 
         scope = $rootScope.$new();
 
@@ -33,7 +33,7 @@ describe('Controller: DataObjectCtrl', function () {
             return $controller('DataObjectCtrl', {
                 '$scope': scope,
                 'FileResource': fileResource,
-                '$routeParams': {id: 1}
+                '$routeParams': {resourceId: 1}
             });
         };
     }));
