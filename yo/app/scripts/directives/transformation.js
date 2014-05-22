@@ -499,6 +499,42 @@ angular.module('dmpApp')
             var walkChainedComponentsRegister = [],
                 gridItemConnectionsRegister = [];
 
+            function addToGridItemConnectionsRegister(connectionData) {
+
+                //gridItemConnectionsRegister.push(connectionData);
+
+                var targetPosition = angular.fromJson(connectionData.target[0].description),
+                    sourcePosition = {
+                    x : -1,
+                    y : -1
+                };
+
+                if(connectionData.type === 'attribute_path_instance') {
+                    sourcePosition.x = getIapIndexByVariableName(connectionData.source);
+
+                    //console.log("connectionData.type", connectionData.type);
+                } else {
+                    //console.log("getComponentByName", getComponentByName(connectionData.source), connectionData.source);
+                }
+
+                console.log("positions", targetPosition.x, sourcePosition.x, typeof targetPosition.x, typeof sourcePosition.x);
+
+
+                if(targetPosition.x !== sourcePosition.x) {
+                    /*console.log("getOpenEndedComponents", getOpenEndedComponents(targetPosition.x));
+
+                    console.log("griditems", $scope.gridItems);
+
+                    loDash.find($scope.gridItems, function(gridItem) {
+
+                    });*/
+
+                    gridItemConnectionsRegister.push(connectionData);
+                }
+
+                console.log("connectionData", connectionData, targetPosition.x, getIapIndexByVariableName(connectionData.source));
+
+            }
 
             function walkChainedComponents(result, components, pool) {
                 var nextLevel = loDash(components).pluck('output_components').flatten().pluck('id').value(),
@@ -512,11 +548,10 @@ angular.module('dmpApp')
                     });
 
                     var connectComponentSource = loDash.filter(result, function(cp) {
-
-                        return loDash.any(connectComponents[0].input_components, {id: cp.id});
+                        return !loDash.isUndefined(loDash.find(connectComponents[0].input_components, {id: cp.id}));
                     });
 
-                    gridItemConnectionsRegister.push({
+                    addToGridItemConnectionsRegister({
                         target : connectComponents,
                         source : connectComponentSource,
                         type : 'griditem'
@@ -544,10 +579,10 @@ angular.module('dmpApp')
 
                                 if(input_variable.indexOf('component') === -1) {
 
-                                    gridItemConnectionsRegister.push({
-                                        target : connectComponents,
-                                        source : input_variable,
-                                        type : 'attribute_path_instance'
+                                    addToGridItemConnectionsRegister({
+                                        target: connectComponents,
+                                        source: input_variable,
+                                        type: 'attribute_path_instance'
                                     });
 
                                 }
@@ -691,6 +726,23 @@ angular.module('dmpApp')
             }
 
             return loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
+                return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
+            });
+        }
+
+        /**
+         * Returns the IAP index by giving the varname
+         * @param varName
+         * @returns int
+         */
+
+        function getIapIndexByVariableName(varName) {
+
+            if(!$scope.activeMapping.transformation.parameter_mappings[varName]) {
+                return -1;
+            }
+
+            return loDash.findIndex($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
                 return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
             });
         }
@@ -946,6 +998,15 @@ angular.module('dmpApp')
          */
         function getComponent(id) {
             return loDash.find($scope.activeMapping.transformation.function.components, { id: id});
+        }
+
+        /**
+         * Extracts a component by name
+         * @param name - Component name
+         * @returns {*}
+         */
+        function getComponentByName(name) {
+            return loDash.find($scope.activeMapping.transformation.function.components, { name: name});
         }
 
         /**
