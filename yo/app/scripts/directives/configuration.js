@@ -81,7 +81,8 @@ angular.module('dmpApp')
                 parameter_mappings: {}
             };
 
-            angular.forEach($scope.component.function_description.parameters, function(paramDef, param) {
+            angular.forEach($scope.component.parameters, function(paramDef) {
+                var param = paramDef.key;
                 if (angular.isDefined(paramDef.data)) {
                     params.parameter_mappings[param] = paramDef.data;
                 }
