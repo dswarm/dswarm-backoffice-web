@@ -1211,9 +1211,12 @@ angular.module('dmpApp')
         //** End of sending transformation to server
 
         //** Start of configuring components
-        $scope.onFunctionClick = function(component) {
+        $scope.onFunctionClick = function(component, onlyIfAlreadyOpened) {
             var newComponent = angular.copy(getComponent(component.id));
-            PubSub.broadcast('handleEditConfig', newComponent);
+            PubSub.broadcast('handleEditConfig', {
+                component: newComponent,
+                onlyIfAlreadyOpened: !!onlyIfAlreadyOpened
+            });
         };
 
         PubSub.subscribe($scope, 'handleConfigEdited', function(component) {
@@ -1427,6 +1430,8 @@ angular.module('dmpApp')
                 hideTransformationPlumbs();
 
                 addGridItemConnections(component[0], currentItem);
+
+                $scope.onFunctionClick(currentItem, true);
 
                 showTransformationPlumbsInit();
 
