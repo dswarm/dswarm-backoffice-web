@@ -156,10 +156,6 @@ angular.module('dmpApp')
 
                 return mapping;
             }, null);
-
-            if (last) {
-                activate(last.id, true);
-            }
         }
 
         init();
@@ -226,6 +222,8 @@ angular.module('dmpApp')
 
                         var newConnectOptions = angular.copy(connectOptions);
 
+                        console.log('jsp-connector-connect iap1', newConnectOptions);
+
                         PubSub.broadcast('jsp-connector-connect', newConnectOptions);
 
                         connectOptions.source = {
@@ -240,9 +238,14 @@ angular.module('dmpApp')
                 j++;
 
             });
+
+            console.log("$scope.gridItemConnections", $scope.gridItemConnections);
+
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
                 if(itemConnection.source.data) {
+
+                    console.log("itemConnection.source.type", itemConnection.source.type);
 
                     if(itemConnection.source.type === 'attribute_path_instance') {
                         connectOptions.source = {
@@ -263,7 +266,14 @@ angular.module('dmpApp')
 
                     var newConnectOptions = angular.copy(connectOptions);
 
-                    if(getIapIndexById(newConnectOptions.source.id) !== itemConnection.target.positionX) {
+                    console.log("griditemconnections", newConnectOptions.source.id, itemConnection);
+
+                    console.log("newConnectOptions", newConnectOptions);
+
+                    if(!connectionInOneRow(newConnectOptions)) {
+
+                        console.log('jsp-connector-connect griditemconnections', newConnectOptions);
+
                         PubSub.broadcast('jsp-connector-connect', newConnectOptions);
                     }
 
@@ -287,14 +297,13 @@ angular.module('dmpApp')
 
                     } else {
 
-                        var firstRow = loDash.filter($scope.gridItems, { positionX: 0 });
-                        firstRow = loDash.sortBy(firstRow, 'positionY');
-
-                        var firstRowLastItem = loDash.last(firstRow);
+                        var lastItem = loDash.filter($scope.activeMapping.transformation.function.components, function(component) {
+                            return component.output_components.length === 0;
+                        });
 
                         connectOptions.source =  {
                             type : 'component',
-                            id : firstRowLastItem.id
+                            id : lastItem[0].id
                         };
 
                     }
@@ -405,8 +414,6 @@ angular.module('dmpApp')
          */
         function addToGrid(positionX, positionY, itemData, itemName, id) {
 
-            console.log('addToGrid [' + itemName + '] position X = ', positionX, 'position Y = ', positionY);
-
             $scope.gridItems.push({
                 positionX: positionX,
                 positionY: positionY,
@@ -487,6 +494,95 @@ angular.module('dmpApp')
         }
 
         /**
+         * Checks if defined connection is in one row
+         * @param connectionData
+         * @returns {boolean}
+         */
+        function connectionInOneRow(connectionData) {
+
+            var targetPosition,
+                sourcePosition = { x: '', y: -1 };
+
+            if(loDash.isUndefined(connectionData.target[0])) {
+                targetPosition = angular.fromJson(getComponent(connectionData.target.id).description);
+            } else {
+                targetPosition = angular.fromJson(connectionData.target[0].description)
+            }
+
+            console.log("connectionData.type", connectionData.type);
+
+            if (connectionData.type === 'attribute_path_instance' || (connectionData.source.type && connectionData.source.type === 'attribute_path_instance')) {
+                sourcePosition.x = connectionData.source;
+            } else {
+
+                var sourceComponent;
+
+                if (typeof connectionData.source === 'string') {
+                    sourceComponent = getComponentByName(connectionData.source);
+                } else {
+
+                    if(loDash.isUndefined(connectionData.source.description)) {
+
+                        console.log("connectionData.source", connectionData.source);
+
+                        if (loDash.isUndefined(connectionData.source.data)) {
+
+                            if (loDash.isUndefined(connectionData.source[0])) {
+                                sourceComponent = getComponent(connectionData.source.id);
+                            } else {
+                                sourceComponent = getComponent(connectionData.source[0].id);
+                            }
+
+                        } else {
+
+                            console.log("connectionData.source.data.id", connectionData.source.data.id);
+
+                            sourceComponent = getComponent(connectionData.source.data.id);
+                        }
+
+                    } else {
+
+                        if (loDash.isUndefined(connectionData.source[0])) {
+
+                            console.log("connectionData.source iap", connectionData.source);
+
+                            sourceComponent = getComponent(connectionData.source.id);
+                        } else {
+                            sourceComponent = connectionData.source[0];
+                        }
+
+                    }
+                }
+
+                console.log("sourceComponent", sourceComponent, connectionData.source);
+
+                sourcePosition = angular.fromJson(sourceComponent.description);
+            }
+
+            return (targetPosition.x === sourcePosition.x);
+
+        }
+
+        /**
+         *
+         */
+        function gridItemConnectionsCheck() {
+
+            $scope.gridItemConnections = Util.collect($scope.gridItemConnections, function(gridItemConnection) {
+
+                console.log("gridItemConnection", gridItemConnection);
+
+                if((!connectionInOneRow(gridItemConnection)) ) {
+                    return gridItemConnection;
+                }
+
+            });
+
+            console.log("after cleanup $scope.gridItemConnections", $scope.gridItemConnections);
+
+        }
+
+        /**
          * Builds visual grid from internal data structure
          */
         function createGridFromInternalComponents() {
@@ -516,40 +612,16 @@ angular.module('dmpApp')
             var walkChainedComponentsRegister = [],
                 gridItemConnectionsRegister = [];
 
+
+            /**
+             * Does checks to connectionData and adds to register
+             * @param connectionData
+             */
             function addToGridItemConnectionsRegister(connectionData) {
 
-                //gridItemConnectionsRegister.push(connectionData);
-
-                var targetPosition = angular.fromJson(connectionData.target[0].description),
-                    sourcePosition = {
-                    x : -1,
-                    y : -1
-                };
-
-                if(connectionData.type === 'attribute_path_instance') {
-                    sourcePosition.x = getIapIndexByVariableName(connectionData.source);
-
-                    //console.log("connectionData.type", connectionData.type);
-                } else {
-                    //console.log("getComponentByName", getComponentByName(connectionData.source), connectionData.source);
-                }
-
-                console.log("positions", targetPosition.x, sourcePosition.x, typeof targetPosition.x, typeof sourcePosition.x);
-
-
-                if(targetPosition.x !== sourcePosition.x) {
-                    /*console.log("getOpenEndedComponents", getOpenEndedComponents(targetPosition.x));
-
-                    console.log("griditems", $scope.gridItems);
-
-                    loDash.find($scope.gridItems, function(gridItem) {
-
-                    });*/
-
+                if(!connectionInOneRow(connectionData)) {
                     gridItemConnectionsRegister.push(connectionData);
                 }
-
-                console.log("connectionData", connectionData, targetPosition.x, getIapIndexByVariableName(connectionData.source));
 
             }
 
@@ -594,15 +666,17 @@ angular.module('dmpApp')
 
                             angular.forEach(inputString, function(input_variable) {
 
+                                var type = 'griditem';
+
                                 if(input_variable.indexOf('component') === -1) {
-
-                                    addToGridItemConnectionsRegister({
-                                        target: connectComponents,
-                                        source: input_variable,
-                                        type: 'attribute_path_instance'
-                                    });
-
+                                    type = 'attribute_path_instance';
                                 }
+
+                                addToGridItemConnectionsRegister({
+                                    target: connectComponents,
+                                    source: input_variable,
+                                    type: type
+                                });
 
                             });
 
@@ -710,7 +784,13 @@ angular.module('dmpApp')
 
                         if(gridItemConnectionsRegisterItem.type === 'griditem') {
 
-                            var sourceComponent = getGridItemFromComponentId(gridItemConnectionsRegisterItem.source[0].id);
+                            var component = gridItemConnectionsRegisterItem.source[0];
+
+                            if(typeof gridItemConnectionsRegisterItem.source === 'string') {
+                                component = getComponentByName(gridItemConnectionsRegisterItem.source);
+                            }
+
+                            var sourceComponent = getGridItemFromComponentId(component.id);
 
                             connectionSource = {
                                 name: sourceComponent.function.name,
@@ -833,9 +913,7 @@ angular.module('dmpApp')
                 storedComponent = createNewComponent(component);
             }
 
-            console.log('resolveComponent [' + component.name + ':' + component.function.name + '] position X = ', component.positionX, 'postion Y = ', component.positionY);
-
-            storedComponent.description = angular.toJson({
+             storedComponent.description = angular.toJson({
                 x: component.positionX,
                 y: component.positionY
             });
@@ -994,6 +1072,8 @@ angular.module('dmpApp')
             var transformationOutputVariable = getOutputVariable($scope.activeMapping);
 
             transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
+
+            gridItemConnectionsCheck();
 
             angular.forEach($scope.gridItemConnections, function(itemConnection) {
 
@@ -1460,6 +1540,7 @@ angular.module('dmpApp')
                             loDash.last(loDash.sortBy(currentRowItems, 'positionY'));
 
                             var currentRowIndexInGridItemConnection = loDash.findIndex($scope.gridItemConnections, function(gridItemConnection) {
+                                if(loDash.isUndefined(gridItemConnection)) { return false; }
                                 if(loDash.isNull(gridItemConnection.source.data)) { return false; }
                                 return gridItemConnection.source.data.id === currentRowItems.id;
                             });
