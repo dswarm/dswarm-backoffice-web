@@ -130,7 +130,7 @@ angular.module('dmpApp')
             });
 
             // restore mappings if a previous project was loaded from a draft
-            loDash.forEach($scope.project.mappings, function(mapping) {
+            var last = loDash.reduce($scope.project.mappings, function(previous, mapping) {
 
                 loDash.forEach(mapping.input_attribute_paths, function(iap) {
                     if (iap.filter) {
@@ -153,7 +153,13 @@ angular.module('dmpApp')
 
                 $scope.tabs.push({ title: mapping.name, active: false, id: mapping.id });
                 availableIds.push(mapping.id);
-            });
+
+                return mapping;
+            }, null);
+
+            if (last) {
+                activate(last.id, true);
+            }
         }
 
         init();
@@ -393,10 +399,13 @@ angular.module('dmpApp')
          * Adds an element to a specific position inside the grid
          * @param positionX - X position
          * @param positionY - Y position
-         * @param itemData - The original data of the dropped fucntion
+         * @param itemData - The original data of the dropped function
+         * @param itemName
          * @param id - Original id used to identify
          */
         function addToGrid(positionX, positionY, itemData, itemName, id) {
+
+            console.log('addToGrid [' + itemName + '] position X = ', positionX, 'position Y = ', positionY);
 
             $scope.gridItems.push({
                 positionX: positionX,
@@ -434,8 +443,6 @@ angular.module('dmpApp')
 
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
 
-            isDraggingToGrid = false;
-
             removeDropPlaceholder();
             isDraggingToGrid = false;
 
@@ -467,6 +474,16 @@ angular.module('dmpApp')
                     $scope.gridsterOpts.maxGridRows =
                         $scope.gridsterOpts.minGridRows =
                             $scope.gridsterOpts.gridHeight = height;
+        }
+
+        /**
+         * returns a "hash" value for a given inputAttributePath, that can be used
+         *  to reliably identify the value identity of an inputAttributePath
+         * @param iap
+         * @returns {*}
+         */
+        function getRowIdentifier(iap) {
+            return buildVariableName(iap.attribute_path.attributes);
         }
 
         /**
@@ -621,6 +638,10 @@ angular.module('dmpApp')
                     return [component.id, component];
                 }));
 
+                var inputAPRows = loDash.zipObject(loDash.map($scope.activeMapping.input_attribute_paths, function(iap, idx) {
+                    return [getRowIdentifier(iap), idx];
+                }));
+
                 var componentRows = loDash(transformation.function.components)
                     .filter({input_components: []})
                     .map(function(component, idx) {
@@ -652,21 +673,32 @@ angular.module('dmpApp')
                     rowComponents.push(components);
                 });
 
-                loDash.forEach(rowComponents, function(components, posX) {
-                    loDash.forEach(components, function(component, posY) {
+                var addToGridCalls = loDash.flatten(loDash.map(rowComponents, function(components, posX) {
+                    return loDash.map(components, function(component, posY) {
                         if (component !== null) {
                             var realPosX = posX,
                                 realPosY = posY;
                             if (component.description) {
                                 try {
                                     var pos = angular.fromJson(component.description);
-                                    realPosX = pos.x;
+
+                                    realPosX = loDash.has(inputAPRows, pos.x) ? inputAPRows[pos.x] : posX;
                                     realPosY = pos.y;
+
+                                    console.log('walkChainedComponents [' + component.name + ':' + component.function.name + '] position X = ', realPosX, 'postion Y = ', realPosY);
                                 } catch (ignore) {}
                             }
-                            addToGrid(realPosX, realPosY, component.function, component.name, component.id);
+                            return {
+                                x: realPosX,
+                                y: realPosY,
+                                args: [realPosX, realPosY, component.function, component.name, component.id]
+                            };
                         }
                     });
+                }), true);
+                var sortedCalls = loDash.sortBy(addToGridCalls, ['x', 'y']);
+                loDash.forEach(sortedCalls, function(call) {
+                    addToGrid.apply(null, call.args);
                 });
 
                 if(gridItemConnectionsRegister.length > 0) {
@@ -726,7 +758,10 @@ angular.module('dmpApp')
             }
 
             return loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
-                return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
+                return buildVariableName(input_attribute_path.attribute_path.attributes) === varName;
+//                return buildUriReference(input_attribute_path.attribute_path.attributes) === $scope.activeMapping.transformation.parameter_mappings[varName];
+//                // TODO: does this work with multiple paths since it's only comparing to the first A?
+//                return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
             });
         }
 
@@ -751,6 +786,7 @@ angular.module('dmpApp')
          * Returns a iap varName by giving a iap index position
          * @param index
          * @returns {string}
+         * @returns {string|undefined|*}
          */
         function getIapVariableNameByIndex(index) {
 
@@ -778,7 +814,7 @@ angular.module('dmpApp')
         /**
          * Returns component from gridItems by component id
          * @param componentId
-         * @returns {*|Mixed}
+         * @returns {*}
          */
         function getGridItemFromComponentId(componentId) {
             return loDash.find($scope.gridItems, { id : componentId}) ;
@@ -796,6 +832,8 @@ angular.module('dmpApp')
             if (!storedComponent) {
                 storedComponent = createNewComponent(component);
             }
+
+            console.log('resolveComponent [' + component.name + ':' + component.function.name + '] position X = ', component.positionX, 'postion Y = ', component.positionY);
 
             storedComponent.description = angular.toJson({
                 x: component.positionX,
@@ -905,6 +943,16 @@ angular.module('dmpApp')
 
             var rowComponents = loDash.times($scope.gridsterOpts.maxRows, function(i) {
 
+                var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes,
+                    iap = $scope.activeMapping.input_attribute_paths[i],
+                    resolver = loDash.wrap(resolveComponent, function(origResolve, component) {
+                        var origX = component.positionX;
+                        component.positionX = getRowIdentifier(iap);
+                        var returnValue = origResolve(component);
+                        component.positionX = origX;
+                        return returnValue;
+                    });
+
                 // get all in this row to array
                 var rowComponents = loDash.filter($scope.gridItems, {positionX: i});
 
@@ -912,12 +960,10 @@ angular.module('dmpApp')
                 rowComponents = loDash.sortBy(rowComponents, 'positionY');
 
                 // replace array entry with original internal component oder generate a new one
-                rowComponents = loDash.map(rowComponents, resolveComponent);
+                rowComponents = loDash.map(rowComponents, resolver);
 
                 // delete eventual existing 'inputString' mappings
                 loDash.forEach(rowComponents, deleteInputStringParameterMapping);
-
-                var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
 
                 // create a simple name for this input_attribute_path
                 var varName = buildAttributeName(inputAttributes, 'name', '_');
@@ -997,7 +1043,7 @@ angular.module('dmpApp')
          * @returns {*}
          */
         function getComponent(id) {
-            return loDash.find($scope.activeMapping.transformation.function.components, { id: id});
+            return loDash.find($scope.activeMapping.transformation.function.components, {id: id});
         }
 
         /**
@@ -1012,7 +1058,7 @@ angular.module('dmpApp')
         /**
          * Creates default component data structure around a given function
          * @param component {*} Internal object
-         * @returns {{id: (*|$scope.file.id|.lines.params.id|exports.expected.id|exports.config.id|id), name: (*|string|name|jasmine-node.spec-requirejs.requirejs.sut.name|parser.name|exports.callee.object.name), description: (*|string|parser.description|.about.description|.info.description|exports.expected.description), function: (*|map.function|exports.function|mout.src.index.function|objectTypes.function|Function), parameter_mappings: {}, output_components: Array, input_components: Array}}
+         * @returns {{id: String, name: String, description: String, function: Object, parameter_mappings: Object, output_components: Array, input_components: Array}}
          */
         function createNewComponent(component) {
 
@@ -1029,9 +1075,9 @@ angular.module('dmpApp')
         }
 
         /**
-         * Creates a default data structure for a tranformation
-         * @param name - Optional given name
-         * @param description - Optional given description
+         * Creates a default data structure for a transformation
+         * @param {String=} name - Optional given name
+         * @param {String=} description - Optional given description
          * @returns {{name: , description: , function: {name: , description: , parameters: string[], type: string, components: Array}, parameter_mappings: {}}}
          */
         function createNewTransformation(name, description) {
@@ -1335,6 +1381,7 @@ angular.module('dmpApp')
 
             modalInstance.result.then(function() {
                 var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function(filter) {
+                    //noinspection FunctionWithInconsistentReturnsJS
                     return Util.collect(filter.inputFilters, function(f) {
                         var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, {id: f.apId});
                         if (path) {
