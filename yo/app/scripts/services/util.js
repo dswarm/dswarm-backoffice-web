@@ -149,12 +149,45 @@ angular.module('dmpApp')
             return JSON.stringify(obj, toJsonReplacer, pretty ? '  ' : null);
         }
 
+        /**
+         * Build a attribute name
+         * @param {Array} attributes The list of attributes
+         * @param {string} property The property to look at
+         * @param {string} delimiter Part delimiter
+         * @returns {string} The combined attribute name
+         */
+        function buildAttributeName(attributes, property, delimiter) {
+            return loDash.pluck(attributes, property).join(delimiter);
+        }
+
+        /**
+         * Build a Uri reference using attribute name builder
+         * @param {Array} attributes The list of attributes
+         * @returns {string} The combined URI string
+         */
+        function buildUriReference(attributes) {
+            return buildAttributeName(attributes, 'uri', '\u001E');
+        }
+
+        /**
+         * Build a var name using attribute name builder
+         * @param {Array} attributes The list of attributes
+         * @returns {string} The combined varname string
+         */
+        function buildVariableName(attributes) {
+            return buildAttributeName(attributes, 'name', '_');
+        }
+
+
         return {
             latestBy: latestBy,
             mapResources: mapResources,
             collect: collect,
             timedoutPromise: timedoutPromise,
-            toJson: toJson
+            toJson: toJson,
+            buildAttributeName: buildAttributeName,
+            buildUriReference: buildUriReference,
+            buildVariableName: buildVariableName
         };
     })
 /**
