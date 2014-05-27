@@ -25,7 +25,7 @@ angular.module('dmpApp')
 
             angular.forEach(args.parameter_mappings, function(value, key) {
 
-                if(typeof args.function.function_description.parameters[key] !== 'undefined') {
+                if(args.function.function_description.parameters && typeof args.function.function_description.parameters[key] !== 'undefined') {
                     args.function.function_description.parameters[key].data = value;
                 }
 
@@ -41,10 +41,12 @@ angular.module('dmpApp')
                     };
                 });
 
-                args.function.function_description.parameters['inputStringSorting'] = {
-                    type : 'sortable',
-                    data : parameterItems
-                };
+                if(args.function.function_description.parameters) {
+                    args.function.function_description.parameters['inputStringSorting'] = {
+                        type : 'sortable',
+                        data : parameterItems
+                    };
+                }
 
             }
 

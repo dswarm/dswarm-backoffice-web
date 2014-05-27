@@ -7,8 +7,7 @@ angular.module('dmpApp')
         var activeComponentId = null,
             availableIds = [],
         // TODO: Find better solution instead of hard limiting to 6 items per row
-            gridMaxItemsPerRow = 6,
-            isDraggingToGrid = false;
+            gridMaxItemsPerRow = 6;
 
         /** Gridster config goes here */
         $scope.gridsterOpts = {
@@ -98,6 +97,11 @@ angular.module('dmpApp')
         }());
 
 
+        /**
+         * returns eigther id or generates a new one
+         * @param optId string the id to return
+         * @returns {*}
+         */
         function getId(optId) {
             return angular.isDefined(optId) ? optId
                 : (new Date().getTime() + Math.floor(Math.random() * 1001)) * -1;
@@ -130,7 +134,7 @@ angular.module('dmpApp')
             });
 
             // restore mappings if a previous project was loaded from a draft
-            var last = loDash.reduce($scope.project.mappings, function(previous, mapping) {
+            loDash.reduce($scope.project.mappings, function(previous, mapping) {
 
                 loDash.forEach(mapping.input_attribute_paths, function(iap) {
                     if (iap.filter) {
@@ -175,6 +179,9 @@ angular.module('dmpApp')
 
         //** Start functions to create plumbs
 
+        /**
+         * Hides all transformations
+         */
         function hideTransformationPlumbs() {
             $scope.transformationStateError = '';
 
@@ -183,6 +190,10 @@ angular.module('dmpApp')
 
         var showTransformationPlumbsTimeout = null;
 
+        /**
+         * Initializes show of all transformations. Saves timeout to prevent multiple
+         * events running into each other
+         */
         function showTransformationPlumbsInit() {
 
             if(showTransformationPlumbsTimeout && showTransformationPlumbsTimeout.then) {
@@ -195,89 +206,56 @@ angular.module('dmpApp')
 
         }
 
+        /**
+         * The real function to show transformations. Use only via init function
+         */
         function showTransformationPlumbs() {
 
-            var j = 0,
-                connectOptions = { type : 'transformation' };
+            var connectOptions = { type : 'transformation' };
 
             $scope.transformationStateError = '';
 
-            angular.forEach($scope.activeMapping.input_attribute_paths, function(iap) {
+            loDash.map($scope.gridItems, function(griditem) {
 
-                connectOptions.source = {
-                    type : 'transformation-input',
-                    id : iap.attribute_path.id
-                };
+                var inputStrings = (!loDash.isNull(griditem.component.parameter_mappings.inputString)) ? griditem.component.parameter_mappings.inputString.split(',') : [];
 
-                for (var i = 0; i < gridMaxItemsPerRow; i++) {
-
-                    var currentGridItemIndex = loDash.findIndex($scope.gridItems, { positionY: i, positionX: j  });
-
-                    if (currentGridItemIndex >= 0) {
-
-                        connectOptions.target = {
-                            type : 'component',
-                            id : $scope.gridItems[currentGridItemIndex].id
-                        };
-
-                        var newConnectOptions = angular.copy(connectOptions);
-
-                        console.log('jsp-connector-connect iap1', newConnectOptions);
-
-                        PubSub.broadcast('jsp-connector-connect', newConnectOptions);
-
-                        connectOptions.source = {
-                            type : 'component',
-                            id : $scope.gridItems[currentGridItemIndex].id
-                        };
-
-                    }
-
-                }
-
-                j++;
-
-            });
-
-            console.log("$scope.gridItemConnections", $scope.gridItemConnections);
-
-            angular.forEach($scope.gridItemConnections, function(itemConnection) {
-
-                if(itemConnection.source.data) {
-
-                    console.log("itemConnection.source.type", itemConnection.source.type);
-
-                    if(itemConnection.source.type === 'attribute_path_instance') {
-                        connectOptions.source = {
-                            type : 'transformation-input',
-                            id : itemConnection.source.data.attribute_path.id
-                        };
-                    } else {
-                        connectOptions.source = {
-                            type : 'component',
-                            id : itemConnection.source.data.id
-                        };
-                    }
+                loDash.map(inputStrings, function(inputString) {
 
                     connectOptions.target = {
                         type : 'component',
-                        id : itemConnection.target.id
+                        id : griditem.id
                     };
 
-                    var newConnectOptions = angular.copy(connectOptions);
+                    if (inputString.length > 0) {
 
-                    console.log("griditemconnections", newConnectOptions.source.id, itemConnection);
+                        if (inputString.indexOf('component') === -1) {
 
-                    console.log("newConnectOptions", newConnectOptions);
+                            var iap = loDash.find($scope.activeMapping.input_attribute_paths, function (iap) {
+                                return iap.attribute_path.attributes[0].name === inputString;
+                            });
 
-                    if(!connectionInOneRow(newConnectOptions)) {
+                            connectOptions.source = {
+                                type: 'transformation-input',
+                                id: iap.attribute_path.id
+                            };
+                        } else {
 
-                        console.log('jsp-connector-connect griditemconnections', newConnectOptions);
+                            var component = loDash.find($scope.gridItems, function (griditem) {
+                                return griditem.name === inputString;
+                            });
 
+                            connectOptions.source = {
+                                type: 'component',
+                                id: component.id
+                            };
+                        }
+
+                        var newConnectOptions = angular.copy(connectOptions);
                         PubSub.broadcast('jsp-connector-connect', newConnectOptions);
+
                     }
 
-                }
+                });
 
             });
 
@@ -297,13 +275,15 @@ angular.module('dmpApp')
 
                     } else {
 
-                        var lastItem = loDash.filter($scope.activeMapping.transformation.function.components, function(component) {
-                            return component.output_components.length === 0;
-                        });
+                        var lastItem = loDash($scope.activeMapping.transformation.function.components)
+                            .filter(function(component) {
+                                return component.output_components.length === 0;
+                            })
+                            .first();
 
                         connectOptions.source =  {
                             type : 'component',
-                            id : lastItem[0].id
+                            id : lastItem.id
                         };
 
                     }
@@ -318,6 +298,7 @@ angular.module('dmpApp')
                 }
 
             }
+
 
         }
 
@@ -381,25 +362,161 @@ angular.module('dmpApp')
         }
 
         /**
+         * Returns the prev component from grid by x,y position
+         * @param positionX int
+         * @param positionY int
+         * @returns {*}
+         */
+        function findPrevGridItem(positionX, positionY) {
+
+            if($scope.gridItems.length <= 1) {
+                return undefined;
+            } else {
+                return loDash($scope.gridItems)
+                    .filter({positionX : positionX, positionY : positionY - 1})
+                    .first();
+            }
+
+        }
+
+        /**
+         * Ensure that the inputString is reference in component. Ensures there
+         * is only one instance
+         * @param component object the component
+         * @param inputString string inputstring to add
+         */
+        function ensureInputString(component, inputString) {
+
+            var componentInputString = (!loDash.isNull(component.parameter_mappings.inputString)) ? component.parameter_mappings.inputString.split(',') : [];
+
+            componentInputString = loDash.filter(componentInputString, function(inputString) {
+                return inputString.length > 0;
+            });
+
+            if(loDash.indexOf(componentInputString, inputString) === -1) {
+                componentInputString.push(inputString);
+            }
+
+            component.parameter_mappings.inputString = componentInputString.join(',');
+
+        }
+
+        /**
+         * Adds other component to input component array. Ensures only one instance
+         * of that component
+         * @param component object The component to add to
+         * @param prevComponent object The component to be added
+         */
+        function ensureInputComponent(component, prevComponent) {
+
+            if(loDash.indexOf(component.input_components, { id : prevComponent.id }) === -1) {
+                component.input_components.push({ id : prevComponent.id });
+            }
+
+        }
+
+        /**
+         * Adds other component to output component array. Ensures only one instance
+         * of that component
+         * @param component object The component to add to
+         * @param prevComponent object The component to be added
+         */
+        function ensureOutputComponent(component, prevComponent) {
+
+            if(loDash.indexOf(prevComponent.output_components, { id : component.id }) === -1) {
+                prevComponent.output_components.push({ id : component.id });
+            }
+
+        }
+
+        /**
+         * Adds other component to output and input component array. Ensures only one instance
+         * of that component
+         * @param component object The component to add to
+         * @param prevComponent object The component to be added
+         */
+        function ensureInputOutputComponents(component, prevComponent) {
+
+            ensureInputComponent(component, prevComponent);
+            ensureOutputComponent(component, prevComponent);
+
+        }
+
+        /**
+         * Updates the input and output objets for a given grid position
+         * @param positionX int
+         * @param positionY int
+         */
+        function updateGridInputOutput(positionX, positionY) {
+
+            var currentGridItem = loDash($scope.gridItems)
+                .filter({positionX : positionX, positionY : positionY })
+                .first();
+
+            var prevGridItem = findPrevGridItem(positionX, positionY);
+
+            if(prevGridItem) {
+
+                if(prevGridItem.component.output_components.length > 0) {
+
+                    var component = loDash.find($scope.activeMapping.transformation.function.components, { id : prevGridItem.component.output_components[0].id});
+                    removeFromComponentList([component], 'input_components', prevGridItem.component.id);
+
+                    removeInputString(component, prevGridItem.component.name);
+
+                    prevGridItem.component.output_components = [];
+                }
+
+                ensureInputString(currentGridItem.component, prevGridItem.name);
+                ensureInputOutputComponents(currentGridItem.component, prevGridItem.component);
+
+            } else {
+
+                ensureInputString(currentGridItem.component, $scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes[0].name);
+
+            }
+
+        }
+
+        /**
+         * Adds component to project
+         * @param component object the component to be added
+         */
+        function addComponentToProject(component) {
+
+            $scope.activeMapping.transformation.function.components.push(component);
+
+        }
+
+        /**
          * Handles a dropped element to a grid position
          * @param positionX
          * @param positionY
-         * @param itemDataOriginal
+         * @param functionDataOriginal
          */
-        function dropToGrid(positionX, positionY, itemDataOriginal) {
+        function dropToGrid(positionX, positionY, functionDataOriginal) {
 
-            var itemData = angular.copy(itemDataOriginal),
-                itemName = 'component' + getId()*-1;
-
-            if(!itemData.hasOwnProperty('function_description')) {
-                itemData.function_description = angular.copy(itemData);
-            }
-
-            addToGrid(positionX, positionY, itemData, itemName, getId());
+            var componentData = {
+                function: angular.copy(functionDataOriginal),
+                name : 'component' + getId() * -1,
+                id: getId(),
+                output_components : [],
+                input_components : [],
+                description: angular.toJson({
+                    x: $scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes[0].name,
+                    y: positionY
+                })
+            };
 
             removeDropPlaceholder();
-            isDraggingToGrid = false;
-            createInternalComponentsFromGridItems();
+
+            ensureComponentProperties(componentData);
+
+            addToGrid(positionX, positionY, componentData);
+
+            addComponentToProject(componentData);
+
+            updateGridInputOutput(positionX, positionY);
 
             buildFunctionToProject();
         }
@@ -409,19 +526,52 @@ angular.module('dmpApp')
          * @param positionX - X position
          * @param positionY - Y position
          * @param itemData - The original data of the dropped function
-         * @param itemName
-         * @param id - Original id used to identify
          */
-        function addToGrid(positionX, positionY, itemData, itemName, id) {
+        function addToGrid(positionX, positionY, componentData) {
 
             $scope.gridItems.push({
                 positionX: positionX,
                 positionY: positionY,
-                function: itemData,
-                name : itemName,
-                id: id
+                component: componentData,
+                name : componentData.name,
+                id: componentData.id
             });
 
+        }
+
+        /**
+         * Removes an id from an id referenced list of components (e.g.
+         * input_components or output_components)
+         * @param components array The list of objects to be extracted
+         * @param componentName The referenced list name to extract from
+         * @param idToRemove int Which id to remove
+         */
+        function removeFromComponentList(components, componentName, idToRemove) {
+
+            loDash.map(components, function(component) {
+
+                var otherComponents = loDash.find($scope.activeMapping.transformation.function.components, { id : component.id});
+
+                otherComponents[componentName] = loDash.filter(otherComponents[componentName], function(otherComponent) {
+                    return otherComponent.id !== idToRemove;
+                });
+
+            });
+
+        }
+
+        /**
+         * Removes input string from stringified inputString list
+         * @param component object Component to be removed from
+         * @param inputStringToRemove string String to be removed
+         */
+        function removeInputString(component, inputStringToRemove) {
+
+            var inputString = component.parameter_mappings.inputString.split(',');
+
+            inputString = loDash.without(inputString, inputStringToRemove);
+
+            component.parameter_mappings.inputString = inputString.join(',');
         }
 
         /**
@@ -433,14 +583,7 @@ angular.module('dmpApp')
             dropToGrid(angular.element(dropEl).scope().item.positionX, angular.element(dropEl).scope().item.positionY, angular.element(dragEl).scope().child);
         };
 
-        $scope.$watch('gridItems', function() {
-            if (isDraggingToGrid === false) {
-                createInternalComponentsFromGridItems();
-            }
-        }, true);
-
         PubSub.subscribe($rootScope, ['DRAG-START'], function() {
-            isDraggingToGrid = true;
             createDropPlaceholder();
 
             hideTransformationPlumbs();
@@ -451,7 +594,40 @@ angular.module('dmpApp')
         PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
 
             removeDropPlaceholder();
-            isDraggingToGrid = false;
+
+            loDash.map($scope.gridItems, function(gridItem) {
+
+                var inputAPRows = loDash.zipObject(loDash.map($scope.activeMapping.input_attribute_paths, function(iap, idx) {
+                    return [getRowIdentifier(iap), idx];
+                }));
+
+                var pos = angular.fromJson(gridItem.component.description);
+
+                var storedPositionX = inputAPRows[pos.x],
+                    storedPositionY = pos.y;
+
+                if(gridItem.positionX !== storedPositionX || storedPositionY !== gridItem.positionY) {
+
+                    removeFromComponentList(gridItem.component.input_components, 'output_components', gridItem.id);
+                    gridItem.component.input_components = [];
+
+                    removeFromComponentList(gridItem.component.output_components, 'input_components', gridItem.id);
+                    gridItem.component.output_components = [];
+
+                    gridItem.component.parameter_mappings.inputString = '';
+
+                    updateGridInputOutput(gridItem.positionX, gridItem.positionY);
+
+                    gridItem.component.description = angular.toJson({
+                        x: $scope.activeMapping.input_attribute_paths[gridItem.positionX].attribute_path.attributes[0].name,
+                        y: gridItem.positionY
+                    });
+
+                }
+
+
+
+            });
 
             showTransformationPlumbsInit();
 
@@ -493,94 +669,18 @@ angular.module('dmpApp')
             return buildVariableName(iap.attribute_path.attributes);
         }
 
-        /**
-         * Checks if defined connection is in one row
-         * @param connectionData
-         * @returns {boolean}
-         */
-        function connectionInOneRow(connectionData) {
-
-            var targetPosition,
-                sourcePosition = { x: '', y: -1 };
-
-            if(loDash.isUndefined(connectionData.target[0])) {
-                targetPosition = angular.fromJson(getComponent(connectionData.target.id).description);
-            } else {
-                targetPosition = angular.fromJson(connectionData.target[0].description)
+        function ensureComponentProperties(component) {
+            if (!component.parameter_mappings) {
+                component.parameter_mappings = { inputString : null };
             }
-
-            console.log("connectionData.type", connectionData.type);
-
-            if (connectionData.type === 'attribute_path_instance' || (connectionData.source.type && connectionData.source.type === 'attribute_path_instance')) {
-                sourcePosition.x = connectionData.source;
-            } else {
-
-                var sourceComponent;
-
-                if (typeof connectionData.source === 'string') {
-                    sourceComponent = getComponentByName(connectionData.source);
-                } else {
-
-                    if(loDash.isUndefined(connectionData.source.description)) {
-
-                        console.log("connectionData.source", connectionData.source);
-
-                        if (loDash.isUndefined(connectionData.source.data)) {
-
-                            if (loDash.isUndefined(connectionData.source[0])) {
-                                sourceComponent = getComponent(connectionData.source.id);
-                            } else {
-                                sourceComponent = getComponent(connectionData.source[0].id);
-                            }
-
-                        } else {
-
-                            console.log("connectionData.source.data.id", connectionData.source.data.id);
-
-                            sourceComponent = getComponent(connectionData.source.data.id);
-                        }
-
-                    } else {
-
-                        if (loDash.isUndefined(connectionData.source[0])) {
-
-                            console.log("connectionData.source iap", connectionData.source);
-
-                            sourceComponent = getComponent(connectionData.source.id);
-                        } else {
-                            sourceComponent = connectionData.source[0];
-                        }
-
-                    }
-                }
-
-                console.log("sourceComponent", sourceComponent, connectionData.source);
-
-                sourcePosition = angular.fromJson(sourceComponent.description);
+            if (!component.input_components) {
+                component.input_components = [];
             }
-
-            return (targetPosition.x === sourcePosition.x);
-
+            if (!component.output_components) {
+                component.output_components = [];
+            }
         }
 
-        /**
-         *
-         */
-        function gridItemConnectionsCheck() {
-
-            $scope.gridItemConnections = Util.collect($scope.gridItemConnections, function(gridItemConnection) {
-
-                console.log("gridItemConnection", gridItemConnection);
-
-                if((!connectionInOneRow(gridItemConnection)) ) {
-                    return gridItemConnection;
-                }
-
-            });
-
-            console.log("after cleanup $scope.gridItemConnections", $scope.gridItemConnections);
-
-        }
 
         /**
          * Builds visual grid from internal data structure
@@ -593,393 +693,47 @@ angular.module('dmpApp')
 
             $scope.gridItems = [];
 
-            function ensureComponentProperties(component) {
-                if (!component.parameter_mappings) {
-                    component.parameter_mappings = {};
-                }
-                if (!component.input_components) {
-                    component.input_components = [];
-                }
-                if (!component.output_components) {
-                    component.output_components = [];
-                }
+            var inputAPRows = loDash.zipObject(loDash.map($scope.activeMapping.input_attribute_paths, function(iap, idx) {
+                return [getRowIdentifier(iap), idx];
+            }));
+
+            if(!$scope.activeMapping.transformation) {
+                $scope.activeMapping.transformation = createNewTransformation();
             }
 
-            function getInputString(component, idx) {
-                return component.parameter_mappings['inputString'] || ('input' + idx);
-            }
+            var transformation = $scope.activeMapping.transformation;
 
-            var walkChainedComponentsRegister = [],
-                gridItemConnectionsRegister = [];
+            loDash.forEach(transformation.function.components, ensureComponentProperties);
 
+            loDash.times($scope.activeMapping.input_attribute_paths.length, function(idx) {
 
-            /**
-             * Does checks to connectionData and adds to register
-             * @param connectionData
-             */
-            function addToGridItemConnectionsRegister(connectionData) {
-
-                if(!connectionInOneRow(connectionData)) {
-                    gridItemConnectionsRegister.push(connectionData);
-                }
-
-            }
-
-            function walkChainedComponents(result, components, pool) {
-                var nextLevel = loDash(components).pluck('output_components').flatten().pluck('id').value(),
-                    connectComponents;
-
-                // if a component has multiple inputs another connector needs to be created
-                if(loDash.indexOf(walkChainedComponentsRegister, nextLevel[0]) > -1) {
-
-                    connectComponents = loDash.map(nextLevel, function(id) {
-                        return pool[id];
-                    });
-
-                    var connectComponentSource = loDash.filter(result, function(cp) {
-                        return !loDash.isUndefined(loDash.find(connectComponents[0].input_components, {id: cp.id}));
-                    });
-
-                    addToGridItemConnectionsRegister({
-                        target : connectComponents,
-                        source : connectComponentSource,
-                        type : 'griditem'
-                    });
-
-                    // end of the line.
-                    nextLevel = [];
-                } else {
-
-                    connectComponents = loDash.map(nextLevel, function(id) {
-                        return pool[id];
-                    });
-
-                    // Multiple inputs in first col
-                    if(nextLevel.length === 0 && loDash.indexOf(walkChainedComponentsRegister, components[0].id) === -1) {
-                        connectComponents = [pool[components[0].id]];
-                    }
-
-                    angular.forEach(connectComponents, function(connectComponent) {
-                        if(connectComponent.parameter_mappings.inputString && connectComponent.parameter_mappings.inputString.length > 0) {
-
-                            var inputString = connectComponent.parameter_mappings.inputString.split(',');
-
-                            angular.forEach(inputString, function(input_variable) {
-
-                                var type = 'griditem';
-
-                                if(input_variable.indexOf('component') === -1) {
-                                    type = 'attribute_path_instance';
-                                }
-
-                                addToGridItemConnectionsRegister({
-                                    target: connectComponents,
-                                    source: input_variable,
-                                    type: type
-                                });
-
-                            });
-
-                        }
-                    });
-
-                }
-
-                if (loDash.isEmpty(nextLevel)) {
-                    return result;
-                }
-
-                walkChainedComponentsRegister = walkChainedComponentsRegister.concat(nextLevel);
-
-                var nextComponents = loDash.map(nextLevel, function(id) {
-                    return pool[id];
+                var rowComponents = loDash.filter(transformation.function.components, function(component) {
+                    var pos = angular.fromJson(component.description);
+                    return inputAPRows[pos.x] === idx;
                 });
 
-                result.push.apply(result, nextComponents);
-
-                return walkChainedComponents(result, nextComponents, pool);
-            }
-
-            if (typeof $scope.activeMapping.transformation !== 'undefined' &&
-                typeof $scope.activeMapping.transformation.function !== 'undefined' &&
-                typeof $scope.activeMapping.transformation.function.components !== 'undefined') {
-
-                var transformation = $scope.activeMapping.transformation;
-
-                loDash.forEach(transformation.function.components, ensureComponentProperties);
-
-                var componentPool = loDash.zipObject(loDash.map(transformation.function.components, function(component) {
-                    return [component.id, component];
-                }));
-
-                var inputAPRows = loDash.zipObject(loDash.map($scope.activeMapping.input_attribute_paths, function(iap, idx) {
-                    return [getRowIdentifier(iap), idx];
-                }));
-
-                var componentRows = loDash(transformation.function.components)
-                    .filter({input_components: []})
-                    .map(function(component, idx) {
-                        return [
-                            getInputString(component, idx),
-                            walkChainedComponents([component], [component], componentPool)
-                        ];
-                    })
-                    .zipObject()
-                    .value();
-
-                var rowComponents = loDash($scope.activeMapping.input_attribute_paths)
-                    .map(function(ap) {
-                        var varName = buildVariableName(ap.attribute_path.attributes);
-
-                        if (componentRows.hasOwnProperty(varName)) {
-                            var components = componentRows[varName];
-                            delete componentRows[varName];
-                            return [components];
-                        } else {
-                            return [];
-                        }
-                    })
-                    .flatten(true)
-                    .value();
-
-                // randomly assign components rows that had no inputString setting
-                loDash.forEach(componentRows, function(components) {
-                    rowComponents.push(components);
+                rowComponents = loDash.sortBy(rowComponents, function(component) {
+                    var pos = angular.fromJson(component.description);
+                    return pos.y;
                 });
 
-                var addToGridCalls = loDash.flatten(loDash.map(rowComponents, function(components, posX) {
-                    return loDash.map(components, function(component, posY) {
-                        if (component !== null) {
-                            var realPosX = posX,
-                                realPosY = posY;
-                            if (component.description) {
-                                try {
-                                    var pos = angular.fromJson(component.description);
+                loDash.map(rowComponents, function(component) {
 
-                                    realPosX = loDash.has(inputAPRows, pos.x) ? inputAPRows[pos.x] : posX;
-                                    realPosY = pos.y;
+                    var realPosX, realPosY;
 
-                                    console.log('walkChainedComponents [' + component.name + ':' + component.function.name + '] position X = ', realPosX, 'postion Y = ', realPosY);
-                                } catch (ignore) {}
-                            }
-                            return {
-                                x: realPosX,
-                                y: realPosY,
-                                args: [realPosX, realPosY, component.function, component.name, component.id]
-                            };
-                        }
-                    });
-                }), true);
-                var sortedCalls = loDash.sortBy(addToGridCalls, ['x', 'y']);
-                loDash.forEach(sortedCalls, function(call) {
-                    addToGrid.apply(null, call.args);
+                    var pos = angular.fromJson(component.description);
+
+                    realPosX = inputAPRows[pos.x];
+                    realPosY = pos.y;
+
+                    addToGrid(realPosX, realPosY, component);
+
                 });
 
-                if(gridItemConnectionsRegister.length > 0) {
-
-                    angular.forEach(gridItemConnectionsRegister, function(gridItemConnectionsRegisterItem) {
-
-                        var targetComponent = getGridItemFromComponentId(gridItemConnectionsRegisterItem.target[0].id),
-                            connectionSource;
-
-                        if(gridItemConnectionsRegisterItem.type === 'griditem') {
-
-                            var component = gridItemConnectionsRegisterItem.source[0];
-
-                            if(typeof gridItemConnectionsRegisterItem.source === 'string') {
-                                component = getComponentByName(gridItemConnectionsRegisterItem.source);
-                            }
-
-                            var sourceComponent = getGridItemFromComponentId(component.id);
-
-                            connectionSource = {
-                                name: sourceComponent.function.name,
-                                type: 'griditem',
-                                data: sourceComponent
-                            };
-
-                        } else {
-
-                            var sourceIap = getIapByVariableName(gridItemConnectionsRegisterItem.source);
-
-                            connectionSource = {
-                                name: gridItemConnectionsRegisterItem.source,
-                                type: 'attribute_path_instance',
-                                data: sourceIap
-                            };
-
-                        }
-
-                        addGridItemConnections(
-                            connectionSource,
-                            targetComponent
-                        );
-
-                    });
-
-                }
-
-            }
+            });
 
             showTransformationPlumbsInit();
 
-        }
-
-
-        /**
-         * Returns the IAP by giving the varname
-         * @param varName
-         * @returns {*}
-         */
-        function getIapByVariableName(varName) {
-
-            if(!$scope.activeMapping.transformation.parameter_mappings[varName]) {
-                return null;
-            }
-
-            return loDash.find($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
-                return buildVariableName(input_attribute_path.attribute_path.attributes) === varName;
-//                return buildUriReference(input_attribute_path.attribute_path.attributes) === $scope.activeMapping.transformation.parameter_mappings[varName];
-//                // TODO: does this work with multiple paths since it's only comparing to the first A?
-//                return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
-            });
-        }
-
-        /**
-         * Returns the IAP index by giving the varname
-         * @param varName
-         * @returns int
-         */
-
-        function getIapIndexByVariableName(varName) {
-
-            if(!$scope.activeMapping.transformation.parameter_mappings[varName]) {
-                return -1;
-            }
-
-            return loDash.findIndex($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
-                return input_attribute_path.attribute_path.attributes[0].uri === $scope.activeMapping.transformation.parameter_mappings[varName];
-            });
-        }
-
-        /**
-         * Returns a iap varName by giving a iap index position
-         * @param index
-         * @returns {string}
-         * @returns {string|undefined|*}
-         */
-        function getIapVariableNameByIndex(index) {
-
-            var input_attribute_path = $scope.activeMapping.input_attribute_paths[index];
-
-            return loDash.findKey($scope.activeMapping.transformation.parameter_mappings, function(parameter_mapping) {
-                return input_attribute_path.attribute_path.attributes[0].uri === parameter_mapping;
-            });
-
-        }
-
-        /**
-         * Returns the Index from iap VarName
-         * @param varName
-         * @returns {number}
-         */
-        function getIapIndexById(id) {
-
-            return loDash.findIndex($scope.activeMapping.input_attribute_paths, function(input_attribute_path) {
-                return input_attribute_path.attribute_path.id === id;
-            });
-
-        }
-
-        /**
-         * Returns component from gridItems by component id
-         * @param componentId
-         * @returns {*}
-         */
-        function getGridItemFromComponentId(componentId) {
-            return loDash.find($scope.gridItems, { id : componentId}) ;
-        }
-
-        /**
-         * Lookup a component in the projects pool, optionally creating a new one
-         * @param component
-         * @returns {*}
-         */
-        function resolveComponent(component) {
-            var storedComponent;
-
-            storedComponent = getComponent(component.id);
-            if (!storedComponent) {
-                storedComponent = createNewComponent(component);
-            }
-
-             storedComponent.description = angular.toJson({
-                x: component.positionX,
-                y: component.positionY
-            });
-
-            return storedComponent;
-        }
-
-        /**
-         * Chain a string of components together by setting their (in|out)put_components
-         * This is a aggregation function that is meant to be used by loDash.reduce or the like
-         * @param result
-         * @param component
-         * @returns {*}
-         */
-        function chainRowComponents(result, component) {
-
-            component.input_components = [];
-            component.output_components = [];
-
-            if (result.length > 0) {
-                var last = loDash.last(result);
-
-                component.input_components = [
-                    {
-                        id: last.id
-                    }
-                ];
-
-                last.output_components = [
-                    {
-                        id: component.id
-                    }
-                ];
-
-                if(!component.parameter_mappings.inputString) {
-
-                    component.parameter_mappings.inputString = last.name;
-
-                } else {
-
-                    var inputString = component.parameter_mappings.inputString.split(','),
-                        componentName = last.name;
-
-                    if(loDash.indexOf(inputString, componentName) === -1) {
-
-                        inputString.push(componentName);
-
-                        component.parameter_mappings.inputString = inputString.join(',');
-
-                    }
-
-                }
-
-            } else {
-
-                if(!component.parameter_mappings.inputString) {
-
-                    var gridItem = getGridItemFromComponentId(component.id);
-                    component.parameter_mappings.inputString = getIapVariableNameByIndex(gridItem.positionX);
-
-                }
-            }
-
-            result.push(component);
-
-            return result;
         }
 
         function buildAttributeName(attributes, property, delimiter) {
@@ -1004,117 +758,6 @@ angular.module('dmpApp')
                 return;
             }
 
-            var transformation = $scope.activeMapping.transformation;
-
-            if (angular.isUndefined(transformation)) {
-                transformation = createNewTransformation();
-                $scope.activeMapping.transformation = transformation;
-            }
-
-            var deleteInputStringParameterMapping = function(component) {
-                delete component.parameter_mappings['inputString'];
-            };
-
-            if (angular.isUndefined(transformation.parameter_mappings)) {
-                transformation.parameter_mappings = {};
-            }
-
-            var rowComponents = loDash.times($scope.gridsterOpts.maxRows, function(i) {
-
-                var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes,
-                    iap = $scope.activeMapping.input_attribute_paths[i],
-                    resolver = loDash.wrap(resolveComponent, function(origResolve, component) {
-                        var origX = component.positionX;
-                        component.positionX = getRowIdentifier(iap);
-                        var returnValue = origResolve(component);
-                        component.positionX = origX;
-                        return returnValue;
-                    });
-
-                // get all in this row to array
-                var rowComponents = loDash.filter($scope.gridItems, {positionX: i});
-
-                // order by column
-                rowComponents = loDash.sortBy(rowComponents, 'positionY');
-
-                // replace array entry with original internal component oder generate a new one
-                rowComponents = loDash.map(rowComponents, resolver);
-
-                // delete eventual existing 'inputString' mappings
-                loDash.forEach(rowComponents, deleteInputStringParameterMapping);
-
-                // create a simple name for this input_attribute_path
-                var varName = buildAttributeName(inputAttributes, 'name', '_');
-
-                // create the fq-uri for this input_attribute_path
-                transformation.parameter_mappings[varName] = buildUriReference(inputAttributes);
-
-                if(typeof transformation.function.parameters === 'undefined') {
-                    transformation.function.parameters = [];
-                }
-
-                if(loDash.indexOf(transformation.function.parameters, varName) > -1) {
-                    transformation.function.parameters.push(varName);
-                }
-
-                if (rowComponents.length > 0) {
-                    rowComponents[0].parameter_mappings['inputString'] = varName;
-                }
-
-                // chain the row together
-                return loDash.reduce(rowComponents, chainRowComponents, []);
-            });
-
-            transformation.function.components = loDash.flatten(rowComponents);
-
-            var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
-
-            var transformationOutputVariable = getOutputVariable($scope.activeMapping);
-
-            transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
-
-            gridItemConnectionsCheck();
-
-            angular.forEach($scope.gridItemConnections, function(itemConnection) {
-
-                var componentIndex,
-                    componentName = itemConnection.source.name;
-
-                if(itemConnection.source.type === 'griditem') {
-                    componentName = itemConnection.source.data.name;
-                }
-
-                componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.target.id});
-
-                if(componentIndex >= 0) {
-
-                    if($scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString && $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.length > 0) {
-
-                        var inputString = $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString.split(',');
-
-                        if(loDash.indexOf(inputString, componentName) === -1) {
-
-                            inputString.push(componentName);
-
-                            $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = inputString.join(',');
-                        }
-
-                    } else {
-                        $scope.activeMapping.transformation.function.components[componentIndex].parameter_mappings.inputString = componentName;
-                    }
-
-                    if(itemConnection.source.type === 'griditem') {
-
-                        $scope.activeMapping.transformation.function.components[componentIndex].input_components.push({id : itemConnection.source.data.id });
-
-                        componentIndex = loDash.findIndex($scope.activeMapping.transformation.function.components, {id : itemConnection.source.data.id});
-                        $scope.activeMapping.transformation.function.components[componentIndex].output_components.push({id : itemConnection.target.id });
-
-                    }
-
-                }
-
-            });
         }
 
         /**
@@ -1124,34 +767,6 @@ angular.module('dmpApp')
          */
         function getComponent(id) {
             return loDash.find($scope.activeMapping.transformation.function.components, {id: id});
-        }
-
-        /**
-         * Extracts a component by name
-         * @param name - Component name
-         * @returns {*}
-         */
-        function getComponentByName(name) {
-            return loDash.find($scope.activeMapping.transformation.function.components, { name: name});
-        }
-
-        /**
-         * Creates default component data structure around a given function
-         * @param component {*} Internal object
-         * @returns {{id: String, name: String, description: String, function: Object, parameter_mappings: Object, output_components: Array, input_components: Array}}
-         */
-        function createNewComponent(component) {
-
-            return {
-                id: component.id,
-                name: component.name,
-                description: component.description,
-                function: component.function,
-                parameter_mappings: {},
-                output_components: [],
-                input_components: []
-            };
-
         }
 
         /**
@@ -1205,6 +820,20 @@ angular.module('dmpApp')
                 }
 
                 createGridFromInternalComponents();
+
+                var transformation = $scope.activeMapping.transformation;
+
+                var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
+                var transformationOutputVariable = getOutputVariable($scope.activeMapping);
+                transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
+
+                loDash.times($scope.gridsterOpts.maxRows, function(i) {
+                    var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
+                    // create a simple name for this input_attribute_path
+                    var varName = buildAttributeName(inputAttributes, 'name', '_');
+                    // create the fq-uri for this input_attribute_path
+                    transformation.parameter_mappings[varName] = buildUriReference(inputAttributes);
+                });
 
             }
         }
@@ -1488,7 +1117,7 @@ angular.module('dmpApp')
         //** End handling filter
 
         $scope.isMultiple = function(item) {
-            return (item.function.function_description.name === 'concat');
+            return (item.component.function.name === 'concat');
         };
 
         /**
@@ -1509,7 +1138,11 @@ angular.module('dmpApp')
                 angular.forEach($scope.activeMapping.input_attribute_paths, function(path, row) {
 
                     if(row !== excludeRow) {
-                        var currentRowItems = loDash.find($scope.gridItems, {positionX : row});
+                        //var currentRowItems = loDash.find($scope.gridItems, {positionX : row});
+
+                        var currentRowItems = loDash.filter($scope.gridItems, function(griditem) {
+                            return griditem.positionX === row && !griditem.placeholder && griditem.component.output_components.length === 0;
+                        });
 
                         if(!currentRowItems || currentRowItems.length === 0) {
 
@@ -1537,7 +1170,7 @@ angular.module('dmpApp')
 
                         } else {
 
-                            loDash.last(loDash.sortBy(currentRowItems, 'positionY'));
+                            currentRowItems = loDash(currentRowItems).sortBy('positionY').last();
 
                             var currentRowIndexInGridItemConnection = loDash.findIndex($scope.gridItemConnections, function(gridItemConnection) {
                                 if(loDash.isUndefined(gridItemConnection)) { return false; }
@@ -1547,8 +1180,8 @@ angular.module('dmpApp')
 
                             if(currentRowIndexInGridItemConnection === -1) {
                                 openEndedComponents.push({
-                                    display : currentRowItems.function.function_description.name,
-                                    name : currentRowItems.function.function_description.name,
+                                    display : currentRowItems.component.function.name,
+                                    name : currentRowItems.component.function.name,
                                     type : 'griditem',
                                     data : currentRowItems
                                 });
@@ -1580,7 +1213,11 @@ angular.module('dmpApp')
          */
         function addGridItemConnections(source, target) {
 
-            $scope.gridItemConnections.push({source : source, target : target});
+            ensureInputString(target.component, (source.type ==='attribute_path_instance') ? source.name : source.data.name);
+
+            if(source.type !=='attribute_path_instance') {
+                ensureInputOutputComponents(target.component, source.data.component);
+            }
 
             createInternalComponentsFromGridItems();
         }
