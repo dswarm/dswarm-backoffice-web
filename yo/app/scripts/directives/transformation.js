@@ -495,7 +495,21 @@ angular.module('dmpApp')
 
             } else {
 
-                ensureInputString(currentGridItem.component, Util.buildAttributeName($scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes, 'name', '_'));
+                var variableName = Util.buildVariableName($scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes);
+
+                loDash.map($scope.activeMapping.transformation.function.components, function(component) {
+
+                    if(component.parameter_mappings.inputString) {
+
+                        var inputString = component.parameter_mappings.inputString.split(',');
+                        inputString = loDash.without(inputString, variableName);
+                        component.parameter_mappings.inputString = inputString.join(',');
+
+                    }
+
+                });
+
+                ensureInputString(currentGridItem.component, variableName);
 
             }
 
