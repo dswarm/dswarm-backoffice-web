@@ -9,14 +9,20 @@ angular.module('dmpApp')
                 templateUrl: 'views/perspectives/data-list.html',
                 controller: 'DataListCtrl'
             })
-            .when('/data/:id', {
+            .when('/data/:resourceId', {
                 title: 'Choose Dataset',
                 slug: 'data',
                 templateUrl: 'views/perspectives/data-object.html',
                 controller: 'DataObjectCtrl'
             })
-            .when('/data-config/:resourceId/:configType', {
+            .when('/data/:resourceId/:configType', {
                 title: 'Choose Dataset configuration',
+                templateUrl: 'views/perspectives/data-config.html',
+                slug: 'data',
+                controller: 'DataConfigCtrl'
+            })
+            .when('/data-config/:dataModelId/:configType', {
+                title: 'Edit a Datamodel configuration',
                 templateUrl: 'views/perspectives/data-config.html',
                 slug: 'data',
                 controller: 'DataConfigCtrl'

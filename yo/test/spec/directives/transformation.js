@@ -768,15 +768,7 @@ describe('Directive: Transformation', function() {
 
         elScope.onFunctionClick(mockedFunctions[0]);
 
-        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', undefined);/*{
-            id: 1,
-            name: 'blacklist',
-            description: 'Blacklist filter',
-            function: mockedFunctions[0],
-            parameter_mappings: {},
-            output_components: [],
-            input_components: []
-        });*/
+        expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', { component: undefined, onlyIfAlreadyOpened: false });
     }));
 
     it('should open a filter modal when the path component is clicked', inject(function($modal) {

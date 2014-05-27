@@ -9,8 +9,8 @@ angular.module('dmpApp')
 
         $scope.showGrid = false;
 
-        $scope.runningUpdate = {};
-        $scope.nextUpdate = {};
+        $scope.runningUpdate = false;
+        $scope.nextUpdate = [];
 
         $scope.previewOptions = {
             data: 'previewResult',
@@ -57,15 +57,15 @@ angular.module('dmpApp')
 
         $scope.checkNextConfigUpdate = function() {
 
-            $scope.runningUpdate = {};
+            $scope.runningUpdate = false;
 
-            if (Object.keys($scope.nextUpdate).length > 0) {
+            if ($scope.nextUpdate.length > 0) {
 
                 // Multiple too fast config previews are tripping the response handling.
                 $timeout(function() {
 
-                    $scope.dataConfigUpdated($scope.nextUpdate);
-                    $scope.nextUpdate = {};
+                    $scope.dataConfigUpdated.apply(null, $scope.nextUpdate);
+                    $scope.nextUpdate = [];
 
                 }, 1);
 
@@ -73,26 +73,20 @@ angular.module('dmpApp')
 
         };
 
-        $scope.dataConfigUpdated = function(config) {
+        $scope.dataConfigUpdated = function(config, resourceId) {
 
-            if (Object.keys($scope.runningUpdate).length > 0) {
+            if ($scope.runningUpdate) {
 
-                $scope.nextUpdate = config;
+                $scope.nextUpdate = [config, resourceId];
 
             } else {
 
-                $scope.runningUpdate = config;
+                $scope.runningUpdate = true;
 
                 $scope.previewResult = [];
                 $scope.colDefs = [];
 
                 $scope.showGrid = false;
-
-                var resourceId = $routeParams.resourceId;
-
-                if (config.resourceId) {
-                    resourceId = config.resourceId;
-                }
 
                 DataConfigPreviewResource.preview(
                     { id: resourceId },
@@ -141,7 +135,7 @@ angular.module('dmpApp')
         };
 
         PubSub.subscribe($scope, 'dataConfigUpdated', function(args) {
-            $scope.dataConfigUpdated(args['config']);
+            $scope.dataConfigUpdated(args['config'], args['resourceId']);
         });
 
     })

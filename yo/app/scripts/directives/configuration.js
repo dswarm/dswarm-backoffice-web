@@ -20,37 +20,104 @@ angular.module('dmpApp')
             };
         };
 
-        PubSub.subscribe($scope, 'handleEditConfig', function(args) {
-            componentId = args.id;
+        function setComponent(providedComponent) {
 
-            angular.forEach(args.parameter_mappings, function(value, key) {
+            angular.forEach(providedComponent.parameter_mappings, function(value, key) {
 
-                if(args.function.function_description.parameters && typeof args.function.function_description.parameters[key] !== 'undefined') {
-                    args.function.function_description.parameters[key].data = value;
+                if (typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
+                    providedComponent.function.function_description.parameters[key].data = value;
                 }
 
             });
 
-            if(args.parameter_mappings.inputString && args.parameter_mappings.inputString.split(',').length > 1) {
-                var inputString = args.parameter_mappings.inputString.split(',');
+            if (providedComponent.parameter_mappings.inputString && providedComponent.parameter_mappings.inputString.split(',').length > 1) {
+                var inputString = providedComponent.parameter_mappings.inputString.split(',');
 
                 var parameterItems = loDash.map(inputString, function(part) {
                     return {
-                        text : getComponentNameByVarName(part),
-                        id : part
+                        text: getComponentNameByVarName(part),
+                        id: part
                     };
                 });
 
-                if(args.function.function_description.parameters) {
-                    args.function.function_description.parameters['inputStringSorting'] = {
-                        type : 'sortable',
-                        data : parameterItems
-                    };
-                }
+                providedComponent.function.function_description.parameters['inputStringSorting'] = {
+                    type: 'sortable',
+                    data: parameterItems
+                };
 
             }
 
-            $scope.component = args['function'];
+            var component = providedComponent['function'];
+            var parameterOrder = angular.copy(component.parameters);
+            var parameterPool = component.function_description.parameters;
+
+            var orderedParameters = loDash.map(parameterOrder, function(parameterKey) {
+                var param = parameterPool[parameterKey];
+                delete parameterPool[parameterKey];
+
+                param.key = parameterKey;
+                return param;
+            });
+
+            var additionalParameters = loDash.map(parameterPool, function(param, parameterKey) {
+                param.key = parameterKey;
+                return param;
+            });
+
+            orderedParameters.push.apply(orderedParameters, additionalParameters);
+            component.parameters = orderedParameters;
+
+            return component;
+        }
+
+        function mergeData(oldData, newData) {
+            if (!oldData) {
+                return newData;
+            }
+            if (!newData) {
+                return oldData;
+            }
+            if (loDash.isArray(oldData)) {
+                if (oldData.length === 0) {
+                    return newData;
+                }
+                if (newData.length === 0) {
+                    return oldData;
+                }
+                return loDash.uniq(oldData.concat(newData), 'id');
+            }
+            return oldData + newData;
+        }
+
+        function mergeComponents(providedComponent) {
+
+            var newComponent = setComponent(providedComponent),
+                scopeParams = $scope.component.parameters;
+
+            loDash.forEach(newComponent.parameters, function(newParam) {
+                var paramKey = newParam.key;
+                var oldParam = loDash.find(scopeParams, {key: paramKey});
+
+                if (oldParam) {
+                    oldParam.data = mergeData(oldParam.data, newParam.data);
+                } else {
+                    scopeParams.push(newParam);
+                }
+            });
+        }
+
+        PubSub.subscribe($scope, 'handleEditConfig', function(args) {
+            if (args.onlyIfAlreadyOpened && componentId === null) {
+                return;
+            }
+            var providedComponent = args.component;
+
+            if (componentId !== null && providedComponent.id === componentId) {
+                mergeComponents(providedComponent);
+            } else {
+                componentId = providedComponent.id;
+                $scope.component = setComponent(providedComponent);
+            }
         });
 
         $scope.onSaveClick = function() {
@@ -63,7 +130,8 @@ angular.module('dmpApp')
                 parameter_mappings: {}
             };
 
-            angular.forEach($scope.component.function_description.parameters, function(paramDef, param) {
+            angular.forEach($scope.component.parameters, function(paramDef) {
+                var param = paramDef.key;
                 if (angular.isDefined(paramDef.data)) {
                     params.parameter_mappings[param] = paramDef.data;
                 }

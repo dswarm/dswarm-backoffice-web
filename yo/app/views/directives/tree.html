@@ -4,18 +4,22 @@
            title="{{data.name}}"
             ng-mousedown="handleClick($event, data)"
             ng-class="{'tree-leaf':isLeaf(data), leafmatchedFilter : data.leafmatchedFilter}">
+
         <i class="glyphicon" ng-class="chevron(data)"></i>
 
         <i class="glyphicon glyphicon-unchecked jsPanchorIcon"
-           ng-if="(isTarget && isLeaf(data)) || (isTarget && !isExpanded(data))"
+           ng-if="(isTarget && !isTempoDisabled() && (isLeaf(data) || !isExpanded(data)))"
            ng-style="{color:isSelected?'slategrey':''}"
            dmp-endpoint test-name="data"
            js-plumb-target-options="jspTargetOptions"></i>
 
-        {{data.name}}
-        <small ng-show="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
+        <i class="glyphicon glyphicon-unchecked target-selector disabled"
+           ng-if="(isTarget && isExpanded(data) && isTempoDisabled())"></i>
 
-        <small ng-show="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
+        {{data.name}}
+        <small ng-if="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
+
+        <small ng-if="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
 
         <!--<i class="glyphicon glyphicon-edit filter-key-icon filter-key-source"-->
            <!--ng-if="isSource"-->

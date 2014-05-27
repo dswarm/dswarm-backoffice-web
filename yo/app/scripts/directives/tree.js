@@ -85,12 +85,16 @@ angular.module('dmpApp')
             return (data.$show ? true : false);
         };
 
+        $scope.isTempoDisabled = function() {
+            return $scope.layer >= 3;
+        };
+
         $scope.layerClass = function() {
             return 'layer' + $scope.layer;
         };
 
         $scope.handleClick = function(evt, data) {
-            if ($scope.isLeaf(data)) {
+            if ($scope.isLeaf(data) && !$scope.isTempoDisabled()) {
                 $scope.$emit('leafClicked', {
                     event: evt,
                     data: data
@@ -112,7 +116,7 @@ angular.module('dmpApp')
         };
 
         $scope.expandCollapse = function(data) {
-            data.$show = !$scope.isLeaf(data) && !data.$show;
+            data.$show = $scope.isLeaf(data) || !data.$show;
 
             $timeout(function() {
                 PubSub.broadcast('schemaCanvasUpdated', {});
