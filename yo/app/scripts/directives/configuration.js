@@ -24,7 +24,8 @@ angular.module('dmpApp')
 
             angular.forEach(providedComponent.parameter_mappings, function(value, key) {
 
-                if (typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
+                if (typeof providedComponent.function.function_description.parameters !== 'undefined' &&
+                    typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
                     providedComponent.function.function_description.parameters[key].data = value;
                 }
 
