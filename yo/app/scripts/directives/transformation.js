@@ -1124,7 +1124,6 @@ angular.module('dmpApp')
                 }), true);
 
                 var expression = JSON.stringify(loDash.zipObject(filters));
-                expression = expression.replace(new RegExp('\\u001E', 'g'), 'u001E');
 
                 if (IAPInstance.filter) {
                     IAPInstance.filter.expression = expression;
