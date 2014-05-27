@@ -442,6 +442,29 @@ angular.module('dmpApp')
 
         }
 
+        function updateInputOutputMappings() {
+
+            var transformation = $scope.activeMapping.transformation;
+
+            var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
+            var transformationOutputVariable = getOutputVariable($scope.activeMapping);
+
+            transformation.parameter_mappings = loDash.omit(transformation.parameter_mappings, function(value, key) {
+                return key.indexOf('TRANSFORMATION_OUTPUT_VARIABLE') > -1;
+            });
+
+            transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
+
+            loDash.times($scope.gridsterOpts.maxRows, function(i) {
+                var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
+                // create a simple name for this input_attribute_path
+                var varName = buildAttributeName(inputAttributes, 'name', '_');
+                // create the fq-uri for this input_attribute_path
+                transformation.parameter_mappings[varName] = buildUriReference(inputAttributes);
+            });
+
+        }
+
         /**
          * Updates the input and output objets for a given grid position
          * @param positionX int
@@ -821,19 +844,7 @@ angular.module('dmpApp')
 
                 createGridFromInternalComponents();
 
-                var transformation = $scope.activeMapping.transformation;
-
-                var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
-                var transformationOutputVariable = getOutputVariable($scope.activeMapping);
-                transformation.parameter_mappings[transformationOutputVariable] = buildUriReference(outputAttributes);
-
-                loDash.times($scope.gridsterOpts.maxRows, function(i) {
-                    var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
-                    // create a simple name for this input_attribute_path
-                    var varName = buildAttributeName(inputAttributes, 'name', '_');
-                    // create the fq-uri for this input_attribute_path
-                    transformation.parameter_mappings[varName] = buildUriReference(inputAttributes);
-                });
+                updateInputOutputMappings();
 
             }
         }
@@ -965,6 +976,8 @@ angular.module('dmpApp')
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
 
             showTransformationPlumbsInit();
+
+            updateInputOutputMappings();
 
             if ($scope.$$phase !== '$digest') {
                 $scope.$digest();
