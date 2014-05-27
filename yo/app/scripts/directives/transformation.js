@@ -726,34 +726,37 @@ angular.module('dmpApp')
 
             var transformation = $scope.activeMapping.transformation;
 
-            loDash.forEach(transformation.function.components, ensureComponentProperties);
+            if(transformation.function) {
+                loDash.forEach(transformation.function.components, ensureComponentProperties);
 
-            loDash.times($scope.activeMapping.input_attribute_paths.length, function(idx) {
+                loDash.times($scope.activeMapping.input_attribute_paths.length, function(idx) {
 
-                var rowComponents = loDash.filter(transformation.function.components, function(component) {
-                    var pos = angular.fromJson(component.description);
-                    return inputAPRows[pos.x] === idx;
+                    var rowComponents = loDash.filter(transformation.function.components, function(component) {
+                        var pos = angular.fromJson(component.description);
+                        return inputAPRows[pos.x] === idx;
+                    });
+
+                    rowComponents = loDash.sortBy(rowComponents, function(component) {
+                        var pos = angular.fromJson(component.description);
+                        return pos.y;
+                    });
+
+                    loDash.map(rowComponents, function(component) {
+
+                        var realPosX, realPosY;
+
+                        var pos = angular.fromJson(component.description);
+
+                        realPosX = inputAPRows[pos.x];
+                        realPosY = pos.y;
+
+                        addToGrid(realPosX, realPosY, component);
+
+                    });
+
                 });
 
-                rowComponents = loDash.sortBy(rowComponents, function(component) {
-                    var pos = angular.fromJson(component.description);
-                    return pos.y;
-                });
-
-                loDash.map(rowComponents, function(component) {
-
-                    var realPosX, realPosY;
-
-                    var pos = angular.fromJson(component.description);
-
-                    realPosX = inputAPRows[pos.x];
-                    realPosY = pos.y;
-
-                    addToGrid(realPosX, realPosY, component);
-
-                });
-
-            });
+            }
 
             showTransformationPlumbsInit();
 
@@ -784,7 +787,7 @@ angular.module('dmpApp')
          * Creates a default data structure for a transformation
          * @param {String=} name - Optional given name
          * @param {String=} description - Optional given description
-         * @returns {{name: , description: , function: {name: , description: , parameters: string[], type: string, components: Array}, parameter_mappings: {}}}
+         * @returns {{name: , description: , parameter_mappings: {}}}
          */
         function createNewTransformation(name, description) {
 
@@ -794,15 +797,30 @@ angular.module('dmpApp')
             return {
                 name: name,
                 description: description,
-                function: {
-                    name: name,
-                    description: description,
-                    parameters: [],
-                    type: 'Transformation',
-                    components: []
-                },
+                function : createNewTransformationFunction(name, description),
                 parameter_mappings: { }
             };
+        }
+
+        /**
+         * Creates a default data structure for a transformations function
+         * @param {String=} name - Optional given name
+         * @param {String=} description - Optional given description
+         * @returns {{name: , description: , parameters: Array, type: string, components: Array}}
+         */
+        function createNewTransformationFunction(name, description) {
+
+            name = typeof name !== 'undefined' ? name : 'transformation';
+            description = typeof description !== 'undefined' ? description : 'transformation';
+
+            return {
+                name: name,
+                description: description,
+                parameters: [],
+                type: 'Transformation',
+                components: []
+            };
+
         }
 
         //** Start of mapping activation and selection
