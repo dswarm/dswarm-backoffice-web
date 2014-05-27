@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, PubSub, loDash) {
+    .controller('ConfigurationCtrl', function($scope, PubSub, loDash, Util) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -159,31 +159,31 @@ angular.module('dmpApp')
 
             angular.forEach($scope.project.mappings, function(mapping) {
 
-                angular.forEach(mapping.input_attribute_paths, function(input_attribute_path) {
+                if(varName.indexOf('component') === -1) {
 
-                    angular.forEach(input_attribute_path.attribute_path.attributes, function(attribute) {
-                        if(attribute.name === varName) {
-                            name = attribute.name;
-                        }
+                    var iap = loDash.find(mapping.input_attribute_paths, function (iap) {
+                        return Util.buildVariableName(iap.attribute_path.attributes) === varName;
                     });
 
-                });
+                    name = Util.buildAttributeName(iap.attribute_path.attributes, 'name', ' › ');
 
-                if(name.length > 0) {
-                    return;
+                    if(name.length > 0) {
+                        return;
+                    }
+
+                } else {
+
+                    if(mapping.transformation) {
+                        angular.forEach(mapping.transformation.function.components, function(component) {
+                            if(component.name === varName) {
+                                name = component.function.name;
+                            }
+                        });
+                    }
+
                 }
-
-                if(mapping.transformation) {
-                    angular.forEach(mapping.transformation.function.components, function(component) {
-                        if(component.name === varName) {
-                            name = component.function.name;
-                        }
-                    });
-                }
-
 
             });
-
 
             return angular.copy(name);
 
