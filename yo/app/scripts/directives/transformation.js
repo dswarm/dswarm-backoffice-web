@@ -231,7 +231,7 @@ angular.module('dmpApp')
                         if (inputString.indexOf('component') === -1) {
 
                             var iap = loDash.find($scope.activeMapping.input_attribute_paths, function (iap) {
-                                return iap.attribute_path.attributes[0].name === inputString;
+                                return buildVariableName(iap.attribute_path.attributes) === inputString;
                             });
 
                             connectOptions.source = {
@@ -472,7 +472,7 @@ angular.module('dmpApp')
 
             } else {
 
-                ensureInputString(currentGridItem.component, $scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes[0].name);
+                ensureInputString(currentGridItem.component, buildAttributeName($scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes, 'name', '_'));
 
             }
 
@@ -503,7 +503,7 @@ angular.module('dmpApp')
                 output_components : [],
                 input_components : [],
                 description: angular.toJson({
-                    x: $scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes[0].name,
+                    x: buildVariableName($scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes),
                     y: positionY
                 })
             };
@@ -619,7 +619,7 @@ angular.module('dmpApp')
                     updateGridInputOutput(gridItem.positionX, gridItem.positionY);
 
                     gridItem.component.description = angular.toJson({
-                        x: $scope.activeMapping.input_attribute_paths[gridItem.positionX].attribute_path.attributes[0].name,
+                        x: buildVariableName($scope.activeMapping.input_attribute_paths[gridItem.positionX].attribute_path.attributes),
                         y: gridItem.positionY
                     });
 
@@ -1156,7 +1156,7 @@ angular.module('dmpApp')
 
                                     var inputString = component.parameter_mappings.inputString.split(',');
 
-                                    if(loDash.indexOf(inputString, $scope.activeMapping.input_attribute_paths[row].attribute_path.attributes[0].name) > -1) {
+                                    if(loDash.indexOf(inputString, buildVariableName($scope.activeMapping.input_attribute_paths[row].attribute_path.attributes)) > -1) {
                                         thisOpenEnded = false;
                                     }
                                 }
