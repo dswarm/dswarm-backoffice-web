@@ -568,7 +568,9 @@ describe('Directive: Transformation', function() {
             input_data_model: project.input_data_model,
             output_data_model: project.output_data_model
         };
-        var payloadJson = Util.toJson(payload);
+
+        var payloadExpect = angular.copy(payload);
+        Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
 
         spyOn(TaskResource, 'execute').andCallThrough();
         spyOn(PubSub, 'broadcast');
@@ -576,7 +578,7 @@ describe('Directive: Transformation', function() {
         elScope.sendTransformation(elScope.tabs[dataIdx]);
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, payloadJson);
+        expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, Util.toJson(payloadExpect));
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
 
@@ -627,7 +629,9 @@ describe('Directive: Transformation', function() {
             input_data_model: project.input_data_model,
             output_data_model: project.output_data_model
         };
-        var payloadJson = Util.toJson(payload);
+
+        var payloadExpect = angular.copy(payload);
+        Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
 
         spyOn(TaskResource, 'execute').andCallThrough();
         spyOn(PubSub, 'broadcast');
@@ -635,7 +639,7 @@ describe('Directive: Transformation', function() {
         elScope.sendTransformations();
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, payloadJson);
+        expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, Util.toJson(payloadExpect));
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
         expect(PubSub.broadcast.calls.length).toBe(1);

@@ -178,6 +178,42 @@ angular.module('dmpApp')
             return buildAttributeName(attributes, 'name', '_');
         }
 
+        /**
+         * Ensures each mapping only has unique parameter_mapping identifiers
+         * @param {Array} mappings Array of mappings
+         */
+        function ensureUniqueParameterMappingVars(mappings) {
+
+            loDash.map(mappings, function(mapping, idx) {
+
+                loDash.forEach(mapping.transformation.parameter_mappings, function(parameter_mapping, key) {
+
+                    if(key.indexOf('TRANSFORMATION_OUTPUT_VARIABLE') === -1) {
+
+                        var newKey = key + '__' + idx + '__';
+
+                        mapping.transformation.parameter_mappings[newKey] = angular.copy(mapping.transformation.parameter_mappings[key]);
+                        delete mapping.transformation.parameter_mappings[key];
+
+                        loDash.forEach(mapping.transformation.function.components, function(component) {
+
+                            var inputString = component.parameter_mappings.inputString.split(',');
+                            var inputStringIndex = inputString.indexOf(key);
+
+                            inputString[inputStringIndex] = newKey;
+
+                            component.parameter_mappings.inputString = inputString.join(',');
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        }
+
 
         return {
             latestBy: latestBy,
@@ -187,7 +223,8 @@ angular.module('dmpApp')
             toJson: toJson,
             buildAttributeName: buildAttributeName,
             buildUriReference: buildUriReference,
-            buildVariableName: buildVariableName
+            buildVariableName: buildVariableName,
+            ensureUniqueParameterMappingVars: ensureUniqueParameterMappingVars
         };
     })
 /**
