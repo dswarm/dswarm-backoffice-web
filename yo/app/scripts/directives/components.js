@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ComponentsCtrl', function($scope, FunctionResource) {
+    .controller('ComponentsCtrl', function($scope, FunctionResource, loDash) {
         $scope.internalName = 'Function List Widget';
 
         /**
@@ -29,6 +29,8 @@ angular.module('dmpApp')
                 }
             });
             // End DD-435
+
+            funs =  loDash.sortBy(funs, 'name');
 
             $scope.functions.children = funs;
         });
