@@ -1013,7 +1013,11 @@ angular.module('dmpApp')
          */
         function sendTransformations(task, persist) {
 
-            TaskResource.execute({persist: !!persist}, Util.toJson(task)).$promise.then(function(result) {
+            var runTask = angular.copy(task);
+
+            Util.ensureUniqueParameterMappingVars(runTask.job.mappings);
+
+            TaskResource.execute({persist: !!persist}, Util.toJson(runTask)).$promise.then(function(result) {
                 console.log('transformation finished', result);
                 PubSub.broadcast('transformationFinished', result);
             }, function(resp) {
