@@ -166,7 +166,9 @@ angular.module('dmpApp')
                         return Util.buildVariableName(iap.attribute_path.attributes) === varName;
                     });
 
-                    name = Util.buildAttributeName(iap.attribute_path.attributes, 'name', ' › ');
+                    if (angular.isObject(iap) && angular.isDefined(iap.attribute_path)) {
+                        name = Util.buildAttributeName(iap.attribute_path.attributes, 'name', ' › ');
+                    }
 
                     if(name.length > 0) {
                         return;
