@@ -81,6 +81,15 @@ angular.module('dmpApp')
             }
         };
 
+        $scope.getTooltipPlacement = function(alternatePositions) {
+
+            if($scope.position.left < $scope.position.width ) return (alternatePositions.left) ? alternatePositions.left : 'right';
+            if($scope.position.left + $scope.position.width + 50 > $scope.position.windowwidth) return (alternatePositions.right) ? alternatePositions.right : 'left';
+
+            return (alternatePositions.default) ? alternatePositions.default : 'top';
+
+        }
+
         $scope.isExpanded = function(data) {
             return (data.$show ? true : false);
         };
@@ -150,6 +159,10 @@ angular.module('dmpApp')
                     if (!compiledContents) {
                         compiledContents = $compile(contents);
                     }
+
+                    scope.position = $(iElement).offset();
+                    scope.position.width = $(iElement).width();
+                    scope.position.windowwidth = $( window ).width();
 
                     if (!isInternal) {
                         scope.$on('leafClicked', function(evt, data) {
