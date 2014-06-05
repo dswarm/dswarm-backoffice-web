@@ -1,17 +1,10 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', function($scope, $routeParams, $location, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub) {
-
-        function returnToData() {
-            $scope.saving = false;
-            ngProgress.complete();
-            $location.path('/data/');
-        }
+    .controller('DataConfigCsvCtrl', function($scope, $routeParams, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub) {
 
         var resource = null;
         var dataModel = null;
-        var mode = $routeParams.dataModelId ? 'edit' : 'create';
 
         var allFields = 'config.parameters',
             allTickableFields = {
@@ -94,7 +87,7 @@ angular.module('dmpApp')
             }
         }
 
-        if (mode === 'create' && $routeParams.resourceId) {
+        if ($scope.mode === 'create' && $routeParams.resourceId) {
             var resourceId = Math.max(1, +$routeParams.resourceId);
             $scope.resourceId = resourceId;
 
@@ -103,7 +96,7 @@ angular.module('dmpApp')
                 extractFromResource(resource);
                 sendDataConfigUpdatedBroadcast();
             });
-        } else if (mode === 'edit' && $routeParams.dataModelId) {
+        } else if ($scope.mode === 'edit' && $routeParams.dataModelId) {
             var dataModelId = Math.max(1, +$routeParams.dataModelId);
 
             DataModelResource.get({id: dataModelId }, function(result) {
@@ -121,19 +114,19 @@ angular.module('dmpApp')
                 $scope.saving = true;
                 ngProgress.start();
 
-                if (mode === 'create' && resource !== null) {
+                if ($scope.mode === 'create' && resource !== null) {
                     var model = {
                         'data_resource': resource,
                         'configuration': getConfig()
                     };
 
-                    DataModelResource.save({}, model, returnToData, function() {
+                    DataModelResource.save({}, model, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
                     });
-                } else if (mode === 'edit' && dataModel !== null) {
+                } else if ($scope.mode === 'edit' && dataModel !== null) {
                     var configuration = getConfig();
-                    ConfigurationResource.update({id: configuration.id}, configuration, returnToData, function() {
+                    ConfigurationResource.update({id: configuration.id}, configuration, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
                     });
@@ -141,7 +134,7 @@ angular.module('dmpApp')
             }
         };
 
-        $scope.onCancelClick = returnToData;
+        $scope.onCancelClick = $scope.returnToData;
 
         // When file format changes, update default row separator
         $scope.onFileFormatChanged = function() {

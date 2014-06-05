@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, DataModelResource, ResourceResource, Util, ngProgress) {
+    .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, DataModelResource, ResourceResource, ConfigurationResource, Util, ngProgress) {
 
         var resource = null;
+        var dataModel = null;
+
         $scope.resourceId = $routeParams.resourceId;
 
         $scope.selectedSet = [];
@@ -32,42 +34,72 @@ angular.module('dmpApp')
             return config;
         }
 
-        ResourceResource.get({ id: $scope.resourceId }, Util.mapResources(function(result, config) {
 
-            resource = result;
+        if ($scope.mode === 'create' && $routeParams.resourceId) {
 
-            if (config) {
+            ResourceResource.get({ id: $scope.resourceId }, Util.mapResources(function(result, config) {
 
-                $scope.config.id = config.id;
+                resource = result;
 
-                $scope.config.name = config.name;
-                $scope.config.description = config.description;
-                $scope.config.parameters = config.parameters;
+                if (config) {
 
-                $scope.selectedSet.push(config.parameters['schema_file']);
-            }
-        }));
+                    $scope.config.id = config.id;
+
+                    $scope.config.name = config.name;
+                    $scope.config.description = config.description;
+                    $scope.config.parameters = config.parameters;
+
+                    $scope.selectedSet.push(config.parameters['schema_file']);
+                }
+            }));
+
+        } else if ($scope.mode === 'edit' && $routeParams.dataModelId) {
+
+            var dataModelId = Math.max(1, +$routeParams.dataModelId);
+
+            DataModelResource.get({id: dataModelId }, function(result) {
+
+                dataModel = result;
+                resource = result.data_resource;
+                $scope.resourceId = resource.id;
+
+                $scope.config = result.configuration;
+
+            });
+
+        }
 
         $scope.onSaveClick = function() {
             if (!$scope.saving) {
                 $scope.saving = true;
                 ngProgress.start();
 
-                var model = {
-                    'data_resource': resource,
-                    'name': resource.name,
-                    'description': resource.description,
-                    'configuration': getConfig()
-                };
+                if ($scope.mode === 'create' && resource !== null) {
 
-                DataModelResource.save({}, model, function() {
-                    ngProgress.complete();
-                    $scope.saving = false;
-                    $location.path('/data/');
-                }, function() {
-                    $scope.saving = false;
-                    ngProgress.complete();
-                });
+                    var model = {
+                        'data_resource': resource,
+                        'name': resource.name,
+                        'description': resource.description,
+                        'configuration': getConfig()
+                    };
+
+                    DataModelResource.save({}, model, function() {
+                        ngProgress.complete();
+                        $scope.saving = false;
+                        $location.path('/data/');
+                    }, function() {
+                        $scope.saving = false;
+                        ngProgress.complete();
+                    });
+
+                } else if ($scope.mode === 'edit' && dataModel !== null) {
+
+                    ConfigurationResource.update({id: $scope.config.id}, $scope.config, $scope.returnToData, function() {
+                        $scope.saving = false;
+                        ngProgress.complete();
+                    });
+
+                }
             }
         };
 

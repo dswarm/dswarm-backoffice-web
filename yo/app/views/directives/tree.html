@@ -17,7 +17,7 @@
            ng-if="(isTarget && isExpanded(data) && isTempoDisabled())"></i>
 
         {{data.name}}
-        <small ng-if="data.title && !data.editableTitle" class="data-sample"> &nbsp; {{data.title}}</small>
+        <small ng-if="data.title && !data.editableTitle" class="data-sample" tooltip-trigger="dblclick" tooltip-placement="{{ getTooltipPlacement({ left : 'top', right : 'left' }) }}" tooltip-append-to-body="true" tooltip="{{ data.title }}"> &nbsp; {{data.title}}</small>
 
         <small ng-if="data.editableTitle && !data.hasChildren" class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"></small>
 

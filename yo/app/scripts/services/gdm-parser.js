@@ -32,7 +32,6 @@ angular.module('dmpApp').
                         properties[key] = {type: 'string'};
                     }
                     shortNames[key] = child.name;
-                    shortNames[key + '[]'] = child.name + '...';
                 });
 
                 return properties;
@@ -177,7 +176,7 @@ angular.module('dmpApp').
             var items = Util.collect(records, function(record) {
                 return parseAny(record, name, schema, extra);
             });
-            return makeNode(name + '[]', items, null, extra);
+            return makeNode(name, items, null, extra);
         }
 
         /**
@@ -202,7 +201,7 @@ angular.module('dmpApp').
                 var items = Util.collect(record, function(item) {
                     return parseString(item, name, extra);
                 });
-                return makeNode(name + '[]', items, null, extra);
+                return makeNode(name, items, null, extra);
             }
         }
 
