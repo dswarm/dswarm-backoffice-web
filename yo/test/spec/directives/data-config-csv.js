@@ -88,9 +88,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
     it('should have a DataConfigCsvCtrl controller', function() {
         routeParams.resourceId = 1;
 
-        scope.mode = 'create';
-
         $httpBackend.expectGET('/dmp/resources/1');
+
+        dataConfigCtrl();
 
         scope.$digest();
         $httpBackend.flush();
@@ -137,10 +137,10 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should default to id 1 if invalid id given', function() {
-        scope.mode = 'create';
-
         routeParams.resourceId = -1;
         $httpBackend.expectGET('/dmp/resources/1');
+
+        dataConfigCtrl();
 
         scope.$digest();
         $httpBackend.flush();
@@ -150,9 +150,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should request the specified data Resource', function() {
-        scope.mode = 'create';
-
         $httpBackend.expectGET('/dmp/resources/42');
+
+        dataConfigCtrl();
 
         scope.$digest();
         $httpBackend.flush();
@@ -177,9 +177,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should update the row separator if the fileformat changes', function() {
-        scope.mode = 'create';
-
         $httpBackend.expectGET('/dmp/resources/42');
+
+        dataConfigCtrl();
 
         scope.$digest();
         $httpBackend.flush();
@@ -202,8 +202,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should broadcast field changes', function() {
-        scope.mode = 'create';
         $httpBackend.expectGET('/dmp/resources/42');
+
+        dataConfigCtrl();
 
         scope.$digest();
         $httpBackend.flush();
@@ -230,9 +231,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should broadcast field changes', function() {
-        scope.mode = 'create';
-
         $httpBackend.expectGET('/dmp/resources/42');
+
+        dataConfigCtrl();
 
         scope.$digest();
         $httpBackend.flush();
@@ -263,8 +264,6 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should change location on cancel', function() {
-        scope.mode = 'create';
-
         $httpBackend.expectGET('/dmp/resources/42');
 
         dataConfigCtrl();
@@ -278,8 +277,6 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should change location after save', function() {
-        scope.mode = 'create';
-
         $httpBackend.expectGET('/dmp/resources/42');
 
         dataConfigCtrl();
