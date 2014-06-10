@@ -46,6 +46,8 @@ describe('Directive: DataConfigXml', function () {
     }));
 
     it('should have a DataConfigXmlCtrl controller', function() {
+        scope.mode = 'create';
+
         routeParams.resourceId = 1;
 
         $httpBackend.expectGET('views/directives/data-config-xml.html');
@@ -69,6 +71,8 @@ describe('Directive: DataConfigXml', function () {
 
 
     it('should request the specified data Resource', function() {
+        scope.mode = 'create';
+
         $httpBackend.expectGET('/dmp/resources/42');
 
         scope.$digest();
@@ -98,6 +102,8 @@ describe('Directive: DataConfigXml', function () {
 
 
     it('should change location on cancel', function() {
+        scope.mode = 'create';
+
         $httpBackend.expectGET('/dmp/resources/42');
 
         scope.$digest();
@@ -109,6 +115,8 @@ describe('Directive: DataConfigXml', function () {
     });
 
     it('should change location after save', function() {
+        scope.mode = 'create';
+
         $httpBackend.expectGET('/dmp/resources/42');
 
         scope.$digest();

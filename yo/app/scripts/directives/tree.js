@@ -83,12 +83,16 @@ angular.module('dmpApp')
 
         $scope.getTooltipPlacement = function(alternatePositions) {
 
-            if($scope.position.left < $scope.position.width ) return (alternatePositions.left) ? alternatePositions.left : 'right';
-            if($scope.position.left + $scope.position.width + 50 > $scope.position.windowwidth) return (alternatePositions.right) ? alternatePositions.right : 'left';
+            if($scope.position.left < $scope.position.width ) {
+                return (alternatePositions.left) ? alternatePositions.left : 'right';
+            }
+            if($scope.position.left + $scope.position.width + 50 > $scope.position.windowwidth) {
+                return (alternatePositions.right) ? alternatePositions.right : 'left';
+            }
 
             return (alternatePositions.default) ? alternatePositions.default : 'top';
 
-        }
+        };
 
         $scope.isExpanded = function(data) {
             return (data.$show ? true : false);
