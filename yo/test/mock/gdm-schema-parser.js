@@ -880,7 +880,7 @@ angular.module('mockedSchemas', [])
                 "leaf": true
             },
             {
-                "name": "feld...",
+                "name": "feld",
                 "$show": true,
                 "children": [
                     {
@@ -1320,7 +1320,7 @@ angular.module('mockedSchemas', [])
                                 "leaf": true
                             },
                             {
-                                "name": "value...",
+                                "name": "value",
                                 "$show": true,
                                 "children": [
                                     {
@@ -1374,7 +1374,7 @@ angular.module('mockedSchemas', [])
                                 "leaf": true
                             },
                             {
-                                "name": "value...",
+                                "name": "value",
                                 "$show": true,
                                 "children": [
                                     {

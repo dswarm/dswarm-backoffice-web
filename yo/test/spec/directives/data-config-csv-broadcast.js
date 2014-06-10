@@ -75,6 +75,8 @@ describe('Controller: DataConfigCsvCtrl', function () {
     xit('should not emit event on form name change', function () {
         $httpBackend.expectGET('/dmp/resources/42');
 
+        scope.mode = 'create';
+
         dataConfigCsvCtrl();
 
         $httpBackend.flush();
@@ -87,6 +89,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
     });
 
     it('should emit event on form object change', function () {
+
+        scope.mode = 'create';
+
         $httpBackend.expectGET('/dmp/resources/42');
 
         dataConfigCsvCtrl();

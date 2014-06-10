@@ -11,6 +11,6 @@ angular.module('dmpApp')
             $scope.saving = false;
             ngProgress.complete();
             $location.path('/data/');
-        }
+        };
 
     });

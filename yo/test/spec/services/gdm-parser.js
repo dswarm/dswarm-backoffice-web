@@ -40,7 +40,7 @@ describe('gdmParser tests', function (){
             { 'type': 'string' }
         );
 
-        expect(result['name']).toBe('bar[]');
+        expect(result['name']).toBe('bar');
 
         expect(result['children'].length).toBe(1);
         expect(result['children'][0]['title']).toBe('urn:nbn:de:bsz:14-ds-1229427875176-76287');
@@ -61,7 +61,7 @@ describe('gdmParser tests', function (){
 
         var result = gdmParser.parseString(container, 'bar');
 
-        expect(result['name']).toBe('bar[]');
+        expect(result['name']).toBe('bar');
         expect(result['children'].length).toBe(3);
 
     });
