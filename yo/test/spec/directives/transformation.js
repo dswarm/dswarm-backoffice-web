@@ -4,7 +4,7 @@ describe('Directive: Transformation', function() {
     var element, scope, $rootScope, $compile, $timeout, $httpBackend;
     var elementHtml = '<transformation></transformation>';
 
-    var project, schema, attributePaths, data_resource, configuration, gridsterOpts, mockedFunctions;
+    var project, schema, attributePaths, data_resource, configuration, gridsterOpts, mockedFunctions, mockedGriditems;
 
 
     function cleanPath(path) {
@@ -311,7 +311,7 @@ describe('Directive: Transformation', function() {
 
     beforeEach(module('dmpApp'));
 
-    beforeEach(module('dmpApp', 'mockedFunctions'));
+    beforeEach(module('dmpApp', 'mockedFunctions', 'mockedGriditems'));
 
     beforeEach(module(function($provide) {
         $provide.value('ApiEndpoint', 'foo/');
@@ -327,6 +327,7 @@ describe('Directive: Transformation', function() {
         $injector.get('$templateCache').put('views/directives/transformation.html', '<div></div>');
 
         mockedFunctions = $injector.get('mockFunctionsJSON');
+        mockedGriditems = $injector.get('mockedGriditemsJSON');
 
         scope = $rootScope.$new();
         scope.project = project;
@@ -791,5 +792,87 @@ describe('Directive: Transformation', function() {
         expect($modal.open.calls[0].args[0].resolve.attributePathId()).toBe('foo');
         expect($modal.open.calls[0].args[0].resolve.filters()).toEqual([]);
     }));
+
+    it('should react to the projectDraftDiscarded Event', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(project.mappings.length).toBe(0);
+
+        var data = connectionDatas[0];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(project.mappings.length).toBe(1);
+        expect(elScope.activeMapping.id).toBe(13);
+
+        $rootScope.$broadcast('projectDraftDiscarded');
+
+        expect(elScope.activeMapping.id).toBe(undefined);
+
+    });
+
+    it('should react to the projectModelChanged Event', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(project.mappings.length).toBe(0);
+
+        var data = connectionDatas[0];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(project.mappings.length).toBe(1);
+        expect(elScope.activeMapping.id).toBe(13);
+
+        $rootScope.$broadcast('projectModelChanged');
+
+        expect(elScope.activeMapping.id).toBe(undefined);
+
+    });
+
+    it('should react to the changeOutputModel Event', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(project.mappings.length).toBe(0);
+
+        var data = connectionDatas[0];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(project.mappings.length).toBe(1);
+        expect(elScope.activeMapping.id).toBe(13);
+
+        $rootScope.$broadcast('changeOutputModel');
+
+        expect(elScope.activeMapping.id).toBe(undefined);
+
+    });
+
+    it('should detect griditems with multiple inputs', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(elScope.isMultiple(mockedGriditems[0])).toBe(false);
+        expect(elScope.isMultiple(mockedGriditems[1])).toBe(true);
+
+    });
+
+    it('should find open ended components', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        expect(project.mappings.length).toBe(0);
+
+        var data = connectionDatas[0];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(project.mappings.length).toBe(1);
+        expect(elScope.activeMapping.id).toBe(13);
+
+        elScope.gridItems = mockedGriditems;
+
+        expect(elScope.hasOpenEndedComponents()).toBe(false);
+
+    });
+
 
 });
