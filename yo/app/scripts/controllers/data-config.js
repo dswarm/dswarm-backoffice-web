@@ -7,6 +7,8 @@ angular.module('dmpApp')
 
         $scope.mode = $routeParams.dataModelId ? 'edit' : 'create';
 
+        $scope.configError = '';
+
         $scope.returnToData = function() {
             $scope.saving = false;
             ngProgress.complete();
