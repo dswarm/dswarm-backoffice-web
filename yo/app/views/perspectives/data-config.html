@@ -1,5 +1,7 @@
 <h1>Data Config as {{configType}}</h1>
 
+<div class="alert alert-dismissable alert-danger" ng-if="configError">{{configError}}</div>
+
 <div ng-switch on="configType">
 
     <div ng-switch-when="csv">

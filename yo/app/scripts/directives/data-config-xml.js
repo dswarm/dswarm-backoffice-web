@@ -87,9 +87,12 @@ angular.module('dmpApp')
                         ngProgress.complete();
                         $scope.saving = false;
                         $location.path('/data/');
-                    }, function() {
-                        $scope.saving = false;
+                    }, function(error) {
                         ngProgress.complete();
+                        $scope.saving = false;
+
+                        $scope.$parent.$parent.configError = error.data.error;
+
                     });
 
                 } else if ($scope.mode === 'edit' && dataModel !== null) {

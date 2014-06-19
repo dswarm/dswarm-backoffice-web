@@ -5,7 +5,6 @@ angular.module('dmpApp')
 
         $scope.previewResult = [];
         $scope.colDefs = [];
-        $scope.configError = '';
 
         $scope.showGrid = false;
 
@@ -102,7 +101,7 @@ angular.module('dmpApp')
                     },
                     function(error) {
 
-                        $scope.configError = error.data.error;
+                        $scope.$parent.$parent.configError = error.data.error;
 
                         FileResource.lines({
                             id: resourceId,
