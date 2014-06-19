@@ -101,7 +101,7 @@ angular.module('dmpApp')
                     },
                     function(error) {
 
-                        $scope.$parent.$parent.configError = error.data.error;
+                        $scope.$parent.$parent.$parent.configError = error.data.error;
 
                         FileResource.lines({
                             id: resourceId,
