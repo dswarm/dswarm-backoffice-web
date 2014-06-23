@@ -10,6 +10,69 @@ angular.module('dmpApp')
         $scope.projectId = $routeParams.projectId;
         $scope.projectIsDraft = false;
 
+
+        $scope.jspSourceOptions = {
+            scope: 'schema',
+            container: 'schema',
+            anchor: ['Continuous', { faces: ['top'] } ],
+            endpoint: ['Dot', {
+                radius: 5,
+                cssClass: 'source-endpoint source-endpoint-tree'
+            }],
+            connectorOverlays: [
+                ['Arrow', {
+                    location: 1,
+                    width: 10,
+                    length: 12,
+                    foldback: 0.75
+                }]
+            ],
+            connector: 'StateMachine',
+            connectorStyle: {
+                strokeStyle: 'black',
+                lineWidth: 3
+            },
+            paintStyle: {
+                fillStyle: 'black',
+                lineWidth: 3
+            }
+        };
+
+        $scope.jspTargetOptions = {
+            scope: 'schema',
+            container: 'schema',
+            anchor: ['Continuous', { faces: ['top'] } ],
+            endpoint: ['Dot', {
+                radius: 5,
+                cssClass: 'transparent'
+            }],
+            connector: 'StateMachine',
+            connectorStyle: {
+                strokeStyle: 'black',
+                lineWidth: 3
+            },
+            paintStyle: {
+                fillStyle: 'transparent',
+                lineWidth: 3
+            },
+            dropOptions: {
+                hoverClass: 'mapping-droppable'
+            }
+        };
+
+        $scope.expandCollapse = function(that, data) {
+
+            that.toggle(that);
+
+            data.$show = !data.$show;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 0);
+        };
+
+        // NEW TREEE TEST END
+
         // Mock project data for angular data handling
         $scope.project = {
             id: 0,

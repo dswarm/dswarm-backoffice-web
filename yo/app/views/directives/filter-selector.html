@@ -11,7 +11,13 @@
             </ul>
 
             <div class="box">
-                <tree data="filter.filter"></tree>
+                <div ui-tree data-drag-enabled="false">
+                    <ol ui-tree-nodes ng-model="filter.filter.children">
+                        <li ng-repeat="data in filter.filter.children"
+                            ui-tree-node
+                            ng-include="'views/directives/tree_renderer.html'"></li>
+                    </ol>
+                </div>
             </div>
 
         </div>

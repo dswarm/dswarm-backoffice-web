@@ -1,0 +1,60 @@
+<div ui-tree-handle
+     ng-class='{ isFiltered : data.isFiltered }'
+     class="jsPanchor">
+
+    <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
+
+        <span ng-if="!data.hasChildren || collapsed">
+            <a class="btn btn-primary btn-xs"
+               data-nodrag
+               style="margin-right: 8px;"
+               ng-if='config.type == "as-target"'>
+                <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"
+                      dmp-endpoint="data"
+                      ng-class="{disabled : depth() > 1 || collapsed }"
+                      ng-style="{color:isSelected?'slategrey':''}"
+                      js-plumb-target-options="jspTargetOptions"></span>
+            </a>
+        </span>
+
+        <a class="btn btn-success btn-xs"
+           data-nodrag
+           ng-click="expandCollapse(this, data)"
+           ng-if="data.children.length">
+            <span class="glyphicon"
+                  ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+        </a>
+        {{data.name}}
+
+        <small ng-if="data.title && !data.editableTitle"
+               class="data-sample"
+               tooltip-trigger="dblclick"
+               tooltip-append-to-body="true"
+               tooltip="{{ data.title }}">
+            &nbsp; {{data.title}}
+        </small>
+
+        <small ng-if="data.editableTitle && !data.hasChildren"
+               class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()">
+        </small>
+
+        <span ng-if="!data.hasChildren || collapsed">
+
+            <a class="pull-right btn btn-primary btn-xs"
+               data-nodrag
+               style="margin-right: 8px;"
+               ng-if='config.type == "as-source"'>
+                <span class="glyphicon glyphicon-unchecked jsPanchorIcon"
+                      dmp-endpoint="data"
+                      ng-class="{disabled : collapsed }"
+                      ng-style="{color:isSelected?'slategrey':''}"
+                      js-plumb-source-options="jspSourceOptions"></span>
+            </a>
+
+        </span>
+
+    </div>
+    <ol ui-tree-nodes="options" ng-model="data.children" ng-class="{hidden: collapsed}">
+        <li ng-repeat="data in data.children" ui-tree-node ng-include="'views/directives/tree_renderer.html'"></li>
+    </ol>
+</div>
