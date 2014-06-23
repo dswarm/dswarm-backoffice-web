@@ -5,6 +5,7 @@ For other environments, please have a look at the [default instructions](dev.md)
 
 ### Prerequisites ###
 
+- create an environment variable DMP_HOME that points to the directory of the datamanagement-platform (backend), e.g. DMP_HOME=C:\DMP\datamanagement-platform\
 - node >= 0.8 [website](http://nodejs.org)
 - npm in your $PATH
 - python 2.7.3 [website](https://www.python.org/), [installer 2.7.3](https://www.python.org/ftp/python/2.7.3/python-2.7.3.msi)
