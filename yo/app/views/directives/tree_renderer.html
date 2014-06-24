@@ -8,12 +8,12 @@
             <a class="btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
-               ng-if='config.type == "as-target"'>
+               ng-if='config.type == "as-target"'
+               dmp-endpoint="data"
+               js-plumb-target-options="jspTargetOptions"
+               ng-style="{color:isSelected?'slategrey':''}">
                 <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"
-                      dmp-endpoint="data"
-                      ng-class="{disabled : depth() > 1 || collapsed }"
-                      ng-style="{color:isSelected?'slategrey':''}"
-                      js-plumb-target-options="jspTargetOptions"></span>
+                      ng-class="{disabled : depth() > 1 || collapsed }"></span>
             </a>
         </span>
 
@@ -43,12 +43,12 @@
             <a class="pull-right btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
-               ng-if='config.type == "as-source"'>
+               ng-if='config.type == "as-source"'
+               dmp-endpoint="data"
+               js-plumb-source-options="jspSourceOptions"
+               ng-style="{color:isSelected?'slategrey':''}">
                 <span class="glyphicon glyphicon-unchecked jsPanchorIcon"
-                      dmp-endpoint="data"
-                      ng-class="{disabled : collapsed }"
-                      ng-style="{color:isSelected?'slategrey':''}"
-                      js-plumb-source-options="jspSourceOptions"></span>
+                      ng-class="{disabled : collapsed }"></span>
             </a>
 
             <a class="pull-right btn btn-primary btn-xs"
