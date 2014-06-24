@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, schemaParser, PubSub, loDash, Util, jsP, endpointLabel) {
+    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, SchemaAttributepathsResource, schemaParser, PubSub, loDash, Util, jsP, endpointLabel) {
 
         var latestSave = {};
 
@@ -344,7 +344,21 @@ angular.module('dmpApp')
         $scope.loadProjectData($routeParams.projectId);
 
         $scope.newLeaf = function(data) {
-            endpointLabel.ask('Name the new Leaf').then(function(label) { });
+            endpointLabel.ask('Name the new Leaf').then(function(label) {
+
+                SchemaAttributepathsResource.add_attribute({
+                        id: $scope.project.input_data_model.schema.id,
+                        attributepathid: data._$path_id
+                    }, {
+                        attribute_name: label
+                    }, function(schema) {
+                        $scope.project.input_data_model.schema = schema;
+
+                        $scope.processInputDataModel();
+                    }
+                );
+
+            });
         }
 
     });
