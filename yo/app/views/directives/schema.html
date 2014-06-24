@@ -5,10 +5,16 @@
     <div class="zebra30 jsPanchor jsPanchorSource source-selected">
 
         <div class="data-head tree-child">
-            <h5>{{project.input_data_model.name}}</h5>
+            <h4>{{project.input_data_model.name}}</h4>
         </div>
 
-        <tree data="project._$input_data_model_schema" name="project.input_data_model.name" res-id="{{ project.input_data_model.id }}" conf-id="{{ project.input_data_model.configuration.id }}" as-source layer="0"></tree>
+        <div ui-tree data-drag-enabled="false" ng-init="config = { type: 'as-source'}">
+            <ol ui-tree-nodes ng-model="project._$input_data_model_schema.children">
+                <li ng-repeat="data in project._$input_data_model_schema.children"
+                    ui-tree-node
+                    ng-include="'views/directives/tree_renderer.html'"></li>
+            </ol>
+        </div>
 
     </div>
 
@@ -27,7 +33,7 @@
               <div class="zebra30 jsPanchorTarget">
 
                   <div class="data-head tree-child">
-                      <h5>Output Schema</h5>
+                      <h4>Output Schema</h4>
 
                       <div class="icons">
 
@@ -37,8 +43,13 @@
 
                   </div>
 
-
-                  <tree data="project._$output_data_model_schema" as-target></tree>
+                  <div ui-tree data-drag-enabled="false" ng-init="config = { type: 'as-target'}">
+                      <ol ui-tree-nodes ng-model="project._$output_data_model_schema.children">
+                          <li ng-repeat="data in project._$output_data_model_schema.children"
+                              ui-tree-node
+                              ng-include="'views/directives/tree_renderer.html'"></li>
+                      </ol>
+                  </div>
               </div>
 
           </div>

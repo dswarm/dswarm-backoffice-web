@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, schemaParser, PubSub, loDash, Util, jsP) {
+    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, SchemaAttributepathsResource, schemaParser, PubSub, loDash, Util, jsP, endpointLabel) {
 
         var latestSave = {};
 
@@ -9,6 +9,69 @@ angular.module('dmpApp')
 
         $scope.projectId = $routeParams.projectId;
         $scope.projectIsDraft = false;
+
+
+        $scope.jspSourceOptions = {
+            scope: 'schema',
+            container: 'schema',
+            anchor: ['Continuous', { faces: ['top'] } ],
+            endpoint: ['Dot', {
+                radius: 5,
+                cssClass: 'source-endpoint source-endpoint-tree'
+            }],
+            connectorOverlays: [
+                ['Arrow', {
+                    location: 1,
+                    width: 10,
+                    length: 12,
+                    foldback: 0.75
+                }]
+            ],
+            connector: 'StateMachine',
+            connectorStyle: {
+                strokeStyle: 'black',
+                lineWidth: 3
+            },
+            paintStyle: {
+                fillStyle: 'black',
+                lineWidth: 3
+            }
+        };
+
+        $scope.jspTargetOptions = {
+            scope: 'schema',
+            container: 'schema',
+            anchor: ['Continuous', { faces: ['top'] } ],
+            endpoint: ['Dot', {
+                radius: 5,
+                cssClass: 'transparent'
+            }],
+            connector: 'StateMachine',
+            connectorStyle: {
+                strokeStyle: 'black',
+                lineWidth: 3
+            },
+            paintStyle: {
+                fillStyle: 'transparent',
+                lineWidth: 3
+            },
+            dropOptions: {
+                hoverClass: 'mapping-droppable'
+            }
+        };
+
+        $scope.expandCollapse = function(that, data) {
+
+            that.toggle(that);
+
+            data.$show = !data.$show;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 0);
+        };
+
+        // NEW TREEE TEST END
 
         // Mock project data for angular data handling
         $scope.project = {
@@ -279,5 +342,23 @@ angular.module('dmpApp')
         });
 
         $scope.loadProjectData($routeParams.projectId);
+
+        $scope.newLeaf = function(data) {
+            endpointLabel.ask('Name the new Leaf').then(function(label) {
+
+                SchemaAttributepathsResource.add_attribute({
+                        id: $scope.project.input_data_model.schema.id,
+                        attributepathid: data._$path_id
+                    }, {
+                        attribute_name: label
+                    }, function(schema) {
+                        $scope.project.input_data_model.schema = schema;
+
+                        $scope.processInputDataModel();
+                    }
+                );
+
+            });
+        }
 
     });

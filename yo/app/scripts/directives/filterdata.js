@@ -5,9 +5,7 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: {
-                data: '='
-            },
+            scope: true,
             templateUrl: 'views/directives/filter-data.html'
         };
     });

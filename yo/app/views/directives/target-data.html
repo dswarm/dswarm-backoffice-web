@@ -11,7 +11,15 @@
 
     <div ng-repeat="record in records" class="tab-content">
         <div ng-show="selectedTab == $index">
-            <tree data="record.data"></tree>
+
+            <div ui-tree data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="record.data.children">
+                    <li ng-repeat="data in record.data.children"
+                        ui-tree-node
+                        ng-include="'views/directives/tree_renderer.html'"></li>
+                </ol>
+            </div>
+
         </div>
     </div>
 

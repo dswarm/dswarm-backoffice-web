@@ -33,6 +33,10 @@ angular.module('dmpApp')
         }
         /* jshint ignore:end */
 
+        $scope.expandCollapse = function(that) {
+            that.toggle(that);
+        };
+
         $scope.update = function() {
 
             var inputFilterCollection = filterHelper.buildFilterInputs(filters);

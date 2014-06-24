@@ -3,5 +3,11 @@
     <div class="filterMatch" ng-class="{ filterNoMatch : data.filterNoMatch }">
         no match
     </div>
-    <tree data="data"></tree>
+    <div ui-tree data-drag-enabled="false">
+        <ol ui-tree-nodes ng-model="dataSource.children">
+            <li ng-repeat="data in dataSource.children"
+                ui-tree-node
+                ng-include="'views/directives/tree_renderer.html'"></li>
+        </ol>
+    </div>
 </div>

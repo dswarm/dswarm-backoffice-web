@@ -5,10 +5,7 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: {
-                filters: '=',
-                update: '='
-            },
+            scope: true,
             templateUrl: 'views/directives/filter-selector.html'
         };
     });

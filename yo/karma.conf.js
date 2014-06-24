@@ -32,6 +32,7 @@ module.exports = function(config) {
             'components/angular-grid/ng-grid-2.0.9.debug.js',
             'components/angular-gridster/app/scripts/gridster.js',
             'components/angular-ui-sortable/sortable.js',
+            'components/angular-ui-tree/dist/angular-ui-tree.js',
             'config.js',
             'scripts/*.js',
             'scripts/**/*.js',

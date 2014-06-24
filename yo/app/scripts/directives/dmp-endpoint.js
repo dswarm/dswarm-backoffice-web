@@ -15,17 +15,22 @@ angular.module('dmpApp')
             if (sourceScope && sourceScope.$id === scope.$id && sourceScope.isSelected) {
                 // clicked again, deselect
                 sourceScope.isSelected = false;
+                sourceScope.$digest();
+
                 sourceScope = null;
                 return;
             }
 
             if (sourceScope) {
                 sourceScope.isSelected = false;
+                sourceScope.$digest();
             }
 
             sourceScope = scope;
 
             sourceScope.isSelected = true;
+            sourceScope.$digest();
+
         }
 
         function selectTarget(scope) {

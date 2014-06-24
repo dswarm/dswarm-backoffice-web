@@ -95,10 +95,11 @@ angular.module('dmpApp')
         jsPlumb.getCachedData = function(elId) {
 
             var $2 = $('#' + elId);
-            if ($2 && !$2.is(':visible') && $2.parent().hasClass('tree-leaf')) {
 
-                $2.closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
-                elId = $2.closest('.jsPanchor:visible').find('i.jsPanchorIcon:visible').first().attr('id');
+            if ($2 && !$2.is(':visible')) {
+
+                $2.closest('.jsPanchor:visible').find('.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
+                elId = $2.closest('.jsPanchor:visible').find('.jsPanchorIcon:visible').first().attr('id');
 
             }
 
