@@ -51,15 +51,16 @@
                       ng-class="{disabled : collapsed }"></span>
             </a>
 
-            <a class="pull-right btn btn-primary btn-xs"
-               data-nodrag
-               ng-click="newLeaf(data)"
-               style="margin-right: 8px;"
-               ng-if='config.type == "as-target" || config.type == "as-source"'>
-                <span class="glyphicon glyphicon-plus"></span>
-            </a>
-
         </span>
+
+        <a class="pull-right btn btn-primary btn-xs"
+           data-nodrag
+           ng-click="newLeaf(data)"
+           style="margin-right: 8px;"
+           ng-if='config.type == "as-source"'>
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+
 
     </div>
     <ol ui-tree-nodes="options" ng-model="data.children" ng-class="{hidden: collapsed}">
