@@ -359,6 +359,6 @@ angular.module('dmpApp')
                 );
 
             });
-        }
+        };
 
     });
