@@ -60,7 +60,7 @@ angular.module('dmpApp')
         }
 
         init();
-        PubSub.subscribe($scope, ['inputDataSelected', 'projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel'], init);
+        PubSub.subscribe($scope, ['inputDataSelected', 'projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel', 'restoreCurrentProject'], init);
 
         PubSub.subscribe($scope, 'getLoadData', function() {
 

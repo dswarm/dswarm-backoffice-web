@@ -135,7 +135,7 @@ angular.module('dmpApp')
 
         PubSub.subscribe($rootScope, 'jsp-connector-connect', onConnectorConnect);
         PubSub.subscribe($rootScope, 'jsp-connector-disconnect', onConnectorDisonnect);
-        PubSub.subscribe($rootScope, 'projectDraftDiscarded', onProjectDraftDiscarded);
+        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'restoreCurrentProject'], onProjectDraftDiscarded);
 
         return {
             scope: true,

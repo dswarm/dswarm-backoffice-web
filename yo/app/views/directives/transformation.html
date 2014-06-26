@@ -8,6 +8,11 @@
         ng-class="{'disabled':tabs.length == 0}"
         ng-click="sendTransformations(true)" >
     <i class="fa fa-save fa-fw"></i> Save all transformations</button>
+
+    <a class="pull-right btn btn-danger btn-xs" ng-click="removeMapping(activeMapping)" style="margin-right: 8px; padding: 8px 12px;">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+    </a>
+
     <div class="tabbable tabs-below">
         <ul class="nav nav-tabs">
 

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive: Transformation', function() {
-    var element, scope, $rootScope, $compile, $timeout, $httpBackend;
+    var element, scope, fakeModal, $modal, $rootScope, $compile, $timeout, $httpBackend;
     var elementHtml = '<transformation></transformation>';
 
     var project, schema, attributePaths, data_resource, configuration, gridsterOpts, mockedFunctions, mockedGriditems;
@@ -336,6 +336,20 @@ describe('Directive: Transformation', function() {
 
         var _element = angular.element(elementHtml);
         element = $compile(_element)(scope);
+    }));
+
+    beforeEach(inject(function ($q, _$modal_) {
+        $modal = _$modal_;
+
+        fakeModal = (function() {
+            var defer = $q.defer();
+
+            return {
+                result: defer.promise,
+                close: defer.resolve,
+                dismiss: defer.reject
+            };
+        }());
     }));
 
     afterEach(function() {
@@ -871,6 +885,29 @@ describe('Directive: Transformation', function() {
         elScope.gridItems = mockedGriditems;
 
         expect(elScope.hasOpenEndedComponents()).toBe(false);
+
+    });
+
+    it('should remove current activemapping from projectmappings', function() {
+        scope.$digest();
+        var elScope = element.scope();
+
+        spyOn($modal, 'open').andReturn(fakeModal);
+
+        expect(project.mappings.length).toBe(0);
+
+        var data = connectionDatas[0];
+        $rootScope.$broadcast('connectionSelected', data);
+
+        expect(project.mappings.length).toBe(1);
+        expect(elScope.activeMapping.id).toBe(13);
+
+        elScope.removeMapping();
+
+        fakeModal.close();
+        $rootScope.$digest();
+
+        expect(elScope.activeMapping.id).toBe(undefined);
 
     });
 

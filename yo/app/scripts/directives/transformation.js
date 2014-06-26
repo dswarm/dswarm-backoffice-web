@@ -163,7 +163,7 @@ angular.module('dmpApp')
         }
 
         init();
-        PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel'], init);
+        PubSub.subscribe($scope, ['projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel', 'restoreCurrentProject'], init);
 
         // show draft banner
         if ($scope.projectIsDraft) {
@@ -1301,6 +1301,25 @@ angular.module('dmpApp')
 
         };
 
+        /**
+         * Removes the current active mapping from the project
+         * after confirming with the user
+         */
+        $scope.removeMapping = function() {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/confirm-remove-mapping.html'
+            });
+
+            modalInstance.result.then(function() {
+
+                $scope.project.mappings = loDash.remove($scope.project.mappings, function(mapping) { console.log("what what?", mapping.id, $scope.activeMapping.id); return mapping.id !== $scope.activeMapping.id; });
+
+                PubSub.broadcast('restoreCurrentProject', {});
+
+            });
+
+        };
 
     })
     .directive('transformation', function() {
