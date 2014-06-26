@@ -1018,7 +1018,6 @@ angular.module('dmpApp')
             Util.ensureUniqueParameterMappingVars(runTask.job.mappings);
 
             TaskResource.execute({persist: !!persist}, Util.toJson(runTask)).$promise.then(function(result) {
-                console.log('transformation finished', result);
                 PubSub.broadcast('transformationFinished', result);
             }, function(resp) {
                 console.log(resp);

@@ -58,8 +58,6 @@ angular.module('dmpApp')
                     var param = parameterPool[parameterKey];
                     delete parameterPool[parameterKey];
 
-                    console.log(parameterOrder, param, parameterPool);
-
                     param.key = parameterKey;
                     return param;
                 });
