@@ -212,7 +212,6 @@ angular.module('dmpApp')
 
             localStorageService.set(getStorageDraftKey(projectToSave.id), projectToSave);
 
-            console.log('Project changed: ', projectToSave);
         }
 
         function discardProjectDraft(projectId) {
