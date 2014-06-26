@@ -205,6 +205,12 @@ angular.module('dmpApp')
 
         }
 
+        function restoreCurrentProject() {
+            restoreProject($scope.project);
+        }
+
+        PubSub.subscribe($scope, 'restoreCurrentProject', restoreCurrentProject);
+
         function saveProjectDraft(project) {
 
             var projectToSave = project || $scope.project;

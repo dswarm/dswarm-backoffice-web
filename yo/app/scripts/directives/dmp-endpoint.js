@@ -316,7 +316,7 @@ angular.module('dmpApp')
             }
         }
 
-        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'changeOutputModel'], onProjectDiscarded);
+        PubSub.subscribe($rootScope, ['projectDraftDiscarded', 'changeOutputModel', 'restoreCurrentProject'], onProjectDiscarded);
         PubSub.subscribe($rootScope, 'paintPlumbs', onPaintPlumbs);
         PubSub.subscribe($rootScope, 'schemaCanvasUpdated', onSchemaCanvasUpdated);
         PubSub.subscribe($rootScope, 'connectionSwitched', onConnectionSwitched);
