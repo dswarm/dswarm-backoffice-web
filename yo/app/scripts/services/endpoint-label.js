@@ -4,7 +4,7 @@ angular.module('dmpApp')
     .factory('endpointLabel', function($modal, $q) {
 
         function valid(label) {
-            return angular.isString(label) && label.length >= 5;
+            return angular.isString(label) && label.length >= 3;
         }
 
         function get(connection) {
@@ -35,7 +35,7 @@ angular.module('dmpApp')
         function ask(promptText, helpText) {
             var text = promptText || 'Name this mapping',
                 buttonText = text,
-                help = helpText || 'The name has to be at least 5 characters long';
+                help = helpText || 'The name has to be at least 3 characters long';
 
             var labelDefer = $q.defer();
 
