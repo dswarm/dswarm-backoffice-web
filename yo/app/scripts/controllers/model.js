@@ -353,7 +353,9 @@ angular.module('dmpApp')
 
                 var result = function(schema) {
                     $scope.project.input_data_model.schema = schema;
-                    $scope.processInputDataModel();
+
+                    PubSub.broadcast('restoreCurrentProject', {});
+
                 };
 
                 if(data) {
