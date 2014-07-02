@@ -1,5 +1,5 @@
 <div ui-tree-handle
-     ng-class='{ isFiltered : data.isFiltered, disabled : depth() > 1 || collapsed }'
+     ng-class='{ isFiltered : data.isFiltered, disabled : (depth() > 1 || collapsed) && config.type == "as-target" }'
      class="jsPanchor">
 
     <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
