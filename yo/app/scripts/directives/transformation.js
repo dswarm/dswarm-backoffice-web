@@ -1312,7 +1312,7 @@ angular.module('dmpApp')
 
             modalInstance.result.then(function() {
 
-                $scope.project.mappings = loDash.remove($scope.project.mappings, function(mapping) { console.log("what what?", mapping.id, $scope.activeMapping.id); return mapping.id !== $scope.activeMapping.id; });
+                $scope.project.mappings = loDash.remove($scope.project.mappings, function(mapping) { return mapping.id !== $scope.activeMapping.id; });
 
                 PubSub.broadcast('restoreCurrentProject', {});
 
