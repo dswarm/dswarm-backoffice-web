@@ -7,7 +7,8 @@ describe('Controller: ConfigurationCtrl', function () {
     var configurationCtrl,
         scope,
         mockedConfiguration,
-        mockedConfigurationInternal;
+        mockedConfigurationInternal,
+        fakeModal, $modal;
 
     beforeEach(module('dmpApp', 'mockedConfiguration'));
 
@@ -36,6 +37,20 @@ describe('Controller: ConfigurationCtrl', function () {
             });
         };
 
+    }));
+
+    beforeEach(inject(function ($q, _$modal_) {
+        $modal = _$modal_;
+
+        fakeModal = (function() {
+            var defer = $q.defer();
+
+            return {
+                result: defer.promise,
+                close: defer.resolve,
+                dismiss: defer.reject
+            };
+        }());
     }));
 
     it('should have a ConfigurationCtrl controller', function() {
@@ -140,5 +155,25 @@ describe('Controller: ConfigurationCtrl', function () {
         expect(PubSub.broadcast).toHaveBeenCalledWith('handleConfigEdited', { id : -1402495665792, parameter_mappings : { value : 'bar' } });
     }));
 
+    it('should send data on removeComponent', inject(function(PubSub) {
+        configurationCtrl();
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockedConfiguration
+        });
+
+        expect(scope.component).not.toBe(null);
+
+        spyOn(PubSub, 'broadcast');
+
+        spyOn($modal, 'open').andReturn(fakeModal);
+
+        scope.removeComponent();
+
+        fakeModal.close();
+        scope.$digest();
+
+        expect(PubSub.broadcast).toHaveBeenCalledWith('removeComponent', -1402495665792);
+    }));
 
 });

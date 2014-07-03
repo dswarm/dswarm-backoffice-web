@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, PubSub, loDash, Util) {
+    .controller('ConfigurationCtrl', function($scope, $modal,  PubSub, loDash, Util) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -195,6 +195,26 @@ angular.module('dmpApp')
             return angular.copy(name);
 
         }
+
+        /**
+         * Called to remove the current component from mapping
+         */
+        $scope.removeComponent = function() {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/confirm-remove-component.html'
+            });
+
+            modalInstance.result.then(function() {
+
+                PubSub.broadcast('removeComponent', componentId);
+
+                $scope.component = null;
+                componentId = null;
+
+            });
+
+        };
 
     })
     .directive('configuration', function() {

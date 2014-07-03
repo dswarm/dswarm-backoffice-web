@@ -1,6 +1,11 @@
 <div ng-show="component">
 
-  <header>
+    <a class="pull-right btn btn-danger btn-xs" ng-click="removeComponent(component)" style="margin-right: 8px; padding: 8px 12px;">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+    </a>
+
+
+    <header>
     <h5>Function: {{component.function_description.name}}</h5>
     <span>{{ component.description }}</span>
   </header>

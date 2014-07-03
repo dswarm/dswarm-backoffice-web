@@ -99,7 +99,7 @@ angular.module('dmpApp')
 
         /**
          * returns eigther id or generates a new one
-         * @param optId string the id to return
+         * @param {string} optId The id to return
          * @returns {*}
          */
         function getId(optId) {
@@ -193,8 +193,11 @@ angular.module('dmpApp')
         /**
          * Initializes show of all transformations. Saves timeout to prevent multiple
          * events running into each other
+         * @param {number} [time] - Timeout time to show plumbs
          */
-        function showTransformationPlumbsInit() {
+        function showTransformationPlumbsInit(time) {
+
+            time = typeof time !== 'undefined' ? time : 100;
 
             if(showTransformationPlumbsTimeout && showTransformationPlumbsTimeout.then) {
                 $timeout.cancel(showTransformationPlumbsTimeout);
@@ -202,7 +205,7 @@ angular.module('dmpApp')
 
             showTransformationPlumbsTimeout = $timeout(function() {
                 showTransformationPlumbs();
-            }, 100);
+            }, time);
 
         }
 
@@ -363,8 +366,8 @@ angular.module('dmpApp')
 
         /**
          * Returns the prev component from grid by x,y position
-         * @param positionX int
-         * @param positionY int
+         * @param {number} positionX
+         * @param {number} positionY
          * @returns {*}
          */
         function findPrevGridItem(positionX, positionY) {
@@ -490,8 +493,10 @@ angular.module('dmpApp')
                     prevGridItem.component.output_components = [];
                 }
 
-                ensureInputString(currentGridItem.component, prevGridItem.name);
-                ensureInputOutputComponents(currentGridItem.component, prevGridItem.component);
+                if(currentGridItem) {
+                    ensureInputString(currentGridItem.component, prevGridItem.name);
+                    ensureInputOutputComponents(currentGridItem.component, prevGridItem.component);
+                }
 
             } else {
 
@@ -509,7 +514,9 @@ angular.module('dmpApp')
 
                 });
 
-                ensureInputString(currentGridItem.component, variableName);
+                if(currentGridItem) {
+                    ensureInputString(currentGridItem.component, variableName);
+                }
 
             }
 
@@ -577,6 +584,21 @@ angular.module('dmpApp')
         }
 
         /**
+         * Removes inputString from components
+         * @param components array Arry of component ids  components
+         * @param inputString string To remove
+         */
+        function removeFromInputString(components, inputString) {
+
+            loDash.map(components, function(component) {
+
+                removeInputString(loDash.find($scope.activeMapping.transformation.function.components, { id : component.id}), inputString);
+
+            });
+
+        }
+
+        /**
          * Removes an id from an id referenced list of components (e.g.
          * input_components or output_components)
          * @param components array The list of objects to be extracted
@@ -620,17 +642,7 @@ angular.module('dmpApp')
             dropToGrid(angular.element(dropEl).scope().item.positionX, angular.element(dropEl).scope().item.positionY, angular.element(dragEl).scope().child);
         };
 
-        PubSub.subscribe($rootScope, ['DRAG-START'], function() {
-            createDropPlaceholder();
-
-            hideTransformationPlumbs();
-        });
-
-        PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
-
-        PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
-
-            removeDropPlaceholder();
+        function updateGridConnections() {
 
             loDash.map($scope.gridItems, function(gridItem) {
 
@@ -662,11 +674,23 @@ angular.module('dmpApp')
 
                 }
 
-
-
             });
 
             showTransformationPlumbsInit();
+        }
+
+        PubSub.subscribe($rootScope, ['DRAG-START'], function() {
+            createDropPlaceholder();
+
+            hideTransformationPlumbs();
+        });
+
+        PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
+
+        PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
+
+            removeDropPlaceholder();
+            updateGridConnections();
 
         });
 
@@ -1319,6 +1343,48 @@ angular.module('dmpApp')
             });
 
         };
+
+        /**
+         * Removes a griditem by gridItem object
+         * @param {object} removeGridItem
+         */
+        function removeGridItem(removeGridItem) {
+
+            var oldItem = angular.copy(removeGridItem);
+
+            $scope.gridItems = loDash.remove($scope.gridItems, function(gridItem) { return gridItem.id !== removeGridItem.id; });
+
+            removeFromInputString(oldItem.component.input_components, oldItem.component.name);
+            removeFromInputString(oldItem.component.output_components, oldItem.component.name);
+
+            removeFromComponentList(oldItem.component.input_components, 'output_components', oldItem.id);
+            removeFromComponentList(oldItem.component.output_components, 'input_components', oldItem.id);
+
+            $timeout(function() {
+
+                updateGridInputOutput(oldItem.positionX, oldItem.positionY);
+                updateGridConnections();
+
+            }, 100);
+
+        }
+
+        /**
+         * Removes a component from project
+         * @param {string} componentId
+         */
+        $scope.removeComponent = function(componentId) {
+
+            var gridItem = loDash.find($scope.gridItems, {id : componentId});
+
+            hideTransformationPlumbs();
+            removeGridItem(gridItem);
+
+            $scope.activeMapping.transformation.function.components = loDash.remove($scope.activeMapping.transformation.function.components, function(component) { return component.id !== componentId; });
+
+        };
+
+        PubSub.subscribe($scope, 'removeComponent', $scope.removeComponent);
 
     })
     .directive('transformation', function() {
