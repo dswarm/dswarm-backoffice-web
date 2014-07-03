@@ -197,7 +197,7 @@ angular.module('dmpApp')
 
                         loDash.forEach(mapping.transformation.function.components, function(component) {
 
-                            var inputString = component.parameter_mappings.inputString.split(',');
+                            var inputString = (!loDash.isUndefined(component.parameter_mappings.inputString)) ? component.parameter_mappings.inputString.split(',') : [];
                             var inputStringIndex = inputString.indexOf(key);
 
                             inputString[inputStringIndex] = newKey;
