@@ -220,7 +220,7 @@ angular.module('dmpApp')
 
             loDash.map($scope.gridItems, function(griditem) {
 
-                var inputStrings = (!loDash.isNull(griditem.component.parameter_mappings.inputString)) ? griditem.component.parameter_mappings.inputString.split(',') : [];
+                var inputStrings = (!loDash.isNull(griditem.component.parameter_mappings.inputString) && !loDash.isUndefined(griditem.component.parameter_mappings.inputString)) ? griditem.component.parameter_mappings.inputString.split(',') : [];
 
                 loDash.map(inputStrings, function(inputString) {
 
@@ -469,7 +469,7 @@ angular.module('dmpApp')
         }
 
         /**
-         * Updates the input and output objets for a given grid position
+         * Updates the input and output objects for a given grid position
          * @param positionX int
          * @param positionY int
          */
@@ -478,6 +478,10 @@ angular.module('dmpApp')
             var currentGridItem = loDash($scope.gridItems)
                 .filter({positionX : positionX, positionY : positionY })
                 .first();
+
+            if(!currentGridItem) {
+                return;
+            }
 
             var prevGridItem = findPrevGridItem(positionX, positionY);
 
@@ -493,10 +497,8 @@ angular.module('dmpApp')
                     prevGridItem.component.output_components = [];
                 }
 
-                if(currentGridItem) {
-                    ensureInputString(currentGridItem.component, prevGridItem.name);
-                    ensureInputOutputComponents(currentGridItem.component, prevGridItem.component);
-                }
+                ensureInputString(currentGridItem.component, prevGridItem.name);
+                ensureInputOutputComponents(currentGridItem.component, prevGridItem.component);
 
             } else {
 
@@ -507,16 +509,19 @@ angular.module('dmpApp')
                     if(component.parameter_mappings.inputString) {
 
                         var inputString = component.parameter_mappings.inputString.split(',');
-                        inputString = loDash.without(inputString, variableName);
+                        var pos = angular.fromJson(component.description);
+
+                        if(pos.y !== 0) {
+                            inputString = loDash.without(inputString, variableName);
+                        }
+
                         component.parameter_mappings.inputString = inputString.join(',');
 
                     }
 
                 });
 
-                if(currentGridItem) {
-                    ensureInputString(currentGridItem.component, variableName);
-                }
+                ensureInputString(currentGridItem.component, variableName);
 
             }
 
@@ -643,6 +648,8 @@ angular.module('dmpApp')
         };
 
         function updateGridConnections() {
+
+            $scope.gridItems = loDash.sortBy($scope.gridItems, ['positionY', 'positionX']);
 
             loDash.map($scope.gridItems, function(gridItem) {
 
@@ -1346,13 +1353,13 @@ angular.module('dmpApp')
 
         /**
          * Removes a griditem by gridItem object
-         * @param {object} removeGridItem
+         * @param {object} gridItemToRemove
          */
-        function removeGridItem(removeGridItem) {
+        function removeGridItem(gridItemToRemove) {
 
-            var oldItem = angular.copy(removeGridItem);
+            var oldItem = angular.copy(gridItemToRemove);
 
-            $scope.gridItems = loDash.remove($scope.gridItems, function(gridItem) { return gridItem.id !== removeGridItem.id; });
+            $scope.gridItems = loDash.remove($scope.gridItems, function(gridItem) { return gridItem.id !== gridItemToRemove.id; });
 
             removeFromInputString(oldItem.component.input_components, oldItem.component.name);
             removeFromInputString(oldItem.component.output_components, oldItem.component.name);
@@ -1365,7 +1372,7 @@ angular.module('dmpApp')
                 updateGridInputOutput(oldItem.positionX, oldItem.positionY);
                 updateGridConnections();
 
-            }, 100);
+            }, 200);
 
         }
 
