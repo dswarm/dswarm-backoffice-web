@@ -12,10 +12,20 @@
                 <span class="help-block">{{ help }}</span>
             </div>
         </div>
+
+        <a class="btn btn-default" ng-click="showExtra()" ng-show="hasExtra()">+</a>
+
+        <div class="form-group" style="display:none;" id="relabel-extra" ng-show="hasExtra()">
+            <label for="inputLabel" class="col-sm-2 control-label">{{ extraLabel }}</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" ng-model="extra" auto-focus>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
                 <button type="reset" ng-click="$dismiss()" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                <button type="submit" ng-disabled="!isValid(label)" ng-click="close(label)" class="btn btn-primary pull-right">{{ buttonText }}</button>
+                <button type="submit" ng-disabled="!isValid(label)" ng-click="close({label: label, extra: extra})" class="btn btn-primary pull-right">{{ buttonText }}</button>
             </div>
         </div>
     </form>

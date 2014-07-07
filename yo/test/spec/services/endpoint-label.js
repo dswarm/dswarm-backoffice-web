@@ -41,6 +41,24 @@ describe('Service: endpointLabel', function () {
 
                 return resolved === expected;
             },
+            toBeResolvedObjectWith: function(expected, test) {
+                var resolved;
+                var msg = 'Expected "' + angular.mock.dump(this.actual) + '" to be resolved with "' + expected;
+
+                this.message = function() {
+                    return msg + '".';
+                };
+
+                this.actual.then(function(result) {
+                    msg += '", but was resolved with "' + angular.mock.dump(result[test]);
+                    resolved = result[test];
+                }, function(reason) {
+                    msg += '", but was rejected with "' + angular.mock.dump(reason);
+                });
+                $rootScope.$digest();
+
+                return resolved === expected;
+            },
             toBeRejectedWith: function(expected) {
                 var rejected;
                 var msg = 'Expected "' + angular.mock.dump(this.actual) + '" to be rejected with "' + expected;
@@ -149,8 +167,8 @@ describe('Service: endpointLabel', function () {
 
         var p = endpointLabel.ask('foo', 'bar');
 
-        fakeModal.close('abcde');
-        expect(p).toBeResolvedWith('abcde');
+        fakeModal.close({label : 'abcde'});
+        expect(p).toBeResolvedObjectWith('abcde', 'label');
     });
 
     it('should ask for the label and reject its input', function () {
@@ -203,10 +221,10 @@ describe('Service: endpointLabel', function () {
     }));
 
     it('should close with a valid label', inject(function ($document, $templateCache) {
-        $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="close(\'abcde\')" id="test-valid-close"></span></div>');
+        $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="close({label : \'abcde\'})" id="test-valid-close"></span></div>');
         spyOn($modal, 'open').andCallThrough();
 
-        expect(endpointLabel.ask()).toBeResolvedWith('abcde');
+        expect(endpointLabel.ask()).toBeResolvedObjectWith('abcde', 'label');
     }));
 
     it('should not close with an invalid label', inject(function ($document, $templateCache) {
