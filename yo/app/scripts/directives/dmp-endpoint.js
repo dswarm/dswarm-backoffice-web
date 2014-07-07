@@ -66,11 +66,16 @@ angular.module('dmpApp')
 
             var connectionDefer = $q.defer();
 
-            function continuation(label) {
+            function continuation(data) {
 
                 var sourceEndpoint,
                     targetEndpoint,
-                    newConnection;
+                    newConnection,
+                    label = (data && data.label) ? data.label : null;
+
+                if (typeof data === 'string') {
+                    label = data;
+                }
 
                 //create endpoint
                 sourceEndpoint = jsP.addEndpoint(elements[sourceId], sourceOptions);

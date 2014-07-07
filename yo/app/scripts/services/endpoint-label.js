@@ -32,7 +32,7 @@ angular.module('dmpApp')
 
         }
 
-        function ask(promptText, helpText) {
+        function ask(promptText, helpText, extraLabel) {
             var text = promptText || 'Name this mapping',
                 buttonText = text,
                 help = helpText || 'The name has to be at least 3 characters long';
@@ -45,23 +45,32 @@ angular.module('dmpApp')
                     $scope.text = text;
                     $scope.buttonText = buttonText;
                     $scope.help = help;
+                    $scope.extraLabel = extraLabel;
 
                     $scope.isValid = function(label) {
                         return valid(label);
                     };
 
-                    $scope.close = function(label) {
-                        if (valid(label)) {
-                            $scope.$close(label);
+                    $scope.close = function(data) {
+                        if (valid(data.label)) {
+                            $scope.$close(data);
                         }
+                    };
+
+                    $scope.showExtra = function() {
+                        $('#relabel-extra').slideToggle();
+                    };
+
+                    $scope.hasExtra = function() {
+                        return extraLabel;
                     };
                 }]
             });
 
-            modalInstance.result.then(function(label) {
+            modalInstance.result.then(function(data) {
 
-                if (valid(label)) {
-                    labelDefer.resolve(label);
+                if (valid(data.label)) {
+                    labelDefer.resolve(data);
                 } else {
                     labelDefer.reject('invalid');
                 }
