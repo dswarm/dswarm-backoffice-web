@@ -348,8 +348,8 @@ angular.module('dmpApp')
 
         $scope.loadProjectData($routeParams.projectId);
 
-        $scope.newLeaf = function() {
-            endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'URI').then(function(data) {
+        $scope.newLeaf = function(data) {
+            endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'URI').then(function(modalData) {
 
                 var result = function(schema) {
                     $scope.project.input_data_model.schema = schema;
@@ -363,13 +363,13 @@ angular.module('dmpApp')
                     SchemaAttributepathsResource.add_attribute({
                         id: $scope.project.input_data_model.schema.id,
                         attributepathid: data._$path_id
-                    }, { name: data.label, uri : data.extra }, result);
+                    }, { name: modalData.label, uri : data.extra }, result);
 
                 } else {
 
                     SchemaResource.save({
                         id: $scope.project.input_data_model.schema.id
-                    }, { name: data.label, uri : data.extra }, result);
+                    }, [{ name: modalData.label, uri : modalData.extra }], result);
                 }
 
             });
