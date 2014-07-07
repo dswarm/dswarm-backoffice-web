@@ -348,15 +348,19 @@ angular.module('dmpApp')
 
         $scope.loadProjectData($routeParams.projectId);
 
-        $scope.newLeaf = function(data) {
+        $scope.newLeaf = function(data, isInputLeaf) {
             endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'URI').then(function(modalData) {
 
                 var result = function(schema) {
-                    $scope.project.input_data_model.schema = schema;
+
+                    if(isInputLeaf) { $scope.project.input_data_model.schema = schema; }
+                    else { $scope.project.output_data_model.schema = schema; }
 
                     PubSub.broadcast('restoreCurrentProject', {});
 
                 };
+
+                var modelId = (isInputLeaf) ? $scope.project.input_data_model.schema.id : $scope.project.output_data_model.schema.id;
 
                 if(data) {
 
@@ -368,7 +372,7 @@ angular.module('dmpApp')
                 } else {
 
                     SchemaResource.save({
-                        id: $scope.project.input_data_model.schema.id
+                        id: modelId
                     }, [{ name: modalData.label, uri : modalData.extra }], result);
                 }
 
