@@ -94,7 +94,7 @@ angular.module('dmpApp')
 
                         $scope.checkNextConfigUpdate();
 
-                        $scope.configError = '';
+                        $scope.$parent.$parent.$parent.configError = '';
                         $scope.dataConfigUpdatedSave(result);
 
                         $scope.showGrid = true;
