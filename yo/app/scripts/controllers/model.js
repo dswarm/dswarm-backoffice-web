@@ -365,9 +365,9 @@ angular.module('dmpApp')
                 if(data) {
 
                     SchemaAttributepathsResource.add_attribute({
-                        id: $scope.project.input_data_model.schema.id,
+                        id: modelId,
                         attributepathid: data._$path_id
-                    }, { name: modalData.label, uri : data.extra }, result);
+                    }, { name: modalData.label, uri : modalData.extra }, result);
 
                 } else {
 

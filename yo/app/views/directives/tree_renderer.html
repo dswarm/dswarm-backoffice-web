@@ -55,9 +55,17 @@
 
         <a class="pull-right btn btn-primary btn-xs"
            data-nodrag
-           ng-click="newLeaf(data)"
+           ng-click="newLeaf(data, false)"
            style="margin-right: 8px;"
-           ng-if='config.type == "as-source" || config.type == "as-target"'>
+           ng-if='config.type == "as-target"'>
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+
+        <a class="pull-right btn btn-primary btn-xs"
+           data-nodrag
+           ng-click="newLeaf(data, true)"
+           style="margin-right: 8px;"
+           ng-if='config.type == "as-source"'>
             <span class="glyphicon glyphicon-plus"></span>
         </a>
 
