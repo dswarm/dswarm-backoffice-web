@@ -94,14 +94,14 @@ angular.module('dmpApp')
 
                         $scope.checkNextConfigUpdate();
 
-                        $scope.$parent.$parent.$parent.configError = '';
+                        $scope.configError = '';
                         $scope.dataConfigUpdatedSave(result);
 
                         $scope.showGrid = true;
                     },
                     function(error) {
 
-                        $scope.$parent.$parent.$parent.configError = error.data.error;
+                        $scope.configError = error.data.error;
 
                         FileResource.lines({
                             id: resourceId,
@@ -142,7 +142,7 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope : false,
             templateUrl: 'views/directives/data-config-preview.html',
             controller: 'DataConfigPreviewCtrl'
         };
