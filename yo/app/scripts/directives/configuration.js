@@ -112,6 +112,10 @@ angular.module('dmpApp')
         }
 
         PubSub.subscribe($scope, 'handleEditConfig', function(args) {
+
+            $scope.component = null;
+            componentId = null;
+
             if (args.onlyIfAlreadyOpened && componentId === null) {
                 return;
             }
