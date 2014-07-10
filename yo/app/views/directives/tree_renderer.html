@@ -61,15 +61,6 @@
             <span class="glyphicon glyphicon-plus"></span>
         </a>
 
-        <a class="pull-right btn btn-primary btn-xs"
-           data-nodrag
-           ng-click="newLeaf(data, true)"
-           style="margin-right: 8px;"
-           ng-if='config.type == "as-source"'>
-            <span class="glyphicon glyphicon-plus"></span>
-        </a>
-
-
     </div>
     <ol ui-tree-nodes="options" ng-model="data.children" ng-class="{hidden: collapsed}">
         <li ng-repeat="data in data.children" ui-tree-node ng-include="'views/directives/tree_renderer.html'"></li>
