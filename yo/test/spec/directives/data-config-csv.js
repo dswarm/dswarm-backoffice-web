@@ -95,9 +95,8 @@ describe('Controller: DataConfigCsvCtrl', function () {
         scope.$digest();
         $httpBackend.flush();
 
-        var elScope = scope.$$childHead;
-        expect(elScope.resourceId).toBe(1);
-        expect(elScope.presets).toEqual({
+        expect(scope.resourceId).toBe(1);
+        expect(scope.presets).toEqual({
             fileFormat : [
                 { name : 'Windows', 'row_delimiter' : '\\r\\n' },
                 { name : 'Linux' , 'row_delimiter' : '\\n' }
@@ -124,7 +123,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
             }
         });
 
-        expect(elScope.config).toEqual({
+        expect(scope.config).toEqual({
             parameters : {
                 'column_delimiter' : ',',
                 'escape_character' : '\\',
@@ -145,8 +144,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
         scope.$digest();
         $httpBackend.flush();
 
-        var elScope = scope.$$childHead;
-        expect(elScope.resourceId).toBe(1);
+        expect(scope.resourceId).toBe(1);
     });
 
     it('should request the specified data Resource', function() {
@@ -157,9 +155,8 @@ describe('Controller: DataConfigCsvCtrl', function () {
         scope.$digest();
         $httpBackend.flush();
 
-        var elScope = scope.$$childHead;
-        expect(elScope.resourceId).toBe(42);
-        expect(elScope.config).toEqual({
+        expect(scope.resourceId).toBe(42);
+        expect(scope.config).toEqual({
             parameters: {
                 ignore_lines: 0,
                 discard_rows: 2,
@@ -171,9 +168,9 @@ describe('Controller: DataConfigCsvCtrl', function () {
                 storage_type: 'csv'
             }
         });
-        expect(elScope.atMostRowsActivate).toBe(true);
-        expect(elScope.discardRowsActivate).toBe(true);
-        expect(elScope.ignoreLinesActivate).toBeUndefined();
+        expect(scope.atMostRowsActivate).toBe(true);
+        expect(scope.discardRowsActivate).toBe(true);
+        expect(scope.ignoreLinesActivate).toBeUndefined();
     });
 
     it('should update the row separator if the fileformat changes', function() {
@@ -186,19 +183,17 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         expect(PubSub.broadcast).toHaveBeenCalled();
 
-        var elScope = scope.$$childHead;
-
-        elScope.config.parameters.fileFormat = {
+        scope.config.parameters.fileFormat = {
             rowSeperator: '\t'
         };
-        elScope.onFileFormatChanged();
+        scope.onFileFormatChanged();
 
-        expect(elScope.config.parameters.rowSeperator).toBe('\t');
+        expect(scope.config.parameters.rowSeperator).toBe('\t');
 
-        delete elScope.config.parameters.fileFormat;
-        elScope.onFileFormatChanged();
+        delete scope.config.parameters.fileFormat;
+        scope.onFileFormatChanged();
 
-        expect(elScope.config.parameters.rowSeperator).toBe('\t');
+        expect(scope.config.parameters.rowSeperator).toBe('\t');
     });
 
     it('should broadcast field changes', function() {
@@ -211,7 +206,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         expect(PubSub.broadcast).toHaveBeenCalled();
 
-        scope.$$childHead.onFieldChanged(false, true);
+        scope.onFieldChanged(false, true);
 
         expect(PubSub.broadcast).toHaveBeenCalledWith('dataConfigUpdated', {
             config: {
@@ -238,12 +233,10 @@ describe('Controller: DataConfigCsvCtrl', function () {
         scope.$digest();
         $httpBackend.flush();
 
-        var elScope = scope.$$childHead;
-
         expect(PubSub.broadcast).toHaveBeenCalled();
 
-        elScope.atMostRowsActivate = false;
-        elScope.config.parameters.ignore_lines = 9;
+        scope.atMostRowsActivate = false;
+        scope.config.parameters.ignore_lines = 9;
 
         scope.$digest();
 
@@ -271,7 +264,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
         scope.$digest();
         $httpBackend.flush();
 
-        scope.$$childHead.onCancelClick();
+        scope.onCancelClick();
 
         expect($location.path()).toBe('/data/');
     });
@@ -295,7 +288,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
             }
         });
 
-        scope.$$childHead.onSaveClick();
+        scope.onSaveClick();
 
         $httpBackend.flush();
 

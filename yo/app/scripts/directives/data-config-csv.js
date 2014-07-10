@@ -179,12 +179,16 @@ angular.module('dmpApp')
 
         $scope.$watch(allFields, fieldChanged, true);
 
+        $scope.$watch('configError', function() {
+            $scope.$parent.configError = $scope.configError;
+        });
+
     })
     .directive('dataconfigcsv', function() {
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope : false,
             templateUrl: 'views/directives/data-config-csv.html',
             controller: 'DataConfigCsvCtrl'
         };

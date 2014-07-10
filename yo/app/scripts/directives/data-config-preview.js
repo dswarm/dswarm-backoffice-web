@@ -101,7 +101,7 @@ angular.module('dmpApp')
                     },
                     function(error) {
 
-                        $scope.$parent.$parent.$parent.configError = error.data.error;
+                        $scope.configError = error.data.error;
 
                         FileResource.lines({
                             id: resourceId,
@@ -142,7 +142,7 @@ angular.module('dmpApp')
         return {
             restrict: 'E',
             replace: true,
-            scope: true,
+            scope : false,
             templateUrl: 'views/directives/data-config-preview.html',
             controller: 'DataConfigPreviewCtrl'
         };
