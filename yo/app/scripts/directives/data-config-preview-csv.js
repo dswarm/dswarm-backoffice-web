@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
+    .controller('DataConfigPreviewCsvCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -138,12 +138,12 @@ angular.module('dmpApp')
         });
 
     })
-    .directive('dataconfigpreview', function() {
+    .directive('dataconfigpreviewcsv', function() {
         return {
             restrict: 'E',
             replace: true,
             scope : false,
-            templateUrl: 'views/directives/data-config-preview.html',
-            controller: 'DataConfigPreviewCtrl'
+            templateUrl: 'views/directives/data-config-preview-csv.html',
+            controller: 'DataConfigPreviewCsvCtrl'
         };
     });

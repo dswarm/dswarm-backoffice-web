@@ -1,7 +1,7 @@
 'use strict';
 
-describe('Controller: DataConfigPreviewCtrl', function () {
-    var $httpBackend, $rootScope, scope, dataConfigPreviewCtrl, $timeout, $jsonResponse;
+describe('Controller: DataConfigPreviewCsvCtrl', function () {
+    var $httpBackend, $rootScope, scope, dataConfigPreviewCsvCtrl, $timeout, $jsonResponse;
 
     var win = {
         _: {
@@ -18,7 +18,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
         }
     };
 
-    beforeEach(module('dmpApp', 'mockedDataConfigPreview'));
+    beforeEach(module('dmpApp', 'mockedDataConfigPreviewCsv'));
 
     beforeEach(module(function($provide) {
         $provide.value('$window', win);
@@ -30,15 +30,15 @@ describe('Controller: DataConfigPreviewCtrl', function () {
         $rootScope = $injector.get('$rootScope');
         $timeout = $injector.get('$timeout');
 
-        $jsonResponse = $injector.get('mockDataConfigPreviewJSON');
+        $jsonResponse = $injector.get('mockDataConfigPreviewCsvJSON');
 
         scope = $rootScope.$new();
 
         $httpBackend.whenPOST('/dmp/resources/1/configurationpreview').respond($jsonResponse);
 
         var $controller = $injector.get('$controller');
-        dataConfigPreviewCtrl = function () {
-            return $controller('DataConfigPreviewCtrl', {
+        dataConfigPreviewCsvCtrl = function () {
+            return $controller('DataConfigPreviewCsvCtrl', {
                 $scope: scope
             });
         };
@@ -46,14 +46,14 @@ describe('Controller: DataConfigPreviewCtrl', function () {
     }));
 
 
-    it('should have a DataConfigPreviewCtrl controller', function() {
-        var DataConfigPreviewCtrl = dataConfigPreviewCtrl();
-        expect(DataConfigPreviewCtrl).not.toBe(null);
+    it('should have a DataConfigPreviewCsvCtrl controller', function() {
+        var DataConfigPreviewCsvCtrl = dataConfigPreviewCsvCtrl();
+        expect(DataConfigPreviewCsvCtrl).not.toBe(null);
     });
 
     it('should push preview response to scope', function() {
 
-        dataConfigPreviewCtrl();
+        dataConfigPreviewCsvCtrl();
 
         scope.dataConfigUpdated({"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}}, 1);
 
@@ -66,7 +66,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
     it('should run a preview update if next preview update is set', function() {
 
-        dataConfigPreviewCtrl();
+        dataConfigPreviewCsvCtrl();
 
         scope.nextUpdate = [{"id":1, "resourceId":1, "name":"foo","description":"bar","parameters":{"encoding":"UTF-8", "escape_character" : "\\", "quote_character" : "\"", "column_delimiter" : ",", "row_delimiter" : "\n"}}, 1];
 
@@ -85,7 +85,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
         var shouldInclude;
 
-        dataConfigPreviewCtrl();
+        dataConfigPreviewCsvCtrl();
 
         scope.showGrid = true;
 
@@ -97,7 +97,7 @@ describe('Controller: DataConfigPreviewCtrl', function () {
 
     it('should update scope data from result', function() {
 
-        dataConfigPreviewCtrl();
+        dataConfigPreviewCsvCtrl();
 
         scope.dataConfigUpdatedSave($jsonResponse);
 
