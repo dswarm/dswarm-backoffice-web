@@ -1,13 +1,15 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, $modal,  PubSub, loDash, Util) {
+    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util) {
 
         $scope.internalName = 'Configuration Widget';
 
         $scope.component = null;
 
-        var componentId = null;
+        var componentId = null,
+            waitToSendChange = null,
+            isLoaded = false;
 
         $scope.getPattern = function(pattern) {
             return pattern ? new RegExp('^' + pattern + '$') : /.*/;
@@ -115,6 +117,7 @@ angular.module('dmpApp')
 
             $scope.component = null;
             componentId = null;
+            isLoaded = false;
 
             if (args.onlyIfAlreadyOpened && componentId === null) {
                 return;
@@ -129,7 +132,10 @@ angular.module('dmpApp')
             }
         });
 
-        $scope.onSaveClick = function() {
+        /**
+         * Saves configuration to project
+         */
+        $scope.doSave = function() {
             if (componentId === null) {
                 return;
             }
@@ -146,12 +152,12 @@ angular.module('dmpApp')
                 }
             });
 
-            $scope.component = null;
-            componentId = null;
-
             PubSub.broadcast('handleConfigEdited', params);
         };
 
+        /**
+         * Function to react on close button
+         */
         $scope.onCancelClick = function() {
             $scope.component = null;
             componentId = null;
@@ -219,6 +225,25 @@ angular.module('dmpApp')
             });
 
         };
+
+        $scope.$watch('component', function() {
+
+            $timeout.cancel(waitToSendChange);
+
+            if(loDash.isNull($scope.component)) {
+                return;
+            }
+
+            if(isLoaded === false) {
+                isLoaded = true;
+                return;
+            }
+
+            waitToSendChange = $timeout(function() {
+                $scope.doSave();
+            }, 500);
+
+        }, true);
 
     })
     .directive('configuration', function() {

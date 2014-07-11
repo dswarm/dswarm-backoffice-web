@@ -150,7 +150,7 @@ describe('Controller: ConfigurationCtrl', function () {
 
         scope.component.parameters['value'] = 'bar';
 
-        scope.onSaveClick();
+        scope.doSave();
 
         expect(PubSub.broadcast).toHaveBeenCalledWith('handleConfigEdited', { id : -1402495665792, parameter_mappings : { value : 'bar' } });
     }));
