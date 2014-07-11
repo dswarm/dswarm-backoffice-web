@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mockedDataConfigPreview', [])
-    .value('mockDataConfigPreviewJSON', {
+angular.module('mockedDataConfigPreviewCsv', [])
+    .value('mockDataConfigPreviewCsvJSON', {
         "data": [
             {name: "Moroni", age: 50},
             {name: "Tiancum", age: 43},
