@@ -1,10 +1,10 @@
 <div ui-tree-handle
-     ng-class='{ isFiltered : data.isFiltered, disabled : (depth() > 1 || collapsed) && config.type == "as-target" }'
+     ng-class='{ isFiltered : data.isFiltered, disabled : (depth() > 1 || isCollapsed(data)) && config.type == "as-target" }'
      class="jsPanchor">
 
     <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
 
-        <span ng-if="!data.hasChildren || collapsed">
+        <span ng-if="!data.hasChildren || isCollapsed(data)">
             <a class="btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
@@ -12,7 +12,7 @@
                dmp-endpoint="data"
                js-plumb-target-options="jspTargetOptions"
                ng-style="{color:isSelected?'slategrey':''}"
-               ng-class="{disabled : depth() > 1 || collapsed }">
+               ng-class="{disabled : depth() > 1 || isCollapsed(data) }">
                 <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"></span>
             </a>
         </span>
@@ -22,7 +22,7 @@
            ng-click="expandCollapse(this, data)"
            ng-if="data.children.length">
             <span class="glyphicon"
-                  ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+                  ng-class="{'glyphicon-chevron-right': isCollapsed(data), 'glyphicon-chevron-down': !isCollapsed(data)}"></span>
         </a>
         {{data.name}}
 
@@ -38,7 +38,7 @@
                class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()">
         </small>
 
-        <span ng-if="!data.hasChildren || collapsed">
+        <span ng-if="!data.hasChildren || isCollapsed(data)">
 
             <a class="pull-right btn btn-primary btn-xs"
                data-nodrag
@@ -48,7 +48,7 @@
                js-plumb-source-options="jspSourceOptions"
                ng-style="{color:isSelected?'slategrey':''}">
                 <span class="glyphicon glyphicon-unchecked jsPanchorIcon"
-                      ng-class="{disabled : collapsed }"></span>
+                      ng-class="{disabled : isCollapsed(data) }"></span>
             </a>
 
         </span>
@@ -62,7 +62,7 @@
         </a>
 
     </div>
-    <ol ui-tree-nodes="options" ng-model="data.children" ng-class="{hidden: collapsed}">
+    <ol ui-tree-nodes="options" ng-model="data.children" ng-class="{hidden: isCollapsed(data)}">
         <li ng-repeat="data in data.children" ui-tree-node ng-include="'views/directives/tree_renderer.html'"></li>
     </ol>
 </div>
