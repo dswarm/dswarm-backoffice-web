@@ -277,7 +277,10 @@ module.exports = function(grunt) {
         bowerInstall: {
             app: {
                 src: ['<%= yeoman.app %>/index.html'],
-                exclude: ['<%= yeoman.bower %>/bootstrap']
+                exclude: [
+                    '<%= yeoman.bower %>/bootstrap',
+                    '<%= yeoman.bower %>/json3'
+                ]
             }
         },
 
