@@ -214,6 +214,28 @@ angular.module('dmpApp')
 
         }
 
+        /**
+         * Generates a new data model
+         * @param {string} name name of that model, used for Data model and schema object
+         * @returns {{name: string, description: string, schema: {name: *, id: number, attribute_paths: Array, record_class: {}}, id: number}}
+         */
+        function buildNewDataModel(name) {
+
+            var randId = (new Date().getTime() + Math.floor(Math.random() * 1001)) * -1;
+            
+            return {
+                'name': name + ' Data Model',
+                'description': name + ' Data Model',
+                'schema': {
+                    'name': name,
+                    'id': randId,
+                    'attribute_paths': [],
+                    'record_class': {}
+                },
+                'id': randId+1
+            };
+
+        }
 
         return {
             latestBy: latestBy,
@@ -224,7 +246,8 @@ angular.module('dmpApp')
             buildAttributeName: buildAttributeName,
             buildUriReference: buildUriReference,
             buildVariableName: buildVariableName,
-            ensureUniqueParameterMappingVars: ensureUniqueParameterMappingVars
+            ensureUniqueParameterMappingVars: ensureUniqueParameterMappingVars,
+            buildNewDataModel: buildNewDataModel
         };
     })
 /**

@@ -7,8 +7,9 @@
         <schemalist items="selectedSet"></schemalist>
     </div>
     <div class="modal-footer">
-        <button type="button" ng-click="onSelectClick()" class="btn btn-default">Select</button>
+        <button type="button" ng-click="onSelectClick()" class="btn btn-default" ng-class="{ disabled : selectedSet.length <= 0}">Select</button>
         <button type="button" ng-click="close()" class="btn btn-default">Cancel</button>
+        <button type="button" ng-click="onNewClick()" class="btn btn-default">New</button>
     </div>
 
 </div>

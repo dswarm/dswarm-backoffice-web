@@ -60,9 +60,11 @@ angular.module('dmpApp')
             }
         };
 
-        $scope.expandCollapse = function(that, data) {
+        $scope.isCollapsed = function(data) {
+            return !data.$show;
+        };
 
-            that.toggle(that);
+        $scope.expandCollapse = function(that, data) {
 
             data.$show = !data.$show;
 
