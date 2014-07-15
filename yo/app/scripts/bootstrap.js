@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dmpApp')
-    .config(['$routeProvider', 'localStorageServiceProvider', function($routeProvider, localStorageServiceProvider) {
+    .config(['$routeProvider', '$httpProvider', 'localStorageServiceProvider', 'HttpHeaders',
+        function($routeProvider, $httpProvider, localStorageServiceProvider, HttpHeaders) {
         $routeProvider
             .when('/data/', {
                 title: 'Data Perspective',
@@ -50,6 +51,12 @@ angular.module('dmpApp')
 
         localStorageServiceProvider.setPrefix('dmp');
         localStorageServiceProvider.setNotify(false, false);
+
+        for (var header in HttpHeaders) {
+            if (HttpHeaders.hasOwnProperty(header)) {
+                $httpProvider.defaults.headers.common[header] = HttpHeaders[header];
+            }
+        }
     }])
     .run(['$rootScope', '$location', 'ProjectInfo', function($rootScope, $location, ProjectInfo) {
         $rootScope.projectName = ProjectInfo.title;

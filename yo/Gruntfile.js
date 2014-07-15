@@ -96,7 +96,8 @@ module.exports = function(grunt) {
                     ProjectInfo: {
                         title: '<%= dmpProject.name %>',
                         versions: '<%= dmpProject.versions %>'
-                    }
+                    },
+                    HttpHeaders: {}
                 }
             },
 
@@ -105,6 +106,18 @@ module.exports = function(grunt) {
                     ServiceUrls: {
                         backend: 'http://127.0.0.1:8087/dmp/',
                         neo: 'http://127.0.0.1:8087/dmp/'
+                    }
+                }
+            },
+
+            againstProd: {
+                constants: {
+                    ServiceUrls: {
+                        backend: 'http://194.95.145.15/dmp/',
+                        neo: 'http://194.95.145.15/dmp/'
+                    },
+                    HttpHeaders: {
+                        Authorization: 'Basic ZHN3YXJtOmQ6c3dhcm0='
                     }
                 }
             },
