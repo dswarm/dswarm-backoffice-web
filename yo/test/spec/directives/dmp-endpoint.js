@@ -34,9 +34,15 @@ describe('Directive: DmpEndpoint', function() {
         sourceScope.opts = {
             'foo': 'bar'
         };
+        sourceScope.projectIsMabXml = function() {
+            return false;
+        };
         targetScope = parentScope.$new();
         targetScope.opts = {
             'foo': 'bar'
+        };
+        targetScope.projectIsMabXml = function() {
+            return false;
         };
 
         var _element;
