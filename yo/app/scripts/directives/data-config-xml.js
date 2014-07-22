@@ -6,6 +6,8 @@ angular.module('dmpApp')
         var resource = null;
         var dataModel = null;
 
+        var configType = $scope.mabxml ? 'mabxml' : 'xml';
+
         $scope.resourceId = $routeParams.resourceId;
 
         $scope.selectedSet = [];
@@ -14,7 +16,7 @@ angular.module('dmpApp')
             name: 'xml',
             description: 'xml with id ' + $scope.resourceId,
             parameters: {
-                'storage_type': 'xml'
+                'storage_type': configType
             }
         };
 

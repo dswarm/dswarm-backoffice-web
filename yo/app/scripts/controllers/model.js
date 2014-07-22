@@ -152,6 +152,14 @@ angular.module('dmpApp')
             return schemaParser.fromDomainSchema(dataModel.schema);
         };
 
+        $scope.projectIsMabXml = function() {
+            try {
+                return $scope.project.input_data_model.configuration.parameters.storage_type === 'mabxml';
+            } catch(e) {
+                return false;
+            }
+        };
+
         //====================================
         // Project drafting
         //====================================

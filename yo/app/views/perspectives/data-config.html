@@ -5,15 +5,20 @@
 <div ng-switch on="configType">
 
     <div ng-switch-when="csv">
-        <dataconfigcsv />
+        <dataconfigcsv ></dataconfigcsv>
     </div>
 
     <div ng-switch-when="xml">
-        <dataconfigxml />
+        <dataconfigxml ></dataconfigxml>
+    </div>
+
+    <div ng-switch-when="mabxml">
+        <div ng-init="mabxml=true"></div>
+        <dataconfigxml></dataconfigxml>
     </div>
 
     <div ng-switch-when="schema">
-        <dataconfigschema />
+        <dataconfigschema ></dataconfigschema>
     </div>
 
 </div>
