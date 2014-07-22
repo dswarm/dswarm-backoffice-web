@@ -45,6 +45,19 @@ angular.module('dmpApp')
                 targetId: scope.guid
             };
 
+            if (scope.projectIsMabXml()) {
+                var iap = getData(elements[sourceScope.guid], sourceScope).path;
+                component.sourceIsMabValue =
+                    loDash(scope.project.input_data_model.schema.attribute_paths)
+                        .filter(function(ap) {
+                            return angular.equals(iap, loDash.map(ap.attributes, 'id'));
+                        })
+                        .filter(function(iap) {
+                            return loDash.last(iap.attributes).uri === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
+                        })
+                        .first();
+            }
+
             connectionParamPromise(component, scope).then(connectComponent, mergeComponent).then(function() {
                 sourceScope.isSelected = false;
                 sourceScope = null;
@@ -71,10 +84,18 @@ angular.module('dmpApp')
                 var sourceEndpoint,
                     targetEndpoint,
                     newConnection,
-                    label = (data && data.label) ? data.label : null;
+                    newLabel = null,
+                    newKeyDefs = null;
 
-                if (typeof data === 'string') {
-                    label = data;
+                if (angular.isString(data)) {
+                    newLabel = data;
+                } else if (angular.isObject(data)) {
+                    if (data.label) {
+                        newLabel = data.label;
+                    }
+                    if (data.keyDefs) {
+                        newKeyDefs = data.keyDefs;
+                    }
                 }
 
                 //create endpoint
@@ -90,9 +111,19 @@ angular.module('dmpApp')
                     newConnection.mappingId = component.mappingId;
                 }
 
-                if (label !== null) {
+                if (newLabel !== null) {
+                    endpointLabel.set(newConnection, newLabel);
+                }
 
-                    endpointLabel.set(newConnection, label);
+                if (newKeyDefs !== null) {
+                    newKeyDefs = loDash.map(newKeyDefs, function(keyDef) {
+                        var kd = {};
+                        loDash.forEach(keyDef, function(key) {
+                            kd[key.attribute] = key.value;
+                        });
+                        return kd;
+                    });
+                    newConnection.keyDefs = newKeyDefs;
                 }
 
                 if (active) {
@@ -105,7 +136,21 @@ angular.module('dmpApp')
             }
 
             if (label === true) {
-                endpointLabel.ask().then(continuation, connectionDefer.reject);
+                var labelPromise;
+                if (component.sourceIsMabValue) {
+                    labelPromise = endpointLabel.askWithKeys([{
+                        attribute: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr',
+                        display: 'nr',
+                        value: ''
+                    }, {
+                        attribute: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind',
+                        display: 'ind',
+                        value: ''
+                    }]);
+                } else {
+                    labelPromise = endpointLabel.ask();
+                }
+                labelPromise.then(continuation, connectionDefer.reject);
             } else if (typeof label === 'string') {
                 continuation(label);
             } else {
@@ -160,13 +205,14 @@ angular.module('dmpApp')
                     name: name,
                     inputAttributePath: source,
                     outputAttributePath: target,
+                    keyDefs: conn.keyDefs || [],
                     additionalInput: getDatas(conn.additionalInput)
                 });
             }
         }
 
-        function getData(c) {
-            var scp = angular.element(c).scope(),
+        function getData(c, cScope) {
+            var scp = cScope || angular.element(c).scope(),
                 parentName = scp.parentName,
                 data;
 

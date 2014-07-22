@@ -99,7 +99,7 @@ angular.module('dmpApp')
 
         /**
          * returns eigther id or generates a new one
-         * @param {string} optId The id to return
+         * @param {string=} optId The id to return
          * @returns {*}
          */
         function getId(optId) {
@@ -113,6 +113,20 @@ angular.module('dmpApp')
             s.name = s.name || '';
 
             return s;
+        }
+
+        function parseFilterDefinitions(expression, name) {
+            var schema = getSchema(),
+                filter = filterHelper.applyFilter(schema, expression),
+                iapFilter = {
+                    filter: filter,
+                    name: name
+                };
+
+            filterHelper.buildFilterInputs([iapFilter]);
+
+            // all existing are merged into one filter now, this might be good or not?
+            return [iapFilter];
         }
 
         /**
@@ -138,20 +152,8 @@ angular.module('dmpApp')
 
                 loDash.forEach(mapping.input_attribute_paths, function(iap) {
                     if (iap.filter) {
-                        var schema = getSchema(),
-                            expression = angular.fromJson(iap.filter.expression),
-
-                            filter = filterHelper.applyFilter(schema, expression),
-
-                            iapFilter = {
-                                filter: filter,
-                                name: iap.filter.name
-                            };
-
-                        filterHelper.buildFilterInputs([iapFilter]);
-
-                        // all existing they're merged into one filter now, this might be good or not?
-                        iap._$filters = [iapFilter];
+                        var expression = angular.fromJson(iap.filter.expression);
+                        iap._$filters = parseFilterDefinitions(expression, iap.filter.name);
                     }
                 });
 
@@ -574,7 +576,7 @@ angular.module('dmpApp')
          * Adds an element to a specific position inside the grid
          * @param positionX - X position
          * @param positionY - Y position
-         * @param itemData - The original data of the dropped function
+         * @param componentData - The original data of the dropped function
          */
         function addToGrid(positionX, positionY, componentData) {
 
@@ -962,19 +964,19 @@ angular.module('dmpApp')
                             return angular.equals(outputPath, loDash.map(ap.attributes, 'id'));
                         }),
 
+                        thisIap = {
+                            type: 'MappingAttributePathInstance',
+                            name: 'input mapping attribute path instance',
+                            id: (new Date().getTime() + 1) * -1,
+                            attribute_path: inputAttributePaths[0]
+                        },
+
                         mapping = {
                             id: data.mapping_id,
                             _$connection_id: data.connection_id,
                             name: data.name,
                             transformation: createNewTransformation(),
-                            input_attribute_paths: [
-                                {
-                                    type: 'MappingAttributePathInstance',
-                                    name: 'input mapping attribute path instance',
-                                    id: (new Date().getTime() + 1) * -1,
-                                    attribute_path: inputAttributePaths[0]
-                                }
-                            ],
+                            input_attribute_paths: [thisIap],
                             output_attribute_path: {
                                 type: 'MappingAttributePathInstance',
                                 name: 'output mapping attribute path instance',
@@ -982,6 +984,15 @@ angular.module('dmpApp')
                                 attribute_path: outputAttributePaths[0]
                             }
                         };
+
+
+                    if (data.keyDefs && data.keyDefs.length) {
+                        thisIap._$filters = loDash.flatten(loDash.map(data.keyDefs, function(keyDef) {
+                            // TODO: multiple filters?
+                            setFilterExpression(thisIap, keyDef);
+                            return parseFilterDefinitions(keyDef, '');
+                        }), true);
+                    }
 
                     $scope.project.mappings.push(mapping);
 
@@ -1135,6 +1146,18 @@ angular.module('dmpApp')
             openFilter($scope.activeMapping, iap.attribute_path.id, iap);
         };
 
+        function setFilterExpression(iap, expr) {
+            var expression = JSON.stringify(expr);
+            if (iap.filter) {
+                iap.filter.expression = expression;
+            } else {
+                iap.filter = {
+                    id: getId(),
+                    expression: expression
+                };
+            }
+        }
+
         function openFilter(mapping, attributePathId, IAPInstance) {
             if (!IAPInstance._$filters) {
                 IAPInstance._$filters = [];
@@ -1171,16 +1194,7 @@ angular.module('dmpApp')
                     });
                 }), true);
 
-                var expression = JSON.stringify(loDash.zipObject(filters));
-
-                if (IAPInstance.filter) {
-                    IAPInstance.filter.expression = expression;
-                } else {
-                    IAPInstance.filter = {
-                        id: getId(),
-                        expression: expression
-                    };
-                }
+                setFilterExpression(IAPInstance, loDash.zipObject(filters));
             });
         }
         //** End handling filter
