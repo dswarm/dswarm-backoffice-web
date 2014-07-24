@@ -32,7 +32,7 @@ angular.module('dmpApp')
 
         }
 
-        function ask(promptText, helpText, extraLabel) {
+        function ask(promptText, helpText, extraLabel, prefill, error) {
             var text = promptText || 'Name this mapping',
                 buttonText = text,
                 help = helpText || 'The name has to be at least 3 characters long';
@@ -46,6 +46,15 @@ angular.module('dmpApp')
                     $scope.buttonText = buttonText;
                     $scope.help = help;
                     $scope.extraLabel = extraLabel;
+                    $scope.error = error;
+
+                    if(prefill && prefill.label) {
+                        $scope.label = prefill.label;
+                    }
+
+                    if(prefill && prefill.extra) {
+                        $scope.extra = prefill.extra;
+                    }
 
                     $scope.isValid = function(label) {
                         return valid(label);

@@ -358,8 +358,9 @@ angular.module('dmpApp')
 
         $scope.loadProjectData($routeParams.projectId);
 
-        $scope.newLeaf = function(data, isInputLeaf) {
-            endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'URI').then(function(modalData) {
+        $scope.newLeaf = function(data, isInputLeaf, prefill, error) {
+
+            endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'URI', prefill, error).then(function(modalData) {
 
                 var result = function(schema) {
 
@@ -368,6 +369,9 @@ angular.module('dmpApp')
 
                     PubSub.broadcast('restoreCurrentProject', {});
 
+                },
+                error = function(error) {
+                    $scope.newLeaf(data, isInputLeaf, { label: modalData.label, extra : modalData.extra }, error.data.error);
                 };
 
                 var modelId = (isInputLeaf) ? $scope.project.input_data_model.schema.id : $scope.project.output_data_model.schema.id;
@@ -377,13 +381,13 @@ angular.module('dmpApp')
                     SchemaAttributepathsResource.add_attribute({
                         id: modelId,
                         attributepathid: data._$path_id
-                    }, { name: modalData.label, uri : modalData.extra }, result);
+                    }, { name: modalData.label, uri : modalData.extra }, result, error);
 
                 } else {
 
                     SchemaResource.save({
                         id: modelId
-                    }, [{ name: modalData.label, uri : modalData.extra }], result);
+                    }, [{ name: modalData.label, uri : modalData.extra }], result, error);
                 }
 
             });
