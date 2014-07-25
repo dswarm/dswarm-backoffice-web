@@ -464,6 +464,8 @@ angular.module('dmpApp')
                 var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
                 // create a simple name for this input_attribute_path
                 var varName = Util.buildAttributeName(inputAttributes, 'name', '_');
+                // set name to varName to connect iap to var later
+                $scope.activeMapping.input_attribute_paths[i].name = varName;
                 // create the fq-uri for this input_attribute_path
                 transformation.parameter_mappings[varName] = Util.buildUriReference(inputAttributes);
             });
@@ -939,6 +941,9 @@ angular.module('dmpApp')
         //** End of mapping activation and selection
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
+
+            console.log(data);
+
 
             hideTransformationPlumbs();
 
