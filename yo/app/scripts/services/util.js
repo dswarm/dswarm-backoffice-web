@@ -206,6 +206,9 @@ angular.module('dmpApp')
 
                         });
 
+                        var iapInstance = loDash.find(mapping.input_attribute_paths, { name : key });
+                        iapInstance.name = newKey;
+
                     }
 
                 });
