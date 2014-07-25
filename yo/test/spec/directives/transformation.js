@@ -20,13 +20,23 @@ describe('Directive: Transformation', function() {
         return ip;
     }
 
-    function getMappingWithPath(attributePaths, selector, specs) {
+    function getMappingWithPath(attributePaths, selector, specs, generateName) {
         var paths = _.filter(attributePaths, selector);
         var mapping = angular.extend({
             type: 'MappingAttributePathInstance',
             name: 'input mapping attribute path instance'
         }, specs || {});
         mapping.attribute_path = paths[0];
+
+        if(generateName) {
+            var names = [];
+
+            _.map(mapping.attribute_path.attributes, function(attribute) {
+                names.push(attribute.name);
+            })
+
+            mapping.name = names.join('_');
+        }
 
         return mapping;
     }
@@ -405,9 +415,7 @@ describe('Directive: Transformation', function() {
         expect(mapping.transformation.function.type).toBe('Transformation');
         expect(mapping.transformation.function.components).toEqual([]);
 
-        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {
-            name: 'input mapping attribute path instance'
-        })];
+        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {}, true)];
         var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
         var expectedOutputMapping = getMappingWithPath(attributePaths, {id: 30}, {
@@ -474,16 +482,10 @@ describe('Directive: Transformation', function() {
 
             var expectedInputMapping;
             if (paths[2]) {
-                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
-                    name: 'input mapping attribute path instance'
-                }), getMappingWithPath(attributePaths, {id: paths[2]}, {
-                    name: 'input mapping attribute path instance'
-                })];
+                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true), getMappingWithPath(attributePaths, {id: paths[2]}, {}, true)];
 
             } else {
-                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {
-                    name: 'input mapping attribute path instance'
-                })];
+                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true)];
             }
 
             var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
