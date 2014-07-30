@@ -236,12 +236,12 @@ angular.module('dmpApp')
                         if (inputString.indexOf('component') === -1) {
 
                             var iap = loDash.find($scope.activeMapping.input_attribute_paths, function (iap) {
-                                return Util.buildVariableName(iap.attribute_path.attributes) === inputString;
+                                return iap.name === inputString;
                             });
 
                             connectOptions.source = {
                                 type: 'transformation-input',
-                                id: iap.attribute_path.id
+                                id: iap.id
                             };
                         } else {
 
@@ -275,7 +275,7 @@ angular.module('dmpApp')
 
                         connectOptions.source =  {
                             type : 'transformation-input',
-                            id : $scope.activeMapping.input_attribute_paths[0].attribute_path.id
+                            id : $scope.activeMapping.input_attribute_paths[0].id
                         };
 
                     } else {
@@ -463,11 +463,11 @@ angular.module('dmpApp')
             loDash.times($scope.gridsterOpts.maxRows, function(i) {
                 var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
                 // create a simple name for this input_attribute_path
-                var varName = Util.buildAttributeName(inputAttributes, 'name', '_');
+                //var varName = Util.buildAttributeName(inputAttributes, 'name', '_') + '__' + $scope.activeMapping.input_attribute_paths[i].id;
                 // set name to varName to connect iap to var later
-                $scope.activeMapping.input_attribute_paths[i].name = varName;
+                //$scope.activeMapping.input_attribute_paths[i].name = varName;
                 // create the fq-uri for this input_attribute_path
-                transformation.parameter_mappings[varName] = Util.buildUriReference(inputAttributes);
+                transformation.parameter_mappings[$scope.activeMapping.input_attribute_paths[i].name] = Util.buildUriReference(inputAttributes);
             });
 
         }
@@ -506,7 +506,7 @@ angular.module('dmpApp')
 
             } else {
 
-                var variableName = Util.buildVariableName($scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes);
+                var variableName = $scope.activeMapping.input_attribute_paths[positionX].name;
 
                 loDash.map($scope.activeMapping.transformation.function.components, function(component) {
 
@@ -556,7 +556,7 @@ angular.module('dmpApp')
                 output_components : [],
                 input_components : [],
                 description: angular.toJson({
-                    x: Util.buildVariableName($scope.activeMapping.input_attribute_paths[positionX].attribute_path.attributes),
+                    x: $scope.activeMapping.input_attribute_paths[positionX].name,
                     y: positionY
                 })
             };
@@ -679,7 +679,7 @@ angular.module('dmpApp')
                     updateGridInputOutput(gridItem.positionX, gridItem.positionY);
 
                     gridItem.component.description = angular.toJson({
-                        x: Util.buildVariableName($scope.activeMapping.input_attribute_paths[gridItem.positionX].attribute_path.attributes),
+                        x: $scope.activeMapping.input_attribute_paths[gridItem.positionX].name,
                         y: gridItem.positionY
                     });
 
@@ -738,7 +738,7 @@ angular.module('dmpApp')
          * @returns {*}
          */
         function getRowIdentifier(iap) {
-            return Util.buildVariableName(iap.attribute_path.attributes);
+            return iap.name;
         }
 
         function ensureComponentProperties(component) {
@@ -966,10 +966,12 @@ angular.module('dmpApp')
                             return angular.equals(outputPath, loDash.map(ap.attributes, 'id'));
                         }),
 
+                        iapId = (new Date().getTime() + 1) * -1,
+
                         thisIap = {
                             type: 'MappingAttributePathInstance',
-                            name: 'input mapping attribute path instance',
-                            id: (new Date().getTime() + 1) * -1,
+                            name: Util.buildAttributeName(inputAttributePaths[0].attributes, 'name', '_') + '__' + iapId,
+                            id: iapId,
                             attribute_path: inputAttributePaths[0]
                         },
 
@@ -1023,14 +1025,14 @@ angular.module('dmpApp')
                     })[0];
 
                     var alreadyInIap = pathInSchema && loDash.any($scope.activeMapping.input_attribute_paths, function(iap) {
-                        return iap.attribute_path.id === pathInSchema.id;
+                        return input.iapId === iap.id;
                     });
 
                     if(pathInSchema && !alreadyInIap) {
                         $scope.activeMapping.input_attribute_paths.push({
                             type: 'MappingAttributePathInstance',
-                            name: 'input mapping attribute path instance',
-                            id: (new Date().getTime() + 1) * -1,
+                            name: Util.buildAttributeName(pathInSchema.attributes, 'name', '_') + '__' + input.iapId,
+                            id: input.iapId,
                             attribute_path: pathInSchema
                         });
                     }
@@ -1238,7 +1240,7 @@ angular.module('dmpApp')
 
                                     var inputString = component.parameter_mappings.inputString.split(',');
 
-                                    if(loDash.indexOf(inputString, Util.buildVariableName($scope.activeMapping.input_attribute_paths[row].attribute_path.attributes)) > -1) {
+                                    if(loDash.indexOf(inputString, $scope.activeMapping.input_attribute_paths[row].name) > -1) {
                                         thisOpenEnded = false;
                                     }
                                 }
@@ -1247,7 +1249,7 @@ angular.module('dmpApp')
                             if(thisOpenEnded) {
                                 openEndedComponents.push({
                                     display : $scope.formatAttributePath($scope.activeMapping.input_attribute_paths[row].attribute_path),
-                                    name : Util.buildVariableName($scope.activeMapping.input_attribute_paths[row].attribute_path.attributes),
+                                    name : $scope.activeMapping.input_attribute_paths[row].name,
                                     type : 'attribute_path_instance',
                                     data : $scope.activeMapping.input_attribute_paths[row]
                                 });

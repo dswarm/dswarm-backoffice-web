@@ -177,7 +177,7 @@ angular.module('dmpApp')
                 if(varName.indexOf('component') === -1) {
 
                     var iap = loDash.find(mapping.input_attribute_paths, function (iap) {
-                        return Util.buildVariableName(iap.attribute_path.attributes) === varName;
+                        return iap.name === varName;
                     });
 
                     if (angular.isObject(iap) && angular.isDefined(iap.attribute_path)) {
