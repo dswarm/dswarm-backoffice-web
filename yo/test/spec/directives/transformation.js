@@ -13,6 +13,10 @@ describe('Directive: Transformation', function() {
 
         var expectedId = -new Date();
 
+        if(_.isUndefined(id)) {
+            id = expectedId;
+        };
+
         expect(Math.abs(id - expectedId)).toBeGreaterThan(-1);
         expect(Math.abs(id - expectedId)).toBeLessThan(100);
 
@@ -20,7 +24,7 @@ describe('Directive: Transformation', function() {
         return ip;
     }
 
-    function getMappingWithPath(attributePaths, selector, specs, generateName) {
+    function getMappingWithPath(attributePaths, selector, specs, generateName, presetId) {
         var paths = _.filter(attributePaths, selector);
         var mapping = angular.extend({
             type: 'MappingAttributePathInstance',
@@ -33,9 +37,13 @@ describe('Directive: Transformation', function() {
 
             _.map(mapping.attribute_path.attributes, function(attribute) {
                 names.push(attribute.name);
-            })
+            });
 
             mapping.name = names.join('_');
+
+            if(presetId) {
+                mapping.name = mapping.name + '__' + presetId;
+            }
         }
 
         return mapping;
@@ -399,6 +407,7 @@ describe('Directive: Transformation', function() {
         });
 
         var data = connectionDatas[0];
+        data.iapId = 33;
 
         $rootScope.$broadcast('connectionSelected', data);
 
@@ -415,7 +424,7 @@ describe('Directive: Transformation', function() {
         expect(mapping.transformation.function.type).toBe('Transformation');
         expect(mapping.transformation.function.components).toEqual([]);
 
-        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {}, true)];
+        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {}, true, data.iapId)];
         var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
         var expectedOutputMapping = getMappingWithPath(attributePaths, {id: 30}, {
@@ -451,9 +460,14 @@ describe('Directive: Transformation', function() {
         });
 
         _.each(connectionDatas, function(data) {
+            data.iapId = 33;
             $rootScope.$broadcast('connectionSelected', data);
         });
-        $rootScope.$broadcast('connectionSelected', connectionDatas[1]);
+
+        var data2 = connectionDatas[1];
+        data2.iapId = 33;
+
+        $rootScope.$broadcast('connectionSelected', data2);
 
         expect(project.mappings.length).toBe(3);
         expect(elScope.tabs.length).toBe(3);
@@ -482,10 +496,10 @@ describe('Directive: Transformation', function() {
 
             var expectedInputMapping;
             if (paths[2]) {
-                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true), getMappingWithPath(attributePaths, {id: paths[2]}, {}, true)];
+                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true, data2.iapId), getMappingWithPath(attributePaths, {id: paths[2]}, {}, true, data2.iapId)];
 
             } else {
-                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true)];
+                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true, data2.iapId)];
             }
 
             var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);

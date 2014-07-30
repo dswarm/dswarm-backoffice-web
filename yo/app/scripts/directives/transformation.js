@@ -970,7 +970,7 @@ angular.module('dmpApp')
 
                         thisIap = {
                             type: 'MappingAttributePathInstance',
-                            name: Util.buildAttributeName(inputAttributePaths[0].attributes, 'name', '_') + '__' + iapId,
+                            name: Util.buildAttributeName(inputAttributePaths[0].attributes, 'name', '_') + '__' + ( (data.iapId > 0) ? data.iapId : iapId ),
                             id: iapId,
                             attribute_path: inputAttributePaths[0]
                         },
@@ -1031,7 +1031,7 @@ angular.module('dmpApp')
                     if(pathInSchema && !alreadyInIap) {
                         $scope.activeMapping.input_attribute_paths.push({
                             type: 'MappingAttributePathInstance',
-                            name: Util.buildAttributeName(pathInSchema.attributes, 'name', '_') + '__' + input.iapId,
+                            name: Util.buildAttributeName(pathInSchema.attributes, 'name', '_') + '__' + ((data.iapId > 0) ? data.iapId : input.iapId),
                             id: input.iapId,
                             attribute_path: pathInSchema
                         });
