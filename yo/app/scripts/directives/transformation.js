@@ -951,13 +951,13 @@ angular.module('dmpApp')
 
                 loDash.map(iap._$filters, function(filter) {
                     filterNames += filter.name;
-                })
+                });
 
                 return filterNames;
 
-            };
+            }
 
-        }
+        };
 
         //** End of mapping activation and selection
 
@@ -1041,7 +1041,7 @@ angular.module('dmpApp')
                     //noinspection FunctionWithInconsistentReturnsJS
                     var pathInSchema = Util.collect(shortPaths, function(sp) {
                         if (loDash.isEqual(sp[0], input.path)) {
-            [DD-530] use multiple iap with same input and output paths                return sp[1];
+                            return sp[1];
                         }
                     })[0];
 
