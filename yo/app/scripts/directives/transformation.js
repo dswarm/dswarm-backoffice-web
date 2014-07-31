@@ -938,6 +938,27 @@ angular.module('dmpApp')
             return '';
         };
 
+        /**
+         * Formats the filter names
+         * @param {object} iap - Input attibute path instance structure
+         * @returns {string}
+         */
+        $scope.formatFilters = function(iap) {
+
+            if(angular.isDefined(iap._$filters)) {
+
+                var filterNames = '';
+
+                loDash.map(iap._$filters, function(filter) {
+                    filterNames += filter.name;
+                })
+
+                return filterNames;
+
+            };
+
+        }
+
         //** End of mapping activation and selection
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
@@ -1020,7 +1041,7 @@ angular.module('dmpApp')
                     //noinspection FunctionWithInconsistentReturnsJS
                     var pathInSchema = Util.collect(shortPaths, function(sp) {
                         if (loDash.isEqual(sp[0], input.path)) {
-                            return sp[1];
+            [DD-530] use multiple iap with same input and output paths                return sp[1];
                         }
                     })[0];
 
