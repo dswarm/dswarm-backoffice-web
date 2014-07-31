@@ -178,6 +178,10 @@ angular.module('dmpApp')
 
         function addInputToComponent(newInputComponent, baseComponent) {
 
+            if(loDash.isUndefined(newInputComponent.iapId)) {
+                newInputComponent.iapId = (new Date().getTime() + 2) * -1;
+            }
+
             newInputComponent.connection.setLabel(' ');
             var labelOverlay = newInputComponent.connection.getLabelOverlay();
             labelOverlay.addClass('mapping-label');
@@ -236,7 +240,10 @@ angular.module('dmpApp')
         function getDatas(c) {
 
             return loDash.map(c, function(data) {
-                return getData(data.connection.source);
+
+                return angular.extend(getData(data.connection.source), {
+                    iapId : data.iapId
+                });
             });
         }
 
@@ -313,7 +320,8 @@ angular.module('dmpApp')
                                 scope: 'schema',
                                 sourceId: inputScope.scope.guid,
                                 targetId: outputScope.scope.guid,
-                                mappingId: mapping.id
+                                mappingId: mapping.id,
+                                iapId: input_attribute_path.id
                             };
 
                             if (!additionalInputPath) {
