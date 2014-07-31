@@ -1,0 +1,46 @@
+<h1>Export</h1>
+
+<h3>Specific model</h3>
+<div class="gridStyle" ng-grid="modelListOptions"></div>
+
+
+<span ng-if="selectedModel.length" class="selected-set-options form-group">
+    <p>Selected data set ({{ selectedModel.0.data_resource.name }})</p>
+
+    <div class="btn-group text-center">
+        <button type="button" class="btn btn-primary" ng-click="onExportModelClick('application/n-quads')">Export model data</button>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a class="btn" ng-click="onExportModelClick('application/n-quads')">N-Quads</a></li>
+            <li><a class="btn" ng-click="onExportModelClick('application/rdf+xml')">RDF XML</a></li>
+            <li><a class="btn" ng-click="onExportModelClick('application/trig')">TriG</a></li>
+            <li><a class="btn" ng-click="onExportModelClick('text/turtle')">Turtle</a></li>
+            <li><a class="btn" ng-click="onExportModelClick('text/n3')">N3</a></li>
+        </ul>
+    </div>
+
+</span>
+
+
+
+<hr>
+<h3>All Data</h3>
+
+<div class="btn-group text-center">
+    <button type="button" class="btn btn-primary" ng-click="onExportAllClick('application/n-quads')">Export All Data</button>
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a class="btn" ng-click="onExportAllClick('application/n-quads')">N-Quads</a></li>
+        <li><a class="btn" ng-click="onExportAllClick('application/trig')">TriG</a></li>
+        <li class="divider"></li>
+        <li><a class="btn disabled">JSON-LD</a></li>
+    </ul>
+</div>
+<hr>
+
