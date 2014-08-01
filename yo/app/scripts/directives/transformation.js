@@ -938,6 +938,27 @@ angular.module('dmpApp')
             return '';
         };
 
+        /**
+         * Formats the filter names
+         * @param {object} iap - Input attibute path instance structure
+         * @returns {string}
+         */
+        $scope.formatFilters = function(iap) {
+
+            if(angular.isDefined(iap._$filters)) {
+
+                var filterNames = '';
+
+                loDash.map(iap._$filters, function(filter) {
+                    filterNames += filter.name;
+                });
+
+                return filterNames;
+
+            }
+
+        };
+
         //** End of mapping activation and selection
 
         PubSub.subscribe($scope, 'connectionSelected', function(data) {
