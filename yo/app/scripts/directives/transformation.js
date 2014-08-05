@@ -1013,7 +1013,6 @@ angular.module('dmpApp')
 
                     if (data.keyDefs && data.keyDefs.length) {
                         thisIap._$filters = loDash.flatten(loDash.map(data.keyDefs, function(keyDef) {
-                            // TODO: multiple filters?
                             setFilterExpression(thisIap, keyDef);
                             return parseFilterDefinitions(keyDef, '');
                         }), true);
@@ -1219,7 +1218,15 @@ angular.module('dmpApp')
                     });
                 }), true);
 
-                setFilterExpression(IAPInstance, loDash.zipObject(filters));
+                var filtersExpression = loDash.map(filters, function(filter) {
+
+                    var filterExpression = {};
+                    filterExpression[filter[0]] = filter[1];
+
+                    return filterExpression;
+                });
+
+                setFilterExpression(IAPInstance, filtersExpression);
             });
         }
         //** End handling filter

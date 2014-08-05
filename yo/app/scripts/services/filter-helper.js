@@ -37,7 +37,7 @@ angular.module('dmpApp').
          * @param expression a filter expression as per backend storage ({ path : value })
          * @returns a list of {filter, inputFilter, name} objects that power the filter functionality
          */
-        function applyFilter(schema, expression) {
+        function applyFilter(schema, expressions) {
 
             function next(children, path, isLeaf) {
                 return loDash.select(children, function(child) {
@@ -64,7 +64,9 @@ angular.module('dmpApp').
                 });
             }
 
-            loDash.forEach(expression, apply);
+            loDash.forEach(expressions, function(expression) {
+                loDash.forEach(expression, apply);
+            });
 
             return schema;
         }
