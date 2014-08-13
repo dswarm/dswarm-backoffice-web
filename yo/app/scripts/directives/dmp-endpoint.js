@@ -248,7 +248,7 @@ angular.module('dmpApp')
         }
 
         function realPath(segments, scp) {
-            if (angular.isUndefined(scp.data) || scp.data.name === 'record') {
+            if (angular.isUndefined(scp.data)) {
                 return segments;
             }
 
