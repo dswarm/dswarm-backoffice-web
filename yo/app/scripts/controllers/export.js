@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ExportCtrl', function($scope, DataModelResource, fileDownload, loDash, Neo4jEndpoint) {
+    .controller('ExportCtrl', function($scope, DataModelResource, fileDownload, loDash, Neo4jEndpoint, ApiEndpoint) {
 
         $scope.models = [];
         $scope.selectedModel = [];
@@ -15,7 +15,7 @@ angular.module('dmpApp')
 
         $scope.onExportModelClick = function(format) {
 
-            var fileUrl = Neo4jEndpoint + 'rdf/export/' + $scope.selectedModel[0].id + '/?format=' + encodeURIComponent(format);
+            var fileUrl = ApiEndpoint + 'datamodels/' + $scope.selectedModel[0].id + '/export?format=' + encodeURIComponent(format);
 
             fileDownload(fileUrl);
 
