@@ -82,7 +82,7 @@ angular.module('dmpApp').
          * @param extra     extra attributes for the leaf node
          */
         function makeNode(name, children, title, extra) {
-            var item = {'name': name, '$show': true};
+            var item = {'name': name, '$show': false, '$wasRendered': false};
 
             if (children && children.length) {
                 item['children'] = children;
