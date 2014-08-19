@@ -33,8 +33,19 @@ angular.module('dmpApp')
         }
         /* jshint ignore:end */
 
-        $scope.expandCollapse = function(that) {
-            that.toggle(that);
+        $scope.expandCollapse = function(that, data) {
+
+            data.$wasRendered = true;
+            data.$show = !data.$show;
+
+        };
+
+        $scope.wasRendered = function(data) {
+            return data.$wasRendered;
+        };
+
+        $scope.isCollapsed = function(data) {
+            return !data.$show;
         };
 
         $scope.update = function() {
