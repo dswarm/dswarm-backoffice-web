@@ -64,8 +64,13 @@ angular.module('dmpApp')
             return !data.$show;
         };
 
+        $scope.wasRendered = function(data) {
+            return data.$wasRendered;
+        };
+
         $scope.expandCollapse = function(that, data) {
 
+            data.$wasRendered = true;
             data.$show = !data.$show;
 
             $timeout(function() {
@@ -141,6 +146,42 @@ angular.module('dmpApp')
 
         $scope.processInputDataModel = function() {
             $scope.project._$input_data_model_schema = $scope.dataModelToSchema($scope.project.input_data_model);
+
+            var showChild = function(needle, child) {
+
+                if(child.id === needle) {
+
+                    child.$wasRendered = true;
+                    child.$show = true;
+
+                    return;
+                }
+
+                if(child.hasChildren) {
+                    loDash.map(child.children, function(child) {
+                        showChild(needle, child);
+                    });
+                }
+
+            };
+
+            loDash.map($scope.project.mappings, function(mapping) {
+
+                loDash.map(mapping.input_attribute_paths, function(input_attribute_path) {
+
+                    loDash.map(input_attribute_path.attribute_path.attributes, function(attribute) {
+
+                        loDash.map($scope.project._$input_data_model_schema.children, function(child) {
+                            showChild(attribute.id, child);
+                        });
+
+
+                    });
+
+                });
+
+            });
+
 
             $timeout(function() {
                 PubSub.broadcast('inputDataSelected', { });

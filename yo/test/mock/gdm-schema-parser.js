@@ -853,60 +853,71 @@ angular.module('mockedSchemas', [])
     })
     .value('expectedMabRtRecord', {
         "name": "mabrt",
-        "$show": true,
+        "$show": false,
+        "$wasRendered" : false,
         "children": [
             {
                 "name": "type",
-                "$show": true,
+                "$show": false,
+                "$wasRendered" : false,
                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
                 "leaf": true
             },
             {
                 "name": "typ",
-                "$show": true,
+                "$show": false,
+                "$wasRendered" : false,
                 "title": "h",
                 "leaf": true
             },
             {
                 "name": "status",
-                "$show": true,
+                "$show": false,
+                "$wasRendered" : false,
                 "title": "n",
                 "leaf": true
             },
             {
                 "name": "mabVersion",
-                "$show": true,
+                "$show": false,
+                "$wasRendered" : false,
                 "title": "M2.0",
                 "leaf": true
             },
             {
                 "name": "feld",
-                "$show": true,
+                "$show": false,
+                "$wasRendered" : false,
                 "children": [
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "001",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "06978834",
                                 "leaf": true
                             }
@@ -914,29 +925,34 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "002",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "a",
                                 "leaf": true
                             },
                             {
-                                "name": "value",
-                                "$show": true,
+                                "name": "value",                                
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "19981028",
                                 "leaf": true
                             }
@@ -944,28 +960,33 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "003",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "20010620",
                                 "leaf": true
                             }
@@ -973,29 +994,34 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "005",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "n",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "20011121",
                                 "leaf": true
                             }
@@ -1003,29 +1029,34 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "029",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "m",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "MB",
                                 "leaf": true
                             }
@@ -1033,28 +1064,33 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "030",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "az1dcr|||||37",
                                 "leaf": true
                             }
@@ -1062,29 +1098,34 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "037",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "z",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "dt.",
                                 "leaf": true
                             }
@@ -1092,28 +1133,31 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false,
+                        "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false,
+                                "$wasRendered" : false,
                                 "title": "050",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "|||||c||||||||",
                                 "leaf": true
                             }
@@ -1121,28 +1165,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "051",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "n||||||",
                                 "leaf": true
                             }
@@ -1150,28 +1194,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "070",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "KNUB",
                                 "leaf": true
                             }
@@ -1179,29 +1223,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "070",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "FRhk",
                                 "leaf": true
                             }
@@ -1209,29 +1253,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "076",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "n",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "098301",
                                 "leaf": true
                             }
@@ -1239,29 +1283,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "076",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "k",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "101171",
                                 "leaf": true
                             }
@@ -1269,29 +1313,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "076",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "v",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "5",
                                 "leaf": true
                             }
@@ -1299,39 +1343,39 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "077",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "p",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "children": [
                                     {
                                         "name": "value",
-                                        "$show": true,
+                                        "$show": false, "$wasRendered" : false,
                                         "title": "00872805",
                                         "leaf": true
                                     },
                                     {
                                         "name": "value",
-                                        "$show": true,
+                                        "$show": false, "$wasRendered" : false,
                                         "title": "Roll, Gernot",
                                         "leaf": true
                                     }
@@ -1339,11 +1383,11 @@ angular.module('mockedSchemas', [])
                             },
                             {
                                 "name": "tf",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "children": [
                                     {
                                         "name": "type",
-                                        "$show": true,
+                                        "$show": false, "$wasRendered" : false,
                                         "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tfType",
                                         "leaf": true
                                     }
@@ -1353,39 +1397,39 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "077",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "p",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "children": [
                                     {
                                         "name": "value",
-                                        "$show": true,
+                                        "$show": false, "$wasRendered" : false,
                                         "title": "00872284",
                                         "leaf": true
                                     },
                                     {
                                         "name": "value",
-                                        "$show": true,
+                                        "$show": false, "$wasRendered" : false,
                                         "title": "Thomas, Eugen",
                                         "leaf": true
                                     }
@@ -1393,11 +1437,11 @@ angular.module('mockedSchemas', [])
                             },
                             {
                                 "name": "tf",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "children": [
                                     {
                                         "name": "type",
-                                        "$show": true,
+                                        "$show": false, "$wasRendered" : false,
                                         "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tfType",
                                         "leaf": true
                                     }
@@ -1407,29 +1451,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "100",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Wirth, Franz Peter",
                                 "leaf": true
                             }
@@ -1437,28 +1481,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "102",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "00412254",
                                 "leaf": true
                             }
@@ -1466,29 +1510,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "104",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Mann, Golo",
                                 "leaf": true
                             }
@@ -1496,28 +1540,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "106",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "00243077",
                                 "leaf": true
                             }
@@ -1525,29 +1569,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "108",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Ahlsen, Leopold",
                                 "leaf": true
                             }
@@ -1555,28 +1599,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "110",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "00004514",
                                 "leaf": true
                             }
@@ -1584,29 +1628,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "112",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Boysen, Rolf",
                                 "leaf": true
                             }
@@ -1614,28 +1658,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "114",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "00045374",
                                 "leaf": true
                             }
@@ -1643,29 +1687,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "116",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Pekny, Romuald",
                                 "leaf": true
                             }
@@ -1673,28 +1717,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "118",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "00465696",
                                 "leaf": true
                             }
@@ -1702,29 +1746,29 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "120",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "b",
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Kreindl, Werner",
                                 "leaf": true
                             }
@@ -1732,28 +1776,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "122",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "00209123",
                                 "leaf": true
                             }
@@ -1761,28 +1805,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "331",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Wallenstein",
                                 "leaf": true
                             }
@@ -1790,28 +1834,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "334",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Bildtonträger",
                                 "leaf": true
                             }
@@ -1819,28 +1863,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "335",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "nach der Biographie von Golo Mann für das Fernsehen erzählt von Leopold Ahlsen",
                                 "leaf": true
                             }
@@ -1848,28 +1892,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "359",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "[Darsteller:] Rolf Boysen, Romuald Pekny, Werner Kreindl ... Kamera: Gernot Roll ... Musik: Eugen Thomas. Regie: Franz Peter Wirth",
                                 "leaf": true
                             }
@@ -1877,28 +1921,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "410",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "[Mainz]",
                                 "leaf": true
                             }
@@ -1906,28 +1950,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "412",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "ZDF [u.a.]",
                                 "leaf": true
                             }
@@ -1935,28 +1979,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "433",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Videokassetten",
                                 "leaf": true
                             }
@@ -1964,28 +2008,28 @@ angular.module('mockedSchemas', [])
                     },
                     {
                         "name": "feld",
-                        "$show": true,
+                        "$show": false, "$wasRendered" : false,
                         "children": [
                             {
                                 "name": "type",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType",
                                 "leaf": true
                             },
                             {
                                 "name": "nr",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "501",
                                 "leaf": true
                             },
                             {
                                 "name": "ind",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "leaf": true
                             },
                             {
                                 "name": "value",
-                                "$show": true,
+                                "$show": false, "$wasRendered" : false,
                                 "title": "Fernsehfilm, BRD 1978",
                                 "leaf": true
                             }

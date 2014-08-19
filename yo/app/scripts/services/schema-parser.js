@@ -34,7 +34,7 @@ angular.module('dmpApp').
         function fromDomainSchema(domainSchema, editableTitle) {
 
             var base = {name: domainSchema.name || ''},
-                extra = {$show: true, editableTitle: !!editableTitle},
+                extra = {$show: false, editableTitle: !!editableTitle, '$wasRendered': false},
                 paths = prepare(domainSchema),
                 cache = generateTreeCache(paths);
 
