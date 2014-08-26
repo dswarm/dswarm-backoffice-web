@@ -79,13 +79,64 @@ angular.module('dmpApp')
 
             var connectionDefer = $q.defer();
 
+            function handleAdditionalKeyDefs(data) {
+
+                if(data.keyDefs.length === 0) {
+                    return;
+                }
+
+                var sourceScope = loDash.find(sourceMap, function(map) {
+                    return map[0].scope.guid === data.component.sourceId;
+                });
+
+                var targetScope = loDash.find(targetMap, function(map) {
+                    return map[0].scope.guid === data.component.targetId;
+                });
+
+                var connectParams = {component: data.component, sourceId: data.component.sourceId, targetId: data.component.targetId, sourceOptions: sourceScope[0].opts, targetOptions: targetScope[0].opts, active: false, label: false};
+
+                loDash.forEach(data.keyDefs, function(keyDef) {
+
+                    connectComponent(connectParams).then(function(newConnection) {
+
+                        connectParams.component.keyDefs = mapKeyDefs([keyDef]);
+
+                        endpointSelector.removeFromPool(newConnection);
+                        var targetConnection = endpointSelector.getTargetFromPool(connectParams.targetId);
+
+                        connectParams.component.connection = newConnection;
+
+                        addInputToComponent(connectParams.component, targetConnection);
+
+                        activate(targetConnection);
+                    });
+
+                });
+
+            }
+
+            function mapKeyDefs(keyDefs) {
+
+                return loDash.map(keyDefs, function(keyDef) {
+
+                    var kd = {};
+                    loDash.forEach(keyDef, function(key) {
+
+                        kd[key.attribute] = key.value;
+                    });
+
+                    return kd;
+                });
+            }
+
             function continuation(data) {
 
                 var sourceEndpoint,
                     targetEndpoint,
                     newConnection,
                     newLabel = null,
-                    newKeyDefs = null;
+                    newKeyDefs = null,
+                    additionalKeyDefs = { keyDefs : [], component : {} };
 
                 if (angular.isString(data)) {
                     newLabel = data;
@@ -116,14 +167,16 @@ angular.module('dmpApp')
                 }
 
                 if (newKeyDefs !== null) {
-                    newKeyDefs = loDash.map(newKeyDefs, function(keyDef) {
-                        var kd = {};
-                        loDash.forEach(keyDef, function(key) {
-                            kd[key.attribute] = key.value;
-                        });
-                        return kd;
-                    });
-                    newConnection.keyDefs = newKeyDefs;
+                    newConnection.keyDefs = mapKeyDefs(newKeyDefs.splice(0,1));
+
+
+                    if(newKeyDefs.length > 0) {
+                        additionalKeyDefs = {
+                            keyDefs : newKeyDefs,
+                            component :component
+                        };
+                    }
+
                 }
 
                 if (active) {
@@ -133,6 +186,8 @@ angular.module('dmpApp')
                 component.connection = newConnection;
 
                 connectionDefer.resolve(newConnection);
+
+                return additionalKeyDefs;
             }
 
             if (label === true) {
@@ -150,7 +205,7 @@ angular.module('dmpApp')
                 } else {
                     labelPromise = endpointLabel.ask();
                 }
-                labelPromise.then(continuation, connectionDefer.reject);
+                labelPromise.then(continuation, connectionDefer.reject).then(handleAdditionalKeyDefs);
             } else if (typeof label === 'string') {
                 continuation(label);
             } else {
@@ -242,7 +297,8 @@ angular.module('dmpApp')
             return loDash.map(c, function(data) {
 
                 return angular.extend(getData(data.connection.source), {
-                    iapId : data.iapId
+                    iapId : data.iapId,
+                    keyDefs: data.keyDefs
                 });
             });
         }

@@ -1049,12 +1049,22 @@ angular.module('dmpApp')
                     });
 
                     if(pathInSchema && !alreadyInIap) {
-                        $scope.activeMapping.input_attribute_paths.push({
+
+                        var newIap = {
                             type: 'MappingAttributePathInstance',
                             name: Util.buildAttributeName(pathInSchema.attributes, 'name', '_') + '__' + ((data.iapId > 0) ? data.iapId : input.iapId),
                             id: input.iapId,
                             attribute_path: pathInSchema
-                        });
+                        };
+
+                        if (input.keyDefs && input.keyDefs.length) {
+                            newIap._$filters = loDash.flatten(loDash.map(input.keyDefs, function(keyDef) {
+                                setFilterExpression(newIap, keyDef);
+                                return parseFilterDefinitions(keyDef, '');
+                            }), true);
+                        }
+
+                        $scope.activeMapping.input_attribute_paths.push(newIap);
                     }
                 });
             }
