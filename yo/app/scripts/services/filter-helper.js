@@ -64,6 +64,10 @@ angular.module('dmpApp').
                 });
             }
 
+            if(!loDash.isArray(expressions)) {
+                expressions = [expressions];
+            }
+
             loDash.forEach(expressions, function(expression) {
                 loDash.forEach(expression, apply);
             });
