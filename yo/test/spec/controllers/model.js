@@ -225,7 +225,7 @@ describe('Controller: ModelCtrl', function() {
 
     it('should load a project from cache', inject(function(localStorageService) {
 
-        spyOn(localStorageService, 'get').andCallThrough();
+        spyOn(localStorageService, 'get').and.callThrough();
 
         expectModelCtrl();
 

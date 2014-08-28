@@ -8,7 +8,7 @@ describe('Directive TargetData', function () {
 
     beforeEach(module(function($provide) {
         gdmParserSpy = jasmine.createSpyObj('gdmParser', ['parse']);
-        gdmParserSpy['parse'].andReturn('parsed');
+        gdmParserSpy['parse'].and.returnValue('parsed');
         $provide.value('gdmParser', gdmParserSpy);
     }));
 
@@ -99,7 +99,7 @@ describe('Directive TargetData', function () {
         expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation2', 'schema', true);
         expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation3', 'schema', true);
 
-        expect(gdmParserSpy.parse.calls.length).toBe(3);
+        expect(gdmParserSpy.parse.calls.count()).toBe(3);
 
         expect(elScope.data).toBeUndefined();
         expect(elScope.records).toEqual([{

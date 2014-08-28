@@ -19,7 +19,7 @@ describe('Service: PubSub', function () {
         PubSub.subscribe(scope1, 'channel', callbackSpy);
 
         expect(scope1.$on).toHaveBeenCalled();
-        expect(scope1.$on.mostRecentCall.args[0]).toEqual('channel');
+        expect(scope1.$on.calls.mostRecent().args[0]).toEqual('channel');
     }));
 
     it('should publish using the $rootScope\'s $broadcast method', inject(function (PubSub) {
@@ -34,7 +34,7 @@ describe('Service: PubSub', function () {
         PubSub.broadcast('channel', 'data');
 
         expect(callbackSpy).toHaveBeenCalled();
-        expect(callbackSpy.mostRecentCall.args[0]).toEqual('data');
+        expect(callbackSpy.calls.mostRecent().args[0]).toEqual('data');
     }));
 
 });

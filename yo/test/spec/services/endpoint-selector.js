@@ -51,7 +51,7 @@ describe('Service: endpointSelector', function () {
     }));
 
     beforeEach(function() {
-        this.addMatchers({
+        jasmine.addMatchers({
             toBeResolvedWith: function(expected) {
                 var resolved;
                 var msg = 'Expected "' + angular.mock.dump(this.actual) + '" to be resolved with "' + expected;

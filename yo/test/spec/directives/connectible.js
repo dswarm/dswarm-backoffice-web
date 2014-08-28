@@ -78,7 +78,7 @@ describe('Directive: Connectibles', function () {
             expect(jsp.connect).not.toHaveBeenCalled();
 
             $timeout.flush();
-            expect(jsp.connect.calls.length).toBe(2);
+            expect(jsp.connect.calls.count()).toBe(2);
         });
 
         it('should connect two elements if the conditions are met', function() {
@@ -88,16 +88,16 @@ describe('Directive: Connectibles', function () {
             scope.$digest();
             $timeout.flush();
 
-            expect(jsp.connect.calls.length).toBe(2);
+            expect(jsp.connect.calls.count()).toBe(2);
 
-            expect(jsp.connect.calls[0].args[0][0]).toBe(element[0]);
-            expect(jsp.connect.calls[0].args[1][0]).toBe(element[1]);
-            expect(jsp.connect.calls[0].args[2].anchors[0].slice(0, 4)).toEqual([0, 1, 0, 1]);
-            expect(jsp.connect.calls[0].args[2].anchors[1].slice(0, 4)).toEqual([0, 0, 0, -1]);
-            expect(jsp.connect.calls[1].args[0][0]).toBe(element[0]);
-            expect(jsp.connect.calls[1].args[1][0]).toBe(element[1]);
-            expect(jsp.connect.calls[1].args[2].anchors[0].slice(0, 4)).toEqual([1, 1, 0, 1]);
-            expect(jsp.connect.calls[1].args[2].anchors[1].slice(0, 4)).toEqual([1, 0, 0, -1]);
+            expect(jsp.connect.calls.argsFor(0)[0][0]).toBe(element[0]);
+            expect(jsp.connect.calls.argsFor(0)[1][0]).toBe(element[1]);
+            expect(jsp.connect.calls.argsFor(0)[2].anchors[0].slice(0, 4)).toEqual([0, 1, 0, 1]);
+            expect(jsp.connect.calls.argsFor(0)[2].anchors[1].slice(0, 4)).toEqual([0, 0, 0, -1]);
+            expect(jsp.connect.calls.argsFor(1)[0][0]).toBe(element[0]);
+            expect(jsp.connect.calls.argsFor(1)[1][0]).toBe(element[1]);
+            expect(jsp.connect.calls.argsFor(1)[2].anchors[0].slice(0, 4)).toEqual([1, 1, 0, 1]);
+            expect(jsp.connect.calls.argsFor(1)[2].anchors[1].slice(0, 4)).toEqual([1, 0, 0, -1]);
         });
 
         it('should detach all connection when the project is discarded', function() {
@@ -108,8 +108,8 @@ describe('Directive: Connectibles', function () {
 
             $rootScope.$broadcast('projectDraftDiscarded');
 
-            expect(jsp.detachAll.calls.length).toBe(1);
-            expect(jsp.detachAll.calls[0].args[0][0]).toBe(element[0]);
+            expect(jsp.detachAll.calls.count()).toBe(1);
+            expect(jsp.detachAll.calls.argsFor(0)[0][0]).toBe(element[0]);
         });
 
     });
@@ -154,64 +154,64 @@ describe('Directive: Connectibles', function () {
             $timeout.flush();
 
             // detach all from first node till the end
-            expect(jsp.detach.calls[0].args[0]).toBeUndefined();
-            expect(jsp.detach.calls[0].args[1].length).toBe(0);
-            expect(jsp.detach.calls[0].args[2].length).toBe(2);
-            expect(jsp.detach.calls[0].args[2][0]).toBe(middle);
-            expect(jsp.detach.calls[0].args[2][1]).toBe(right);
+            expect(jsp.detach.calls.argsFor(0)[0]).toBeUndefined();
+            expect(jsp.detach.calls.argsFor(0)[1].length).toBe(0);
+            expect(jsp.detach.calls.argsFor(0)[2].length).toBe(2);
+            expect(jsp.detach.calls.argsFor(0)[2][0]).toBe(middle);
+            expect(jsp.detach.calls.argsFor(0)[2][1]).toBe(right);
 
-            expect(jsp.detach.calls[1].args[0]).toBeUndefined();
-            expect(jsp.detach.calls[1].args[1].length).toBe(1);
-            expect(jsp.detach.calls[1].args[1][0]).toBe(left);
-            expect(jsp.detach.calls[1].args[2].length).toBe(1);
-            expect(jsp.detach.calls[1].args[2][0]).toBe(middle);
+            expect(jsp.detach.calls.argsFor(1)[0]).toBeUndefined();
+            expect(jsp.detach.calls.argsFor(1)[1].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(1)[1][0]).toBe(left);
+            expect(jsp.detach.calls.argsFor(1)[2].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(1)[2][0]).toBe(middle);
 
-            expect(jsp.detach.calls[2].args[0]).toBeUndefined();
-            expect(jsp.detach.calls[2].args[1].length).toBe(1);
-            expect(jsp.detach.calls[2].args[1][0]).toBe(middle);
-            expect(jsp.detach.calls[2].args[2].length).toBe(1);
-            expect(jsp.detach.calls[2].args[2][0]).toBe(right);
+            expect(jsp.detach.calls.argsFor(2)[0]).toBeUndefined();
+            expect(jsp.detach.calls.argsFor(2)[1].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(2)[1][0]).toBe(middle);
+            expect(jsp.detach.calls.argsFor(2)[2].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(2)[2][0]).toBe(right);
 
             // detach all from second node till the end
-            expect(jsp.detach.calls[3].args[0]).toBeUndefined();
-            expect(jsp.detach.calls[3].args[1].length).toBe(1);
-            expect(jsp.detach.calls[3].args[1][0]).toBe(left);
-            expect(jsp.detach.calls[3].args[2].length).toBe(1);
-            expect(jsp.detach.calls[3].args[2][0]).toBe(right);
+            expect(jsp.detach.calls.argsFor(3)[0]).toBeUndefined();
+            expect(jsp.detach.calls.argsFor(3)[1].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(3)[1][0]).toBe(left);
+            expect(jsp.detach.calls.argsFor(3)[2].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(3)[2][0]).toBe(right);
 
-            expect(jsp.detach.calls[4].args[0]).toBeUndefined();
-            expect(jsp.detach.calls[4].args[1].length).toBe(1);
-            expect(jsp.detach.calls[4].args[1][0]).toBe(middle);
-            expect(jsp.detach.calls[4].args[2].length).toBe(1);
-            expect(jsp.detach.calls[4].args[2][0]).toBe(right);
+            expect(jsp.detach.calls.argsFor(4)[0]).toBeUndefined();
+            expect(jsp.detach.calls.argsFor(4)[1].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(4)[1][0]).toBe(middle);
+            expect(jsp.detach.calls.argsFor(4)[2].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(4)[2][0]).toBe(right);
 
             // detach all from the third node till the end
-            expect(jsp.detach.calls[5].args[0]).toBeUndefined();
-            expect(jsp.detach.calls[5].args[1].length).toBe(1);
-            expect(jsp.detach.calls[5].args[1][0]).toBe(middle);
-            expect(jsp.detach.calls[5].args[2].length).toBe(0);
+            expect(jsp.detach.calls.argsFor(5)[0]).toBeUndefined();
+            expect(jsp.detach.calls.argsFor(5)[1].length).toBe(1);
+            expect(jsp.detach.calls.argsFor(5)[1][0]).toBe(middle);
+            expect(jsp.detach.calls.argsFor(5)[2].length).toBe(0);
 
             // connect all from the first till the end, and previous to current
-            expect(jsp.connect.calls[0].args[0][0]).toBe(left);
-            expect(jsp.connect.calls[0].args[1][0]).toBe(middle);
+            expect(jsp.connect.calls.argsFor(0)[0][0]).toBe(left);
+            expect(jsp.connect.calls.argsFor(0)[1][0]).toBe(middle);
 
-            expect(jsp.connect.calls[1].args[0][0]).toBe(middle);
-            expect(jsp.connect.calls[1].args[1][0]).toBe(right);
+            expect(jsp.connect.calls.argsFor(1)[0][0]).toBe(middle);
+            expect(jsp.connect.calls.argsFor(1)[1][0]).toBe(right);
 
 
             // connect all from the second till the end, and previous to current
-            expect(jsp.connect.calls[2].args[0][0]).toBe(middle);
-            expect(jsp.connect.calls[2].args[1][0]).toBe(right);
+            expect(jsp.connect.calls.argsFor(2)[0][0]).toBe(middle);
+            expect(jsp.connect.calls.argsFor(2)[1][0]).toBe(right);
 
-            expect(jsp.connect.calls[3].args[0][0]).toBe(left);
-            expect(jsp.connect.calls[3].args[1][0]).toBe(middle);
+            expect(jsp.connect.calls.argsFor(3)[0][0]).toBe(left);
+            expect(jsp.connect.calls.argsFor(3)[1][0]).toBe(middle);
 
             // connect all from the third till the end, and previous to current
-            expect(jsp.connect.calls[4].args[0][0]).toBe(middle);
-            expect(jsp.connect.calls[4].args[1][0]).toBe(right);
+            expect(jsp.connect.calls.argsFor(4)[0][0]).toBe(middle);
+            expect(jsp.connect.calls.argsFor(4)[1][0]).toBe(right);
 
-            expect(jsp.detach.calls.length).toBe(6);
-            expect(jsp.connect.calls.length).toBe(5);
+            expect(jsp.detach.calls.count()).toBe(6);
+            expect(jsp.connect.calls.count()).toBe(5);
         }));
 
         it('should detach all connections on a tab switch', inject(function($timeout) {
@@ -219,16 +219,16 @@ describe('Directive: Connectibles', function () {
             scope.$digest();
             $timeout.flush();
 
-            expect(jsp.detach.calls.length).toBe(6);
-            expect(jsp.connect.calls.length).toBe(5);
+            expect(jsp.detach.calls.count()).toBe(6);
+            expect(jsp.connect.calls.count()).toBe(5);
 
             $rootScope.$broadcast('tabSwitch');
 
-            expect(jsp.detachAll.calls.length).toBe(3);
+            expect(jsp.detachAll.calls.count()).toBe(3);
 
-            expect(jsp.detachAll.calls[0].args[0][0]).toBe(left);
-            expect(jsp.detachAll.calls[1].args[0][0]).toBe(middle);
-            expect(jsp.detachAll.calls[2].args[0][0]).toBe(right);
+            expect(jsp.detachAll.calls.argsFor(0)[0][0]).toBe(left);
+            expect(jsp.detachAll.calls.argsFor(1)[0][0]).toBe(middle);
+            expect(jsp.detachAll.calls.argsFor(2)[0][0]).toBe(right);
 
         }));
     });
