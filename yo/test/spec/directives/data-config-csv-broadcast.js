@@ -30,7 +30,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
     }));
 
     beforeEach(function() {
-        spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send');
     });
 

@@ -8,7 +8,7 @@ describe('Directives DragDrop', function() {
     beforeEach(module(function($provide) {
 
         guid = jasmine.createSpyObj('GUID', ['uuid4']);
-        guid.uuid4.andReturn('1234');
+        guid.uuid4.and.returnValue('1234');
 
         $provide.value('GUID', guid);
     }));

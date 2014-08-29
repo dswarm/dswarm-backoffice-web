@@ -603,7 +603,7 @@ describe('Directive: Transformation', function() {
         var payloadExpect = angular.copy(payload);
         Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
 
-        spyOn(TaskResource, 'execute').andCallThrough();
+        spyOn(TaskResource, 'execute').and.callThrough();
         spyOn(PubSub, 'broadcast');
 
         elScope.sendTransformation(elScope.tabs[dataIdx]);
@@ -613,11 +613,11 @@ describe('Directive: Transformation', function() {
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
 
-        expect(PubSub.broadcast.calls.length).toBe(1);
-        expect(PubSub.broadcast.calls[0].args.length).toBe(2);
-        expect(PubSub.broadcast.calls[0].args[0]).toBe('transformationFinished');
-        expect(PubSub.broadcast.calls[0].args[1].length).toBe(1);
-        expect(PubSub.broadcast.calls[0].args[1][0].foo).toBe('bar');
+        expect(PubSub.broadcast.calls.count()).toBe(1);
+        expect(PubSub.broadcast.calls.argsFor(0).length).toBe(2);
+        expect(PubSub.broadcast.calls.argsFor(0)[0]).toBe('transformationFinished');
+        expect(PubSub.broadcast.calls.argsFor(0)[1].length).toBe(1);
+        expect(PubSub.broadcast.calls.argsFor(0)[1][0].foo).toBe('bar');
     }));
 
     it('should alert an error on wrong transformations', inject(function(TaskResource, $window) {
@@ -630,7 +630,7 @@ describe('Directive: Transformation', function() {
         var data = connectionDatas[dataIdx];
         $rootScope.$broadcast('connectionSelected', data);
 
-        spyOn(TaskResource, 'execute').andCallThrough();
+        spyOn(TaskResource, 'execute').and.callThrough();
         spyOn($window, 'alert');
 
         elScope.sendTransformation(elScope.tabs[dataIdx]);
@@ -664,7 +664,7 @@ describe('Directive: Transformation', function() {
         var payloadExpect = angular.copy(payload);
         Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
 
-        spyOn(TaskResource, 'execute').andCallThrough();
+        spyOn(TaskResource, 'execute').and.callThrough();
         spyOn(PubSub, 'broadcast');
 
         elScope.sendTransformations();
@@ -673,11 +673,11 @@ describe('Directive: Transformation', function() {
         expect(TaskResource.execute).toHaveBeenCalledWith({ persist: false }, Util.toJson(payloadExpect));
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
-        expect(PubSub.broadcast.calls.length).toBe(1);
-        expect(PubSub.broadcast.calls[0].args.length).toBe(2);
-        expect(PubSub.broadcast.calls[0].args[0]).toBe('transformationFinished');
-        expect(PubSub.broadcast.calls[0].args[1].length).toBe(1);
-        expect(PubSub.broadcast.calls[0].args[1][0].foo).toBe('bar');
+        expect(PubSub.broadcast.calls.count()).toBe(1);
+        expect(PubSub.broadcast.calls.argsFor(0).length).toBe(2);
+        expect(PubSub.broadcast.calls.argsFor(0)[0]).toBe('transformationFinished');
+        expect(PubSub.broadcast.calls.argsFor(0)[1].length).toBe(1);
+        expect(PubSub.broadcast.calls.argsFor(0)[1][0].foo).toBe('bar');
     }));
 
     it('should map additional input data to input attribute path', function() {
@@ -810,7 +810,7 @@ describe('Directive: Transformation', function() {
         var fakeModal = { result: { then: function(fn) {
             fn();
         } } };
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         scope.$digest();
         var elScope = element.scope();
@@ -818,9 +818,9 @@ describe('Directive: Transformation', function() {
         elScope.onFilterClick({'attribute_path': {id: 'foo'}});
 
         expect($modal.open).toHaveBeenCalled();
-        expect($modal.open.calls[0].args[0].resolve.mapping()).toEqual({});
-        expect($modal.open.calls[0].args[0].resolve.attributePathId()).toBe('foo');
-        expect($modal.open.calls[0].args[0].resolve.filters()).toEqual([]);
+        expect($modal.open.calls.argsFor(0)[0].resolve.mapping()).toEqual({});
+        expect($modal.open.calls.argsFor(0)[0].resolve.attributePathId()).toBe('foo');
+        expect($modal.open.calls.argsFor(0)[0].resolve.filters()).toEqual([]);
     }));
 
     it('should react to the projectDraftDiscarded Event', function() {
@@ -908,7 +908,7 @@ describe('Directive: Transformation', function() {
         scope.$digest();
         var elScope = element.scope();
 
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         expect(project.mappings.length).toBe(0);
 

@@ -166,7 +166,7 @@ describe('Controller: ConfigurationCtrl', function () {
 
         spyOn(PubSub, 'broadcast');
 
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         scope.removeComponent();
 

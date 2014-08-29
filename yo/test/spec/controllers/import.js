@@ -6,7 +6,7 @@ describe('Controller: Import', function () {
     beforeEach(module('dmpApp'));
 
     beforeEach(function () {
-        spyOn(XMLHttpRequest.prototype, 'open').andCallThrough();
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send');
     });
 

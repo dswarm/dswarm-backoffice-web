@@ -91,7 +91,7 @@ describe('Controller: DataListCtrl', function () {
             { id: 2}
         ], { name: 'Foo', description: 'Bar'});
 
-        var callArgs = ProjectResource.save.mostRecentCall.args;
+        var callArgs = ProjectResource.save.calls.mostRecent().args;
 
         expect(callArgs[1].input_data_model.id).toBe(2);
         expect(callArgs[1].name).toBe('Foo');

@@ -12,7 +12,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
     };
 
 //    function dumpSpy(spy, name) {
-//        console.log(name + ' calls length', spy.calls.length);
+//        console.log(name + ' calls length', spy.calls.count());
 //        spy.calls.forEach(function(call, i) {
 //            console.log(name + ' call ' + i + ' args length', call.args.length);
 //            call.args.forEach(function(arg, ii) {
@@ -77,7 +77,7 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
     beforeEach(function() {
         spyOn(PubSub, 'broadcast');
-        spyOn($rootScope, '$broadcast').andCallThrough();
+        spyOn($rootScope, '$broadcast').and.callThrough();
     });
 
     afterEach(inject(function () {

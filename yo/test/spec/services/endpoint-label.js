@@ -22,76 +22,110 @@ describe('Service: endpointLabel', function () {
     }));
 
     beforeEach(function() {
-        this.addMatchers({
-            toBeResolvedWith: function(expected) {
-                var resolved;
-                var msg = 'Expected "' + angular.mock.dump(this.actual) + '" to be resolved with "' + expected;
+        jasmine.addMatchers({
+            toBeResolvedWith: function() {
 
-                this.message = function() {
-                    return msg + '".';
-                };
+                return {
+                    compare: function(actual, expected) {
 
-                this.actual.then(function(result) {
-                    msg += '", but was resolved with "' + angular.mock.dump(result);
-                    resolved = result;
-                }, function(reason) {
-                    msg += '", but was rejected with "' + angular.mock.dump(reason);
-                });
-                $rootScope.$digest();
+                        var resolved,
+                            result = {
+                                message : 'Expected "' + angular.mock.dump(actual) + '" to be resolved with "' + expected
+                            };
 
-                return resolved === expected;
+                        actual.then(function(result) {
+                            result.message += '", but was resolved with "' + angular.mock.dump(result);
+                            resolved = result;
+                        }, function(reason) {
+                            result.message += '", but was rejected with "' + angular.mock.dump(reason);
+                        });
+                        $rootScope.$digest();
+
+                        result.pass = resolved === expected;
+
+                        return result;
+
+                    }
+                }
+
             },
-            toBeResolvedObjectWith: function(expected, test) {
-                var resolved;
-                var msg = 'Expected "' + angular.mock.dump(this.actual) + '" to be resolved with "' + expected;
+            toBeResolvedObjectWith: function() {
 
-                this.message = function() {
-                    return msg + '".';
-                };
+                return {
+                    compare: function(actual, expected, test) {
 
-                this.actual.then(function(result) {
-                    msg += '", but was resolved with "' + angular.mock.dump(result[test]);
-                    resolved = result[test];
-                }, function(reason) {
-                    msg += '", but was rejected with "' + angular.mock.dump(reason);
-                });
-                $rootScope.$digest();
+                        var resolved,
+                            result = {
+                                message : 'Expected "' + angular.mock.dump(actual) + '" to be resolved with "' + expected
+                            };
 
-                return resolved === expected;
+                        actual.then(function(result) {
+                            result.message += '", but was resolved with "' + angular.mock.dump(result[test]);
+                            resolved = result[test];
+                        }, function(reason) {
+                            result.message += '", but was rejected with "' + angular.mock.dump(reason);
+                        });
+                        $rootScope.$digest();
+
+                        result.pass = resolved === expected;
+
+                        return result;
+
+                    }
+                }
+
             },
-            toBeRejectedWith: function(expected) {
-                var rejected;
-                var msg = 'Expected "' + angular.mock.dump(this.actual) + '" to be rejected with "' + expected;
+            toBeRejectedWith: function() {
 
-                this.message = function() {
-                    return msg + '".';
-                };
+                return {
+                    compare: function(actual, expected) {
 
-                this.actual.then(function(result) {
-                    msg += '", but was resolved with "' + angular.mock.dump(result);
-                }, function(reason) {
-                    msg += '", but was rejected with "' + angular.mock.dump(reason);
-                    rejected = reason;
-                });
-                $rootScope.$digest();
+                        var rejected,
+                            result = {
+                                message : 'Expected "' + angular.mock.dump(actual) + '" to be resolved with "' + expected
+                            };
 
-                return rejected === expected;
+                        actual.then(function(result) {
+                            result.message += '", but was resolved with "' + angular.mock.dump(result);
+                        }, function(reason) {
+                            result.message += '", but was rejected with "' + angular.mock.dump(reason);
+                            rejected = reason;
+                        });
+                        $rootScope.$digest();
+
+                        result.pass = rejected === expected;
+                        result.message += '".';
+
+                        return result;
+
+                    }
+                }
+
             },
             toBeCompleted: function() {
-                var completed = false;
 
-                this.message = function() {
-                    return 'Expected "' + angular.mock.dump(this.actual) + '" to be completed".';
-                };
+                return {
+                    compare: function(actual) {
 
-                this.actual.then(function() {
-                    completed = true;
-                }, function() {
-                    completed = true;
-                });
-                $rootScope.$digest();
+                        var completed = false,
+                            result = {
+                                message : 'Expected "' + angular.mock.dump(actual) + '" to be completed".'
+                            };
 
-                return completed;
+                        actual.then(function() {
+                            completed = true;
+                        }, function() {
+                            completed = true;
+                        });
+                        $rootScope.$digest();
+
+                        result.pass = completed;
+
+                        return result;
+
+                    }
+                }
+
             }
         });
     });
@@ -105,7 +139,7 @@ describe('Service: endpointLabel', function () {
 
     it('should get the label', function () {
         var connection = jasmine.createSpyObj('connection', ['getLabel']);
-        connection.getLabel.andReturn('foo');
+        connection.getLabel.and.returnValue('foo');
 
         var actual = endpointLabel.get(connection);
         expect(actual).toBe('foo');
@@ -115,7 +149,7 @@ describe('Service: endpointLabel', function () {
     it('should set the label', function () {
         var connection = jasmine.createSpyObj('connection', ['setLabel', 'getLabelOverlay']);
         var labelOverlay = jasmine.createSpyObj('labelOverlay', ['addClass']);
-        connection.getLabelOverlay.andReturn(labelOverlay);
+        connection.getLabelOverlay.and.returnValue(labelOverlay);
 
         endpointLabel.set(connection, 'foo');
 
@@ -135,7 +169,7 @@ describe('Service: endpointLabel', function () {
         expect(labelOverlay.addClass).not.toHaveBeenCalled();
 
         // with overlay
-        connection.getLabelOverlay.andReturn(labelOverlay);
+        connection.getLabelOverlay.and.returnValue(labelOverlay);
 
         endpointLabel.activate(connection);
 
@@ -154,7 +188,7 @@ describe('Service: endpointLabel', function () {
         expect(labelOverlay.removeClass).not.toHaveBeenCalled();
 
         // with overlay
-        connection.getLabelOverlay.andReturn(labelOverlay);
+        connection.getLabelOverlay.and.returnValue(labelOverlay);
 
         endpointLabel.deactivate(connection);
 
@@ -163,7 +197,7 @@ describe('Service: endpointLabel', function () {
     });
 
     it('should ask for the label and validate its input', function () {
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         var p = endpointLabel.ask('foo', 'bar');
 
@@ -172,7 +206,7 @@ describe('Service: endpointLabel', function () {
     });
 
     it('should ask for the label and reject its input', function () {
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         var p = endpointLabel.ask('foo', 'bar');
 
@@ -181,7 +215,7 @@ describe('Service: endpointLabel', function () {
     });
 
     it('should ask for the label and reject on dismissal', function () {
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         var p = endpointLabel.ask('foo', 'bar');
 
@@ -190,7 +224,7 @@ describe('Service: endpointLabel', function () {
     });
 
     it('should ask for the label and reject on dismissal', function () {
-        spyOn($modal, 'open').andReturn(fakeModal);
+        spyOn($modal, 'open').and.returnValue(fakeModal);
 
         var p = endpointLabel.ask('foo', 'bar');
 
@@ -200,7 +234,7 @@ describe('Service: endpointLabel', function () {
 
     it('should render the prompt and help texts', inject(function ($document, $templateCache) {
         $templateCache.put('views/modals/re-label-connection.html', '<div><span id="test-text">{{ text }}</span><span id="test-help">{{ help }}</span></div>');
-        spyOn($modal, 'open').andCallThrough();
+        spyOn($modal, 'open').and.callThrough();
 
         endpointLabel.ask();
         $rootScope.$digest();
@@ -211,7 +245,7 @@ describe('Service: endpointLabel', function () {
 
     it('should be able to use label validation', inject(function ($document, $templateCache) {
         $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="label=\'abcde\'" id="test-valid">{{ isValid(label) }}</span><span ng-init="label2=\'ab\'" id="test-invalid">{{ isValid(label2) }}</span></div>');
-        spyOn($modal, 'open').andCallThrough();
+        spyOn($modal, 'open').and.callThrough();
 
         endpointLabel.ask();
         $rootScope.$digest();
@@ -222,14 +256,14 @@ describe('Service: endpointLabel', function () {
 
     it('should close with a valid label', inject(function ($document, $templateCache) {
         $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="close({label : \'abcde\'})" id="test-valid-close"></span></div>');
-        spyOn($modal, 'open').andCallThrough();
+        spyOn($modal, 'open').and.callThrough();
 
         expect(endpointLabel.ask()).toBeResolvedObjectWith('abcde', 'label');
     }));
 
     it('should not close with an invalid label', inject(function ($document, $templateCache) {
         $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="close(\'ab\')" id="test-invalid-close"></span></div>');
-        spyOn($modal, 'open').andCallThrough();
+        spyOn($modal, 'open').and.callThrough();
 
         expect(endpointLabel.ask()).not.toBeCompleted();
     }));

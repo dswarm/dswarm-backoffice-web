@@ -110,7 +110,7 @@ describe('Directive: DmpEndpoint', function() {
             return fakePromise;
         }};
 
-        spyOn(endpointSelector, 'connectionParamPromise').andReturn(fakePromise);
+        spyOn(endpointSelector, 'connectionParamPromise').and.returnValue(fakePromise);
 
         sourceScope.$digest();
         targetScope.$digest();
