@@ -122,7 +122,10 @@ angular.module('dmpApp')
                     var kd = {};
                     loDash.forEach(keyDef, function(key) {
 
-                        kd[key.attribute] = key.value;
+                        if(key.value) {
+                            kd[key.attribute] = key.value;
+                        }
+
                     });
 
                     return kd;
