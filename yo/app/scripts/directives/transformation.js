@@ -1181,6 +1181,11 @@ angular.module('dmpApp')
         };
 
         function setFilterExpression(iap, expr) {
+
+            if(!loDash.isArray(expr)) {
+                expr = [expr];
+            }
+
             var expression = JSON.stringify(expr);
             if (iap.filter) {
                 iap.filter.expression = expression;
