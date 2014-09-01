@@ -57,8 +57,17 @@ angular.module('dmpApp')
             if(loDash.size(parameterPool) > 0) {
 
                 var orderedParameters = loDash.map(parameterOrder, function(parameterKey) {
-                    var param = parameterPool[parameterKey];
+
+                    if(parameterKey.key) {
+                        parameterKey = parameterKey.key;
+                    }
+
+                    var param = parameterPool[parameterKey] ? parameterPool[parameterKey] : {};
                     delete parameterPool[parameterKey];
+
+                    if (typeof param == 'undefined') {
+                        param = {};
+                    }
 
                     param.key = parameterKey;
                     return param;
@@ -119,9 +128,6 @@ angular.module('dmpApp')
             componentId = null;
             isLoaded = false;
 
-            if (args.onlyIfAlreadyOpened && componentId === null) {
-                return;
-            }
             var providedComponent = args.component;
 
             if (componentId !== null && providedComponent.id === componentId) {
@@ -164,7 +170,7 @@ angular.module('dmpApp')
         };
 
         /**
-         * Finds the readable component name from both possible registers by teh component var name
+         * Finds the readable component name from both possible registers by the component var name
          * @param varName
          * @returns {*}
          */

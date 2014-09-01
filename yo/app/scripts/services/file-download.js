@@ -26,7 +26,7 @@ angular.module('dmpApp')
         };
     })
 
-    .factory('fileDownload', function($window, mobileBrowserCheck) {
+    .factory('fileDownload', function($window, $location, mobileBrowserCheck) {
         var iFrameId = 'fileDownloadFrame';
 
         function onIos(fileUrl) {
@@ -42,7 +42,7 @@ angular.module('dmpApp')
         }
 
         function onMobile(fileUrl) {
-            $window.location = fileUrl;
+            $location.path(fileUrl);
         }
 
         function onDesktop(fileUrl) {
@@ -50,7 +50,7 @@ angular.module('dmpApp')
 
             iFrame = angular.element('#' + iFrameId);
             if (iFrame.length === 0) {
-                iFrame = angular.element('<iframe id="' + iFrameId + '" style="display: none;"></iframe>');
+                iFrame = angular.element('<iframe id="' + iFrameId + '" name="' + iFrameId + '" style="display: none;" ></iframe>');
                 iFrame.appendTo('body');
             }
             iFrame.prop('src', fileUrl);
