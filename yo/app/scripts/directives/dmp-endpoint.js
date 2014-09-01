@@ -99,6 +99,8 @@ angular.module('dmpApp')
 
                     connectComponent(connectParams).then(function(newConnection) {
 
+                        delete(connectParams.component.iapId);
+
                         connectParams.component.keyDefs = mapKeyDefs([keyDef]);
 
                         endpointSelector.removeFromPool(newConnection);
@@ -237,7 +239,7 @@ angular.module('dmpApp')
         function addInputToComponent(newInputComponent, baseComponent) {
 
             if(loDash.isUndefined(newInputComponent.iapId)) {
-                newInputComponent.iapId = (new Date().getTime() + 2) * -1;
+                newInputComponent.iapId = (new Date().getTime() + Math.floor(Math.random() * 10)) * -1;
             }
 
             newInputComponent.connection.setLabel(' ');
