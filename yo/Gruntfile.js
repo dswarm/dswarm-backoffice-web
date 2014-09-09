@@ -534,7 +534,7 @@ module.exports = function(grunt) {
                     type: 'cobertura',
                     dir: '../<%= yeoman.target %>/coverage/'
                 },
-                browsers: ['PhantomJS'],
+                browsers: ['PhantomJS_without_security'],
                 autoWatch: false
             },
             localci: {

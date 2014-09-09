@@ -15,7 +15,7 @@ describe('Directive: Transformation', function() {
 
         if(_.isUndefined(id)) {
             id = expectedId;
-        };
+        }
 
         expect(Math.abs(id - expectedId)).toBeGreaterThan(-1);
         expect(Math.abs(id - expectedId)).toBeLessThan(100);

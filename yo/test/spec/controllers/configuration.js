@@ -8,9 +8,13 @@ describe('Controller: ConfigurationCtrl', function () {
         scope,
         mockedConfiguration,
         mockedConfigurationInternal,
+        mockConfigurationBroken,
+        mockConfigurationMulti1JSON,
+        mockConfigurationMulti2JSON,
+        mockedProject,
         fakeModal, $modal;
 
-    beforeEach(module('dmpApp', 'mockedConfiguration'));
+    beforeEach(module('dmpApp', 'mockedConfiguration', 'mockedProject'));
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $rootScope, $injector) {
@@ -18,6 +22,10 @@ describe('Controller: ConfigurationCtrl', function () {
 
         mockedConfiguration = $injector.get('mockConfigurationComponentJSON');
         mockedConfigurationInternal = $injector.get('mockConfigurationComponentInternalJSON');
+        mockConfigurationBroken = $injector.get('mockConfigurationComponentBrokenJSON');
+        mockConfigurationMulti1JSON = $injector.get('mockConfigurationMulti1JSON');
+        mockConfigurationMulti2JSON = $injector.get('mockConfigurationMulti2JSON');
+        mockedProject = $injector.get('mockProjectJSON2');
 
         scope.component = {
             "name" : 'equals',
@@ -155,6 +163,33 @@ describe('Controller: ConfigurationCtrl', function () {
         expect(PubSub.broadcast).toHaveBeenCalledWith('handleConfigEdited', { id : -1402495665792, parameter_mappings : { value : 'bar' } });
     }));
 
+    it('should send no data onSaveClick', inject(function(PubSub) {
+        configurationCtrl();
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationBroken
+        });
+
+        expect(scope.component).not.toBe(null);
+
+        spyOn(PubSub, 'broadcast');
+
+        angular.forEach(scope.component.parameters, function(paramDef) {
+            var param = paramDef.key;
+
+            if(param === 'value') {
+                paramDef.data = 'bar';
+            }
+        });
+
+        scope.component.parameters['value'] = 'bar';
+
+        scope.doSave();
+
+        expect(PubSub.broadcast).not.toHaveBeenCalled();
+
+    }));
+
     it('should send data on removeComponent', inject(function(PubSub) {
         configurationCtrl();
 
@@ -174,6 +209,26 @@ describe('Controller: ConfigurationCtrl', function () {
         scope.$digest();
 
         expect(PubSub.broadcast).toHaveBeenCalledWith('removeComponent', -1402495665792);
+    }));
+
+    it('should merge data on second handleEditConfig call', inject(function() {
+        configurationCtrl();
+
+        scope.project = mockedProject;
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationMulti1JSON
+        });
+
+        expect(scope.component).not.toBe(null);
+        expect(scope.component.parameters.length).toBe(3);
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationMulti2JSON
+        });
+
+        expect(scope.component.parameters.length).toBe(4);
+
     }));
 
 });
