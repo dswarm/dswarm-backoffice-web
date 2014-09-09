@@ -19,7 +19,7 @@ describe('Controller: Export', function () {
             $provide.value('fileDownload', fileDownloadMock);
         });
 
-    })
+    });
 
     beforeEach(inject(function ($injector, $httpBackend) {
         $rootScope = $injector.get('$rootScope');

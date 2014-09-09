@@ -108,6 +108,10 @@ module.exports = function(config) {
             FixedChrome: {
                 base: 'Chrome',
                 flags: ['--user-data-dir=../KarmaChrome/Profile']
+            },
+            PhantomJS_without_security: {
+                base: 'PhantomJS',
+                flags: ['--web-security=no']
             }
         }
 

@@ -46,7 +46,7 @@ describe('Service: endpointLabel', function () {
                         return result;
 
                     }
-                }
+                };
 
             },
             toBeResolvedObjectWith: function() {
@@ -72,7 +72,7 @@ describe('Service: endpointLabel', function () {
                         return result;
 
                     }
-                }
+                };
 
             },
             toBeRejectedWith: function() {
@@ -99,7 +99,7 @@ describe('Service: endpointLabel', function () {
                         return result;
 
                     }
-                }
+                };
 
             },
             toBeCompleted: function() {
@@ -124,7 +124,7 @@ describe('Service: endpointLabel', function () {
                         return result;
 
                     }
-                }
+                };
 
             }
         });

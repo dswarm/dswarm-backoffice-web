@@ -29,12 +29,9 @@ describe('file download service tests', function () {
 
                 setTimeout(function() {
 
-                    if(window['fileDownloadFrame'].location.href.indexOf(_Neo4jEndpoint + 'rdf/getall?format=application%2Fn-quads') > -1) {
-                        iFrameUrlChanged = true;
-                    } else {
-                        iFrameUrlChanged = false;
-                    }
+                    iFrameUrlChanged = window['fileDownloadFrame'].location.href.indexOf(_Neo4jEndpoint + 'rdf/getall?format=application%2Fn-quads') > -1;
                     callback();
+
                 }, 10);
 
             };
@@ -68,9 +65,8 @@ describe('file download service tests', function () {
 
         beforeEach(inject(function ($window) {
 
-            $window.navigator.__defineGetter__('userAgent', function(){
-                return( 'android' );
-            });
+            $window.navigator = {};
+            $window.navigator.__defineGetter__('userAgent', function () { return 'android'; });
 
         }));
 
@@ -92,9 +88,8 @@ describe('file download service tests', function () {
 
         beforeEach(inject(function ($window) {
 
-            $window.navigator.__defineGetter__('userAgent', function(){
-                return( 'iphone' );
-            });
+            $window.navigator = {};
+            $window.navigator.__defineGetter__('userAgent', function () { return 'iphone'; });
 
         }));
 
@@ -116,9 +111,8 @@ describe('file download service tests', function () {
 
         beforeEach(inject(function ($window) {
 
-            $window.navigator.__defineGetter__('userAgent', function(){
-                return( 'blackberry' );
-            });
+            $window.navigator = {};
+            $window.navigator.__defineGetter__('userAgent', function () { return 'blackberry'; });
 
         }));
 

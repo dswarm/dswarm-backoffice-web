@@ -211,7 +211,7 @@ describe('Controller: ConfigurationCtrl', function () {
         expect(PubSub.broadcast).toHaveBeenCalledWith('removeComponent', -1402495665792);
     }));
 
-    it('should merge data on second handleEditConfig call', inject(function(PubSub) {
+    it('should merge data on second handleEditConfig call', inject(function() {
         configurationCtrl();
 
         scope.project = mockedProject;

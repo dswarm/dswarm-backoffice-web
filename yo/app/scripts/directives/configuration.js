@@ -65,7 +65,7 @@ angular.module('dmpApp')
                     var param = parameterPool[parameterKey] ? parameterPool[parameterKey] : {};
                     delete parameterPool[parameterKey];
 
-                    if (typeof param == 'undefined') {
+                    if (typeof param === 'undefined') {
                         param = {};
                     }
 
