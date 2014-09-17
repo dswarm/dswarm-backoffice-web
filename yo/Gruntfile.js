@@ -122,6 +122,18 @@ module.exports = function(grunt) {
                 }
             },
 
+            localdist: {
+                options: {
+                    dest: '<%= yeoman.dist %>/config.js'
+                },
+                constants: {
+                    ServiceUrls: {
+                        backend: 'http://127.0.0.1:8087/dmp/',
+                        neo: 'http://127.0.0.1:8087/dmp/'
+                    }
+                }
+            },
+
             unstable: {
                 options: {
                     dest: '<%= yeoman.dist %>/config.js'
