@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewCsvCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource) {
+    .controller('DataConfigPreviewCsvCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, DataConfigPreviewResource, FileResource, normalizeKey) {
 
         $scope.previewResult = [];
         $scope.colDefs = [];
@@ -17,12 +17,6 @@ angular.module('dmpApp')
             enableRowSelection: false,
             enableColumnResize: true
         };
-
-        var keyRegex = new RegExp('[`~!@#$%^&*()_|+\\-=?;:\'",.<>\\n\\t\\r\\{\\}\\[\\]\\\\/ ]', 'gi');
-
-        function normalizeKey(key) {
-            return key.replace(keyRegex, '');
-        }
 
         $scope.gridInclude = function() {
             return $scope.showGrid ? 'previewgrid' : '';
