@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, schemaParser, filterHelper, TaskResource, Util) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, schemaParser, filterHelper, TaskResource, Util, idIncrementer) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -77,24 +77,8 @@ angular.module('dmpApp')
             }
         }, true);
 
-        var getOutputVariable = (function() {
-            var template = '__TRANSFORMATION_OUTPUT_VARIABLE__',
-                counter = 0,
-                outVariablesPool = {};
-
-            function getOutputVariable(mapping) {
-                if (loDash.has(outVariablesPool, mapping.id)) {
-                    return outVariablesPool[mapping.id];
-                }
-
-                var variableName = template + (++counter);
-                outVariablesPool[mapping.id] = variableName;
-
-                return variableName;
-            }
-
-            return getOutputVariable;
-        }());
+        var getOutputVariable = idIncrementer('__TRANSFORMATION_OUTPUT_VARIABLE__').map('id');
+        var getOutputMAPIName = idIncrementer('__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__').map('id');
 
 
         /**
@@ -451,23 +435,23 @@ angular.module('dmpApp')
 
             var transformation = $scope.activeMapping.transformation;
 
-            var outputAttributes = $scope.activeMapping.output_attribute_path.attribute_path.attributes;
             var transformationOutputVariable = getOutputVariable($scope.activeMapping);
+            var outputMAPIName = getOutputMAPIName($scope.activeMapping);
 
             transformation.parameter_mappings = loDash.omit(transformation.parameter_mappings, function(value, key) {
                 return key.indexOf('TRANSFORMATION_OUTPUT_VARIABLE') > -1;
             });
-
-            transformation.parameter_mappings[transformationOutputVariable] = Util.buildUriReference(outputAttributes);
+            transformation.parameter_mappings[transformationOutputVariable] = outputMAPIName;
 
             loDash.times($scope.gridsterOpts.maxRows, function(i) {
-                var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
+                // var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
                 // create a simple name for this input_attribute_path
                 //var varName = Util.buildAttributeName(inputAttributes, 'name', '_') + '__' + $scope.activeMapping.input_attribute_paths[i].id;
                 // set name to varName to connect iap to var later
                 //$scope.activeMapping.input_attribute_paths[i].name = varName;
                 // create the fq-uri for this input_attribute_path
-                transformation.parameter_mappings[$scope.activeMapping.input_attribute_paths[i].name] = Util.buildUriReference(inputAttributes);
+                var mappingNameInIAP = $scope.activeMapping.input_attribute_paths[i].name;
+                transformation.parameter_mappings[mappingNameInIAP] = mappingNameInIAP;
             });
 
         }
@@ -944,19 +928,13 @@ angular.module('dmpApp')
          * @returns {string}
          */
         $scope.formatFilters = function(iap) {
-
+            var filterNames;
             if(angular.isDefined(iap._$filters)) {
-
-                var filterNames = '';
-
-                loDash.map(iap._$filters, function(filter) {
-                    filterNames += filter.name;
-                });
-
-                return filterNames;
-
+                filterNames = loDash.map(iap._$filters, 'name');
+            } else {
+                filterNames = [];
             }
-
+            return filterNames.join('');
         };
 
         //** End of mapping activation and selection
@@ -1004,7 +982,7 @@ angular.module('dmpApp')
                             input_attribute_paths: [thisIap],
                             output_attribute_path: {
                                 type: 'MappingAttributePathInstance',
-                                name: 'output mapping attribute path instance',
+                                name: getOutputMAPIName({id: data.mapping_id}),
                                 id: (new Date().getTime() + 2) * -1,
                                 attribute_path: outputAttributePaths[0]
                             }

@@ -428,7 +428,7 @@ describe('Directive: Transformation', function() {
         var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
         var expectedOutputMapping = getMappingWithPath(attributePaths, {id: 30}, {
-            name: 'output mapping attribute path instance'
+            name: '__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__1'
         });
         var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath)[0];
 
@@ -505,7 +505,7 @@ describe('Directive: Transformation', function() {
             var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
             var expectedOutputMapping = [getMappingWithPath(attributePaths, {id: paths[1]}, {
-                name: 'output mapping attribute path instance'
+                name: '__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__' + (idx + 1)
             })];
             var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath);
 
