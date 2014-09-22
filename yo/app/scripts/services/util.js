@@ -192,7 +192,7 @@ angular.module('dmpApp')
 
                         var newKey = key + '__' + idx + '__';
 
-                        mapping.transformation.parameter_mappings[newKey] = angular.copy(mapping.transformation.parameter_mappings[key]);
+                        mapping.transformation.parameter_mappings[newKey] = newKey;
                         delete mapping.transformation.parameter_mappings[key];
 
                         loDash.forEach(mapping.transformation.function.components, function(component) {
@@ -225,7 +225,7 @@ angular.module('dmpApp')
         function buildNewDataModel(name) {
 
             var randId = (new Date().getTime() + Math.floor(Math.random() * 1001)) * -1;
-            
+
             return {
                 'name': name + ' Data Model',
                 'description': name + ' Data Model',
