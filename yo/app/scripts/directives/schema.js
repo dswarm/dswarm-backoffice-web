@@ -4,11 +4,6 @@ angular.module('dmpApp')
     .controller('SchemaCtrl', function($scope, $timeout, $q, $modal, PubSub) {
         $scope.internalName = 'Source Target Schema Mapper';
 
-        $scope.handleOutputSelected = function(dataModel) {
-
-            $scope.setOutputSchema(dataModel);
-        };
-
         $scope.onOutputSelectorClick = function() {
 
             var modalInstance = $modal.open({
@@ -21,8 +16,8 @@ angular.module('dmpApp')
                 }
             });
 
-            modalInstance.result.then(function(selectedItem) {
-                $scope.handleOutputSelected(selectedItem);
+            modalInstance.result.then(function(dataModel) {
+                $scope.setOutputSchema(dataModel);
             });
 
         };

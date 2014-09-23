@@ -124,6 +124,7 @@ angular.module('dmpApp')
 
         $scope.setOutputSchema = function(dataModel) {
             $scope.setOutputDataModel(dataModel);
+            PubSub.broadcast('restoreCurrentProject', {});
         };
 
         $scope.processOutputDataModel = function() {
@@ -274,7 +275,7 @@ angular.module('dmpApp')
         function discardProjectDraft(projectId) {
 
             localStorageService.remove(getStorageDraftKey(projectId));
-            PubSub.broadcast('projectDraftDiscarded');
+            PubSub.broadcast('projectDraftDiscarded', {});
         }
 
         function blocked(idx) {
