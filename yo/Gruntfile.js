@@ -110,6 +110,15 @@ module.exports = function(grunt) {
                 }
             },
 
+            againstDev: {
+                constants: {
+                    ServiceUrls: {
+                        backend: 'http://194.95.145.12/dmp/',
+                        neo: 'http://194.95.145.12/dmp/'
+                    }
+                }
+            },
+
             againstProd: {
                 constants: {
                     ServiceUrls: {
