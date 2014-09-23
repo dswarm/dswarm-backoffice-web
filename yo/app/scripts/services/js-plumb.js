@@ -96,7 +96,7 @@ angular.module('dmpApp')
 
             var $2 = $('#' + elId);
 
-            if ($2 && !$2.is(':visible')) {
+            if ($2.length && !$2.is(':visible')) {
 
                 $2.closest('.jsPanchor:visible').find('.jsPanchorIcon:visible').first().attr('id', GUID.uuid4());
                 elId = $2.closest('.jsPanchor:visible').find('.jsPanchorIcon:visible').first().attr('id');
@@ -151,7 +151,9 @@ angular.module('dmpApp')
          * @param connection
          */
         function detachOriginal(connection) {
-            jsPlumb.detach(connection);
+            if (angular.isObject(connection) && connection.endpoints) {
+                jsPlumb.detach(connection);
+            }
         }
 
         /**
