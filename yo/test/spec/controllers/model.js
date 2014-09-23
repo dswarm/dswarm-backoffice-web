@@ -206,7 +206,7 @@ describe('Controller: ModelCtrl', function() {
         expect(scope.project._$output_data_model_schema).toEqual('foo');
         expect(scope.isOutputDataModelLoaded).toBe(true);
 
-        expect(PubSub.broadcast).not.toHaveBeenCalled();
+        expect(PubSub.broadcast).toHaveBeenCalledWith('restoreCurrentProject', {});
         $timeout.flush();
 
         expect(PubSub.broadcast).toHaveBeenCalledWith('outputDataSelected', {});
