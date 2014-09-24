@@ -4,16 +4,18 @@
 
     <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
 
-        <span ng-if="!data.hasChildren || isCollapsed(data)">
+        <span ng-if="!data.hasChildren || isCollapsed(data)" class="mapping-selector-btn">
             <a class="btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
                ng-if='config.type == "as-target"'
                dmp-endpoint="data"
+               dmp-endpoint-disabled="depth() > 1 || (isCollapsed(data) && data.hasChildren)"
                js-plumb-target-options="jspTargetOptions"
                ng-style="{color:isSelected?'slategrey':''}"
                ng-class="{disabled : depth() > 1 || (isCollapsed(data) && data.hasChildren) }">
-                <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"></span>
+                <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"
+                      ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }"></span>
             </a>
         </span>
 
@@ -38,19 +40,19 @@
                class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()">
         </small>
 
-        <span ng-if="!data.hasChildren || isCollapsed(data)">
-
+        <span ng-if="!data.hasChildren || isCollapsed(data)" class="mapping-selector-btn">
             <a class="pull-right btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
                ng-if='config.type == "as-source"'
                dmp-endpoint="data"
+               dmp-endpoint-disabled="(isCollapsed(data) && data.hasChildren)"
                js-plumb-source-options="jspSourceOptions"
-               ng-style="{color:isSelected?'slategrey':''}">
-                <span class="glyphicon glyphicon-unchecked jsPanchorIcon"
+               ng-style="{color:isSelected?'slategrey':''}"
+               ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }">
+                <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"
                       ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }"></span>
             </a>
-
         </span>
 
         <a class="pull-right btn btn-primary btn-xs"
