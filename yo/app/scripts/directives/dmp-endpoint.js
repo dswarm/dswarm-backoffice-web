@@ -475,13 +475,22 @@ angular.module('dmpApp')
                     jspTargetOpts = tAttrs['jspTargetOptions'] || tAttrs['jsPlumbTargetOptions'],
                     jspTargetOptsWatch = function(scope) {
                         return scope.$eval(jspTargetOpts);
+                    },
+                    isDisabledOpt = tAttrs['dmpEndpointDisabled'],
+                    isEnabledWatch = function(scope) {
+                        return !scope.$eval(isDisabledOpt);
                     };
 
                 return function(scope, iElement) {
-                    var sourceOpts = jspSourceOptsWatch(scope),
+                    var isEnabled = isEnabledWatch(scope),
+                        sourceOpts = jspSourceOptsWatch(scope),
                         targetOpts = jspTargetOptsWatch(scope),
-                        isSource = !!sourceOpts,
-                        isTarget = !!targetOpts;
+                        isSource = isEnabled && !!sourceOpts,
+                        isTarget = isEnabled && !!targetOpts;
+
+                    if (!isEnabled) {
+                        return;
+                    }
 
                     scope.guid = GUID.uuid4();
                     iElement.attr('id', scope.guid);
