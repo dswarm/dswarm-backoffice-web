@@ -31,6 +31,20 @@ angular.module('dmpApp')
 
         };
 
+        $scope.deleteResource = function(resourceId) {
+            ResourceResource.remove({id: resourceId}, {}, function() {
+                $scope.selectedSet.length = 0;
+                $scope.updateGridData();
+            });
+        };
+
+        $scope.deleteDataModel = function(dataModelId) {
+            DataModelResource.remove({id: dataModelId}, {}, function() {
+                $scope.selectedModel.length = 0;
+                $scope.updateGridData();
+            });
+        };
+
         $scope.onProjectDeleteClick = function(project) {
             ProjectResource.remove({id: project.id}, {}, function() {
                 $scope.selectedProject.length = 0;
