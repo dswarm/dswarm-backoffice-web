@@ -30,6 +30,7 @@ body {
 	background:url(../images/dswarm_bglines.svg) no-repeat 0 0;
 	opacity:.3;
 	background-size:1120px 888px;
+    z-index: -10;
 }
 
 
