@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, schemaParser, filterHelper, TaskResource, Util, idIncrementer) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, schemaParser, filterHelper, TaskResource, Util, idIncrementer) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -1060,6 +1060,22 @@ angular.module('dmpApp')
 
         //** Start of sending transformation to server
 
+        function showAlert(type, message, timeout) {
+            var alter = {
+                type: type,
+                discard: false,
+                save: false,
+                msg: message
+            };
+            $scope.alerts.push(alter);
+            $timeout(function() {
+                var alterIndex = $scope.alerts.indexOf(alter);
+                if (alterIndex !== -1) {
+                    $scope.closeAlert(alterIndex);
+                }
+            }, timeout || 3000);
+        }
+
         /**
          * Send all transformations to the server
          * @param task - Transformations to send
@@ -1068,12 +1084,24 @@ angular.module('dmpApp')
         function sendTransformations(task, persist) {
 
             var runTask = angular.copy(task);
-
             Util.ensureUniqueParameterMappingVars(runTask.job.mappings);
+            var finalTask = Util.toJson(runTask);
 
-            TaskResource.execute({persist: !!persist}, Util.toJson(runTask)).$promise.then(function(result) {
+            var isMultipleMappings = task.job.mappings.length > 1;
+            var finishMessage =
+                (persist ? 'Saving ' : 'Running ') +
+                (isMultipleMappings ? 'all ' : '') +
+                'Transformation' +
+                (isMultipleMappings ? 's' : '') + ' ';
+
+            ngProgress.start();
+            TaskResource.execute({persist: !!persist}, finalTask).$promise.then(function(result) {
+                ngProgress.complete();
+                showAlert('info', finishMessage + 'successfully finished.');
                 PubSub.broadcast('transformationFinished', result);
             }, function(resp) {
+                ngProgress.complete();
+                showAlert('danger', finishMessage + 'failed.', 5000);
                 console.log(resp);
                 $window.alert(resp.message || resp.data.error);
             });
