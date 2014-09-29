@@ -2,7 +2,7 @@
 
 ### Prerequisites ###
 
-- $DMP_HOME that points to the directory of the datamanagement-platform (backend), e.g. export DMP_HOME=/var/www/dmp/datamanagement-platform/
+- $DMP_HOME that points to the directory of the datamanagement-platform (backend), e.g. export DMP_HOME="/var/www/dmp/datamanagement-platform/" or permanently add to /etc/environment 
 - node >= 0.8 [website](http://nodejs.org)
 - npm in your $PATH
 
