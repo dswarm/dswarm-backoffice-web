@@ -1076,6 +1076,16 @@ angular.module('dmpApp')
             }, timeout || 3000);
         }
 
+        function createTransformationStatusMessage(task, persist) {
+            var actionMsg = persist ? 'Saving' : 'Running';
+            var itemMsg = task.job.mappings.length > 1 ?
+                'all Transformations' :
+                ('Transformation \'' + $scope.activeMapping.name + '\'');
+            return function(statusMsg) {
+                return [actionMsg, itemMsg, statusMsg].join(' ');
+            };
+        }
+
         /**
          * Send all transformations to the server
          * @param task - Transformations to send
@@ -1087,21 +1097,16 @@ angular.module('dmpApp')
             Util.ensureUniqueParameterMappingVars(runTask.job.mappings);
             var finalTask = Util.toJson(runTask);
 
-            var isMultipleMappings = task.job.mappings.length > 1;
-            var finishMessage =
-                (persist ? 'Saving ' : 'Running ') +
-                (isMultipleMappings ? 'all ' : '') +
-                'Transformation' +
-                (isMultipleMappings ? 's' : '') + ' ';
+            var finishMessage = createTransformationStatusMessage(task, persist);
 
             ngProgress.start();
             TaskResource.execute({persist: !!persist}, finalTask).$promise.then(function(result) {
                 ngProgress.complete();
-                showAlert('info', finishMessage + 'successfully finished.');
+                showAlert('info', finishMessage('successfully finished.'));
                 PubSub.broadcast('transformationFinished', result);
             }, function(resp) {
                 ngProgress.complete();
-                showAlert('danger', finishMessage + 'failed.', 5000);
+                showAlert('danger', finishMessage('failed.'), 5000);
                 console.log(resp);
                 $window.alert(resp.message || resp.data.error);
             });
