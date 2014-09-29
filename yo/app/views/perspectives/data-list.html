@@ -1,5 +1,7 @@
 <h1>Data</h1>
 
+<flash-messages></flash-messages>
+
 <h3>Available for configuration</h3>
 <div class="gridStyle" ng-grid="dataListOptions"></div>
 
@@ -23,7 +25,7 @@
 
     </span>
 
-    <button class="btn btn-danger" ng-click="deleteResource(selectedSet.0.id)">Delete Resource</button>
+    <button class="btn btn-danger" ng-click="deleteResource(selectedSet.0)">Delete Resource</button>
 </span>
 
 <hr>
@@ -53,7 +55,7 @@
 
     </span>
 
-    <button class="btn btn-danger" ng-click="deleteDataModel(selectedModel.0.id)">Delete Datamodel</button>
+    <button class="btn btn-danger" ng-click="deleteDataModel(selectedModel.0)">Delete Datamodel</button>
 
 </span>
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, fileDownload, loDash, Neo4jEndpoint) {
+    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, flashMessage, fileDownload, loDash, Neo4jEndpoint) {
 
         $scope.files = [];
         $scope.models = [];
@@ -31,26 +31,47 @@ angular.module('dmpApp')
 
         };
 
-        $scope.deleteResource = function(resourceId) {
-            ResourceResource.remove({id: resourceId}, {}, function() {
-                $scope.selectedSet.length = 0;
+        function errorHandler(what) {
+            return function(err) {
+                var error = err.message || err.data.error;
+                flashMessage.failure('Error while deleting ' + what + ': ' + error, {timeout: 5000});
+            };
+        }
+
+        function successHandler(grid, what) {
+            return function() {
+                flashMessage.success('Successfully deleted ' + what, { timeout: 3000 });
+                grid.length = 0;
                 $scope.updateGridData();
-            });
+            };
+        }
+
+        var resources = {
+            Resource: {
+                resource: ResourceResource,
+                grid: $scope.selectedSet
+            },
+            DataModel: {
+                resource: DataModelResource,
+                grid: $scope.selectedModel
+            },
+            Project: {
+                resource: ProjectResource,
+                grid: $scope.selectedProject
+            }
         };
 
-        $scope.deleteDataModel = function(dataModelId) {
-            DataModelResource.remove({id: dataModelId}, {}, function() {
-                $scope.selectedModel.length = 0;
-                $scope.updateGridData();
-            });
-        };
+        function deleteItem(item, obj) {
+            var resource = resources[item].resource;
+            var grid = resources[item].grid;
+            var what = item + ' ' + obj.name;
+            resource.remove({id: obj.id}, {},
+                successHandler(grid, what), errorHandler(what));
+        }
 
-        $scope.onProjectDeleteClick = function(project) {
-            ProjectResource.remove({id: project.id}, {}, function() {
-                $scope.selectedProject.length = 0;
-                $scope.updateGridData();
-            });
-        };
+        $scope.deleteResource = loDash.partial(deleteItem, 'Resource');
+        $scope.deleteDataModel = loDash.partial(deleteItem, 'DataModel');
+        $scope.onProjectDeleteClick = loDash.partial(deleteItem, 'Project');
 
         $scope.onProjectExportClick = function(project) {
             // TODO: call actual endpoint

@@ -1,0 +1,6 @@
+<div id="dmp-flash-messages">
+    <div class="alert alert-dismissable alert-{{ msg.type }} {{ animation }}" ng-repeat="msg in messages">
+        <a class="close" ng-click="msg.close();" data-dismiss="alert" aria-hidden="true">&times;</a>
+        {{ msg.msg }}
+    </div>
+</div>
