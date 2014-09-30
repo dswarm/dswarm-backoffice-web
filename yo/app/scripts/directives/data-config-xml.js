@@ -36,17 +36,15 @@ angular.module('dmpApp')
             return config;
         }
 
+        function applicableAsPlaceholder(config) {
+            return config !== null && config.parameters['storage_type'] === configType;
+        }
 
         if ($scope.mode === 'create' && $routeParams.resourceId) {
 
             ResourceResource.get({ id: $scope.resourceId }, Util.mapResources(function(result, config) {
-
                 resource = result;
-
-                if (config) {
-
-                    $scope.config.id = config.id;
-
+                if (applicableAsPlaceholder(config)) {
                     $scope.config.name = config.name;
                     $scope.config.description = config.description;
                     $scope.config.parameters = config.parameters;

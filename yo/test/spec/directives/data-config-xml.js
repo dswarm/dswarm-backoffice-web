@@ -85,8 +85,8 @@ describe('Directive: DataConfigXml', function () {
             name: 'foo',
             description: 'bar'
         }]);
+
         expect(elScope.config).toEqual({
-            id: 4,
             name: 'foooo',
             description: 'bar baz',
             parameters: {
@@ -131,8 +131,7 @@ describe('Directive: DataConfigXml', function () {
             configuration: {
                 name: config.name,
                 description: config.description,
-                parameters: config.parameters,
-                id: config.id
+                parameters: config.parameters
             }
         });
 
