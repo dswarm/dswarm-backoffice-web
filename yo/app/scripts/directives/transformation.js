@@ -77,8 +77,8 @@ angular.module('dmpApp')
             }
         }, true);
 
-        var getOutputVariable = idIncrementer('__TRANSFORMATION_OUTPUT_VARIABLE__').map('id');
-        var getOutputMAPIName = idIncrementer('__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__').map('id');
+        var getOutputVariable = angular.noop;
+        var getOutputMAPIName = angular.noop;
 
 
         /**
@@ -130,6 +130,9 @@ angular.module('dmpApp')
                 maxRows: 0,
                 maxGridRows: 0
             });
+
+            getOutputVariable = idIncrementer('__TRANSFORMATION_OUTPUT_VARIABLE__').map('id');
+            getOutputMAPIName = idIncrementer('__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__').map('id');
 
             // restore mappings if a previous project was loaded from a draft
             loDash.reduce($scope.project.mappings, function(previous, mapping) {
