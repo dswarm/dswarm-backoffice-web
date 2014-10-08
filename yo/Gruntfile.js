@@ -21,6 +21,8 @@ module.exports = function(grunt) {
     // Ensure copyright banners
     require('./copyright')(grunt);
 
+    var saveLicense = require('uglify-save-license');
+
     // Define the configuration for all the tasks
     grunt.initConfig({
         // Project settings
@@ -67,6 +69,10 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>/views/',
                     src: ['**/*.html']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles/',
+                    src: ['**/*.less', '**/*.css']
                 }]
             },
             ensure: {
@@ -78,6 +84,10 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>/views/',
                     src: ['**/*.html']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles/',
+                    src: ['**/*.less', '**/*.css']
                 }]
             }
         },
@@ -561,6 +571,11 @@ module.exports = function(grunt) {
         // },
 
         uglify: {
+
+            options: {
+                preserveComments: saveLicense
+            },
+
             local: {
                 options: {
                     sourceMap: true,

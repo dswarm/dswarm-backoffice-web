@@ -14,6 +14,16 @@ module.exports = function(grunt) {
             first: '<!--',
             middle: '    ',
             last: '-->'
+        },
+        css: {
+            first: '/*!',
+            middle: '    ',
+            last: '*/'
+        },
+        less: {
+            first: '/*!',
+            middle: '    ',
+            last: '*/'
         }
     };
 
