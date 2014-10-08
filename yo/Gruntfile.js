@@ -18,6 +18,11 @@ module.exports = function(grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
+    // Ensure copyright banners
+    require('./copyright')(grunt);
+
+    var saveLicense = require('uglify-save-license');
+
     // Define the configuration for all the tasks
     grunt.initConfig({
         // Project settings
@@ -46,6 +51,44 @@ module.exports = function(grunt) {
                     revision: 'HEAD',
                     date: 'latest'
                 }
+            }
+        },
+
+        copyright: {
+            options: {
+                holder: 'SLUB Dresden & Avantgarde Labs GmbH',
+                email: 'code@dswarm.org',
+                year: '2013, 2014'
+            },
+            check: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/scripts/',
+                    src: ['**/*.js']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/views/',
+                    src: ['**/*.html']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles/',
+                    src: ['**/*.less', '**/*.css']
+                }]
+            },
+            ensure: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/scripts/',
+                    src: ['**/*.js']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/views/',
+                    src: ['**/*.html']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles/',
+                    src: ['**/*.less', '**/*.css']
+                }]
             }
         },
 
@@ -528,6 +571,11 @@ module.exports = function(grunt) {
         // },
 
         uglify: {
+
+            options: {
+                preserveComments: saveLicense
+            },
+
             local: {
                 options: {
                     sourceMap: true,
@@ -647,6 +695,7 @@ module.exports = function(grunt) {
         'clean:server',
         'less',
         'bowerInstall',
+        'copyright:ensure',
         'updateConfig',
         'copy:styles',
         'autoprefixer',
@@ -676,6 +725,7 @@ module.exports = function(grunt) {
             'clean:dist',
             'less',
             'bowerInstall',
+            'copyright:ensure',
             'useminPrepare',
             'updateConfig',
             'copy:styles',
@@ -696,6 +746,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('jenkins', [
         'jshint:ci',
+        'copyright:check',
         'plato',
         'test:ci'
     ]);
