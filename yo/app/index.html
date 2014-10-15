@@ -106,7 +106,7 @@
     <script src="components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="components/angular-cookies/angular-cookies.js"></script>
     <script src="components/angular-grid/build/ng-grid.js"></script>
-    <script src="components/angular-local-storage/angular-local-storage.js"></script>
+    <script src="components/angular-local-storage/dist/angular-local-storage.js"></script>
     <script src="components/angular-resource/angular-resource.js"></script>
     <script src="components/angular-route/angular-route.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
@@ -194,20 +194,12 @@
         <!-- endbuild -->
 
         <script>
-            // Include the UserVoice JavaScript SDK (only needed once on a page)
-            UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/ffX8f30bHHlRct1plfAePQ.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
-
-            UserVoice.push(['set', {
-                accent_color: '#808283',
-                trigger_color: 'white',
-                trigger_background_color: '#e23a39'
-            }]);
-
-            // Add default trigger to the bottom-right corner of the window:
-            UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-right' }]);
-
-            // Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
-            UserVoice.push(['autoprompt', {}]);
+            jQuery.ajax({
+                url: "https://jira.slub-dresden.de/s/d41d8cd98f00b204e9800998ecf8427e/en_US4osl5z-1988229788/6258/22/1.4.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?collectorId=354646d9",
+                type: "get",
+                cache: true,
+                dataType: "script"
+            });
         </script>
 
 
