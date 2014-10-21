@@ -459,7 +459,7 @@ angular.module('dmpApp')
             transformation.parameter_mappings = loDash.omit(transformation.parameter_mappings, function(value, key) {
                 return key.indexOf('TRANSFORMATION_OUTPUT_VARIABLE') > -1;
             });
-            transformation.parameter_mappings[transformationOutputVariable] = outputMAPIName;
+            transformation.parameter_mappings[transformationOutputVariable] = $scope.activeMapping.output_attribute_path.name = outputMAPIName;
 
             loDash.times($scope.gridsterOpts.maxRows, function(i) {
                 // var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
