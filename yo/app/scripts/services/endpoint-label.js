@@ -47,9 +47,9 @@ angular.module('dmpApp')
 
         }
 
-        function ask(promptText, helpText, extraLabel, prefill, error) {
+        function ask(promptText, helpText, buttonText, extraLabel, prefill, error) {
             var text = promptText || 'Name this mapping',
-                buttonText = text,
+                buttonText = buttonText || 'Ok',
                 help = helpText || 'The name has to be at least 3 characters long';
 
             var labelDefer = $q.defer();
@@ -111,7 +111,7 @@ angular.module('dmpApp')
         function askWithKeys(keys) {
             var text = 'Name this mapping',
                 help = 'The name has to be at least 3 characters long',
-                buttonText = text,
+                buttonText = 'Ok',
                 keyDef = (keys && keys.length) ? keys : [],
                 hasKeyDef = !!keyDef.length;
 

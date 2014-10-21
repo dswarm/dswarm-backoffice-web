@@ -417,7 +417,7 @@ angular.module('dmpApp')
 
         $scope.newLeaf = function(data, isInputLeaf, prefill, error) {
 
-            endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'URI', prefill, error).then(function(modalData) {
+            endpointLabel.ask('Name the new Leaf', 'The name has to be at least 3 characters long', 'Ok', 'URI', prefill, error).then(function(modalData) {
 
                 var result = function(schema) {
 
