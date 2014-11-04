@@ -8,3 +8,5 @@ coverage-*.json
 KarmaChrome
 
 .idea/
+
+npm-debug.log
