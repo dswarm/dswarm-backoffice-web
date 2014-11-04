@@ -2,7 +2,7 @@
 'use strict';
 
 var SERVER_PORT = 9999;
-var OPEN_TO_THE_WORLD = false;
+var OPEN_TO_THE_WORLD = process.env.DMP_OPEN_TO_THE_WORLD || false;
 
 // # Globbing
 // for performance reasons we're only matching one level down:
