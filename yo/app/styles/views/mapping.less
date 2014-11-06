@@ -1,0 +1,569 @@
+/*!
+    Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+     
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+     
+    http://www.apache.org/licenses/LICENSE-2.0
+     
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+.btn.draft-alert {
+
+  position: relative;
+  float: right;
+  padding: 3px 12px;
+  margin-right: 1em;
+  top: -0.2em;
+}
+
+.data-sample {
+  color: @gray-light;
+}
+
+svg.mapping-active {
+  z-index: 1000;
+}
+
+.mapping-label {
+  font-size:   1.3em;
+  font-weight: 200;
+  text-shadow: 0 0 15px fadeout(black, 20%);
+  margin-top:  0.5em;
+
+  &.mapping-active {
+    color: red;
+    z-index: 1000;
+  }
+}
+
+#configuration header {
+  margin-bottom: 1em;
+}
+
+.mapping-droppable {
+  color: lighten(black, 10%);
+  text-shadow: 0 0 10px fadeout(black, 20%);
+}
+
+.source-endpoint._jsPlumb_dragging,
+.source-endpoint._jsPlumb_dragging *,
+.transparent,
+.transparent * {
+  background-color: transparent;
+  fill: transparent;
+}
+
+.modal.in {
+  display: block;
+}
+
+.modal.wide .modal-dialog {
+  width: 90%;
+}
+
+.filters {
+  .tree-leaf input {
+    border: 1px solid lightgrey;
+    position: absolute;
+    right: 0;
+    width: 80px;
+  }
+
+  .tabbable {
+    overflow: hidden;
+    height: 100%;
+    padding-bottom: 40px;
+
+    .box {
+      position: relative;
+    }
+  }
+
+  &.modal-dialog {
+    width: 95%;
+  }
+
+}
+
+.filterMatch {
+  display: none;
+}
+
+.filterNoMatch {
+  display: block;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background: red;
+  color: white;
+  padding: 2px;
+}
+
+.tree-leaf.leafmatchedFilter {
+  font-weight: bold;
+  color: red;
+
+  .data-sample {
+    color: currentcolor;
+  }
+}
+
+.tree-child.leafmatchedFilter {
+  color: red;
+}
+
+.target-selector {
+  &.disabled {
+    color: lightgray;
+    cursor: not-allowed;
+  }
+}
+
+.mapping-selector-btn {
+  .disabled {
+    color: lightgray;
+    cursor: not-allowed;
+    pointer-events: auto;
+  }
+}
+
+.form-control-inline {
+  width: 50px;
+  display: inline;
+}
+
+span.label-inline {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.gridOuter {
+  height: 300px;
+}
+
+.gridStyle {
+  border: 1px solid rgb(212,212,212);
+  width: 100%;
+  height: 300px;
+}
+
+.selected-set-options {
+  margin-top: 20px;
+  display: block;
+}
+
+.previewOptionsError, .loadError {
+  background: red;
+  color: #ffffff;
+  padding: 2px;
+  z-index: 101;
+  font-weight: bold;
+}
+
+.previewOptionsError {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.tabbable {
+  position: relative;
+}
+
+button.open-schema-col-selector {
+  margin: 0 0 15px;
+}
+
+.target-schema-selector-modal,
+.data-selector-modal,
+.mapping-component-config-modal {
+  background: #ffffff;
+  padding: 20px;
+  position: absolute;
+  width: 80%;
+  margin: 10% 0 0 50%;
+  left: -40%;
+}
+
+
+.source-selected .data-head .icons .glyphicon {
+  color: @brand-success;
+}
+
+.data-head,
+.well {
+
+  position: relative;
+
+  .icons .glyphicon-download {
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+  }
+
+  .icons {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    cursor: pointer;
+  }
+
+  h5, h4 {
+    margin: 0;
+  }
+
+}
+
+.well .icons {
+  top: 10px;
+  right: 10px;
+}
+
+.data-tab-heading {
+  display: inline-block;
+
+  & a {
+    max-height: 42px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.key-def-remove {
+  margin-top: -5px;
+}
+
+.zebra30 {
+  //background: url("../images/zebra30.png");
+
+  .tree-child {
+    width: 100%;
+    padding: 5px;
+    height: 30px;
+    position: relative;
+  }
+
+}
+
+.filter-key-icon {
+  position: absolute;
+  top: 5px;
+
+  &.filter-key-source {
+    right: 2em;
+  }
+}
+
+.jsPanchorIcon {
+  cursor: pointer;
+}
+
+.not-allowed {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+
+.tree-child.tree-leaf {
+  .text-overflow();
+
+  & + .data-sample {
+    margin-left: 2em;
+  }
+}
+
+#schema {
+
+  ._jsPlumb_connector, ._jsPlumb_endpoint {
+    margin: 1px 0 0 -6px;
+  }
+
+}
+
+.gridster {
+  position: relative;
+  margin: auto;
+  background: rgba(0, 0, 0, .1);
+  height: 0;
+}
+
+.gridster-loaded {
+  -webkit-transition: height .3s;
+}
+
+.gridster-loaded {
+  -moz-transition: height .3s;
+  -o-transition: height .3s;
+  transition: height .3s;
+}
+
+.gridster ul {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.gridster .gridster-item {
+  -webkit-box-sizing: border-box;
+}
+
+.gridster .gridster-item {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  list-style: none;
+  text-align: center;
+  z-index: 2;
+  position: absolute;
+  display: none;
+}
+
+.gridster-loaded .gridster-item  {
+  display: block;
+}
+
+.gridster-loaded .gridster-item {
+  -webkit-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+}
+
+.gridster-loaded .gridster-item {
+  -moz-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+  -o-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+  transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+}
+
+.gridster-mobile .gridster-item {
+  position: static;
+  float: none;
+}
+
+.gridster .gridster-preview-holder {
+  display: none;
+  z-index: 1;
+  position: absolute;
+  background-color: #fff;
+  border-color: #fff;
+  opacity: 0.2;
+}
+
+.gridster .gridster-preview {
+  z-index: 1;
+  position: absolute;
+  background-color: #fff;
+  border-color: #fff;
+  opacity: 0.2;
+}
+
+.gridster .gridster-item-moving,
+.gridster .gridster-preview-holder {
+  -webkit-transition: opacity 0s, left 0s, top 0s, width 0s, height 0s;
+}
+
+.gridster .gridster-item-moving,
+.gridster .gridster-preview-holder {
+  -moz-transition: opacity 0s, left 0s, top 0s, width 0s, height 0s;
+  -o-transition: opacity 0s, left 0s, top 0s, width 0s, height 0s;
+  transition: opacity 0s, left 0s, top 0s, width 0s, height 0s;
+}
+
+.gridster .gridster-item-moving {
+  z-index: 3;
+}
+
+.gridster .gridster-item {
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.gridster .gridster-item {
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  color: #004756;
+}
+
+.gridster .gridster-item {
+  background: #ffffff;
+  padding: 10px;
+}
+
+
+.input-attribute-path-badge {
+  cursor: pointer;
+}
+
+.transformation-inputs, .transformation-output {
+  position: absolute;
+  height: 100%;
+  color: #004756;
+}
+
+.transformation-inputs {
+  left: 10px;
+}
+
+.transformation-output {
+  right: 10px;
+}
+
+.transformation-inputs li,
+.transformation-output li,
+.transformation-inputs ul,
+.transformation-output ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+}
+
+.transformation-inputs ul,
+.transformation-output ul {
+  height: 100%;
+}
+
+.transformation-inputs li span,
+.transformation-output li span {
+  position: absolute;
+  top: 50%;
+  margin-top: -20px;
+  background: #ffffff;
+  padding: 5px;
+  border: 1px dotted black;
+}
+
+.transformation-output li {
+  height: 100%;
+}
+
+.transformation-output li span {
+  right: 0;
+}
+
+.transformation-inputs li.count1 {
+  height: 100%;
+}
+
+.transformation-inputs li.count2 {
+  height: 50%;
+}
+
+.transformation-inputs li.count3 {
+  height: 33%;
+}
+
+.transformation-inputs li.count4 {
+  height: 25%;
+}
+
+.transformation-inputs li.count5 {
+  height: 20%;
+}
+
+.transformation-inputs li.count6 {
+  height: 17%;
+}
+
+.transformation-inputs li.count7 {
+  height: 14%;
+}
+
+.transformation-inputs li.count8 {
+  height: 12.5%;
+}
+
+.transformation-inputs li.count9 {
+  height: 11.1%;
+}
+
+.transformation-inputs li.count10 {
+  height: 10%;
+}
+
+.transformation-inputs li.count11 {
+  height: 10%;
+}
+
+
+.transformation-inputs, .transformation-output, ._jsPlumb_connector, ._jsPlumb_endpoint {
+  z-index: 1000;
+}
+
+.configurationSortable .list {
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+}
+
+.configurationSortable .item {
+  width: 200px;
+  padding: 5px 10px;
+  margin: 5px 0;
+  border: 1px solid #444;
+
+  font-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+  cursor: move;
+}
+
+.tooltip-inner {
+  word-wrap: break-word;
+}
+
+.angular-ui-tree-handle {
+  min-height: 30px;
+  line-height: 30px;
+
+  cursor: pointer;
+
+  background: #f8faff;
+  border: 1px solid #dae2ea;
+  color: #7c9eb2;
+  padding: 10px 10px;
+}
+
+.angular-ui-tree-handle:hover {
+  color: #438eb9;
+  background: #f4f6f7;
+  border-color: #dce2e8;
+}
+
+.angular-ui-tree-placeholder {
+  background: #f0f9ff;
+  border: 2px dashed #bed2db;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+.group-title {
+  background-color: #687074 !important;
+  color: #FFF !important;
+}
+
+.jsPanchor {
+
+  h4 {
+    margin : 0;
+  }
+
+  .tree-leaf {
+    .text-overflow();
+
+    & + .data-sample {
+      margin-left: 2em;
+    }
+  }
+}
+
+.angular-ui-tree-handle .disabled {
+  cursor: not-allowed;
+
+}
