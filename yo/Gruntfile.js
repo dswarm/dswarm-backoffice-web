@@ -69,10 +69,6 @@ module.exports = function(grunt) {
                     src: ['**/*.js']
                 }, {
                     expand: true,
-                    cwd: '<%= yeoman.app %>/views/',
-                    src: ['**/*.html']
-                }, {
-                    expand: true,
                     cwd: '<%= yeoman.app %>/styles/',
                     src: ['**/*.less', '**/*.css']
                 }]
@@ -82,10 +78,6 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>/scripts/',
                     src: ['**/*.js']
-                }, {
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/views/',
-                    src: ['**/*.html']
                 }, {
                     expand: true,
                     cwd: '<%= yeoman.app %>/styles/',
