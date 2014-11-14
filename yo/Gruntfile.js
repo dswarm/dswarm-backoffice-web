@@ -3,6 +3,8 @@
 
 var SERVER_PORT = 9999;
 var OPEN_TO_THE_WORLD = process.env.DMP_OPEN_TO_THE_WORLD || false;
+var WORLD_IP = process.env.DMP_WORLD_IP || '0.0.0.0';
+var BACKEND_URL = process.env.DMP_BACKEND_URL || 'http://127.0.0.1:8087/dmp/';
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -147,8 +149,8 @@ module.exports = function(grunt) {
             development: {
                 constants: {
                     ServiceUrls: {
-                        backend: 'http://127.0.0.1:8087/dmp/',
-                        neo: 'http://127.0.0.1:8087/dmp/'
+                        backend: BACKEND_URL,
+                        neo: BACKEND_URL
                     }
                 }
             },
@@ -180,8 +182,8 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ServiceUrls: {
-                        backend: 'http://127.0.0.1:8087/dmp/',
-                        neo: 'http://127.0.0.1:8087/dmp/'
+                        backend: BACKEND_URL,
+                        neo: BACKEND_URL
                     }
                 }
             },
@@ -228,7 +230,7 @@ module.exports = function(grunt) {
         connect: {
             options: {
                 port: SERVER_PORT,
-                hostname: OPEN_TO_THE_WORLD ? '0.0.0.0' : 'localhost',
+                hostname: OPEN_TO_THE_WORLD ? WORLD_IP : 'localhost',
                 livereload: 35729
             },
             livereload: {
