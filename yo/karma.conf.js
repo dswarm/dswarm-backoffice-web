@@ -22,7 +22,7 @@ module.exports = function(config) {
             'components/angular-mocks/angular-mocks.js',
             'components/angular-bootstrap/ui-bootstrap-tpls.js',
             'components/angular-ui-utils/ui-utils.js',
-            'components/angular-local-storage/angular-local-storage.js',
+            'components/angular-local-storage/dist/angular-local-storage.js',
             'components/angular-resource/angular-resource.js',
             'components/angular-cookies/angular-cookies.js',
             'components/angular-sanitize/angular-sanitize.js',
