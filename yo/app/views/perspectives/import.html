@@ -1,47 +1,41 @@
-<!--
-    Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
-     
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-     
-    http://www.apache.org/licenses/LICENSE-2.0
-     
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
-<form role="form" name="uploadForm" ng-submit="submitForm()">
-  <div class="form-group"
-       ng-class="{'has-error': uploadForm.file.$invalid, 'has-success': uploadForm.file.$valid}">
-    <label for="dataUpload">Upload file</label>
-    <input type="file" id="dataUpload" name="file" required="required"
-           ng-required="true" dmp-file-upload>
+<div class="content-header">
+    <h1>Import</h1>
+    <div class="hr"/>
+</div>
 
-    <p class="help-block">
-      <span>Upload a file from your computer &hellip;</span><br>
-      <span ng-show="meta.type">{{ meta.type }}</span>
-      <span ng-show="meta.size">{{ meta.size|filesize }}</span>
-    </p>
+<div class="content">
 
-  </div>
-  <div class="form-group"
-       ng-class="{'has-error': uploadForm.name.$invalid, 'has-success': uploadForm.name.$valid}">
-    <label for="dataName">Name</label>
-    <input type="text" class="form-control" id="dataName" name="name"
-           ng-model="data.name" required="required"
-           ng-required="true" placeholder="Name of dataset">
-  </div>
-  <div class="form-group"
-       ng-class="{'has-error': uploadForm.description.$invalid, 'has-success': uploadForm.description.$valid}">
-    <label for="dataDescription">Description</label>
-    <textarea class="form-control" id="dataDescription" name="description"
-              ng-model="data.description" required="required"
-              ng-required="true"
-              placeholder="Description for this dataset"></textarea>
-  </div>
-  <button type="submit" class="btn btn-default"
-          ng-disabled="uploadForm.$invalid">Submit</button>
-</form>
+    <form role="form" name="uploadForm" ng-submit="submitForm()">
+      <div class="form-group"
+           ng-class="{'has-error': uploadForm.file.$invalid, 'has-success': uploadForm.file.$valid}">
+        <label for="dataUpload">Upload file</label>
+        <input type="file" id="dataUpload" name="file" required="required"
+               ng-required="true" dmp-file-upload>
+
+        <p class="help-block">
+          <span>Upload a file from your computer &hellip;</span><br>
+          <span ng-show="meta.type">{{ meta.type }}</span>
+          <span ng-show="meta.size">{{ meta.size|filesize }}</span>
+        </p>
+
+      </div>
+      <div class="form-group"
+           ng-class="{'has-error': uploadForm.name.$invalid, 'has-success': uploadForm.name.$valid}">
+        <label for="dataName">Name</label>
+        <input type="text" class="form-control" id="dataName" name="name"
+               ng-model="data.name" required="required"
+               ng-required="true" placeholder="Name of dataset">
+      </div>
+      <div class="form-group"
+           ng-class="{'has-error': uploadForm.description.$invalid, 'has-success': uploadForm.description.$valid}">
+        <label for="dataDescription">Description</label>
+        <textarea class="form-control" id="dataDescription" name="description"
+                  ng-model="data.description" required="required"
+                  ng-required="true"
+                  placeholder="Description for this dataset"></textarea>
+      </div>
+      <button type="submit" class="btn btn-default"
+              ng-disabled="uploadForm.$invalid">Submit</button>
+    </form>
+
+</div>

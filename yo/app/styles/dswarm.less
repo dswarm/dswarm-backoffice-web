@@ -35,6 +35,8 @@ body,html {
     width:100%;
     padding:0;
     margin:0;
+
+    overflow-x: hidden;
 }
 
 body {
@@ -56,16 +58,6 @@ body {
     opacity:.3;
     background-size:1120px 888px;
     z-index: -10;
-}
-
-#wrap {
-  min-height: 100%;
-  height:     auto !important;
-  height:     100%;
-  /* Negative indent footer by its height */
-  margin:     0 auto -@footer-height;
-  /* Pad bottom by footer height */
-  padding:    0 10px @footer-height;
 }
 
 /*
@@ -158,6 +150,8 @@ a.navbar-brand {
     text-transform:uppercase;
     font-size:12px;
     color:#fff;
+
+    z-index: 1000;
 }
 
 .dswarm-status-footer a {
@@ -187,7 +181,7 @@ a.navbar-brand {
 }
 
 .wrap {
-    margin: 20px;
+    margin: 40px 20px;
 }
 
 
@@ -224,8 +218,123 @@ a.navbar-brand {
  *
  */
 
-#content {
+
+.content-header {
+
+  margin: 0 0 20px 0;
+
+  h1 {
+    font-size: 17px;
+    text-transform: uppercase;
+    color: white;
+    padding: 0 20px;
+    display: inline;
+  }
+
+  .hr {
+    margin: 5px 0 0;
+    border: none;
+    box-shadow: none;
+    border-bottom: 1px dotted white;
+
+    position: relative;
+    display: block;
+    z-index: 100;
+  }
+
+  .content-header-right {
+
+    float: right;
+    margin: -12px 3px 0 0;
+    padding: 0;
+
+    display: inline;
+    position: relative;
+    z-index: 1;
+
+    height: 40px;
+    line-height: 40px;
+    vertical-align: top;
+
+    li {
+      margin: 0 0 0 10px;
+
+      display: inline-block;
+
+      padding: 0;
+      list-style: outside none none;
+      text-transform: uppercase;
+
+      background-color: #66706F;
+
+      border-color: #66706F;
+      border-style: solid;
+      border-width: 3px 3px 3px;
+
+      font-size: 11px;
+
+      & .title {
+        font-size: 17px;
+      }
+
+      span {
+        color: white;
+        border-top: 2px solid white;
+
+        padding: 0px 5px;
+
+        height: 34px;
+        line-height: 34px;
+        vertical-align: middle;
+
+        display: block;
+
+        cursor: pointer;
+
+        i {
+          font-size: 17px;
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
+.content {
+  position: relative;
   padding: 0 20px;
+
+  .gridOuter {
+    height: 300px;
+  }
+
+  .gridStyle {
+    border: 3px solid #5E6C6D;
+    width: 100%;
+    height: 300px;
+    z-index: 100;
+  }
+
+  .ngRow.even {
+    background: #FDF6EE;
+  }
+
+  .ngRow.selected {
+    background-color: #F6EBD7;
+  }
+
+  h3 {
+    margin-bottom: -4px;
+    z-index: 1;
+
+    color: #5E6C6D;
+    font-size: 17px;
+    text-transform: uppercase;
+  }
+
 }
 
 .box {
@@ -235,16 +344,6 @@ a.navbar-brand {
   background: @gray-lighter;
   border:     @padding-base-vertical solid @body-bg;
   overflow:   auto;
-}
-
-.row-1 {
-  //  height: percentage((1 / @box-rows));
-  height: 360px;
-}
-
-.row-2 {
-  //  height: percentage((2 / @box-rows));
-  height: 480px;
 }
 
 .layer1 {
