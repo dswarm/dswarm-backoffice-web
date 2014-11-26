@@ -24,7 +24,10 @@
 }
 
 .data-sample {
-  color: @gray-light;
+  color: white;
+  line-height: 10px;
+  vertical-align: middle;
+  position: relative;
 }
 
 svg.mapping-active {
@@ -132,6 +135,19 @@ svg.mapping-active {
     cursor: not-allowed;
     pointer-events: auto;
   }
+
+  > a {
+    display: block;
+    width: 10px;
+    height: 10px;
+
+    padding: 0;
+    
+    span {
+      line-height: 10px;
+    }
+  }
+
 }
 
 .form-control-inline {
@@ -143,16 +159,6 @@ span.label-inline {
   font-weight: bold;
   margin-bottom: 5px;
   display: inline-block;
-}
-
-.gridOuter {
-  height: 300px;
-}
-
-.gridStyle {
-  border: 1px solid rgb(212,212,212);
-  width: 100%;
-  height: 300px;
 }
 
 .selected-set-options {
@@ -179,6 +185,10 @@ span.label-inline {
 }
 
 button.open-schema-col-selector {
+  margin: 15px;
+}
+
+button.close-transformation-selector {
   margin: 0 0 15px;
 }
 
@@ -198,6 +208,42 @@ button.open-schema-col-selector {
   color: @brand-success;
 }
 
+.data-head {
+  background-color: #5E6C6D;
+  color: white;
+
+}
+
+.data-wrap {
+  background: white;
+  border: 3px solid #5E6C6D;
+  position: absolute;
+  top: 35px;
+  left: 17px;
+  right: 20px;
+  bottom: 50px;
+
+  overflow: hidden;
+
+
+  .leaf-add {
+
+    font-size: 24px;
+    color: blue;
+
+  }
+
+  .scroller {
+    position: absolute;
+    top: 30px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden;
+  }
+
+}
+
 .data-head,
 .well {
 
@@ -214,7 +260,7 @@ button.open-schema-col-selector {
   .icons {
     position: absolute;
     top: 5px;
-    right: 0;
+    right: 5px;
     cursor: pointer;
   }
 
@@ -235,7 +281,7 @@ button.open-schema-col-selector {
   & a {
     max-height: 42px;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
   }
 }
 
@@ -243,14 +289,26 @@ button.open-schema-col-selector {
   margin-top: -5px;
 }
 
-.zebra30 {
-  //background: url("../images/zebra30.png");
+.zebra20 {
+
+  .angular-ui-tree > div:first-child {
+    background: url("../images/zebra20.png");
+  }
 
   .tree-child {
     width: 100%;
     padding: 5px;
     height: 30px;
     position: relative;
+  }
+
+}
+
+#sourceData .zebra20,
+#targetData .zebra20{
+
+  .angular-ui-tree > div:first-child {
+    background: url("../images/zebra20b.png");
   }
 
 }
@@ -283,8 +341,27 @@ button.open-schema-col-selector {
 
 #schema {
 
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+
+
   ._jsPlumb_connector, ._jsPlumb_endpoint {
     margin: 1px 0 0 -6px;
+  }
+
+  .col-md-4 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
   }
 
 }
@@ -517,22 +594,30 @@ button.open-schema-col-selector {
 }
 
 .angular-ui-tree-handle {
-  min-height: 30px;
-  line-height: 30px;
+  line-height: 10px;
+  min-height: 10px;
+
 
   cursor: pointer;
 
-  background: #f8faff;
-  border: 1px solid #dae2ea;
+  /*background: #f8faff;
+  border: 1px solid #dae2ea;*/
   color: #7c9eb2;
-  padding: 10px 10px;
+  font-weight: normal;
+
+  .tree-leaf-data {
+    padding: 0 10px;
+  }
+
 }
 
-.angular-ui-tree-handle:hover {
-  color: #438eb9;
-  background: #f4f6f7;
-  border-color: #dce2e8;
+#sourceData .angular-ui-tree-handle,
+#targetData .angular-ui-tree-handle{
+  color: white;
 }
+
+
+
 
 .angular-ui-tree-placeholder {
   background: #f0f9ff;
@@ -557,13 +642,237 @@ button.open-schema-col-selector {
   .tree-leaf {
     .text-overflow();
 
+    font-size: 12px;
+    line-height: 20px;
+
     & + .data-sample {
       margin-left: 2em;
     }
+
+    .mapping-selector-btn {
+      margin-top: 4px;
+      margin-left: 4px;
+    }
+
+
+
   }
+}
+
+.tree-leaf-plus, .tree-leaf-expandCollapse {
+  padding: 0;
+  line-height: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 11px;
+  height: 11px;
+  margin: 4px 0 0 10px;
+
+  cursor: pointer;
+  text-decoration: none;
+
+  span {
+    margin-left: -1px;
+  }
+
+  i {
+    text-decoration: none;
+  }
+
+}
+
+.tree-leaf-expandCollapse {
+  font-size: 8px;
 }
 
 .angular-ui-tree-handle .disabled {
   cursor: not-allowed;
+}
+
+.offCanvasToggleButton {
+  position: absolute;
+  top: 50%;
+  font-size: 36px;
+  padding: 10px;
+
+  cursor: pointer;
+
+  .opacity(0.9);
+
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+
+  &.offCanvasToggleButtonLeft {
+    left: -55px;
+
+    .state {
+      left: 35px;
+    }
+  }
+
+  &.offCanvasToggleButtonRight {
+    right: 0px;
+
+    .state {
+      left: -35px;
+      left: 0;
+    }
+
+  }
+
+
+  .shape {
+    color: white;
+    font-size: 72px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+  }
+
+  .state {
+    z-index: 2000;
+    position: absolute;
+    top: 20px;
+
+  }
+}
+
+.offCanvas {
+
+  position: absolute;
+  background-color: #363C3C;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+
+  .dataOuter {
+    z-index: 1000;
+    position: absolute;
+    top: 10px;
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+
+    .tabbable {
+      position: absolute;
+      top: 10px;
+      bottom: 0;
+      right: 0;
+      left: 0;
+    }
+
+    .scroller {
+      position: absolute;
+      top: 45px;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+  }
+
+  &.offCanvasRight {
+    right: -10000px;
+    z-index: 50;
+
+    &.offCanvasShow {
+      left: auto;
+      right: 0px;
+      top: 35px;
+      bottom: 50px;
+    }
+
+    .offCanvasToggleButtonRight {
+      left: -35px;
+      right: 0;
+
+      .opacity(1);
+
+      .shape {
+        color: #363C3C;
+        text-shadow: none;
+      }
+
+      .state {
+        color: white;
+      }
+
+    }
+
+  }
+
+  &.offCanvasLeft {
+    left: -10000px;
+    z-index: 50;
+
+    &.offCanvasShow {
+      left: -20px;
+      top: 35px;
+      bottom: 50px;
+      right: auto;
+    }
+
+    .offCanvasToggleButtonLeft {
+      right: 10px;
+      left: auto;
+
+      .opacity(1);
+
+      .shape {
+        color: #363C3C;
+        text-shadow: none;
+      }
+
+      .state {
+        color: white;
+      }
+
+    }
+
+  }
+
+  &.offCanvasOverlay {
+    left: -10000px;
+    top: 0;
+    z-index: 49;
+
+    &.offCanvasShow {
+      position: absolute;
+      top: 35px;
+      left: 40px;
+      right: 45px;
+      bottom: 50px;
+
+    }
+
+  }
 
 }
+
+.offCanvasBlind {
+  .opacity(0.3);
+}
+
+#bottom-row {
+  padding: 10px;
+  background-color: #F7F9F8;
+  border: 3px solid #5E6C6D;
+
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+
+
+}
+

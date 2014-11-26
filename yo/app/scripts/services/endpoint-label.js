@@ -49,8 +49,9 @@ angular.module('dmpApp')
 
         function ask(promptText, helpText, buttonText, extraLabel, prefill, error) {
             var text = promptText || 'Name this mapping',
-                buttonText = buttonText || 'Ok',
                 help = helpText || 'The name has to be at least 3 characters long';
+
+            buttonText = buttonText || 'Ok';
 
             var labelDefer = $q.defer();
 

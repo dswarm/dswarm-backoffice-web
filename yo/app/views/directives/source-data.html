@@ -1,22 +1,5 @@
-<!--
-    Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
-     
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-     
-    http://www.apache.org/licenses/LICENSE-2.0
-     
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
 <div>
-    <h5>{{resourceName}}</h5>
-
-    <div class="dataOuter">
+    <div class="zebra20 dataOuter">
         <div class="tabbable tabs-below">
             <ul class="nav nav-tabs">
                 <li ng-repeat="record in records track by $index" ng-class="{active: selectedTab == $index}">
@@ -27,13 +10,14 @@
             <div ng-repeat="record in records"  class="tab-content">
                 <div ng-show="selectedTab == $index">
 
-                    <div ui-tree data-drag-enabled="false">
+                    <perfect-scrollbar ui-tree data-drag-enabled="false" class="scroller" wheel-propagation="true" wheel-speed="50" ng-class="{offCanvasShow: panes.left }" id="sourceData">
+
                         <ol ui-tree-nodes ng-model="record.data.children">
                             <li ng-repeat="data in record.data.children"
                                 ui-tree-node
                                 ng-include="'views/directives/tree_renderer.html'"></li>
                         </ol>
-                    </div>
+                    </perfect-scrollbar>
 
                 </div>
             </div>

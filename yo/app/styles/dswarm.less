@@ -181,7 +181,7 @@ a.navbar-brand {
 }
 
 .wrap {
-    margin: 40px 20px;
+    margin: 40px 20px 0 20px;
 }
 
 
@@ -304,8 +304,13 @@ a.navbar-brand {
 }
 
 .content {
-  position: relative;
-  padding: 0 20px;
+
+  position: absolute;
+  padding: 0px 20px;
+  left: 20px;
+  top: 145px;
+  right: 20px;
+  bottom: 0;
 
   .gridOuter {
     height: 300px;
@@ -360,3 +365,43 @@ a.navbar-brand {
 }
 
 .forceShow { display: block !important; }
+
+.content {
+
+  .nav-tabs {
+    border: none;
+  }
+
+  .nav > li > a {
+    padding: 5px 10px;
+    margin: 0 0 10px 0;
+  }
+
+  .nav-tabs > li > a {
+    border: none;
+    border-radius: 0px;
+
+    color: #5E6C6D;
+  }
+
+  .nav-tabs > li.active > a,
+  .nav-tabs > li.active > a:hover,
+  .nav-tabs > li.active > a:focus {
+    background-color: transparent;
+    border: none;
+    color: #5E6C6D;
+    font-size: 18px;
+
+    border-bottom: 1px solid #5E6C6D;
+
+  }
+
+}
+
+.wrap .alert {
+  z-index: 1000;
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  .opacity(0.9)
+}

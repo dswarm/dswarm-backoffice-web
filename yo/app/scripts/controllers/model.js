@@ -93,6 +93,12 @@ angular.module('dmpApp')
             }, 0);
         };
 
+        $scope.panes = {
+            left : 0,
+            right : 0,
+            bottom : 0
+        };
+
         // NEW TREEE TEST END
 
         // Mock project data for angular data handling
@@ -381,6 +387,81 @@ angular.module('dmpApp')
             leading: true,
             trailing: true
         });
+
+        $scope.onRunProjectRunClick = function() {
+            PubSub.broadcast('sendTransformations', false);
+        };
+
+        $scope.onSaveProjectSaveClick = function() {
+            PubSub.broadcast('sendTransformations', true);
+        };
+
+        function toggleSourceData() {
+
+            $scope.panes.left = $scope.panes.left === 1 ? 0 : 1;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 200);
+
+        }
+
+        $scope.onToggleSourceDataClick = function() {
+            toggleSourceData();
+        };
+
+        function toggleTargetData() {
+
+            $scope.panes.right = $scope.panes.right === 1 ? 0 : 1;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 200);
+
+        }
+
+        function showTargetData() {
+
+            $scope.panes.right = 1;
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 200);
+
+        }
+
+        $scope.onToggleTargetDataClick = function() {
+            toggleTargetData();
+        };
+
+        PubSub.subscribe($scope, 'transformationFinished', function() {
+            showTargetData();
+        });
+
+        function showOverlayData() {
+            $scope.panes.bottom = 1;
+        }
+
+        function hideOverlayData() {
+            $scope.panes.bottom = 0;
+        }
+
+        $scope.onCloseTransformationSelectorClick = function() {
+            hideOverlayData();
+        };
+
+        PubSub.subscribe($scope, 'connectionSelected', function(data) {
+
+            if(data.click) {
+                showOverlayData();
+            }
+
+            $timeout(function() {
+                PubSub.broadcast('schemaCanvasUpdated', {});
+            }, 400);
+
+        });
+
 
         $scope.$watch(function() {
 

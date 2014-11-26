@@ -26,7 +26,7 @@ angular.module('dmpApp', [
     'ui.utils', 'ui.bootstrap', 'ui.bootstrap.tabs', 'ui.bootstrap.modal', 'ui.sortable', 'ui.tree',
 
     // 3rd Party
-    'ngProgress', 'ngGrid', 'LocalStorageModule', 'gridster'
+    'ngProgress', 'ngGrid', 'LocalStorageModule', 'gridster', 'perfect_scrollbar'
 ]);
 
 // jQuery Compatibility with dragdrop

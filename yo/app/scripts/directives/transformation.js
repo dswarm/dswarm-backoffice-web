@@ -1165,6 +1165,11 @@ angular.module('dmpApp')
 
             sendTransformations(payload, persist);
         };
+
+        PubSub.subscribe($scope, 'sendTransformations', function(persist) {
+            $scope.sendTransformations(persist);
+        });
+
         //** End of sending transformation to server
 
         //** Start of configuring components
