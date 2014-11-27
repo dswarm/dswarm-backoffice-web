@@ -12,6 +12,7 @@
     "angular-sanitize": "1.2.13",
     "angular-ui-utils": "~0.1.1",
     "angular-ui-sortable": "~0.12.6",
+    "angular-perfect-scrollbar": "*",
     "bootstrap": "~3.1.1",
     "es5-shim": "~2.1.0",
     "font-awesome": "~4.0.0",
@@ -21,7 +22,7 @@
     "jsPlumb": "1.5.5",
     "json3": "~3.3.0",
     "lodash": "~2.4.0",
-    "ngprogress": "~1.0.3",
+    "ngprogress": "chrode/ngProgress#8cc05a6d63efec9c867ebac87fec94a5e405722e",
     "angular-gridster": "chrode/angular-gridster#03985e2483e24ce841d19e6d3b1c458d67edf416",
     "angular-ui-tree": "2.1.4"
   },

@@ -269,7 +269,7 @@ angular.module('dmpApp')
 
         }
 
-        function activate(connection, dontFire) {
+        function activate(connection, dontFire, click) {
             var conn = endpointSelector.activate(connection);
             if (conn && !dontFire) {
 
@@ -285,7 +285,8 @@ angular.module('dmpApp')
                     inputAttributePath: source,
                     outputAttributePath: target,
                     keyDefs: conn.keyDefs || [],
-                    additionalInput: getDatas(conn.additionalInput)
+                    additionalInput: getDatas(conn.additionalInput),
+                    click: click
                 });
             }
         }
@@ -347,7 +348,7 @@ angular.module('dmpApp')
 
                     case 'DIV':
                     case 'path': // fall through
-                        activate(component);
+                        activate(component, false, true);
                         break;
                 }
             }

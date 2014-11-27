@@ -1,61 +1,52 @@
-<!--
-    Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
-     
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-     
-    http://www.apache.org/licenses/LICENSE-2.0
-     
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
-<h1>Export</h1>
+<div class="content-header">
+    <h1>Export</h1>
+    <div class="hr"/>
+</div>
 
-<h3>Specific model</h3>
-<div class="gridStyle" ng-grid="modelListOptions"></div>
+<div class="content">
+
+    <h3>Specific model</h3>
+    <div class="gridStyle" ng-grid="modelListOptions"></div>
 
 
-<span ng-if="selectedModel.length" class="selected-set-options form-group">
-    <p>Selected data set ({{ selectedModel.0.name }})</p>
+    <span ng-if="selectedModel.length" class="selected-set-options form-group">
+        <p>Selected data set ({{ selectedModel.0.name }})</p>
+
+        <div class="btn-group text-center">
+            <button type="button" class="btn btn-primary" ng-click="onExportModelClick('application/n-quads')">Export model data</button>
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a class="btn" ng-click="onExportModelClick('application/n-quads')">N-Quads</a></li>
+                <li><a class="btn" ng-click="onExportModelClick('application/rdf+xml')">RDF XML</a></li>
+                <li><a class="btn" ng-click="onExportModelClick('application/trig')">TriG</a></li>
+                <li><a class="btn" ng-click="onExportModelClick('text/turtle')">Turtle</a></li>
+                <li><a class="btn" ng-click="onExportModelClick('text/n3')">N3</a></li>
+            </ul>
+        </div>
+
+    </span>
+
+
+
+    <hr>
+    <h3>All Data</h3>
 
     <div class="btn-group text-center">
-        <button type="button" class="btn btn-primary" ng-click="onExportModelClick('application/n-quads')">Export model data</button>
+        <button type="button" class="btn btn-primary" ng-click="onExportAllClick('application/n-quads')">Export All Data</button>
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li><a class="btn" ng-click="onExportModelClick('application/n-quads')">N-Quads</a></li>
-            <li><a class="btn" ng-click="onExportModelClick('application/rdf+xml')">RDF XML</a></li>
-            <li><a class="btn" ng-click="onExportModelClick('application/trig')">TriG</a></li>
-            <li><a class="btn" ng-click="onExportModelClick('text/turtle')">Turtle</a></li>
-            <li><a class="btn" ng-click="onExportModelClick('text/n3')">N3</a></li>
+            <li><a class="btn" ng-click="onExportAllClick('application/n-quads')">N-Quads</a></li>
+            <li><a class="btn" ng-click="onExportAllClick('application/trig')">TriG</a></li>
+            <li class="divider"></li>
+            <li><a class="btn disabled">JSON-LD</a></li>
         </ul>
     </div>
+    <hr>
 
-</span>
-
-
-
-<hr>
-<h3>All Data</h3>
-
-<div class="btn-group text-center">
-    <button type="button" class="btn btn-primary" ng-click="onExportAllClick('application/n-quads')">Export All Data</button>
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
-        <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-        <li><a class="btn" ng-click="onExportAllClick('application/n-quads')">N-Quads</a></li>
-        <li><a class="btn" ng-click="onExportAllClick('application/trig')">TriG</a></li>
-        <li class="divider"></li>
-        <li><a class="btn disabled">JSON-LD</a></li>
-    </ul>
 </div>
-<hr>
-

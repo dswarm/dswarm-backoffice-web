@@ -1,25 +1,10 @@
-<!--
-    Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
-     
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-     
-    http://www.apache.org/licenses/LICENSE-2.0
-     
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
 <div ui-tree-handle
      ng-class='{ isFiltered : data.isFiltered, disabled : (depth() > 1 || isCollapsed(data)) && config.type == "as-target" }'
      class="jsPanchor">
 
     <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
 
-        <span ng-if="!data.hasChildren || isCollapsed(data)" class="mapping-selector-btn">
+        <span ng-if='(!data.hasChildren || isCollapsed(data)) && config.type == "as-target"' class="pull-left mapping-selector-btn mapping-selector-btn-target target-selector jsPanchorIcon">
             <a class="btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
@@ -29,19 +14,19 @@
                js-plumb-target-options="jspTargetOptions"
                ng-style="{color:isSelected?'slategrey':''}"
                ng-class="{disabled : depth() > 1 || (isCollapsed(data) && data.hasChildren) }">
-                <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"
+                <span class=""
                       ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }"></span>
             </a>
         </span>
 
-        <a class="btn btn-success btn-xs"
+        <a class="btn btn-success btn-xs pull-left tree-leaf-expandCollapse"
            data-nodrag
            ng-click="expandCollapse(this, data)"
            ng-if="data.children.length">
             <span class="glyphicon"
                   ng-class="{'glyphicon-chevron-right': isCollapsed(data), 'glyphicon-chevron-down': !isCollapsed(data)}"></span>
         </a>
-        {{data.name}}
+        <div class="tree-leaf-data pull-left">{{data.name}}</div>
 
         <small ng-if="data.title && !data.editableTitle"
                class="data-sample"
@@ -55,8 +40,8 @@
                class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()">
         </small>
 
-        <span ng-if="!data.hasChildren || isCollapsed(data)" class="mapping-selector-btn">
-            <a class="pull-right btn btn-primary btn-xs"
+        <span ng-if='(!data.hasChildren || isCollapsed(data)) && config.type == "as-source"' class="pull-right mapping-selector-btn mapping-selector-btn-source target-selector jsPanchorIcon">
+            <a class="btn btn-primary btn-xs"
                data-nodrag
                style="margin-right: 8px;"
                ng-if='config.type == "as-source"'
@@ -65,17 +50,17 @@
                js-plumb-source-options="jspSourceOptions"
                ng-style="{color:isSelected?'slategrey':''}"
                ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }">
-                <span class="glyphicon glyphicon-unchecked target-selector jsPanchorIcon"
+                <span class=""
                       ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }"></span>
             </a>
         </span>
 
-        <a class="pull-right btn btn-primary btn-xs"
+        <a class="pull-right tree-leaf-plus"
            data-nodrag
            ng-click="newLeaf(data, false)"
            style="margin-right: 8px;"
            ng-if='config.type == "as-target"'>
-            <span class="glyphicon glyphicon-plus"></span>
+            <i class="icon icon-add"></i>
         </a>
 
     </div>

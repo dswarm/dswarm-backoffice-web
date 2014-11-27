@@ -1,0 +1,133 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "dswarm";
+  src:url("dswarm.eot");
+  src:url("dswarm.eot?#iefix") format("embedded-opentype"),
+    url("dswarm.woff") format("woff"),
+    url("dswarm.ttf") format("truetype"),
+    url("dswarm.svg#dswarm") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "dswarm" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "dswarm" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-add:before {
+  content: "a";
+}
+.icon-admin:before {
+  content: "b";
+}
+.icon-baseshape:before {
+  content: "c";
+}
+.icon-create:before {
+  content: "d";
+}
+.icon-export:before {
+  content: "e";
+}
+.icon-messagebox:before {
+  content: "f";
+}
+.icon-openleft:before {
+  content: "g";
+}
+.icon-openright:before {
+  content: "h";
+}
+.icon-optimize:before {
+  content: "i";
+}
+.icon-remove:before {
+  content: "j";
+}
+.icon-settings:before {
+  content: "k";
+}
+.icon-tools:before {
+  content: "l";
+}
+.icon-warning:before {
+  content: "m";
+}
+.icon-lock-1:before {
+  content: "n";
+}
+.icon-lock-unlock-1:before {
+  content: "o";
+}
+.icon-link-2:before {
+  content: "p";
+}
+.icon-hand-block:before {
+  content: "q";
+}
+.icon-bubble-conversation-6:before {
+  content: "r";
+}
+.icon-hotspot-2:before {
+  content: "s";
+}
+.icon-plane-paper-1:before {
+  content: "t";
+}
+.icon-photos-2:before {
+  content: "u";
+}
+.icon-cloud-download:before {
+  content: "v";
+}
+.icon-cloud-upload:before {
+  content: "w";
+}
+.icon-infinity:before {
+  content: "x";
+}
+.icon-check-2:before {
+  content: "y";
+}
+.icon-alarm-clock:before {
+  content: "z";
+}
+.icon-business-chart-1:before {
+  content: "A";
+}
+.icon-delete-marker-3:before {
+  content: "B";
+}
+.icon-script:before {
+  content: "C";
+}
+.icon-hierarchy-6:before {
+  content: "D";
+}
+.icon-refresh:before {
+  content: "E";
+}

@@ -1,18 +1,31 @@
-<!--
-    Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
-     
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-     
-    http://www.apache.org/licenses/LICENSE-2.0
-     
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
+<div class="content-header">
+    <h1>Modelling Workbench</h1>
+
+    <ul class="content-header-right">
+        <li>
+            <span class="title">{{project.name}}</span>
+        </li>
+        <li>
+            <span ng-click="onDiscardDraftClick()"><i class="icon icon-refresh"></i> Revert</span>
+        </li>
+
+        <li>
+            <span ng-click="onSaveProjectClick()"><i class="icon icon-check-2"></i> Save Project</span>
+        </li>
+
+        <li>
+            <span ng-click="onRunProjectRunClick()"><i class="icon icon-plane-paper-1"></i> Preview</span>
+        </li>
+
+        <li>
+            <span ng-click="onSaveProjectSaveClick()"><i class="icon icon-optimize"></i> Execute</span>
+        </li>
+
+    </ul>
+
+    <div class="hr"/>
+</div>
+
 <div class="alert alert-dismissable" ng-repeat="alert in alerts" ng-class="'alert-'+alert.type">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
     {{alert.msg}}
@@ -27,30 +40,81 @@
         save
     </button>
 </div>
-<div class="row row-2" id="top-row">
-    <div class="col-md-3 box" id="sourceData">
 
-        <button class="btn btn-default" type="button" ng-click="onSaveProjectClick()">Save project</button>
-        <button class="btn btn-default" type="button" ng-click="onDiscardDraftClick()">Cancel changes</button>
+<div class="content">
 
-        <source-data />
+    <div class="row row-2" id="top-row">
+
+
+        <span class="offCanvasToggleButton offCanvasToggleButtonLeft" ng-show="!panes.left" ng-click='onToggleSourceDataClick()'>
+            <span class="shape">
+                <i class="icon icon-baseshape"></i>
+            </span>
+            <span class="state">
+                <i class="icon icon-openleft"></i>
+            </span>
+        </span>
+
+        <div class="col-md-3 offCanvas offCanvasLeft" ng-class="{offCanvasShow: panes.left }" id="sourceData">
+
+            <span class="offCanvasToggleButton offCanvasToggleButtonLeft" ng-click='onToggleSourceDataClick()'>
+                <span class="shape">
+                    <i class="icon icon-baseshape"></i>
+                </span>
+                <span class="state">
+                    <i class="icon" ng-class='{"icon-openright":!pane.left, "icon-openleft": pane.left}'></i>
+                </span>
+            </span>
+
+            <source-data />
+        </div>
+
+        <div ng-class='{ "col-md-12": !panes.left && !panes.right, "col-md-9": panes.left != panes.right, "col-md-offset-3": (panes.left != panes.right && panes.left) || panes.left && panes.right, "col-md-6": panes.left && panes.right, "offCanvasBlind" : panes.bottom === 1 }' id="schema">
+            <schema />
+        </div>
+
+        <div class="col-md-3 offCanvas offCanvasRight" ng-class="{offCanvasShow: panes.right }" id="targetData">
+
+            <span class="offCanvasToggleButton offCanvasToggleButtonRight" ng-show="panes.right" ng-click='onToggleTargetDataClick()'>
+                <span class="shape">
+                    <i class="icon icon-baseshape"></i>
+                </span>
+                <span class="state">
+                    <i class="icon" ng-class='{"icon-openleft":!pane.right, "icon-openright": pane.right}'></i>
+                </span>
+            </span>
+
+            <target-data />
+        </div>
+
+        <span class="offCanvasToggleButton offCanvasToggleButtonRight" ng-show="!panes.right" ng-click='onToggleTargetDataClick()'>
+            <span class="shape">
+                <i class="icon icon-baseshape"></i>
+            </span>
+            <span class="state">
+                <i class="icon icon-openright"></i>
+            </span>
+        </span>
+
     </div>
-    <div class="col-md-6 box" id="schema">
-        <schema />
+    <div class="row row-1 offCanvas offCanvasOverlay" ng-class='{ "col-md-9": panes.left != panes.right, "col-md-offset-3": (panes.left != panes.right && panes.left) || panes.left && panes.right, "col-md-6": panes.left && panes.right, "offCanvasShow" : panes.bottom === 1 }' id="bottom-row">
+
+        <div class="col-md-12">
+            <h3>Mapping configuration</h3>
+        </div>
+
+        <div class="col-md-3" id="configuration">
+            <configuration />
+        </div>
+        <div class="col-md-6" id="transformation">
+            <transformation />
+        </div>
+        <div class="col-md-3" id="components">
+
+            <button class="btn btn-default close-transformation-selector" type="button" ng-click="onCloseTransformationSelectorClick()">Close</button>
+
+            <components />
+        </div>
     </div>
-    <div class="col-md-3 box" id="targetData">
-        <target-data />
-    </div>
+
 </div>
-<div class="row row-1" id="bottom-row">
-    <div class="col-md-3 box" id="configuration">
-        <configuration />
-    </div>
-    <div class="col-md-6 box" id="transformation">
-        <transformation />
-    </div>
-    <div class="col-md-3 box" id="components">
-        <components />
-    </div>
-</div>
-
