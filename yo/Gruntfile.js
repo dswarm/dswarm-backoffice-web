@@ -502,6 +502,12 @@ module.exports = function(grunt) {
                     },
                     {
                         expand: true,
+                        cwd: '<%= yeoman.bower %>/bootstrap/dist/fonts',
+                        dest: '<%= yeoman.dist %>/fonts',
+                        src: ['*']
+                    },
+                    {
+                        expand: true,
                         cwd: '<%= yeoman.bower %>/font-awesome/fonts',
                         dest: '<%= yeoman.dist %>/fonts',
                         src: ['*']
@@ -513,6 +519,10 @@ module.exports = function(grunt) {
                 cwd: '<%= yeoman.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
+            },
+            config: {
+                src: ['<%= yeoman.app %>/config.js'],
+                dest: '<%= yeoman.dist %>/config.js'
             },
             rev: {
                 files: [
@@ -666,6 +676,11 @@ module.exports = function(grunt) {
         'ngconstant:' + grunt.config.get('stage').name
     ]);
 
+    grunt.registerTask('updateConfigAndCopy', [
+        'updateConfig',
+        'copy:config'
+    ]);
+
     grunt.registerTask('printConfig', 'print the complete configuration', function() {
         grunt.log.writeln(JSON.stringify(grunt.config(), null, 2));
     });
@@ -721,7 +736,7 @@ module.exports = function(grunt) {
             'bowerInstall',
             'copyright:ensure',
             'useminPrepare',
-            'updateConfig',
+            (target === 'local' ? 'updateConfigAndCopy' : 'updateConfig'),
             'copy:styles',
             'imagemin',
             'svgmin',
