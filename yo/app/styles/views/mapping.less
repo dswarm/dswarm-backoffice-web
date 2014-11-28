@@ -32,6 +32,7 @@
 
 svg.mapping-active {
   z-index: 1000;
+  cursor: pointer;
 }
 
 .mapping-label {
@@ -39,6 +40,7 @@ svg.mapping-active {
   font-weight: 200;
   text-shadow: 0 0 15px fadeout(black, 20%);
   margin-top:  0.5em;
+  cursor: pointer;
 
   &.mapping-active {
     color: red;
@@ -190,6 +192,15 @@ button.open-schema-col-selector {
 
 button.close-transformation-selector {
   margin: 0 0 15px;
+}
+
+.close-overlay {
+  .text-right();
+  font-size: 140%;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  right: 0.5em;
+  top: 0.5em;
 }
 
 .target-schema-selector-modal,
