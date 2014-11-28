@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013, 2014  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,7 +96,8 @@ angular.module('dmpApp')
         $scope.panes = {
             left : 0,
             right : 0,
-            bottom : 0
+            bottom : 0,
+            configuration: 0
         };
 
         // NEW TREEE TEST END
@@ -446,7 +447,42 @@ angular.module('dmpApp')
             $scope.panes.bottom = 0;
         }
 
+        function isOpen(p) {
+            return !!$scope.panes[p];
+        }
+        function isEitherOpen(a, b) {
+            return ($scope.panes[a] + $scope.panes[b]) === 1;
+        }
+        function isBothOpen(a, b) {
+            return $scope.panes[a] && $scope.panes[b];
+        }
+        function isNoneOpen(a, b) {
+            return !$scope.panes[a] && !$scope.panes[b];
+        }
+
+        $scope.schemaClasses = function() {
+            return {
+                'col-md-12': isNoneOpen('left', 'right'),
+                'col-md-9': isEitherOpen('left', 'right'),
+                'col-md-6': isBothOpen('left', 'right'),
+                'col-md-offset-3': isOpen('left'),
+                offCanvasBlind: isOpen('bottom'),
+                offCanvasDoublyBlind: isOpen('configuration')
+            };
+        };
+
+        $scope.bottomRowClasses = function() {
+            return {
+                'col-md-9': isEitherOpen('left', 'right'),
+                'col-md-6': isBothOpen('left', 'right'),
+                'col-md-offset-3': isOpen('left'),
+                offCanvasShow: isOpen('bottom'),
+                offCanvasBlind: isOpen('configuration')
+            };
+        };
+
         $scope.onCloseTransformationSelectorClick = function() {
+            hideFunctionConfiguration();
             hideOverlayData();
         };
 
@@ -462,6 +498,21 @@ angular.module('dmpApp')
 
         });
 
+        function showFunctionConfiguration() {
+            $scope.panes.configuration = 1;
+        }
+
+        function hideFunctionConfiguration() {
+            $scope.panes.configuration = 0;
+        }
+
+        PubSub.subscribe($scope, 'handleEditConfig', showFunctionConfiguration);
+
+        PubSub.subscribe($scope,
+            ['changeOutputModel', 'connectionSelected', 'handleConfigEdited',
+                'projectDraftDiscarded', 'projectModelChanged', 'removeComponent',
+                'restoreCurrentProject', 'configurationClosed'],
+            hideFunctionConfiguration);
 
         $scope.$watch(function() {
 

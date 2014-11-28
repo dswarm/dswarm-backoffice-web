@@ -62,14 +62,14 @@
                     <i class="icon icon-baseshape"></i>
                 </span>
                 <span class="state">
-                    <i class="icon" ng-class='{"icon-openright":!pane.left, "icon-openleft": pane.left}'></i>
+                    <i class="icon icon-openright"></i>
                 </span>
             </span>
 
             <source-data />
         </div>
 
-        <div ng-class='{ "col-md-12": !panes.left && !panes.right, "col-md-9": panes.left != panes.right, "col-md-offset-3": (panes.left != panes.right && panes.left) || panes.left && panes.right, "col-md-6": panes.left && panes.right, "offCanvasBlind" : panes.bottom === 1 }' id="schema">
+        <div ng-class='schemaClasses()' id="schema">
             <schema />
         </div>
 
@@ -80,7 +80,7 @@
                     <i class="icon icon-baseshape"></i>
                 </span>
                 <span class="state">
-                    <i class="icon" ng-class='{"icon-openleft":!pane.right, "icon-openright": pane.right}'></i>
+                    <i class="icon icon-openleft"></i>
                 </span>
             </span>
 
@@ -97,22 +97,23 @@
         </span>
 
     </div>
-    <div class="row row-1 offCanvas offCanvasOverlay" ng-class='{ "col-md-9": panes.left != panes.right, "col-md-offset-3": (panes.left != panes.right && panes.left) || panes.left && panes.right, "col-md-6": panes.left && panes.right, "offCanvasShow" : panes.bottom === 1 }' id="bottom-row">
+    <div class="row row-1 offCanvas offCanvasOverlay" ng-class='bottomRowClasses()' id="bottom-row">
 
         <div class="col-md-11">
             <h3>Mapping configuration</h3>
         </div>
         <div class="col-md-1 close-overlay" ng-click="onCloseTransformationSelectorClick()">&times;</div>
 
-        <div class="col-md-3" id="configuration">
-            <configuration />
-        </div>
-        <div class="col-md-6" id="transformation">
+        <div class="col-md-9" id="transformation">
             <transformation />
         </div>
         <div class="col-md-3" id="components">
             <components />
         </div>
+    </div>
+
+    <div class="offCanvas offCanvasOverlay" id="configuration" ng-class="{'offCanvasShow': panes.configuration}">
+        <configuration />
     </div>
 
 </div>
