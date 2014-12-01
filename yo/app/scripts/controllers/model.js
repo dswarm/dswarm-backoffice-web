@@ -509,7 +509,7 @@ angular.module('dmpApp')
         PubSub.subscribe($scope, 'handleEditConfig', showFunctionConfiguration);
 
         PubSub.subscribe($scope,
-            ['changeOutputModel', 'connectionSelected', 'handleConfigEdited',
+            ['changeOutputModel', 'connectionSelected',
                 'projectDraftDiscarded', 'projectModelChanged', 'removeComponent',
                 'restoreCurrentProject', 'configurationClosed'],
             hideFunctionConfiguration);
