@@ -2,7 +2,7 @@
 
 <div class="alert alert-dismissable alert-danger" ng-if="configError">{{configError}}</div>
 
-<div ng-switch on="configType">
+<div ng-switch on="configType" class="data-config-window">
 
     <div ng-switch-when="csv">
         <dataconfigcsv ></dataconfigcsv>
