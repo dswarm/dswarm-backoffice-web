@@ -222,6 +222,7 @@ a.navbar-brand {
 .content-header {
 
   margin: 0 0 20px 0;
+  position: relative;
 
   h1 {
     font-size: 17px;
@@ -231,13 +232,16 @@ a.navbar-brand {
     display: inline;
   }
 
-  .hr {
+  hr {
     margin: 5px 0 0;
     border: none;
     box-shadow: none;
     border-bottom: 1px dotted white;
 
-    position: relative;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 1.25em;
     display: block;
     z-index: 100;
   }
