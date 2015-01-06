@@ -67,8 +67,8 @@ angular.module('dmpApp').
 
             return loDash.map(originalPaths, function(attributePath) {
 
-                return loDash.forEach(attributePath.attributes, function(attribute) {
-                    attribute._$path_id = attributePath.id;
+                return loDash.forEach(attributePath.attribute_path.attributes, function(attribute) {
+                    attribute._$path_id = attributePath.attribute_path.id;
                 });
             });
         }

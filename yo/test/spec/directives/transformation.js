@@ -25,12 +25,12 @@ describe('Directive: Transformation', function() {
     }
 
     function getMappingWithPath(attributePaths, selector, specs, generateName, presetId) {
-        var paths = _.filter(attributePaths, selector);
+        var paths = _.filter(attributePaths, { attribute_path : selector });
         var mapping = angular.extend({
             type: 'MappingAttributePathInstance',
             name: 'input mapping attribute path instance'
         }, specs || {});
-        mapping.attribute_path = paths[0];
+        mapping.attribute_path = paths[0].attribute_path;
 
         if(generateName) {
             var names = [];
@@ -79,149 +79,204 @@ describe('Directive: Transformation', function() {
 
         attributePaths = [
             {
-                "id": 33,
-                "attributes": [
-                    {
-                        "id": 21,
-                        "name": "mabVersion",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 1,
+                attribute_path : {
+                    "id": 33,
+                    "attributes": [
+                        {
+                            "id": 21,
+                            "name": "mabVersion",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion"
+                        }
+                    ]
+                }
             },
             {
-                "id": 34,
-                "attributes": [
-                    {
-                        "id": 22,
-                        "name": "typ",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 2,
+                attribute_path : {
+                    "id": 34,
+                    "attributes": [
+                        {
+                            "id": 22,
+                            "name": "typ",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ"
+                        }
+                    ]
+                }
             },
             {
-                "id": 35,
-                "attributes": [
-                    {
-                        "id": 23,
-                        "name": "status",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 3,
+                attribute_path : {
+                    "id": 35,
+                    "attributes": [
+                        {
+                            "id": 23,
+                            "name": "status",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status"
+                        }
+                    ]
+                }
             },
             {
-                "id": 5,
-                "attributes": [
-                    {
-                        "id": 5,
-                        "name": "type",
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 4,
+                attribute_path : {
+                    "id": 5,
+                    "attributes": [
+                        {
+                            "id": 5,
+                            "name": "type",
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                        }
+                    ]
+                }
             },
             {
-                "id": 28,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    },
-                    {
-                        "id": 18,
-                        "name": "nr",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 13543,
+                attribute_path : {
+                    "id": 28,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        },
+                        {
+                            "id": 18,
+                            "name": "nr",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"
+                        }
+                    ]
+                }
             },
             {
-                "id": 27,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    },
-                    {
-                        "id": 5,
-                        "name": "type",
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 123554,
+                attribute_path : {
+                    "id": 27,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        },
+                        {
+                            "id": 5,
+                            "name": "type",
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                        }
+                    ]
+                }
             },
             {
-                "id": 26,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 1234,
+                attribute_path : {
+                    "id": 26,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        }
+                    ]
+                }
             },
             {
-                "id": 32,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    },
-                    {
-                        "id": 20,
-                        "name": "tf",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
-                    },
-                    {
-                        "id": 5,
-                        "name": "type",
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 16875,
+                attribute_path : {
+                    "id": 32,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        },
+                        {
+                            "id": 20,
+                            "name": "tf",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
+                        },
+                        {
+                            "id": 5,
+                            "name": "type",
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                        }
+                    ]
+                }
             },
             {
-                "id": 31,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    },
-                    {
-                        "id": 20,
-                        "name": "tf",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 17895,
+                attribute_path : {
+                    "id": 31,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        },
+                        {
+                            "id": 20,
+                            "name": "tf",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
+                        }
+                    ]
+                }
             },
             {
-                "id": 30,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    },
-                    {
-                        "id": 14,
-                        "name": "value",
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 187656,
+                attribute_path : {
+                    "id": 30,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        },
+                        {
+                            "id": 14,
+                            "name": "value",
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+                        }
+                    ]
+                }
             },
             {
-                "id": 29,
-                "attributes": [
-                    {
-                        "id": 17,
-                        "name": "feld",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
-                    },
-                    {
-                        "id": 19,
-                        "name": "ind",
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 1875,
+                attribute_path : {
+                    "id": 29,
+                    "attributes": [
+                        {
+                            "id": 17,
+                            "name": "feld",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+                        },
+                        {
+                            "id": 19,
+                            "name": "ind",
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
+                        }
+                    ]
+                }
             }
         ];
         schema = {
@@ -469,6 +524,8 @@ describe('Directive: Transformation', function() {
 
         $rootScope.$broadcast('connectionSelected', data2);
 
+        console.log(project.mappings);
+
         expect(project.mappings.length).toBe(3);
         expect(elScope.tabs.length).toBe(3);
 
@@ -495,12 +552,7 @@ describe('Directive: Transformation', function() {
             expect(mapping.transformation.function.components).toEqual([]);
 
             var expectedInputMapping;
-            if (paths[2]) {
-                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true, data2.iapId), getMappingWithPath(attributePaths, {id: paths[2]}, {}, true, data2.iapId)];
-
-            } else {
-                expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true, data2.iapId)];
-            }
+            expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true, data2.iapId)];
 
             var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
@@ -535,7 +587,7 @@ describe('Directive: Transformation', function() {
         scope.$digest();
         var elScope = element.scope();
 
-        expect(elScope.formatAttributePath(attributePaths[7])).toBe('feld › tf › type');
+        expect(elScope.formatAttributePath(attributePaths[7].attribute_path)).toBe('feld › tf › type');
         expect(elScope.formatAttributePath()).toBe('');
         expect(elScope.formatAttributePath(false)).toBe('');
         expect(elScope.formatAttributePath({})).toBe('');
@@ -693,13 +745,13 @@ describe('Directive: Transformation', function() {
 
         $rootScope.$broadcast('connectionSelected', data);
 
-        expect(elScope.activeMapping.input_attribute_paths.length).toBe(1);
+        expect(elScope.activeMapping.input_attribute_paths[0].attribute_path.attributes[1].id).toBe(data.inputAttributePath.path[1]);
 
         data = connectionDatas[2];
 
         $rootScope.$broadcast('connectionSelected', data);
 
-        expect(elScope.activeMapping.input_attribute_paths.length).toBe(2);
+        expect(elScope.activeMapping.input_attribute_paths[0].attribute_path.attributes[1].id).toBe(data.inputAttributePath.path[1]);
 
     });
 
@@ -721,13 +773,6 @@ describe('Directive: Transformation', function() {
 
         expect(elScope.gridsterOpts.minRows).toBe(1);
         expect(elScope.gridsterOpts.maxRows).toBe(1);
-
-        data = connectionDatas[2];
-
-        $rootScope.$broadcast('connectionSelected', data);
-
-        expect(elScope.gridsterOpts.minRows).toBe(2);
-        expect(elScope.gridsterOpts.maxRows).toBe(2);
 
     });
 
