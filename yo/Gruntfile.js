@@ -60,7 +60,7 @@ module.exports = function(grunt) {
             options: {
                 holder: 'SLUB Dresden & Avantgarde Labs GmbH',
                 email: 'code@dswarm.org',
-                year: '2013, 2014'
+                year: '2013 – 2015'
             },
             check: {
                 files: [{
