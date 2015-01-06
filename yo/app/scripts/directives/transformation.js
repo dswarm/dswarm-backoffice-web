@@ -976,20 +976,20 @@ angular.module('dmpApp')
                 } else {
                     var inputPath = data.inputAttributePath.path,
                         inputAttributePaths = loDash.filter($scope.project.input_data_model.schema.attribute_paths, function(ap) {
-                            return angular.equals(inputPath, loDash.map(ap.attributes, 'id'));
+                            return angular.equals(inputPath, loDash.map(ap.attribute_path.attributes, 'id'));
                         }),
                         outputPath = data.outputAttributePath.path,
                         outputAttributePaths = loDash.filter($scope.project.output_data_model.schema.attribute_paths, function(ap) {
-                            return angular.equals(outputPath, loDash.map(ap.attributes, 'id'));
+                            return angular.equals(outputPath, loDash.map(ap.attribute_path.attributes, 'id'));
                         }),
 
                         iapId = (new Date().getTime() + 1) * -1,
 
                         thisIap = {
                             type: 'MappingAttributePathInstance',
-                            name: Util.buildAttributeName(inputAttributePaths[0].attributes, 'name', '_') + '__' + ( (data.iapId > 0) ? data.iapId : iapId ),
+                            name: Util.buildAttributeName(inputAttributePaths[0].attribute_path.attributes, 'name', '_') + '__' + ( (data.iapId > 0) ? data.iapId : iapId ),
                             id: iapId,
-                            attribute_path: inputAttributePaths[0]
+                            attribute_path: inputAttributePaths[0].attribute_path
                         },
 
                         mapping = {
@@ -1002,7 +1002,7 @@ angular.module('dmpApp')
                                 type: 'MappingAttributePathInstance',
                                 name: getOutputMAPIName({id: data.mapping_id}),
                                 id: (new Date().getTime() + 2) * -1,
-                                attribute_path: outputAttributePaths[0]
+                                attribute_path: outputAttributePaths[0].attribute_path
                             }
                         };
 

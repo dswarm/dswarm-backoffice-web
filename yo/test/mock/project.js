@@ -30,49 +30,74 @@ angular.module('mockedProject', [])
                 "name": "test_csv.csv schema",
                 "attribute_paths": [
                     {
-                        "id": 132,
-                        "attributes": [
-                            {
-                                "id": "/test_csv.csv#id",
-                                "name": "id"
-                            }
-                        ]
+                        type : "SchemaAttributePathInstance",
+                        name : null,
+                        id : 61,
+                        attribute_path : {
+                            "id": 132,
+                            "attributes": [
+                                {
+                                    "id": "/test_csv.csv#id",
+                                    "name": "id"
+                                }
+                            ]
+                        }
                     },
                     {
-                        "id": 136,
-                        "attributes": [
-                            {
-                                "id": "/test_csv.csv#year",
-                                "name": "year"
-                            }
-                        ]
+                        type : "SchemaAttributePathInstance",
+                        name : null,
+                        id : 62,
+                        attribute_path : {
+                            "id": 136,
+                            "attributes": [
+                                {
+                                    "id": "/test_csv.csv#year",
+                                    "name": "year"
+                                }
+                            ]
+                        }
                     },
                     {
-                        "id": 135,
-                        "attributes": [
-                            {
-                                "id": "/test_csv.csv#isbn",
-                                "name": "isbn"
-                            }
-                        ]
+                        type : "SchemaAttributePathInstance",
+                        name : null,
+                        id : 63,
+                        attribute_path : {
+                            "id": 135,
+                            "attributes": [
+                                {
+                                    "id": "/test_csv.csv#isbn",
+                                    "name": "isbn"
+                                }
+                            ]
+                        }
                     },
                     {
-                        "id": 134,
-                        "attributes": [
-                            {
-                                "id": "/test_csv.csv#description",
-                                "name": "description"
-                            }
-                        ]
+                        type : "SchemaAttributePathInstance",
+                        name : null,
+                        id : 64,
+                        attribute_path : {
+                            "id": 134,
+                            "attributes": [
+                                {
+                                    "id": "/test_csv.csv#description",
+                                    "name": "description"
+                                }
+                            ]
+                        }
                     },
                     {
-                        "id": 133,
-                        "attributes": [
-                            {
-                                "id": "/test_csv.csv#name",
-                                "name": "name"
-                            }
-                        ]
+                        type : "SchemaAttributePathInstance",
+                        name : null,
+                        id : 65,
+                        attribute_path : {
+                            "id": 133,
+                            "attributes": [
+                                {
+                                    "id": "/test_csv.csv#name",
+                                    "name": "name"
+                                }
+                            ]
+                        }
                     }
                 ],
                 "record_class": {
