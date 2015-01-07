@@ -1,5 +1,5 @@
 <div ui-tree-handle
-     ng-class='{ isFiltered : data.isFiltered, disabled : (depth() > 1 || isCollapsed(data)) && config.type == "as-target" }'
+     ng-class='{ isFiltered : data.isFiltered, disabled : isCollapsed(data) && config.type == "as-target" }'
      class="jsPanchor">
 
     <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
@@ -10,10 +10,10 @@
                style="margin-right: 8px;"
                ng-if='config.type == "as-target"'
                dmp-endpoint="data"
-               dmp-endpoint-disabled="depth() > 1 || (isCollapsed(data) && data.hasChildren)"
+               dmp-endpoint-disabled="isCollapsed(data) && data.hasChildren"
                js-plumb-target-options="jspTargetOptions"
                ng-style="{color:isSelected?'slategrey':''}"
-               ng-class="{disabled : depth() > 1 || (isCollapsed(data) && data.hasChildren) }">
+               ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }">
                 <span class=""
                       ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }"></span>
             </a>
