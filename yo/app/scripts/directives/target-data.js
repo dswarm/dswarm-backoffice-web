@@ -40,8 +40,8 @@ angular.module('dmpApp')
 
                 $scope.records = loDash.map(transformation, function(t) {
                     return {
-                        id: t['record_id'],
-                        data: mapToSchema(t['record_data'], schema)
+                        id: t['__record_id'],
+                        data: mapToSchema(t['__record_data'], schema)
                     };
                 });
             } else {
