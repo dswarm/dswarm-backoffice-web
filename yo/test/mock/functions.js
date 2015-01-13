@@ -5,7 +5,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "blacklist",
             "description": "Blacklist filter",
-            "id": 1,
+            "uuid": 1,
             "function_description": {
                 "name": "blacklist",
                 "dsl": "metafacture",
@@ -35,7 +35,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "case",
             "description": "Upper/lower-case transformation.",
-            "id": 2,
+            "uuid": 2,
             "function_description": {
                 "name": "case",
                 "dsl": "metafacture",
@@ -64,7 +64,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "compose",
             "description": "Add pre- or postfix to a string.",
-            "id": 3,
+            "uuid": 3,
             "function_description": {
                 "name": "compose",
                 "dsl": "metafacture",
@@ -90,7 +90,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "constant",
             "description": "Sets literal value to a constant.",
-            "id": 4,
+            "uuid": 4,
             "function_description": {
                 "name": "constant",
                 "dsl": "metafacture",
@@ -111,7 +111,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "count",
             "description": "Returns the an increasing count for each received literal.",
-            "id": 5,
+            "uuid": 5,
             "function_description": {
                 "name": "count",
                 "dsl": "metafacture",
@@ -123,7 +123,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "equals",
             "description": "Returns the value only if equality holds.",
-            "id": 6,
+            "uuid": 6,
             "function_description": {
                 "name": "equals",
                 "dsl": "metafacture",
@@ -143,7 +143,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "htmlanchor",
             "description": "Create an HTML anchor.",
-            "id": 7,
+            "uuid": 7,
             "function_description": {
                 "name": "htmlanchor",
                 "dsl": "metafacture",
@@ -173,7 +173,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "isbn",
             "description": "ISBN conversion and verification.",
-            "id": 8,
+            "uuid": 8,
             "function_description": {
                 "name": "isbn",
                 "dsl": "metafacture",
@@ -203,7 +203,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "lookup",
             "description": "Performs a table lookup",
-            "id": 9,
+            "uuid": 9,
             "function_description": {
                 "name": "lookup",
                 "dsl": "metafacture",
@@ -244,7 +244,7 @@ angular.module('mockedFunctions', [])
         },
         {
             "name": "normalize-utf8",
-            "id": 10,
+            "uuid": 10,
             "function_description": {
                 "name": "normalize-utf8",
                 "dsl": "metafacture",
@@ -255,7 +255,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "not-equals",
             "description": "Returns value only if equality does not hold.",
-            "id": 11,
+            "uuid": 11,
             "function_description": {
                 "name": "not-equals",
                 "dsl": "metafacture",
@@ -275,7 +275,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "occurrence",
             "description": "Filter by number of occurrence.",
-            "id": 12,
+            "uuid": 12,
             "parameters": [
                 "only",
                 "sameEntity"
@@ -285,7 +285,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "regexp",
             "description": "Extract data based on a regular expression. Syntax corresponds to Java Regular Expressions.",
-            "id": 13,
+            "uuid": 13,
             "function_description": {
                 "name": "regexp",
                 "dsl": "metafacture",
@@ -310,7 +310,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "replace",
             "description": "String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-            "id": 14,
+            "uuid": 14,
             "function_description": {
                 "name": "replace",
                 "dsl": "metafacture",
@@ -335,7 +335,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "setreplace",
             "description": "Relace strings based on a replacement table.",
-            "id": 15,
+            "uuid": 15,
             "function_description": {
                 "name": "setreplace",
                 "dsl": "metafacture",
@@ -371,7 +371,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "split",
             "description": "Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.",
-            "id": 16,
+            "uuid": 16,
             "function_description": {
                 "name": "split",
                 "dsl": "metafacture",
@@ -392,7 +392,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "substring",
             "description": "Returns a substring",
-            "id": 17,
+            "uuid": 17,
             "function_description": {
                 "name": "substring",
                 "dsl": "metafacture",
@@ -418,7 +418,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "switch-name-value",
             "description": "Switches name and value.",
-            "id": 18,
+            "uuid": 18,
             "function_description": {
                 "name": "switch-name-value",
                 "dsl": "metafacture",
@@ -430,7 +430,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "trim",
             "description": "Trimms the value",
-            "id": 19,
+            "uuid": 19,
             "function_description": {
                 "name": "trim",
                 "dsl": "metafacture",
@@ -442,7 +442,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "unique",
             "description": "Filters out dublicate literals",
-            "id": 20,
+            "uuid": 20,
             "function_description": {
                 "name": "unique",
                 "dsl": "metafacture",
@@ -479,7 +479,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "urlencode",
             "description": "Escapes value according to URL encoding rules.",
-            "id": 21,
+            "uuid": 21,
             "function_description": {
                 "name": "urlencode",
                 "dsl": "metafacture",
@@ -491,7 +491,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "whitelist",
             "description": "Whitelist filter.",
-            "id": 22,
+            "uuid": 22,
             "function_description": {
                 "name": "whitelist",
                 "dsl": "metafacture",
@@ -527,7 +527,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "transformation",
             "description": "transformation",
-            "id": 23,
+            "uuid": 23,
             "parameters": [
                 "transformationInputString"
             ],
@@ -537,7 +537,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "transformation",
             "description": "transformation",
-            "id": 24,
+            "uuid": 24,
             "parameters": [
                 "transformationInputString"
             ],
@@ -550,7 +550,7 @@ angular.module('mockedFunctions', [])
                         "type": "Function",
                         "name": "case",
                         "description": "Upper/lower-case transformation.",
-                        "id": 2,
+                        "uuid": 2,
                         "function_description": {
                             "name": "case",
                             "dsl": "metafacture",
@@ -575,7 +575,7 @@ angular.module('mockedFunctions', [])
                             "language"
                         ]
                     },
-                    "id": 9,
+                    "uuid": 9,
                     "input_components": null,
                     "output_components": null
                 }
@@ -584,7 +584,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "transformation",
             "description": "transformation",
-            "id": 25,
+            "uuid": 25,
             "parameters": [
                 "transformationInputString"
             ],
@@ -597,7 +597,7 @@ angular.module('mockedFunctions', [])
                         "type": "Function",
                         "name": "equals",
                         "description": "Returns the value only if equality holds.",
-                        "id": 6,
+                        "uuid": 6,
                         "function_description": {
                             "name": "equals",
                             "dsl": "metafacture",
@@ -613,7 +613,7 @@ angular.module('mockedFunctions', [])
                             "string"
                         ]
                     },
-                    "id": 11,
+                    "uuid": 11,
                     "input_components": null,
                     "output_components": null
                 }
@@ -622,7 +622,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "transformation",
             "description": "transformation",
-            "id": 26,
+            "uuid": 26,
             "parameters": [
                 "transformationInputString"
             ],
@@ -632,7 +632,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "transformation",
             "description": "transformation",
-            "id": 27,
+            "uuid": 27,
             "parameters": [
                 "transformationInputString"
             ],
@@ -645,7 +645,7 @@ angular.module('mockedFunctions', [])
                         "type": "Function",
                         "name": "equals",
                         "description": "Returns the value only if equality holds.",
-                        "id": 6,
+                        "uuid": 6,
                         "function_description": {
                             "name": "equals",
                             "dsl": "metafacture",
@@ -661,7 +661,7 @@ angular.module('mockedFunctions', [])
                             "string"
                         ]
                     },
-                    "id": 36,
+                    "uuid": 36,
                     "input_components": null,
                     "output_components": null
                 }
@@ -670,7 +670,7 @@ angular.module('mockedFunctions', [])
         {
             "name": "transformation",
             "description": "transformation",
-            "id": 28,
+            "uuid": 28,
             "parameters": [
                 "transformationInputString"
             ],
@@ -683,7 +683,7 @@ angular.module('mockedFunctions', [])
                         "type": "Function",
                         "name": "constant",
                         "description": "Sets literal value to a constant.",
-                        "id": 4,
+                        "uuid": 4,
                         "function_description": {
                             "name": "constant",
                             "dsl": "metafacture",
@@ -700,7 +700,7 @@ angular.module('mockedFunctions', [])
                             "value"
                         ]
                     },
-                    "id": 39,
+                    "uuid": 39,
                     "input_components": null,
                     "output_components": null
                 }

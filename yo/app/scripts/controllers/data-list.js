@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, flashMessage, fileDownload, loDash, Neo4jEndpoint) {
+    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, flashMessage, fileDownload, loDash, Neo4jEndpoint, GUID) {
 
         $scope.files = [];
         $scope.models = [];
@@ -35,7 +35,8 @@ angular.module('dmpApp')
             var project = {
                 'input_data_model': inputDataModel,
                 'name': newProject.name,
-                'description': newProject.description
+                'description': newProject.description,
+                'uuid': GUID.uuid4()
             };
 
             ProjectResource.save({}, project, function() {
@@ -80,7 +81,7 @@ angular.module('dmpApp')
             var resource = resources[item].resource;
             var grid = resources[item].grid;
             var what = item + ' ' + obj.name;
-            resource.remove({id: obj.id}, {},
+            resource.remove({id: obj.uuid}, {},
                 successHandler(grid, what), errorHandler(what));
         }
 

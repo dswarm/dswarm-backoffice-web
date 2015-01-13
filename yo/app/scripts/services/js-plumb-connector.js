@@ -98,8 +98,8 @@ angular.module('dmpApp')
 
         function onConnectorConnect(options) {
 
-            var target = loDash.filter(connectorMap, { 'ident': { type: options.target.type, id: options.target.id} });
-            var source = loDash.filter(connectorMap, { 'ident': { type: options.source.type, id: options.source.id} });
+            var target = loDash.filter(connectorMap, { 'ident': { type: options.target.type, uuid: options.target.uuid} });
+            var source = loDash.filter(connectorMap, { 'ident': { type: options.source.type, uuid: options.source.uuid} });
 
             if(target[0] && source[0]) {
                 createConnection([source[0].scope.guid, target[0].scope.guid], target[0].options, options.type);
@@ -172,7 +172,7 @@ angular.module('dmpApp')
 
                 function pushConnectorMap(elem) {
 
-                    var connectorMapIndex = loDash.findIndex(connectorMap, {ident : { type: elem.ident.type, id: elem.ident.id }});
+                    var connectorMapIndex = loDash.findIndex(connectorMap, {ident : { type: elem.ident.type, uuid: elem.ident.uuid }});
                     if(connectorMapIndex < 0) {
                         connectorMap.push(elem);
                     } else {
@@ -194,7 +194,7 @@ angular.module('dmpApp')
                         options: options,
                         ident: {
                             type: tAttrs['jsPlumbConnectorIdentType'],
-                            id: identItem
+                            uuid: identItem
                         }
                     };
 

@@ -2,18 +2,18 @@
 
 angular.module('mockedSchemas', [])
     .value('mockCsvSchema', {
-        id: 42,
+        uuid : 42,
         name: 'foobar',
         attribute_paths: [
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3,
+                uuid : 3,
                 attribute_path : {
-                    id: 9,
+                    uuid : 9,
                     attributes: [
                         {
-                            id: 'csv:foo',
+                            uuid : 'csv:foo',
                             uri: 'csv:foo',
                             name: 'foo'
                         }
@@ -23,12 +23,12 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 4,
+                uuid : 4,
                 attribute_path : {
-                    id: 19,
+                    uuid : 19,
                     attributes: [
                         {
-                            id: 'csv:bar',
+                            uuid : 'csv:bar',
                             uri: 'csv:bar',
                             name: 'bar'
                         }
@@ -38,23 +38,23 @@ angular.module('mockedSchemas', [])
         ]
     })
     .value('mockXmlSchema', {
-        id: 42,
+        uuid : 42,
         name: 'foobarbazqux',
         attribute_paths: [
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1,
+                uuid : 1,
                 attribute_path : {
-                    id: 9,
+                    uuid : 9,
                     attributes: [
                         {
-                            id: 'xml:foo',
+                            uuid : 'xml:foo',
                             uri: 'xml:foo',
                             name: 'foo'
                         },
                         {
-                            id: 'xml:foo.bar',
+                            uuid : 'xml:foo.bar',
                             uri: 'xml:foo.bar',
                             name: 'foo.bar'
                         }
@@ -64,17 +64,17 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 2,
+                uuid : 2,
                 attribute_path : {
-                    id: 19,
+                    uuid : 19,
                     attributes: [
                         {
-                            id: 'xml:foo',
+                            uuid : 'xml:foo',
                             uri: 'xml:foo',
                             name: 'foo'
                         },
                         {
-                            id: 'xml:foo.qux',
+                            uuid : 'xml:foo.qux',
                             uri: 'xml:foo.qux',
                             name: 'foo.qux'
                         }
@@ -84,17 +84,17 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3,
+                uuid : 3,
                 attribute_path : {
-                    id: 29,
+                    uuid : 29,
                     attributes: [
                         {
-                            id: 'xml:bar',
+                            uuid : 'xml:bar',
                             uri: 'xml:bar',
                             name: 'bar'
                         },
                         {
-                            id: 'xml:bar.baz',
+                            uuid : 'xml:bar.baz',
                             uri: 'xml:bar.baz',
                             name: 'bar.baz'
                         }
@@ -105,14 +105,14 @@ angular.module('mockedSchemas', [])
         ]
     })
     .value('mockMabSchema', {
-        "id": 1,
+        "uuid" : 1,
         "attribute_paths": [
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1,
+                uuid : 1,
                 attribute_path : {
-                    "id": 3,
+                    "uuid" : 3,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -128,9 +128,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 2,
+                uuid : 2,
                 attribute_path : {
-                    "id": 4,
+                    "uuid" : 4,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -146,9 +146,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3,
+                uuid : 3,
                 attribute_path : {
-                    "id": 1,
+                    "uuid" : 1,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -160,9 +160,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 4,
+                uuid : 4,
                 attribute_path : {
-                    "id": 2,
+                    "uuid" : 2,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -178,9 +178,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 5,
+                uuid : 5,
                 attribute_path : {
-                    "id": 7,
+                    "uuid" : 7,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -200,9 +200,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 6,
+                uuid : 6,
                 attribute_path : {
-                    "id": 8,
+                    "uuid" : 8,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
@@ -214,9 +214,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 7,
+                uuid : 7,
                 attribute_path : {
-                    "id": 5,
+                    "uuid" : 5,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -232,9 +232,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 8,
+                uuid : 8,
                 attribute_path : {
-                    "id": 6,
+                    "uuid" : 6,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
@@ -250,9 +250,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 9,
+                uuid : 9,
                 attribute_path : {
-                    "id": 11,
+                    "uuid" : 11,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
@@ -264,9 +264,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 10,
+                uuid : 10,
                 attribute_path : {
-                    "id": 9,
+                    "uuid" : 9,
                     "attributes": [
                         {
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
@@ -278,9 +278,9 @@ angular.module('mockedSchemas', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 11,
+                uuid : 11,
                 attribute_path : {
-                    "id": 10,
+                    "uuid" : 10,
                     "attributes": [
                         {
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -304,7 +304,7 @@ angular.module('mockedSchemas', [])
                 "hasChildren": false,
                 "name": "status",
                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
-                "id": 3,
+                "uuid" : 3,
                 "_$path_id": 3
             },
             {
@@ -312,7 +312,7 @@ angular.module('mockedSchemas', [])
                 "hasChildren": false,
                 "name": "mabVersion",
                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
-                "id": 4,
+                "uuid" : 4,
                 "_$path_id": 4
             },
             {
@@ -320,7 +320,7 @@ angular.module('mockedSchemas', [])
                 "hasChildren": false,
                 "name": "type",
                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "id": 1,
+                "uuid" : 1,
                 "_$path_id": 1
             },
             {
@@ -328,7 +328,7 @@ angular.module('mockedSchemas', [])
                 "hasChildren": false,
                 "name": "typ",
                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
-                "id": 2,
+                "uuid" : 2,
                 "_$path_id": 2
             },
             {
@@ -336,32 +336,32 @@ angular.module('mockedSchemas', [])
                 "hasChildren": true,
                 "name": "feld",
                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "id": 5,
+                "uuid" : 5,
                 "_$path_id": 5,
                 "children": [
                     {
                         "$show": true,
                         "name": "nr",
                         "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                        "id": 6,
+                        "uuid" : 6,
                         "_$path_id": 7
                     },
                     {
                         "$show": true,
                         "name": "ind",
                         "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-                        "id": 7,
+                        "uuid" : 7,
                         "_$path_id": 8
                     },
                     {
                         "$show": true,
                         "name": "type",
                         "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                        "id": 1,
+                        "uuid" : 1,
                         "_$path_id": 6
                     },
                     {
-                        "id": 9,
+                        "uuid" : 9,
                         "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
                         "name": "tf",
                         "children": [
@@ -369,7 +369,7 @@ angular.module('mockedSchemas', [])
                                 "$show": true,
                                 "name": "type",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                                "id": 1,
+                                "uuid" : 1,
                                 "_$path_id": 11
                             }
                         ],
@@ -379,7 +379,7 @@ angular.module('mockedSchemas', [])
                         "$show": true,
                         "name": "value",
                         "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                        "id": 8,
+                        "uuid" : 8,
                         "_$path_id": 9
                     }
                 ]
@@ -388,7 +388,7 @@ angular.module('mockedSchemas', [])
         "hasChildren": true
     })
     .value('mockMabRtRecord', {
-        id: "http://data.slub-dresden.de/datamodels/1/records/4462210f-65bf-4cf9-9a24-cb6e11da579c",
+        uuid : "http://data.slub-dresden.de/datamodels/1/records/4462210f-65bf-4cf9-9a24-cb6e11da579c",
         data: [
             {
                 "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"

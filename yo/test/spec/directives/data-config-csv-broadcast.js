@@ -102,7 +102,10 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         scope.$digest();
 
-        expect(spyee.foo).toHaveBeenCalledWith(scope.config);
+        expect(spyee.foo).toHaveBeenCalled();
+        expect(spyee.foo.calls.mostRecent().args[0].parameters).toEqual(scope.config.parameters);
+
+
     });
 
 });

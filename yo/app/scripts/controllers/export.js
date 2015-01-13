@@ -30,7 +30,7 @@ angular.module('dmpApp')
 
         $scope.onExportModelClick = function(format) {
 
-            var fileUrl = ApiEndpoint + 'datamodels/' + $scope.selectedModel[0].id + '/export?format=' + encodeURIComponent(format);
+            var fileUrl = ApiEndpoint + 'datamodels/' + $scope.selectedModel[0].uuid + '/export?format=' + encodeURIComponent(format);
 
             fileDownload(fileUrl);
 
