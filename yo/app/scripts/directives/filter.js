@@ -32,7 +32,7 @@ angular.module('dmpApp')
         // deactivated until further notice
         /* jshint ignore:start */
         function restrictSchema(schema, pathId) {
-            var exactPath = loDash.find(schema.attribute_paths, { id: pathId });
+            var exactPath = loDash.find(schema.attribute_paths, { uuid: pathId });
 
             if (angular.isDefined(exactPath)) {
                 var exactAttributes = exactPath.attributes;
@@ -41,7 +41,7 @@ angular.module('dmpApp')
 
                     return loDash.every(exactAttributes, function(a, i) {
 
-                        return ap.attributes[i] && ap.attributes[i].id === a.id;
+                        return ap.attributes[i] && ap.attributes[i].uuid === a.uuid;
                     });
                 });
             }

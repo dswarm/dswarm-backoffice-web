@@ -62,16 +62,21 @@ angular.module('dmpApp')
 
             if (scope.projectIsMabXml()) {
                 var iap = getData(elements[sourceScope.guid], sourceScope).path;
+
+                console.log("iap", iap, scope.project, elements);
+
                 component.sourceIsMabValue =
                     loDash(scope.project.input_data_model.schema.attribute_paths)
                         .filter(function(ap) {
-                            return angular.equals(iap, loDash.map(ap.attribute_path.attributes, 'id'));
+                            return angular.equals(iap, loDash.map(ap.attribute_path.attributes, 'uuid'));
                         })
                         .filter(function(iap) {
                             return loDash.last(iap.attribute_path.attributes).uri === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
                         })
                         .first();
             }
+
+            console.log("component", component);
 
             connectionParamPromise(component, scope).then(connectComponent, mergeComponent).then(function() {
                 sourceScope.isSelected = false;
@@ -254,7 +259,7 @@ angular.module('dmpApp')
         function addInputToComponent(newInputComponent, baseComponent) {
 
             if(loDash.isUndefined(newInputComponent.iapId)) {
-                newInputComponent.iapId = (new Date().getTime() + Math.floor(Math.random() * 10)) * -1;
+                newInputComponent.iapId = GUID.uuid4();
             }
 
             newInputComponent.connection.setLabel(' ');
@@ -298,7 +303,7 @@ angular.module('dmpApp')
 
             if (scp.data) {
                 data = {
-                    id: scp.data.id,
+                    uuid: scp.data.uuid,
                     name: scp.data.name,
                     path: realPath([], scp)
                 };
@@ -330,7 +335,7 @@ angular.module('dmpApp')
             }
 
             var lastSegment = segments[0],
-                currentSegment = scp.data && scp.data.id;
+                currentSegment = scp.data && scp.data.uuid;
 
             if (!currentSegment || currentSegment === lastSegment) {
                 return realPath(segments, scp.$parent);
@@ -387,8 +392,8 @@ angular.module('dmpApp')
 
                 angular.forEach(mapping.input_attribute_paths, function(input_attribute_path) {
 
-                    var inputScopes = sourceMap[input_attribute_path.attribute_path.id] || [],
-                        outputScopes = targetMap[mapping.output_attribute_path.attribute_path.id] || [];
+                    var inputScopes = sourceMap[input_attribute_path.attribute_path.uuid] || [],
+                        outputScopes = targetMap[mapping.output_attribute_path.attribute_path.uuid] || [];
 
                     angular.forEach(inputScopes, function(inputScope) {
                         angular.forEach(outputScopes, function(outputScope) {
@@ -397,8 +402,8 @@ angular.module('dmpApp')
                                 scope: 'schema',
                                 sourceId: inputScope.scope.guid,
                                 targetId: outputScope.scope.guid,
-                                mappingId: mapping.id,
-                                iapId: input_attribute_path.id
+                                mappingId: mapping.uuid,
+                                iapId: input_attribute_path.uuid
                             };
 
                             if (!additionalInputPath) {

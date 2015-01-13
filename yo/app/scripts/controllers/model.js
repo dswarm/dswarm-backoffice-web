@@ -104,7 +104,7 @@ angular.module('dmpApp')
 
         // Mock project data for angular data handling
         $scope.project = {
-            id: 0,
+            uuid: 0,
             name: '',
             description: '',
             mappings: [],
@@ -151,7 +151,7 @@ angular.module('dmpApp')
 
         function showChild(needle, child) {
 
-            if(child.id === needle) {
+            if(child.uuid === needle) {
 
                 child.$wasRendered = true;
                 child.$show = true;
@@ -180,7 +180,7 @@ angular.module('dmpApp')
                     loDash.map(mapping.output_attribute_path.attribute_path.attributes, function(attribute) {
 
                         loDash.map($scope.project._$output_data_model_schema.children, function(child) {
-                            showChild(attribute.id, child);
+                            showChild(attribute.uuid, child);
                         });
 
                     });
@@ -208,7 +208,7 @@ angular.module('dmpApp')
                     loDash.map(input_attribute_path.attribute_path.attributes, function(attribute) {
 
                         loDash.map($scope.project._$input_data_model_schema.children, function(child) {
-                            showChild(attribute.id, child);
+                            showChild(attribute.uuid, child);
                         });
 
 
@@ -231,6 +231,9 @@ angular.module('dmpApp')
 
         $scope.projectIsMabXml = function() {
             try {
+
+                console.log("$scope.project.input_data_model.configuration.parameters", $scope.project.input_data_model.configuration.parameters);
+
                 return $scope.project.input_data_model.configuration.parameters.storage_type === 'mabxml';
             } catch(e) {
                 return false;
@@ -242,14 +245,14 @@ angular.module('dmpApp')
         //====================================
 
         function getStorageDraftKey(projectId) {
-            return 'project.draft.' + (projectId || $scope.project.id);
+            return 'project.draft.' + (projectId || $scope.project.uuid);
         }
 
         $scope.loadProjectData = function(projectId, cb) {
             var callback = angular.isFunction(cb) ? cb : angular.identity,
                 draft = localStorageService.get(getStorageDraftKey(projectId));
 
-            if (angular.isObject(draft) && +draft.id === +projectId) {
+            if (angular.isObject(draft) && +draft.uuid === +projectId) {
 
                 $scope.projectIsDraft = true;
 
@@ -303,7 +306,9 @@ angular.module('dmpApp')
             var projectToSave = project || $scope.project;
             $scope.projectIsDraft = true;
 
-            localStorageService.set(getStorageDraftKey(projectToSave.id), projectToSave);
+            console.log("saveProjectDraft", projectToSave.uuid);
+
+            localStorageService.set(getStorageDraftKey(projectToSave.uuid), projectToSave);
 
         }
 
@@ -354,11 +359,11 @@ angular.module('dmpApp')
 
             $scope.projectIsDraft = false;
 
-            discardProjectDraft($scope.project.id);
+            discardProjectDraft($scope.project.uuid);
 
             var projectToSend = Util.toJson(prepareProject());
 
-            ProjectResource.update({ id: $scope.project.id }, projectToSend, function(project) {
+            ProjectResource.update({ id: $scope.project.uuid }, projectToSend, function(project) {
 
                 latestSave = project;
 
@@ -533,7 +538,7 @@ angular.module('dmpApp')
                 return false;
             }
 
-            return $scope.project.id + ':' + Util.toJson($scope.project);
+            return $scope.project.uuid + ':' + Util.toJson($scope.project);
         }, function(newValue, oldValue) {
 
             if (newValue === false) {
@@ -576,7 +581,7 @@ angular.module('dmpApp')
                     $scope.newLeaf(data, isInputLeaf, { label: modalData.label, extra : modalData.extra }, error.data.error);
                 };
 
-                var modelId = (isInputLeaf) ? $scope.project.input_data_model.schema.id : $scope.project.output_data_model.schema.id;
+                var modelId = (isInputLeaf) ? $scope.project.input_data_model.schema.uuid : $scope.project.output_data_model.schema.uuid;
 
                 if(data) {
 

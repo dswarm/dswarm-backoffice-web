@@ -71,7 +71,7 @@ angular.module('dmpApp').
                 var basePaths = attributePath.attribute_path.attributes;
 
                 loDash.forEach(basePaths, function(basePath) {
-                    basePath._$path_id = attributePath.attribute_path.id;
+                    basePath._$path_id = attributePath.attribute_path.uuid;
                     basePath._$isSubSchema = false;
                 });
 
@@ -84,7 +84,10 @@ angular.module('dmpApp').
                         var subSchemaPaths = subSchemaAttributePath.attribute_path.attributes;
 
                         loDash.forEach(subSchemaPaths, function(subSchemaPath) {
-                            subSchemaPath._$path_id = subSchemaAttributePath.attribute_path.id;
+
+                            console.log("subSchemaPath", subSchemaPath);
+
+                            subSchemaPath._$path_id = subSchemaAttributePath.attribute_path.uuid;
                             subSchemaPath._$isSubSchema = true;
                         });
 
@@ -138,7 +141,7 @@ angular.module('dmpApp').
                 if (!loDash.has(cache, head.uri)) {
 
                     cache[head.uri] = elem = {
-                        id: head.id,
+                        uuid: head.uuid,
                         uri: head.uri,
                         name: head.name,
                         order: [],

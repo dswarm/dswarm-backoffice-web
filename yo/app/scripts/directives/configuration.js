@@ -145,10 +145,10 @@ angular.module('dmpApp')
 
             var providedComponent = args.component;
 
-            if (componentId !== null && providedComponent.id === componentId) {
+            if (componentId !== null && providedComponent.uuid === componentId) {
                 mergeComponents(providedComponent);
             } else {
-                componentId = providedComponent.id;
+                componentId = providedComponent.uuid;
                 $scope.component = setComponent(providedComponent);
             }
         });
@@ -162,7 +162,7 @@ angular.module('dmpApp')
             }
 
             var params = {
-                id: componentId,
+                uuid: componentId,
                 parameter_mappings: {}
             };
 

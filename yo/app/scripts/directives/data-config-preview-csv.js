@@ -143,6 +143,9 @@ angular.module('dmpApp')
         };
 
         PubSub.subscribe($scope, 'dataConfigUpdated', function(args) {
+
+            console.log('dataConfigUpdated', args['config'], args['resourceId']);
+
             $scope.dataConfigUpdated(args['config'], args['resourceId']);
         });
 

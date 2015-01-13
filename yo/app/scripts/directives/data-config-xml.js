@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, DataModelResource, ResourceResource, ConfigurationResource, Util, ngProgress) {
+    .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, DataModelResource, ResourceResource, ConfigurationResource, Util, ngProgress, GUID) {
 
         var resource = null;
         var dataModel = null;
@@ -42,10 +42,14 @@ angular.module('dmpApp')
 
             if ($scope.selectedSet[0]) {
                 config.parameters['schema_file'] = {
-                    id: $scope.selectedSet[0].id,
+                    uuid: $scope.selectedSet[0].uuid,
                     name: $scope.selectedSet[0].name,
                     description: $scope.selectedSet[0].description
                 };
+            }
+
+            if(!config.uuid) {
+                config.uuid = GUID.uuid4();
             }
 
             return config;
@@ -70,13 +74,11 @@ angular.module('dmpApp')
 
         } else if ($scope.mode === 'edit' && $routeParams.dataModelId) {
 
-            var dataModelId = Math.max(1, +$routeParams.dataModelId);
-
-            DataModelResource.get({id: dataModelId }, function(result) {
+            DataModelResource.get({id: $routeParams.dataModelId }, function(result) {
 
                 dataModel = result;
                 resource = result.data_resource;
-                $scope.resourceId = resource.id;
+                $scope.resourceId = resource.uuid;
 
                 $scope.config = result.configuration;
 
@@ -95,7 +97,8 @@ angular.module('dmpApp')
                         'data_resource': resource,
                         'name': resource.name,
                         'description': resource.description,
-                        'configuration': getConfig()
+                        'configuration': getConfig(),
+                        'uuid': GUID.uuid4()
                     };
 
                     DataModelResource.save({}, model, function() {
@@ -112,7 +115,7 @@ angular.module('dmpApp')
 
                 } else if ($scope.mode === 'edit' && dataModel !== null) {
 
-                    ConfigurationResource.update({id: $scope.config.id}, $scope.config, $scope.returnToData, function() {
+                    ConfigurationResource.update({id: $scope.config.uuid}, $scope.config, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
                     });

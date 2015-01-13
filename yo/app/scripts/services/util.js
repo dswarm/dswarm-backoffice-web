@@ -38,7 +38,7 @@ angular.module('dmpApp')
 /**
  * Provide utility functions for miscellaneous operations
  */
-    .factory('Util', function(loDash, $q, $timeout) {
+    .factory('Util', function(loDash, $q, $timeout, GUID) {
 
         function latestBy(list, property) {
             var prop = property || 'id';
@@ -235,22 +235,20 @@ angular.module('dmpApp')
         /**
          * Generates a new data model
          * @param {string} name name of that model, used for Data model and schema object
-         * @returns {{name: string, description: string, schema: {name: *, id: number, attribute_paths: Array, record_class: {}}, id: number}}
+         * @returns {{name: string, description: string, schema: {name: *, uuid: number, attribute_paths: Array, record_class: {}}, uuid: number}}
          */
         function buildNewDataModel(name) {
-
-            var randId = (new Date().getTime() + Math.floor(Math.random() * 1001)) * -1;
 
             return {
                 'name': name + ' Data Model',
                 'description': name + ' Data Model',
                 'schema': {
                     'name': name,
-                    'id': randId,
+                    'uuid': GUID.uuid4(),
                     'attribute_paths': [],
                     'record_class': {}
                 },
-                'id': randId+1
+                'uuid': GUID.uuid4()
             };
 
         }
