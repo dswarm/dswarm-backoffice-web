@@ -676,6 +676,7 @@ describe('ralfsMabSchema', function (){
                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                     "name": "type",
                     "_$path_id": 20,
+                    "_$isSubSchema" : false,
                     "$show": false, "$wasRendered" : false,
                     "editableTitle": false,
                     "hasChildren": false
@@ -685,6 +686,7 @@ describe('ralfsMabSchema', function (){
                     "uri": "http://www.openarchives.org/OAI/2.0/metadata",
                     "name": "metadata",
                     "_$path_id": 220,
+                    "_$isSubSchema" : false,
                     "$show": false, "$wasRendered" : false,
                     "editableTitle": false,
                     "hasChildren": true,
@@ -694,6 +696,7 @@ describe('ralfsMabSchema', function (){
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                             "name": "type",
                             "_$path_id": 221,
+                            "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
                             "editableTitle": false,
                             "hasChildren": false
@@ -703,6 +706,7 @@ describe('ralfsMabSchema', function (){
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
                             "name": "record",
                             "_$path_id": 222,
+                            "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
                             "editableTitle": false,
                             "hasChildren": true,
@@ -712,6 +716,7 @@ describe('ralfsMabSchema', function (){
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                     "name": "type",
                                     "_$path_id": 223,
+                                    "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
                                     "editableTitle": false,
                                     "hasChildren": false
@@ -721,6 +726,7 @@ describe('ralfsMabSchema', function (){
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
                                     "name": "controlfield",
                                     "_$path_id": 227,
+                                    "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
                                     "editableTitle": false,
                                     "hasChildren": true,
@@ -730,6 +736,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                             "name": "type",
                                             "_$path_id": 228,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -739,6 +746,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
                                             "name": "tag",
                                             "_$path_id": 229,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -748,6 +756,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                             "name": "value",
                                             "_$path_id": 230,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -759,6 +768,7 @@ describe('ralfsMabSchema', function (){
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
                                     "name": "leader",
                                     "_$path_id": 224,
+                                    "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
                                     "editableTitle": false,
                                     "hasChildren": true,
@@ -768,6 +778,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                             "name": "type",
                                             "_$path_id": 225,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -777,6 +788,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                             "name": "value",
                                             "_$path_id": 226,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -788,6 +800,7 @@ describe('ralfsMabSchema', function (){
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
                                     "name": "datafield",
                                     "_$path_id": 231,
+                                    "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
                                     "editableTitle": false,
                                     "hasChildren": true,
@@ -797,6 +810,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                             "name": "type",
                                             "_$path_id": 232,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -806,6 +820,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
                                             "name": "tag",
                                             "_$path_id": 233,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -815,6 +830,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1",
                                             "name": "ind1",
                                             "_$path_id": 238,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": false
@@ -824,6 +840,7 @@ describe('ralfsMabSchema', function (){
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
                                             "name": "subfield",
                                             "_$path_id": 234,
+                                            "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
                                             "editableTitle": false,
                                             "hasChildren": true,
@@ -833,6 +850,7 @@ describe('ralfsMabSchema', function (){
                                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                                     "name": "type",
                                                     "_$path_id": 235,
+                                                    "_$isSubSchema" : false,
                                                     "$show": false, "$wasRendered" : false,
                                                     "editableTitle": false,
                                                     "hasChildren": false
@@ -842,6 +860,7 @@ describe('ralfsMabSchema', function (){
                                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code",
                                                     "name": "code",
                                                     "_$path_id": 236,
+                                                    "_$isSubSchema" : false,
                                                     "$show": false, "$wasRendered" : false,
                                                     "editableTitle": false,
                                                     "hasChildren": false
@@ -851,6 +870,7 @@ describe('ralfsMabSchema', function (){
                                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                                     "name": "value",
                                                     "_$path_id": 237,
+                                                    "_$isSubSchema" : false,
                                                     "$show": false, "$wasRendered" : false,
                                                     "editableTitle": false,
                                                     "hasChildren": false
@@ -868,6 +888,7 @@ describe('ralfsMabSchema', function (){
                     "uri": "http://www.openarchives.org/OAI/2.0/header",
                     "name": "header",
                     "_$path_id": 215,
+                    "_$isSubSchema" : false,
                     "$show": false, "$wasRendered" : false,
                     "editableTitle": false,
                     "hasChildren": true,
@@ -877,6 +898,7 @@ describe('ralfsMabSchema', function (){
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                             "name": "type",
                             "_$path_id": 216,
+                            "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
                             "editableTitle": false,
                             "hasChildren": false
@@ -886,6 +908,7 @@ describe('ralfsMabSchema', function (){
                             "uri": "http://www.openarchives.org/OAI/2.0/identifier",
                             "name": "identifier",
                             "_$path_id": 217,
+                            "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
                             "editableTitle": false,
                             "hasChildren": true,
@@ -895,6 +918,7 @@ describe('ralfsMabSchema', function (){
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                     "name": "value",
                                     "_$path_id": 219,
+                                    "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
                                     "editableTitle": false,
                                     "hasChildren": false
@@ -904,6 +928,7 @@ describe('ralfsMabSchema', function (){
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                     "name": "type",
                                     "_$path_id": 218,
+                                    "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
                                     "editableTitle": false,
                                     "hasChildren": false

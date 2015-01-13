@@ -56,21 +56,46 @@ angular.module('dmpApp').
             return createSchemaItem(cache.children, cache.order, base, extra);
         }
 
-        /**
+         /**
          * return a list of all attribute path's attributes (a list of list of attributes, if you will)
          * @param schema
          * @returns {*}
          */
         function prepare(schema) {
 
-            var originalPaths = schema.attribute_paths;
+            var originalPaths = schema.attribute_paths,
+                preparedPaths = [];
 
-            return loDash.map(originalPaths, function(attributePath) {
+            loDash.map(originalPaths, function(attributePath) {
 
-                return loDash.forEach(attributePath.attribute_path.attributes, function(attribute) {
-                    attribute._$path_id = attributePath.attribute_path.id;
+                var basePaths = attributePath.attribute_path.attributes;
+
+                loDash.forEach(basePaths, function(basePath) {
+                    basePath._$path_id = attributePath.attribute_path.id;
+                    basePath._$isSubSchema = false;
                 });
+
+                preparedPaths.push(angular.copy(basePaths));
+
+                if(attributePath.sub_schema) {
+
+                    loDash.forEach(attributePath.sub_schema.attribute_paths, function(subSchemaAttributePath) {
+
+                        var subSchemaPaths = subSchemaAttributePath.attribute_path.attributes;
+
+                        loDash.forEach(subSchemaPaths, function(subSchemaPath) {
+                            subSchemaPath._$path_id = subSchemaAttributePath.attribute_path.id;
+                            subSchemaPath._$isSubSchema = true;
+                        });
+
+                        preparedPaths.push(basePaths.concat(subSchemaPaths));
+                    });
+
+                }
+
             });
+
+            return preparedPaths;
         }
 
         /**
@@ -125,6 +150,8 @@ angular.module('dmpApp').
                 }
                 if (tail.length === 0) {
                     elem._$path_id = head._$path_id;
+                    elem._$isSubSchema = head._$isSubSchema;
+
                 }
 
                 addToCache(elem.children, elem.order, tail);

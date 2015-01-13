@@ -1,5 +1,5 @@
 <div ui-tree-handle
-     ng-class='{ isFiltered : data.isFiltered, disabled : isCollapsed(data) && config.type == "as-target" }'
+     ng-class='{ isFiltered : data.isFiltered, disabled : data._$isSubSchema || (isCollapsed(data) && config.type == "as-target") }'
      class="jsPanchor">
 
     <div class="tree-leaf" ng-class="{leafmatchedFilter : data.leafmatchedFilter}">
@@ -10,10 +10,10 @@
                style="margin-right: 8px;"
                ng-if='config.type == "as-target"'
                dmp-endpoint="data"
-               dmp-endpoint-disabled="isCollapsed(data) && data.hasChildren"
+               dmp-endpoint-disabled="data._$isSubSchema|| (isCollapsed(data) && data.hasChildren)"
                js-plumb-target-options="jspTargetOptions"
                ng-style="{color:isSelected?'slategrey':''}"
-               ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }">
+               ng-class="{disabled : data._$isSubSchema || (isCollapsed(data) && data.hasChildren) }">
                 <span class=""
                       ng-class="{disabled : (isCollapsed(data) && data.hasChildren) }"></span>
             </a>
@@ -26,7 +26,12 @@
             <span class="glyphicon"
                   ng-class="{'glyphicon-chevron-right': isCollapsed(data), 'glyphicon-chevron-down': !isCollapsed(data)}"></span>
         </a>
-        <div class="tree-leaf-data pull-left">{{data.name}}</div>
+        <div class="tree-leaf-data pull-left">
+            {{data.name}}
+
+
+
+        </div>
 
         <small ng-if="data.title && !data.editableTitle"
                class="data-sample"
