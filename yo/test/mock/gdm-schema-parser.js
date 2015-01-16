@@ -6,24 +6,34 @@ angular.module('mockedSchemas', [])
         name: 'foobar',
         attribute_paths: [
             {
-                id: 9,
-                attributes: [
-                    {
-                        id: 'csv:foo',
-                        uri: 'csv:foo',
-                        name: 'foo'
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 3,
+                attribute_path : {
+                    id: 9,
+                    attributes: [
+                        {
+                            id: 'csv:foo',
+                            uri: 'csv:foo',
+                            name: 'foo'
+                        }
+                    ]
+                }
             },
             {
-                id: 19,
-                attributes: [
-                    {
-                        id: 'csv:bar',
-                        uri: 'csv:bar',
-                        name: 'bar'
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 4,
+                attribute_path : {
+                    id: 19,
+                    attributes: [
+                        {
+                            id: 'csv:bar',
+                            uri: 'csv:bar',
+                            name: 'bar'
+                        }
+                    ]
+                }
             }
         ]
     })
@@ -32,181 +42,252 @@ angular.module('mockedSchemas', [])
         name: 'foobarbazqux',
         attribute_paths: [
             {
-                id: 9,
-                attributes: [
-                    {
-                        id: 'xml:foo',
-                        uri: 'xml:foo',
-                        name: 'foo'
-                    },
-                    {
-                        id: 'xml:foo.bar',
-                        uri: 'xml:foo.bar',
-                        name: 'foo.bar'
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 1,
+                attribute_path : {
+                    id: 9,
+                    attributes: [
+                        {
+                            id: 'xml:foo',
+                            uri: 'xml:foo',
+                            name: 'foo'
+                        },
+                        {
+                            id: 'xml:foo.bar',
+                            uri: 'xml:foo.bar',
+                            name: 'foo.bar'
+                        }
+                    ]
+                }
             },
             {
-                id: 19,
-                attributes: [
-                    {
-                        id: 'xml:foo',
-                        uri: 'xml:foo',
-                        name: 'foo'
-                    },
-                    {
-                        id: 'xml:foo.qux',
-                        uri: 'xml:foo.qux',
-                        name: 'foo.qux'
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 2,
+                attribute_path : {
+                    id: 19,
+                    attributes: [
+                        {
+                            id: 'xml:foo',
+                            uri: 'xml:foo',
+                            name: 'foo'
+                        },
+                        {
+                            id: 'xml:foo.qux',
+                            uri: 'xml:foo.qux',
+                            name: 'foo.qux'
+                        }
+                    ]
+                }
             },
             {
-                id: 29,
-                attributes: [
-                    {
-                        id: 'xml:bar',
-                        uri: 'xml:bar',
-                        name: 'bar'
-                    },
-                    {
-                        id: 'xml:bar.baz',
-                        uri: 'xml:bar.baz',
-                        name: 'bar.baz'
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 3,
+                attribute_path : {
+                    id: 29,
+                    attributes: [
+                        {
+                            id: 'xml:bar',
+                            uri: 'xml:bar',
+                            name: 'bar'
+                        },
+                        {
+                            id: 'xml:bar.baz',
+                            uri: 'xml:bar.baz',
+                            name: 'bar.baz'
+                        }
+                    ]
+                }
             }
+
         ]
     })
     .value('mockMabSchema', {
         "id": 1,
         "attribute_paths": [
             {
-                "id": 3,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    },
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                        "name": "nr"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 1,
+                attribute_path : {
+                    "id": 3,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        },
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
+                            "name": "nr"
+                        }
+                    ]
+                }
             },
             {
-                "id": 4,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    },
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-                        "name": "ind"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 2,
+                attribute_path : {
+                    "id": 4,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        },
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
+                            "name": "ind"
+                        }
+                    ]
+                }
             },
             {
-                "id": 1,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 3,
+                attribute_path : {
+                    "id": 1,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        }
+                    ]
+                }
             },
             {
-                "id": 2,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    },
-                    {
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                        "name": "type"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 4,
+                attribute_path : {
+                    "id": 2,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        },
+                        {
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                            "name": "type"
+                        }
+                    ]
+                }
             },
             {
-                "id": 7,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    },
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                        "name": "tf"
-                    },
-                    {
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                        "name": "type"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 5,
+                attribute_path : {
+                    "id": 7,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        },
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                            "name": "tf"
+                        },
+                        {
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                            "name": "type"
+                        }
+                    ]
+                }
             },
             {
-                "id": 8,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
-                        "name": "status"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 6,
+                attribute_path : {
+                    "id": 8,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
+                            "name": "status"
+                        }
+                    ]
+                }
             },
             {
-                "id": 5,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    },
-                    {
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                        "name": "value"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 7,
+                attribute_path : {
+                    "id": 5,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        },
+                        {
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+                            "name": "value"
+                        }
+                    ]
+                }
             },
             {
-                "id": 6,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                        "name": "feld"
-                    },
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                        "name": "tf"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 8,
+                attribute_path : {
+                    "id": 6,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
+                            "name": "feld"
+                        },
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
+                            "name": "tf"
+                        }
+                    ]
+                }
             },
             {
-                "id": 11,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
-                        "name": "typ"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 9,
+                attribute_path : {
+                    "id": 11,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
+                            "name": "typ"
+                        }
+                    ]
+                }
             },
             {
-                "id": 9,
-                "attributes": [
-                    {
-                        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
-                        "name": "mabVersion"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 10,
+                attribute_path : {
+                    "id": 9,
+                    "attributes": [
+                        {
+                            "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
+                            "name": "mabVersion"
+                        }
+                    ]
+                }
             },
             {
-                "id": 10,
-                "attributes": [
-                    {
-                        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                        "name": "type"
-                    }
-                ]
+                type : "SchemaAttributePathInstance",
+                name : null,
+                id : 11,
+                attribute_path : {
+                    "id": 10,
+                    "attributes": [
+                        {
+                            "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                            "name": "type"
+                        }
+                    ]
+                }
             }
         ],
         "record_class": {

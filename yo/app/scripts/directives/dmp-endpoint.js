@@ -65,10 +65,10 @@ angular.module('dmpApp')
                 component.sourceIsMabValue =
                     loDash(scope.project.input_data_model.schema.attribute_paths)
                         .filter(function(ap) {
-                            return angular.equals(iap, loDash.map(ap.attributes, 'id'));
+                            return angular.equals(iap, loDash.map(ap.attribute_path.attributes, 'id'));
                         })
                         .filter(function(iap) {
-                            return loDash.last(iap.attributes).uri === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
+                            return loDash.last(iap.attribute_path.attributes).uri === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
                         })
                         .first();
             }

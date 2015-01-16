@@ -149,6 +149,24 @@ angular.module('dmpApp')
             PubSub.broadcast('restoreCurrentProject', {});
         };
 
+        function showChild(needle, child) {
+
+            if(child.id === needle) {
+
+                child.$wasRendered = true;
+                child.$show = true;
+
+                return;
+            }
+
+            if(child.hasChildren) {
+                loDash.map(child.children, function(child) {
+                    showChild(needle, child);
+                });
+            }
+
+        }
+
         $scope.processOutputDataModel = function() {
 
             if (loDash.size($scope.project.output_data_model) > 0) {
@@ -156,6 +174,19 @@ angular.module('dmpApp')
                 $scope.project._$output_data_model_schema = $scope.dataModelToSchema($scope.project.output_data_model);
 
                 $scope.isOutputDataModelLoaded = true;
+
+                loDash.map($scope.project.mappings, function(mapping) {
+
+                    loDash.map(mapping.output_attribute_path.attribute_path.attributes, function(attribute) {
+
+                        loDash.map($scope.project._$output_data_model_schema.children, function(child) {
+                            showChild(attribute.id, child);
+                        });
+
+                    });
+
+
+                });
 
                 $timeout(function() {
                     PubSub.broadcast('outputDataSelected', {});
@@ -169,24 +200,6 @@ angular.module('dmpApp')
 
         $scope.processInputDataModel = function() {
             $scope.project._$input_data_model_schema = $scope.dataModelToSchema($scope.project.input_data_model);
-
-            var showChild = function(needle, child) {
-
-                if(child.id === needle) {
-
-                    child.$wasRendered = true;
-                    child.$show = true;
-
-                    return;
-                }
-
-                if(child.hasChildren) {
-                    loDash.map(child.children, function(child) {
-                        showChild(needle, child);
-                    });
-                }
-
-            };
 
             loDash.map($scope.project.mappings, function(mapping) {
 

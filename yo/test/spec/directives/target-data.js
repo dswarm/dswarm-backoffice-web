@@ -52,11 +52,11 @@ describe('Directive TargetData', function () {
         var elScope = element.scope();
 
         $rootScope.$broadcast('transformationFinished', [{
-            record_id: 1,
-            record_data: 'transformation1'
+            __record_id: 1,
+            __record_data: 'transformation1'
         }, {
-            record_id: 2,
-            record_data: 'transformation2'
+            __record_id: 2,
+            __record_data: 'transformation2'
         }]);
 
         expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation1', 'schema', true);
@@ -76,23 +76,23 @@ describe('Directive TargetData', function () {
         var elScope = element.scope();
 
         $rootScope.$broadcast('transformationFinished', [{
-            record_id: 1,
-            record_data: 'transformation1'
+            __record_id: 1,
+            __record_data: 'transformation1'
         }, {
-            record_id: 2,
-            record_data: 'transformation2'
+            __record_id: 2,
+            __record_data: 'transformation2'
         }, {
-            record_id: 3,
-            record_data: 'transformation3'
+            __record_id: 3,
+            __record_data: 'transformation3'
         }, {
-            record_id: 4,
-            record_data: 'transformation4'
+            __record_id: 4,
+            __record_data: 'transformation4'
         }, {
-            record_id: 5,
-            record_data: 'transformation5'
+            __record_id: 5,
+            __record_data: 'transformation5'
         }, {
-            record_id: 6,
-            record_data: 'transformation6'
+            __record_id: 6,
+            __record_data: 'transformation6'
         }]);
 
         expect(gdmParserSpy.parse).toHaveBeenCalledWith('transformation1', 'schema', true);
