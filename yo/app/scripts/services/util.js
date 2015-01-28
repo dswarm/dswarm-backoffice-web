@@ -41,7 +41,7 @@ angular.module('dmpApp')
     .factory('Util', function(loDash, $q, $timeout, GUID) {
 
         function latestBy(list, property) {
-            var prop = property || 'id';
+            var prop = property || 'uuid';
             return loDash.max(list, prop);
         }
 

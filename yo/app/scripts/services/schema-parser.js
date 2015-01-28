@@ -84,9 +84,6 @@ angular.module('dmpApp').
                         var subSchemaPaths = subSchemaAttributePath.attribute_path.attributes;
 
                         loDash.forEach(subSchemaPaths, function(subSchemaPath) {
-
-                            console.log("subSchemaPath", subSchemaPath);
-
                             subSchemaPath._$path_id = subSchemaAttributePath.attribute_path.uuid;
                             subSchemaPath._$isSubSchema = true;
                         });

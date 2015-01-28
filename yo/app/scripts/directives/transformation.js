@@ -887,8 +887,6 @@ angular.module('dmpApp')
             if (activeComponentId !== uuid) {
                 $scope.$broadcast('tabSwitch', uuid);
 
-                console.log("tabSwitch", availableIds, uuid);
-
                 $scope.activeMapping = $scope.project.mappings[availableIds.indexOf(uuid)];
                 $scope.gridItemConnections = [];
                 activateTab(uuid);
@@ -1033,8 +1031,6 @@ angular.module('dmpApp')
 
                 var shortPaths = loDash.map($scope.project.input_data_model.schema.attribute_paths, function(ap) {
 
-                    console.log("ap.attributes", ap.attribute_path.attributes);
-
                     return [loDash.map(ap.attribute_path.attributes, 'uuid'), ap];
                 });
 
@@ -1051,13 +1047,11 @@ angular.module('dmpApp')
                         return input.iapId === iap.uuid;
                     });
 
-                    console.log("pathInSchema", pathInSchema, alreadyInIap, shortPaths);
-
                     if(pathInSchema && !alreadyInIap) {
 
                         var newIap = {
                             type: 'MappingAttributePathInstance',
-                            name: Util.buildAttributeName(pathInSchema.attributes, 'name', '_') + '__' + ((data.iapId > 0) ? data.iapId : input.iapId),
+                            name: Util.buildAttributeName(pathInSchema.attribute_path.attributes, 'name', '_') + '__' + ((data.iapId > 0) ? data.iapId : input.iapId),
                             uuid: input.iapId,
                             attribute_path: pathInSchema.attribute_path
                         };
@@ -1267,9 +1261,10 @@ angular.module('dmpApp')
                 var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function(filter) {
                     //noinspection FunctionWithInconsistentReturnsJS
                     return Util.collect(filter.inputFilters, function(f) {
-                        var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, {uuid: f.apId});
+
+                        var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, function(ap) { return ap.attribute_path.uuid === f.apId; });
                         if (path) {
-                            path = Util.buildUriReference(path.attributes);
+                            path = Util.buildUriReference(path.attribute_path.attributes);
                             // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
                             return [path, f.title];
                         }

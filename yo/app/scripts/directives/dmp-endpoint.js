@@ -63,8 +63,6 @@ angular.module('dmpApp')
             if (scope.projectIsMabXml()) {
                 var iap = getData(elements[sourceScope.guid], sourceScope).path;
 
-                console.log("iap", iap, scope.project, elements);
-
                 component.sourceIsMabValue =
                     loDash(scope.project.input_data_model.schema.attribute_paths)
                         .filter(function(ap) {
@@ -75,8 +73,6 @@ angular.module('dmpApp')
                         })
                         .first();
             }
-
-            console.log("component", component);
 
             connectionParamPromise(component, scope).then(connectComponent, mergeComponent).then(function() {
                 sourceScope.isSelected = false;

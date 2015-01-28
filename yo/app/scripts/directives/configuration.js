@@ -54,7 +54,7 @@ angular.module('dmpApp')
                 var parameterItems = loDash.map(inputString, function(part) {
                     return {
                         text: getComponentNameByVarName(part),
-                        id: part
+                        uuid: part
                     };
                 });
 

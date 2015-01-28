@@ -9,7 +9,7 @@ angular.module('mockedGriditems', [])
                 "function": {
                     "name": "constant",
                     "description": "Sets literal value to a constant.",
-                    "id": 4,
+                    "uuid": 4,
                     "function_description": {
                         "name": "constant",
                         "dsl": "metafacture",
@@ -27,10 +27,10 @@ angular.module('mockedGriditems', [])
                     "type": "Function"
                 },
                 "name": "component1402495666169",
-                "id": -1402495665792,
+                "uuid": -1402495665792,
                 "output_components": [
                     {
-                        "id": -1402501641255
+                        "uuid": -1402501641255
                     }
                 ],
                 "input_components": [],
@@ -41,7 +41,7 @@ angular.module('mockedGriditems', [])
                 }
             },
             "name": "component1402495666169",
-            "id": -1402495665792,
+            "uuid": -1402495665792,
             "$$hashKey": "0WA"
         },
         {
@@ -51,7 +51,7 @@ angular.module('mockedGriditems', [])
                 "function": {
                     "name": "concat",
                     "description": "Collects all received values and concatenates them on record end.",
-                    "id": 23,
+                    "uuid": 23,
                     "function_description": {
                         "name": "concat",
                         "dsl": "metafacture",
@@ -79,11 +79,11 @@ angular.module('mockedGriditems', [])
                     "type": "Function"
                 },
                 "name": "component1402501641359",
-                "id": -1402501641255,
+                "uuid": -1402501641255,
                 "output_components": [],
                 "input_components": [
                     {
-                        "id": -1402495665792
+                        "uuid": -1402495665792
                     }
                 ],
                 "description": "{\"x\":\"status\",\"y\":1}",
@@ -92,7 +92,7 @@ angular.module('mockedGriditems', [])
                 }
             },
             "name": "component1402501641359",
-            "id": -1402501641255,
+            "uuid": -1402501641255,
             "$$hashKey": "0WB"
         }
     ]

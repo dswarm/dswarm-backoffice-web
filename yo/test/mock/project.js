@@ -2,19 +2,19 @@
 
 angular.module('mockedProject', [])
     .value('mockProjectJSON', {
-        "id": 6,
+        "uuid": 6,
         "name": "baz",
         "mappings": [],
         "functions": [],
         "input_data_model": {
-            "id": 34,
+            "uuid": 34,
             "name": "test_csv.csv + null data model",
             "description": " data model of resource 'test_csv.csv' and configuration ' null'",
             "configuration": {
-                "id": 50,
+                "uuid": 50,
                 "resources": [
                     {
-                        "id": 43
+                        "uuid": 43
                     }
                 ],
                 "parameters": {
@@ -26,19 +26,19 @@ angular.module('mockedProject', [])
                 }
             },
             "schema": {
-                "id": 39,
+                "uuid": 39,
                 "name": "test_csv.csv schema",
                 "attribute_paths": [
                     {
                         type : "SchemaAttributePathInstance",
                         name : null,
-                        id : 61,
+                        uuid : 61,
                         attribute_path : {
-                            "id": 132,
+                            "uuid": 132,
                             "attributes": [
                                 {
-                                    "id": "/test_csv.csv#id",
-                                    "name": "id"
+                                    "uuid": "/test_csv.csv#id",
+                                    "name": "uuid"
                                 }
                             ]
                         }
@@ -46,12 +46,12 @@ angular.module('mockedProject', [])
                     {
                         type : "SchemaAttributePathInstance",
                         name : null,
-                        id : 62,
+                        uuid : 62,
                         attribute_path : {
-                            "id": 136,
+                            "uuid": 136,
                             "attributes": [
                                 {
-                                    "id": "/test_csv.csv#year",
+                                    "uuid": "/test_csv.csv#year",
                                     "name": "year"
                                 }
                             ]
@@ -60,12 +60,12 @@ angular.module('mockedProject', [])
                     {
                         type : "SchemaAttributePathInstance",
                         name : null,
-                        id : 63,
+                        uuid : 63,
                         attribute_path : {
-                            "id": 135,
+                            "uuid": 135,
                             "attributes": [
                                 {
-                                    "id": "/test_csv.csv#isbn",
+                                    "uuid": "/test_csv.csv#isbn",
                                     "name": "isbn"
                                 }
                             ]
@@ -74,12 +74,12 @@ angular.module('mockedProject', [])
                     {
                         type : "SchemaAttributePathInstance",
                         name : null,
-                        id : 64,
+                        uuid : 64,
                         attribute_path : {
-                            "id": 134,
+                            "uuid": 134,
                             "attributes": [
                                 {
-                                    "id": "/test_csv.csv#description",
+                                    "uuid": "/test_csv.csv#description",
                                     "name": "description"
                                 }
                             ]
@@ -88,12 +88,12 @@ angular.module('mockedProject', [])
                     {
                         type : "SchemaAttributePathInstance",
                         name : null,
-                        id : 65,
+                        uuid : 65,
                         attribute_path : {
-                            "id": 133,
+                            "uuid": 133,
                             "attributes": [
                                 {
-                                    "id": "/test_csv.csv#name",
+                                    "uuid": "/test_csv.csv#name",
                                     "name": "name"
                                 }
                             ]
@@ -101,12 +101,12 @@ angular.module('mockedProject', [])
                     }
                 ],
                 "record_class": {
-                    "id": "/test_csv.csv#RecordType",
+                    "uuid": "/test_csv.csv#RecordType",
                     "name": "record type"
                 }
             },
             "data_resource": {
-                "id": 43,
+                "uuid": 43,
                 "name": "test_csv.csv",
                 "description": "this is a description",
                 "type": "FILE",
@@ -116,10 +116,10 @@ angular.module('mockedProject', [])
                 },
                 "configurations": [
                     {
-                        "id": 50,
+                        "uuid": 50,
                         "resources": [
                             {
-                                "id": 43
+                                "uuid": 43
                             }
                         ],
                         "parameters": {
@@ -137,17 +137,17 @@ angular.module('mockedProject', [])
     .value('mockProjectJSON2', {
         "name": "newww",
         "description": null,
-        "id": 25,
+        "uuid": 25,
         "input_data_model": {
             "name": "mabxml_dmp.xml",
             "description": "sdff",
             "configuration": {
                 "name": "xml",
                 "description": "xml with id 2",
-                "id": 2,
+                "uuid": 2,
                 "resources": [
                     {
-                        "id": 2
+                        "uuid": 2
                     }
                 ],
                 "parameters": {
@@ -157,190 +157,190 @@ angular.module('mockedProject', [])
             },
             "schema": {
                 "name": "mabxml schema",
-                "id": 3,
+                "uuid": 3,
                 "attribute_paths": [
                     {
-                        "id": 53,
+                        "uuid": 53,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "tf",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                                "id": 45
+                                "uuid": 45
                             }
                         ]
                     },
                     {
-                        "id": 40,
+                        "uuid": 40,
                         "attributes": [
                             {
-                                "name": "id",
+                                "name": "uuid",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
-                                "id": 36
+                                "uuid": 36
                             }
                         ]
                     },
                     {
-                        "id": 50,
+                        "uuid": 50,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "ns",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-                                "id": 44
+                                "uuid": 44
                             }
                         ]
                     },
                     {
-                        "id": 49,
+                        "uuid": 49,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "ns",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-                                "id": 44
+                                "uuid": 44
                             }
                         ]
                     },
                     {
-                        "id": 52,
+                        "uuid": 52,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "tf",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                                "id": 45
+                                "uuid": 45
                             }
                         ]
                     },
                     {
-                        "id": 51,
+                        "uuid": 51,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "ns",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-                                "id": 44
+                                "uuid": 44
                             },
                             {
                                 "name": "value",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                                "id": 43
+                                "uuid": 43
                             }
                         ]
                     },
                     {
-                        "id": 45,
+                        "uuid": 45,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             }
                         ]
                     },
                     {
-                        "id": 46,
+                        "uuid": 46,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "nr",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                                "id": 41
+                                "uuid": 41
                             }
                         ]
                     },
                     {
-                        "id": 47,
+                        "uuid": 47,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "ind",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-                                "id": 42
+                                "uuid": 42
                             }
                         ]
                     },
                     {
-                        "id": 48,
+                        "uuid": 48,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "value",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                                "id": 43
+                                "uuid": 43
                             }
                         ]
                     },
                     {
-                        "id": 41,
+                        "uuid": 41,
                         "attributes": [
                             {
                                 "name": "typ",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
-                                "id": 37
+                                "uuid": 37
                             }
                         ]
                     },
                     {
-                        "id": 42,
+                        "uuid": 42,
                         "attributes": [
                             {
                                 "name": "status",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
-                                "id": 38
+                                "uuid": 38
                             }
                         ]
                     },
                     {
-                        "id": 43,
+                        "uuid": 43,
                         "attributes": [
                             {
                                 "name": "mabVersion",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
-                                "id": 39
+                                "uuid": 39
                             }
                         ]
                     },
                     {
-                        "id": 44,
+                        "uuid": 44,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             }
                         ]
                     }
@@ -348,66 +348,66 @@ angular.module('mockedProject', [])
                 "record_class": {
                     "name": "datensatzType",
                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
-                    "id": 3
+                    "uuid": 3
                 },
                 "content_schema": {
                     "name": "mab content schema",
-                    "id": 1,
+                    "uuid": 1,
                     "key_attribute_paths": [
                         {
-                            "id": 46,
+                            "uuid": 46,
                             "attributes": [
                                 {
                                     "name": "feld",
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                    "id": 40
+                                    "uuid": 40
                                 },
                                 {
                                     "name": "nr",
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                                    "id": 41
+                                    "uuid": 41
                                 }
                             ]
                         },
                         {
-                            "id": 47,
+                            "uuid": 47,
                             "attributes": [
                                 {
                                     "name": "feld",
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                    "id": 40
+                                    "uuid": 40
                                 },
                                 {
                                     "name": "ind",
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-                                    "id": 42
+                                    "uuid": 42
                                 }
                             ]
                         }
                     ],
                     "value_attribute_path": {
-                        "id": 48,
+                        "uuid": 48,
                         "attributes": [
                             {
                                 "name": "feld",
                                 "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                                "id": 40
+                                "uuid": 40
                             },
                             {
                                 "name": "value",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                                "id": 43
+                                "uuid": 43
                             }
                         ]
                     }
                 }
             },
-            "id": 18,
+            "uuid": 18,
             "data_resource": {
                 "name": "mabxml_dmp.xml",
                 "description": "sdff",
                 "type": "FILE",
-                "id": 2,
+                "uuid": 2,
                 "resource_attributes": {
                     "path": "/var/www/dmp/init/../tmp/resources/mabxml_dmp.xml",
                     "filesize": -1,
@@ -417,10 +417,10 @@ angular.module('mockedProject', [])
                     {
                         "name": "xml",
                         "description": "xml with id 2",
-                        "id": 2,
+                        "uuid": 2,
                         "resources": [
                             {
-                                "id": 2
+                                "uuid": 2
                             }
                         ],
                         "parameters": {
@@ -436,45 +436,45 @@ angular.module('mockedProject', [])
             "description": "Internal Data Model ContractItem",
             "schema": {
                 "name": "bibrm:ContractItem-Schema (ERM-Scenario)",
-                "id": 1,
+                "uuid": 1,
                 "attribute_paths": [
                     {
-                        "id": 3,
+                        "uuid": 3,
                         "attributes": [
                             {
                                 "name": "title",
                                 "uri": "http://purl.org/dc/elements/1.1/title",
-                                "id": 3
+                                "uuid": 3
                             }
                         ]
                     },
                     {
-                        "id": 4,
+                        "uuid": 4,
                         "attributes": [
                             {
                                 "name": "price",
                                 "uri": "http://vocab.ub.uni-leipzig.de/bibrm/price",
-                                "id": 4
+                                "uuid": 4
                             }
                         ]
                     },
                     {
-                        "id": 1,
+                        "uuid": 1,
                         "attributes": [
                             {
                                 "name": "type",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                                "id": 1
+                                "uuid": 1
                             }
                         ]
                     },
                     {
-                        "id": 2,
+                        "uuid": 2,
                         "attributes": [
                             {
                                 "name": "EISSN",
                                 "uri": "http://vocab.ub.uni-leipzig.de/bibrm/EISSN",
-                                "id": 2
+                                "uuid": 2
                             }
                         ]
                     }
@@ -482,10 +482,10 @@ angular.module('mockedProject', [])
                 "record_class": {
                     "name": "ContractItem",
                     "uri": "http://vocab.ub.uni-leipzig.de/bibrm/ContractItem",
-                    "id": 1
+                    "uuid": 1
                 }
             },
-            "id": 1
+            "uuid": 1
         },
         "mappings": [],
         "functions": [
@@ -493,7 +493,7 @@ angular.module('mockedProject', [])
                 "type": "Function",
                 "name": "concat",
                 "description": "Collects all received values and concatenates them on record end.",
-                "id": 23,
+                "uuid": 23,
                 "function_description": {
                     "name": "concat",
                     "dsl": "metafacture",
@@ -524,17 +524,17 @@ angular.module('mockedProject', [])
     .value("mockProjectJSON3", {
         "name": "csv",
         "description": null,
-        "id": 26,
+        "uuid": 26,
         "input_data_model": {
             "name": "TB_data_dictionary_2013-11-11.csv + null data model",
             "description": " data model of resource 'TB_data_dictionary_2013-11-11.csv' and configuration ' null'",
             "configuration": {
                 "name": null,
                 "description": null,
-                "id": 10,
+                "uuid": 10,
                 "resources": [
                     {
-                        "id": 1
+                        "uuid": 1
                     }
                 ],
                 "parameters": {
@@ -548,59 +548,59 @@ angular.module('mockedProject', [])
             },
             "schema": {
                 "name": "TB_data_dictionary_2013-11-11.csv schema",
-                "id": 10,
+                "uuid": 10,
                 "attribute_paths": [
                     {
-                        "id": 54,
+                        "uuid": 54,
                         "attributes": [
                             {
                                 "name": "variable_name",
                                 "uri": "http://data.slub-dresden.de/resources/1/schema#variable_name",
-                                "id": 46,
+                                "uuid": 46,
                                 "_$path_id": 54
                             }
                         ]
                     },
                     {
-                        "id": 56,
+                        "uuid": 56,
                         "attributes": [
                             {
                                 "name": "code_list",
                                 "uri": "http://data.slub-dresden.de/resources/1/schema#code_list",
-                                "id": 48,
+                                "uuid": 48,
                                 "_$path_id": 56
                             }
                         ]
                     },
                     {
-                        "id": 1,
+                        "uuid": 1,
                         "attributes": [
                             {
                                 "name": "type",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                                "id": 1,
+                                "uuid": 1,
                                 "_$path_id": 1
                             }
                         ]
                     },
                     {
-                        "id": 55,
+                        "uuid": 55,
                         "attributes": [
                             {
                                 "name": "dataset",
                                 "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
-                                "id": 47,
+                                "uuid": 47,
                                 "_$path_id": 55
                             }
                         ]
                     },
                     {
-                        "id": 57,
+                        "uuid": 57,
                         "attributes": [
                             {
                                 "name": "definition",
                                 "uri": "http://data.slub-dresden.de/resources/1/schema#definition",
-                                "id": 49,
+                                "uuid": 49,
                                 "_$path_id": 57
                             }
                         ]
@@ -609,15 +609,15 @@ angular.module('mockedProject', [])
                 "record_class": {
                     "name": "record type",
                     "uri": "http://data.slub-dresden.de/resources/1/schema#RecordType",
-                    "id": 4
+                    "uuid": 4
                 }
             },
-            "id": 19,
+            "uuid": 19,
             "data_resource": {
                 "name": "TB_data_dictionary_2013-11-11.csv",
                 "description": "TB",
                 "type": "FILE",
-                "id": 1,
+                "uuid": 1,
                 "resource_attributes": {
                     "path": "/var/www/dmp/init/../tmp/resources/TB_data_dictionary_2013-11-11.csv",
                     "filesize": -1,
@@ -627,10 +627,10 @@ angular.module('mockedProject', [])
                     {
                         "name": null,
                         "description": null,
-                        "id": 3,
+                        "uuid": 3,
                         "resources": [
                             {
-                                "id": 1
+                                "uuid": 1
                             }
                         ],
                         "parameters": {
@@ -645,10 +645,10 @@ angular.module('mockedProject', [])
                     {
                         "name": null,
                         "description": null,
-                        "id": 1,
+                        "uuid": 1,
                         "resources": [
                             {
-                                "id": 1
+                                "uuid": 1
                             }
                         ],
                         "parameters": {
@@ -663,10 +663,10 @@ angular.module('mockedProject', [])
                     {
                         "name": null,
                         "description": null,
-                        "id": 9,
+                        "uuid": 9,
                         "resources": [
                             {
-                                "id": 1
+                                "uuid": 1
                             }
                         ],
                         "parameters": {
@@ -681,10 +681,10 @@ angular.module('mockedProject', [])
                     {
                         "name": null,
                         "description": null,
-                        "id": 10,
+                        "uuid": 10,
                         "resources": [
                             {
-                                "id": 1
+                                "uuid": 1
                             }
                         ],
                         "parameters": {
@@ -701,7 +701,7 @@ angular.module('mockedProject', [])
         },
         "mappings": [
             {
-                "id": -1410185900845,
+                "uuid": -1410185900845,
                 "_$connection_id": "con_5",
                 "name": "gffggf",
                 "transformation": {
@@ -717,7 +717,7 @@ angular.module('mockedProject', [])
                                 "function": {
                                     "name": "concat",
                                     "description": "Collects all received values and concatenates them on record end.",
-                                    "id": 23,
+                                    "uuid": 23,
                                     "function_description": {
                                         "name": "concat",
                                         "dsl": "metafacture",
@@ -745,7 +745,7 @@ angular.module('mockedProject', [])
                                     "type": "Function"
                                 },
                                 "name": "component1410195726811",
-                                "id": -1410195726280,
+                                "uuid": -1410195726280,
                                 "output_components": [],
                                 "input_components": [],
                                 "description": "{\"x\":\"dataset__-1410185900851\",\"y\":0}",
@@ -766,14 +766,14 @@ angular.module('mockedProject', [])
                     {
                         "type": "MappingAttributePathInstance",
                         "name": "dataset__-1410185900851",
-                        "id": -1410185900851,
+                        "uuid": -1410185900851,
                         "attribute_path": {
-                            "id": 55,
+                            "uuid": 55,
                             "attributes": [
                                 {
                                     "name": "dataset",
                                     "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
-                                    "id": 47,
+                                    "uuid": 47,
                                     "_$path_id": 55
                                 }
                             ]
@@ -783,14 +783,14 @@ angular.module('mockedProject', [])
                     {
                         "type": "MappingAttributePathInstance",
                         "name": "definition__-1410185903886",
-                        "id": -1410185903886,
+                        "uuid": -1410185903886,
                         "attribute_path": {
-                            "id": 57,
+                            "uuid": 57,
                             "attributes": [
                                 {
                                     "name": "definition",
                                     "uri": "http://data.slub-dresden.de/resources/1/schema#definition",
-                                    "id": 49,
+                                    "uuid": 49,
                                     "_$path_id": 57
                                 }
                             ]
@@ -800,14 +800,14 @@ angular.module('mockedProject', [])
                     {
                         "type": "MappingAttributePathInstance",
                         "name": "type__-1410186655082",
-                        "id": -1410186655082,
+                        "uuid": -1410186655082,
                         "attribute_path": {
-                            "id": 1,
+                            "uuid": 1,
                             "attributes": [
                                 {
                                     "name": "type",
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                                    "id": 1,
+                                    "uuid": 1,
                                     "_$path_id": 1
                                 }
                             ]
@@ -818,14 +818,14 @@ angular.module('mockedProject', [])
                 "output_attribute_path": {
                     "type": "MappingAttributePathInstance",
                     "name": "output mapping attribute path instance",
-                    "id": -1410185900852,
+                    "uuid": -1410185900852,
                     "attribute_path": {
-                        "id": 2,
+                        "uuid": 2,
                         "attributes": [
                             {
                                 "name": "EISSN",
                                 "uri": "http://vocab.ub.uni-leipzig.de/bibrm/EISSN",
-                                "id": 2,
+                                "uuid": 2,
                                 "_$path_id": 2
                             }
                         ]
@@ -839,7 +839,7 @@ angular.module('mockedProject', [])
             {
                 "name": "concat",
                 "description": "Collects all received values and concatenates them on record end.",
-                "id": 23,
+                "uuid": 23,
                 "function_description": {
                     "name": "concat",
                     "dsl": "metafacture",
@@ -875,7 +875,7 @@ angular.module('mockedProject', [])
             "hasChildren": true,
             "children": [
                 {
-                    "id": 46,
+                    "uuid": 46,
                     "uri": "http://data.slub-dresden.de/resources/1/schema#variable_name",
                     "name": "variable_name",
                     "_$path_id": 54,
@@ -886,7 +886,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "05R"
                 },
                 {
-                    "id": 48,
+                    "uuid": 48,
                     "uri": "http://data.slub-dresden.de/resources/1/schema#code_list",
                     "name": "code_list",
                     "_$path_id": 56,
@@ -897,7 +897,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "05S"
                 },
                 {
-                    "id": 1,
+                    "uuid": 1,
                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                     "name": "type",
                     "_$path_id": 1,
@@ -908,7 +908,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "05T"
                 },
                 {
-                    "id": 47,
+                    "uuid": 47,
                     "uri": "http://data.slub-dresden.de/resources/1/schema#dataset",
                     "name": "dataset",
                     "_$path_id": 55,
@@ -919,7 +919,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "05U"
                 },
                 {
-                    "id": 49,
+                    "uuid": 49,
                     "uri": "http://data.slub-dresden.de/resources/1/schema#definition",
                     "name": "definition",
                     "_$path_id": 57,
@@ -936,48 +936,48 @@ angular.module('mockedProject', [])
             "description": "Internal Data Model ContractItem",
             "schema": {
                 "name": "bibrm:ContractItem-Schema (ERM-Scenario)",
-                "id": 1,
+                "uuid": 1,
                 "attribute_paths": [
                     {
-                        "id": 3,
+                        "uuid": 3,
                         "attributes": [
                             {
                                 "name": "title",
                                 "uri": "http://purl.org/dc/elements/1.1/title",
-                                "id": 3,
+                                "uuid": 3,
                                 "_$path_id": 3
                             }
                         ]
                     },
                     {
-                        "id": 4,
+                        "uuid": 4,
                         "attributes": [
                             {
                                 "name": "price",
                                 "uri": "http://vocab.ub.uni-leipzig.de/bibrm/price",
-                                "id": 4,
+                                "uuid": 4,
                                 "_$path_id": 4
                             }
                         ]
                     },
                     {
-                        "id": 1,
+                        "uuid": 1,
                         "attributes": [
                             {
                                 "name": "type",
                                 "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                                "id": 1,
+                                "uuid": 1,
                                 "_$path_id": 1
                             }
                         ]
                     },
                     {
-                        "id": 2,
+                        "uuid": 2,
                         "attributes": [
                             {
                                 "name": "EISSN",
                                 "uri": "http://vocab.ub.uni-leipzig.de/bibrm/EISSN",
-                                "id": 2,
+                                "uuid": 2,
                                 "_$path_id": 2
                             }
                         ]
@@ -986,10 +986,10 @@ angular.module('mockedProject', [])
                 "record_class": {
                     "name": "ContractItem",
                     "uri": "http://vocab.ub.uni-leipzig.de/bibrm/ContractItem",
-                    "id": 1
+                    "uuid": 1
                 }
             },
-            "id": 1,
+            "uuid": 1,
             "_$name": "bibrm:ContractItem-Schema (ERM-Scenario) (Internal Data Model ContractItem)",
             "_$description": "4 attribute paths, record class: ContractItem"
         },
@@ -1001,7 +1001,7 @@ angular.module('mockedProject', [])
             "hasChildren": true,
             "children": [
                 {
-                    "id": 3,
+                    "uuid": 3,
                     "uri": "http://purl.org/dc/elements/1.1/title",
                     "name": "title",
                     "_$path_id": 3,
@@ -1012,7 +1012,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "061"
                 },
                 {
-                    "id": 4,
+                    "uuid": 4,
                     "uri": "http://vocab.ub.uni-leipzig.de/bibrm/price",
                     "name": "price",
                     "_$path_id": 4,
@@ -1023,7 +1023,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "062"
                 },
                 {
-                    "id": 1,
+                    "uuid": 1,
                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                     "name": "type",
                     "_$path_id": 1,
@@ -1034,7 +1034,7 @@ angular.module('mockedProject', [])
                     "$$hashKey": "063"
                 },
                 {
-                    "id": 2,
+                    "uuid": 2,
                     "uri": "http://vocab.ub.uni-leipzig.de/bibrm/EISSN",
                     "name": "EISSN",
                     "_$path_id": 2,

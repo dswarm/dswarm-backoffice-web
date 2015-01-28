@@ -5,21 +5,21 @@ angular.module('mockedData', [])
     {
         "recordId": "3",
         "Name": "Chefchen",
-        "ID": "3",
+        "uuid": "3",
         "Email": "cc@testung.tt",
         "Vorname": "Carlo"
     },
     {
         "recordId": "2",
         "Name": "User",
-        "ID": "2",
+        "uuid": "2",
         "Email": "uu@testung.tt",
         "Vorname": "Undine"
     },
     {
         "recordId": "1",
         "Name": "Tester",
-        "ID": "1",
+        "uuid": "1",
         "Email": "tt@testung.tst",
         "Vorname": "Testine"
     }

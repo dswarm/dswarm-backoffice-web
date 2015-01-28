@@ -135,18 +135,6 @@ describe('Controller: DataConfigCsvCtrl', function () {
         });
     });
 
-    it('should default to id 1 if invalid id given', function() {
-        routeParams.resourceId = -1;
-        $httpBackend.expectGET('/dmp/resources/1');
-
-        dataConfigCtrl();
-
-        scope.$digest();
-        $httpBackend.flush();
-
-        expect(scope.resourceId).toBe(1);
-    });
-
     it('should request the specified data Resource', function() {
         $httpBackend.expectGET('/dmp/resources/42');
 
@@ -208,20 +196,17 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         scope.onFieldChanged(false, true);
 
-        expect(PubSub.broadcast).toHaveBeenCalledWith('dataConfigUpdated', {
-            config: {
-                parameters: {
-                    ignore_lines: 0,
-                    discard_rows: 2,
-                    at_most_rows: 5,
-                    column_delimiter: "^",
-                    escape_character: "\\\\",
-                    quote_character: "\\\"",
-                    column_names: "columnN",
-                    storage_type: "csv"
-                }
-            },
-            resourceId: 42
+        expect(PubSub.broadcast).toHaveBeenCalled();
+
+        expect(PubSub.broadcast.calls.mostRecent().args[1].config.parameters).toEqual({
+            ignore_lines: 0,
+            discard_rows: 2,
+            at_most_rows: 5,
+            column_delimiter: "^",
+            escape_character: "\\\\",
+            quote_character: "\\\"",
+            column_names: "columnN",
+            storage_type: "csv"
         });
     });
 
@@ -240,19 +225,15 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         scope.$digest();
 
-        expect(PubSub.broadcast).toHaveBeenCalledWith('dataConfigUpdated', {
-            config: {
-                parameters: {
-                    ignore_lines: 9,
-                    discard_rows: 2,
-                    column_delimiter: "^",
-                    escape_character: "\\\\",
-                    quote_character: "\\\"",
-                    column_names: "columnN",
-                    storage_type: "csv"
-                }
-            },
-            resourceId: 42
+        expect(PubSub.broadcast).toHaveBeenCalled();
+        expect(PubSub.broadcast.calls.mostRecent().args[1].config.parameters).toEqual({
+            ignore_lines: 9,
+            discard_rows: 2,
+            column_delimiter: "^",
+            escape_character: "\\\\",
+            quote_character: "\\\"",
+            column_names: "columnN",
+            storage_type: "csv"
         });
     });
 
@@ -276,17 +257,6 @@ describe('Controller: DataConfigCsvCtrl', function () {
 
         scope.$digest();
         $httpBackend.flush();
-
-        var config = $jsonResponseGet.configurations[0];
-
-        $httpBackend.expectPOST('/dmp/datamodels', {
-            data_resource: $jsonResponseGet,
-            name: $jsonResponseGet.name,
-            description: $jsonResponseGet.description,
-            configuration: {
-                parameters: config.parameters
-            }
-        });
 
         scope.onSaveClick();
 

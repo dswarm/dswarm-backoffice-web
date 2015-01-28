@@ -160,7 +160,7 @@ describe('Controller: ConfigurationCtrl', function () {
 
         scope.doSave();
 
-        expect(PubSub.broadcast).toHaveBeenCalledWith('handleConfigEdited', { id : -1402495665792, parameter_mappings : { value : 'bar' } });
+        expect(PubSub.broadcast).toHaveBeenCalledWith('handleConfigEdited', { uuid : -1402495665792, parameter_mappings : { value : 'bar' } });
     }));
 
     it('should send no data onSaveClick', inject(function(PubSub) {
