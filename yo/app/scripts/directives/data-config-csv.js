@@ -96,6 +96,7 @@ angular.module('dmpApp')
         function extractFromResource(dataResource) {
             if (dataResource.configurations) {
 
+                // TODO: Find a way to determine the latest configuration
                 var latestConfig = dataResource.configurations[0];
 
                 if (angular.isObject(latestConfig)) {
