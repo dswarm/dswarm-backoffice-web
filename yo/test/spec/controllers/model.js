@@ -64,6 +64,7 @@ describe('Controller: ModelCtrl', function() {
         $httpBackend.whenGET('/dmp/projects').respond(mockProjectJSON);
         $httpBackend.whenGET('/dmp/projects/1').respond(mockProjectJSON);
         $httpBackend.whenGET('/dmp/projects/6').respond(mockProjectJSON);
+        $httpBackend.whenGET('/dmp/projects/9').respond(mockProjectJSON);
         $httpBackend.whenPUT('/dmp/projects/6').respond(mockProjectJSON);
 
         var $controller = $injector.get('$controller');
@@ -159,7 +160,7 @@ describe('Controller: ModelCtrl', function() {
         $rootScope.$digest();
         $httpBackend.flush();
 
-        expect(scope.project.input_data_model.id).toBe(34);
+        expect(scope.project.input_data_model.uuid).toBe(34);
     });
 
     it('should close alters', function() {
@@ -232,6 +233,9 @@ describe('Controller: ModelCtrl', function() {
         var foo = jasmine.createSpyObj('foo', ['callback']);
 
         scope.loadProjectData(9, foo.callback);
+
+        $rootScope.$digest();
+        $httpBackend.flush();
 
         expect(localStorageService.get).toHaveBeenCalledWith('project.draft.9');
         expect(foo.callback).toHaveBeenCalled();

@@ -2,9 +2,9 @@
 
 angular.module('mockedDataConfig', [])
     .value('mockDataConfigSaveJSON', {
-        'id': 4,
+        'uuid': 4,
         'resources': [
-            { 'id': 2 }
+            { 'uuid': 2 }
         ],
         'parameters': {
             'column_delimiter': ';',
@@ -15,10 +15,10 @@ angular.module('mockedDataConfig', [])
         }
     })
     .value('mockDataConfigGetJSON', {
-        "id": 4,
+        "uuid": 4,
         "resources": [
             {
-                "id": 2
+                "uuid": 2
             }
         ],
         "parameters": {
@@ -30,9 +30,9 @@ angular.module('mockedDataConfig', [])
         }
     })
     .value('mockDataResourceGetJson', {
-        "id": 42,
+        "uuid": 42,
         configurations: [{
-            id: 1337,
+            uuid: 1337,
             name: 'foo',
             description: 'Lorem ipsum dolor sit amet.',
             parameters: {
@@ -48,17 +48,17 @@ angular.module('mockedDataConfig', [])
         }]
     })
     .value('mockDataConfigXMLResource', {
-        id: 42,
+        uuid: 42,
         configurations: [{
-            id: 4,
+            uuid: 4,
             name: 'foooo',
             description: 'bar baz',
             resources: [{
-                id: 42
+                uuid: 42
             }],
             parameters: {
                 schema_file: {
-                    id: 1337,
+                    uuid: 1337,
                     name: 'foo',
                     description: 'bar'
                 },

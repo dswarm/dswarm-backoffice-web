@@ -5,29 +5,29 @@ describe('ralfsMabSchema', function (){
 
     var rmxSchema = {
         "name": null,
-        "id": 32,
+        "uuid": 32,
         "attribute_paths": [
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 9,
+                uuid : 9,
                 attribute_path : {
-                    "id": 227,
+                    "uuid": 227,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "controlfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
-                            "id": 187
+                            "uuid": 187
                         }
                     ]
                 }
@@ -35,14 +35,14 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 933354,
+                uuid : 933354,
                 attribute_path : {
-                    "id": 20,
+                    "uuid": 20,
                     "attributes": [
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -50,24 +50,24 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 9785,
+                uuid : 9785,
                 attribute_path : {
-                    "id": 223,
+                    "uuid": 223,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -75,29 +75,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 9677544,
+                uuid : 9677544,
                 attribute_path : {
-                    "id": 228,
+                    "uuid": 228,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "controlfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
-                            "id": 187
+                            "uuid": 187
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -105,24 +105,24 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 5624249,
+                uuid : 5624249,
                 attribute_path : {
-                    "id": 224,
+                    "uuid": 224,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "leader",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
-                            "id": 186
+                            "uuid": 186
                         }
                     ]
                 }
@@ -130,19 +130,19 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 34567569,
+                uuid : 34567569,
                 attribute_path : {
-                    "id": 221,
+                    "uuid": 221,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -150,29 +150,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 96876774,
+                uuid : 96876774,
                 attribute_path : {
-                    "id": 225,
+                    "uuid": 225,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "leader",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
-                            "id": 186
+                            "uuid": 186
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -180,29 +180,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3442349,
+                uuid : 3442349,
                 attribute_path : {
-                    "id": 226,
+                    "uuid": 226,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "leader",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
-                            "id": 186
+                            "uuid": 186
                         },
                         {
                             "name": "value",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                            "id": 137
+                            "uuid": 137
                         }
                     ]
                 }
@@ -210,19 +210,19 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 676453423429,
+                uuid : 676453423429,
                 attribute_path : {
-                    "id": 222,
+                    "uuid": 222,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         }
                     ]
                 }
@@ -230,24 +230,24 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 97865634423,
+                uuid : 97865634423,
                 attribute_path : {
-                    "id": 231,
+                    "uuid": 231,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         }
                     ]
                 }
@@ -255,24 +255,24 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 123445439,
+                uuid : 123445439,
                 attribute_path : {
-                    "id": 219,
+                    "uuid": 219,
                     "attributes": [
                         {
                             "name": "header",
                             "uri": "http://www.openarchives.org/OAI/2.0/header",
-                            "id": 182
+                            "uuid": 182
                         },
                         {
                             "name": "identifier",
                             "uri": "http://www.openarchives.org/OAI/2.0/identifier",
-                            "id": 183
+                            "uuid": 183
                         },
                         {
                             "name": "value",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                            "id": 137
+                            "uuid": 137
                         }
                     ]
                 }
@@ -280,29 +280,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 98544343532,
+                uuid : 98544343532,
                 attribute_path : {
-                    "id": 232,
+                    "uuid": 232,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -310,14 +310,14 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 963232342343,
+                uuid : 963232342343,
                 attribute_path : {
-                    "id": 220,
+                    "uuid": 220,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         }
                     ]
                 }
@@ -325,29 +325,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1234575339,
+                uuid : 1234575339,
                 attribute_path : {
-                    "id": 229,
+                    "uuid": 229,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "controlfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
-                            "id": 187
+                            "uuid": 187
                         },
                         {
                             "name": "tag",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
-                            "id": 188
+                            "uuid": 188
                         }
                     ]
                 }
@@ -355,19 +355,19 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 21345546549,
+                uuid : 21345546549,
                 attribute_path : {
-                    "id": 217,
+                    "uuid": 217,
                     "attributes": [
                         {
                             "name": "header",
                             "uri": "http://www.openarchives.org/OAI/2.0/header",
-                            "id": 182
+                            "uuid": 182
                         },
                         {
                             "name": "identifier",
                             "uri": "http://www.openarchives.org/OAI/2.0/identifier",
-                            "id": 183
+                            "uuid": 183
                         }
                     ]
                 }
@@ -375,29 +375,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 91212323545678,
+                uuid : 91212323545678,
                 attribute_path : {
-                    "id": 230,
+                    "uuid": 230,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "controlfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
-                            "id": 187
+                            "uuid": 187
                         },
                         {
                             "name": "value",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                            "id": 137
+                            "uuid": 137
                         }
                     ]
                 }
@@ -405,24 +405,24 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 4654652352349,
+                uuid : 4654652352349,
                 attribute_path : {
-                    "id": 218,
+                    "uuid": 218,
                     "attributes": [
                         {
                             "name": "header",
                             "uri": "http://www.openarchives.org/OAI/2.0/header",
-                            "id": 182
+                            "uuid": 182
                         },
                         {
                             "name": "identifier",
                             "uri": "http://www.openarchives.org/OAI/2.0/identifier",
-                            "id": 183
+                            "uuid": 183
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -430,34 +430,34 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 12344521219,
+                uuid : 12344521219,
                 attribute_path : {
-                    "id": 235,
+                    "uuid": 235,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "subfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
-                            "id": 190
+                            "uuid": 190
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -465,14 +465,14 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 867549,
+                uuid : 867549,
                 attribute_path : {
-                    "id": 215,
+                    "uuid": 215,
                     "attributes": [
                         {
                             "name": "header",
                             "uri": "http://www.openarchives.org/OAI/2.0/header",
-                            "id": 182
+                            "uuid": 182
                         }
                     ]
                 }
@@ -480,34 +480,34 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 67761211119,
+                uuid : 67761211119,
                 attribute_path : {
-                    "id": 236,
+                    "uuid": 236,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "subfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
-                            "id": 190
+                            "uuid": 190
                         },
                         {
                             "name": "code",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code",
-                            "id": 191
+                            "uuid": 191
                         }
                     ]
                 }
@@ -515,19 +515,19 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1234123121119,
+                uuid : 1234123121119,
                 attribute_path : {
-                    "id": 216,
+                    "uuid": 216,
                     "attributes": [
                         {
                             "name": "header",
                             "uri": "http://www.openarchives.org/OAI/2.0/header",
-                            "id": 182
+                            "uuid": 182
                         },
                         {
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                            "id": 20
+                            "uuid": 20
                         }
                     ]
                 }
@@ -535,29 +535,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1131234354349,
+                uuid : 1131234354349,
                 attribute_path : {
-                    "id": 233,
+                    "uuid": 233,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "tag",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
-                            "id": 188
+                            "uuid": 188
                         }
                     ]
                 }
@@ -565,29 +565,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 112222129,
+                uuid : 112222129,
                 attribute_path : {
-                    "id": 234,
+                    "uuid": 234,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "subfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
-                            "id": 190
+                            "uuid": 190
                         }
                     ]
                 }
@@ -595,34 +595,34 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 7897834349,
+                uuid : 7897834349,
                 attribute_path : {
-                    "id": 237,
+                    "uuid": 237,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "subfield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
-                            "id": 190
+                            "uuid": 190
                         },
                         {
                             "name": "value",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                            "id": 137
+                            "uuid": 137
                         }
                     ]
                 }
@@ -630,29 +630,29 @@ describe('ralfsMabSchema', function (){
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3343342342349,
+                uuid : 3343342342349,
                 attribute_path : {
-                    "id": 238,
+                    "uuid": 238,
                     "attributes": [
                         {
                             "name": "metadata",
                             "uri": "http://www.openarchives.org/OAI/2.0/metadata",
-                            "id": 184
+                            "uuid": 184
                         },
                         {
                             "name": "record",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
-                            "id": 185
+                            "uuid": 185
                         },
                         {
                             "name": "datafield",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
-                            "id": 189
+                            "uuid": 189
                         },
                         {
                             "name": "ind1",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1",
-                            "id": 192
+                            "uuid": 192
                         }
                     ]
                 }
@@ -661,7 +661,7 @@ describe('ralfsMabSchema', function (){
         "record_class": {
             "name": "recordType",
             "uri": "http://www.openarchives.org/OAI/2.0/recordType",
-            "id": 25
+            "uuid": 25
         }
     },
 
@@ -672,7 +672,7 @@ describe('ralfsMabSchema', function (){
             "hasChildren": true,
             "children": [
                 {
-                    "id": 20,
+                    "uuid": 20,
                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                     "name": "type",
                     "_$path_id": 20,
@@ -682,7 +682,7 @@ describe('ralfsMabSchema', function (){
                     "hasChildren": false
                 },
                 {
-                    "id": 184,
+                    "uuid": 184,
                     "uri": "http://www.openarchives.org/OAI/2.0/metadata",
                     "name": "metadata",
                     "_$path_id": 220,
@@ -692,7 +692,7 @@ describe('ralfsMabSchema', function (){
                     "hasChildren": true,
                     "children": [
                         {
-                            "id": 20,
+                            "uuid": 20,
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                             "name": "type",
                             "_$path_id": 221,
@@ -702,7 +702,7 @@ describe('ralfsMabSchema', function (){
                             "hasChildren": false
                         },
                         {
-                            "id": 185,
+                            "uuid": 185,
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record",
                             "name": "record",
                             "_$path_id": 222,
@@ -712,7 +712,7 @@ describe('ralfsMabSchema', function (){
                             "hasChildren": true,
                             "children": [
                                 {
-                                    "id": 20,
+                                    "uuid": 20,
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                     "name": "type",
                                     "_$path_id": 223,
@@ -722,7 +722,7 @@ describe('ralfsMabSchema', function (){
                                     "hasChildren": false
                                 },
                                 {
-                                    "id": 187,
+                                    "uuid": 187,
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#controlfield",
                                     "name": "controlfield",
                                     "_$path_id": 227,
@@ -732,7 +732,7 @@ describe('ralfsMabSchema', function (){
                                     "hasChildren": true,
                                     "children": [
                                         {
-                                            "id": 20,
+                                            "uuid": 20,
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                             "name": "type",
                                             "_$path_id": 228,
@@ -742,7 +742,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": false
                                         },
                                         {
-                                            "id": 188,
+                                            "uuid": 188,
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
                                             "name": "tag",
                                             "_$path_id": 229,
@@ -752,7 +752,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": false
                                         },
                                         {
-                                            "id": 137,
+                                            "uuid": 137,
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                             "name": "value",
                                             "_$path_id": 230,
@@ -764,7 +764,7 @@ describe('ralfsMabSchema', function (){
                                     ]
                                 },
                                 {
-                                    "id": 186,
+                                    "uuid": 186,
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#leader",
                                     "name": "leader",
                                     "_$path_id": 224,
@@ -774,7 +774,7 @@ describe('ralfsMabSchema', function (){
                                     "hasChildren": true,
                                     "children": [
                                         {
-                                            "id": 20,
+                                            "uuid": 20,
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                             "name": "type",
                                             "_$path_id": 225,
@@ -784,7 +784,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": false
                                         },
                                         {
-                                            "id": 137,
+                                            "uuid": 137,
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                             "name": "value",
                                             "_$path_id": 226,
@@ -796,7 +796,7 @@ describe('ralfsMabSchema', function (){
                                     ]
                                 },
                                 {
-                                    "id": 189,
+                                    "uuid": 189,
                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield",
                                     "name": "datafield",
                                     "_$path_id": 231,
@@ -806,7 +806,7 @@ describe('ralfsMabSchema', function (){
                                     "hasChildren": true,
                                     "children": [
                                         {
-                                            "id": 20,
+                                            "uuid": 20,
                                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                             "name": "type",
                                             "_$path_id": 232,
@@ -816,7 +816,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": false
                                         },
                                         {
-                                            "id": 188,
+                                            "uuid": 188,
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag",
                                             "name": "tag",
                                             "_$path_id": 233,
@@ -826,7 +826,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": false
                                         },
                                         {
-                                            "id": 192,
+                                            "uuid": 192,
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind1",
                                             "name": "ind1",
                                             "_$path_id": 238,
@@ -836,7 +836,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": false
                                         },
                                         {
-                                            "id": 190,
+                                            "uuid": 190,
                                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield",
                                             "name": "subfield",
                                             "_$path_id": 234,
@@ -846,7 +846,7 @@ describe('ralfsMabSchema', function (){
                                             "hasChildren": true,
                                             "children": [
                                                 {
-                                                    "id": 20,
+                                                    "uuid": 20,
                                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                                     "name": "type",
                                                     "_$path_id": 235,
@@ -856,7 +856,7 @@ describe('ralfsMabSchema', function (){
                                                     "hasChildren": false
                                                 },
                                                 {
-                                                    "id": 191,
+                                                    "uuid": 191,
                                                     "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code",
                                                     "name": "code",
                                                     "_$path_id": 236,
@@ -866,7 +866,7 @@ describe('ralfsMabSchema', function (){
                                                     "hasChildren": false
                                                 },
                                                 {
-                                                    "id": 137,
+                                                    "uuid": 137,
                                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                                     "name": "value",
                                                     "_$path_id": 237,
@@ -884,7 +884,7 @@ describe('ralfsMabSchema', function (){
                     ]
                 },
                 {
-                    "id": 182,
+                    "uuid": 182,
                     "uri": "http://www.openarchives.org/OAI/2.0/header",
                     "name": "header",
                     "_$path_id": 215,
@@ -894,7 +894,7 @@ describe('ralfsMabSchema', function (){
                     "hasChildren": true,
                     "children": [
                         {
-                            "id": 20,
+                            "uuid": 20,
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                             "name": "type",
                             "_$path_id": 216,
@@ -904,7 +904,7 @@ describe('ralfsMabSchema', function (){
                             "hasChildren": false
                         },
                         {
-                            "id": 183,
+                            "uuid": 183,
                             "uri": "http://www.openarchives.org/OAI/2.0/identifier",
                             "name": "identifier",
                             "_$path_id": 217,
@@ -914,7 +914,7 @@ describe('ralfsMabSchema', function (){
                             "hasChildren": true,
                             "children": [
                                 {
-                                    "id": 137,
+                                    "uuid": 137,
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
                                     "name": "value",
                                     "_$path_id": 219,
@@ -924,7 +924,7 @@ describe('ralfsMabSchema', function (){
                                     "hasChildren": false
                                 },
                                 {
-                                    "id": 20,
+                                    "uuid": 20,
                                     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                                     "name": "type",
                                     "_$path_id": 218,

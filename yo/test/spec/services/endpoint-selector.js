@@ -130,7 +130,6 @@ describe('Service: endpointSelector', function () {
         });
         expect(entries).toBe(1);
 
-        expect(fakeConnection.mappingId).toBeGreaterThan(-new Date() - 1);
         expect(EndpointSpy.setPaintStyle).toHaveBeenCalledWith({fillStyle: 'red'}); // endpoint
         expect(EndpointSpy.setPaintStyle).toHaveBeenCalledWith({strokeStyle: 'red'}); // connection
 

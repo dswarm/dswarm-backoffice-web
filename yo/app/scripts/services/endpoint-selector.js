@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('endpointSelector', function($modal, $q, endpointLabel, loDash, Util) {
+    .factory('endpointSelector', function($modal, $q, endpointLabel, loDash, Util, GUID) {
 
         var activeComponent = null;
         var pool = [];
@@ -110,7 +110,7 @@ angular.module('dmpApp')
                 }
 
                 if (!connection.mappingId) {
-                    connection.mappingId = new Date().getTime() * -1;
+                    connection.mappingId = GUID.uuid4();
                 }
 
                 activeComponent = connection;

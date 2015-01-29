@@ -2,18 +2,18 @@
 
 angular.module('mockedSchema', [])
     .value('mockSchemaSimpleJSON', {
-        "id": 1,
+        "uuid": 1,
         "name": "Geonames_DE_1-2.csv schema",
         "attribute_paths": [
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1,
+                uuid : 1,
                 attribute_path : {
-                    "id": 3,
+                    "uuid": 3,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#asciiname",
+                            "uuid": "/Geonames_DE_1-2.csv#asciiname",
                             "name": "asciiname"
                         }
                     ]
@@ -22,12 +22,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 2,
+                uuid : 2,
                 attribute_path : {
-                    "id": 4,
+                    "uuid": 4,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#alternatenames",
+                            "uuid": "/Geonames_DE_1-2.csv#alternatenames",
                             "name": "alternatenames"
                         }
                     ]
@@ -36,12 +36,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3,
+                uuid : 3,
                 attribute_path : {
-                    "id": 1,
+                    "uuid": 1,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#geonameid",
+                            "uuid": "/Geonames_DE_1-2.csv#geonameid",
                             "name": "geonameid"
                         }
                     ]
@@ -50,12 +50,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 4,
+                uuid : 4,
                 attribute_path : {
-                    "id": 2,
+                    "uuid": 2,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#name",
+                            "uuid": "/Geonames_DE_1-2.csv#name",
                             "name": "name"
                         }
                     ]
@@ -64,12 +64,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 15,
+                uuid : 15,
                 attribute_path : {
-                    "id": 7,
+                    "uuid": 7,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#feature class",
+                            "uuid": "/Geonames_DE_1-2.csv#feature class",
                             "name": "feature class"
                         }
                     ]
@@ -78,12 +78,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 17,
+                uuid : 17,
                 attribute_path : {
-                    "id": 8,
+                    "uuid": 8,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#feature code",
+                            "uuid": "/Geonames_DE_1-2.csv#feature code",
                             "name": "feature code"
                         }
                     ]
@@ -92,12 +92,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 18,
+                uuid : 18,
                 attribute_path : {
-                    "id": 5,
+                    "uuid": 5,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#latitude",
+                            "uuid": "/Geonames_DE_1-2.csv#latitude",
                             "name": "latitude"
                         }
                     ]
@@ -106,12 +106,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 19,
+                uuid : 19,
                 attribute_path : {
-                    "id": 6,
+                    "uuid": 6,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#longitude",
+                            "uuid": "/Geonames_DE_1-2.csv#longitude",
                             "name": "longitude"
                         }
                     ]
@@ -120,12 +120,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 11,
+                uuid : 11,
                 attribute_path : {
-                    "id": 11,
+                    "uuid": 11,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#admin1 code",
+                            "uuid": "/Geonames_DE_1-2.csv#admin1 code",
                             "name": "admin1 code"
                         }
                     ]
@@ -134,12 +134,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 12,
+                uuid : 12,
                 attribute_path : {
-                    "id": 12,
+                    "uuid": 12,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#admin2 code",
+                            "uuid": "/Geonames_DE_1-2.csv#admin2 code",
                             "name": "admin2 code"
                         }
                     ]
@@ -148,12 +148,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 13,
+                uuid : 13,
                 attribute_path : {
-                    "id": 9,
+                    "uuid": 9,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#country code",
+                            "uuid": "/Geonames_DE_1-2.csv#country code",
                             "name": "country code"
                         }
                     ]
@@ -162,12 +162,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 14,
+                uuid : 14,
                 attribute_path : {
-                    "id": 10,
+                    "uuid": 10,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#cc2",
+                            "uuid": "/Geonames_DE_1-2.csv#cc2",
                             "name": "cc2"
                         }
                     ]
@@ -176,12 +176,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 21,
+                uuid : 21,
                 attribute_path : {
-                    "id": 15,
+                    "uuid": 15,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#population",
+                            "uuid": "/Geonames_DE_1-2.csv#population",
                             "name": "population"
                         }
                     ]
@@ -190,12 +190,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 31,
+                uuid : 31,
                 attribute_path : {
-                    "id": 16,
+                    "uuid": 16,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#elevation",
+                            "uuid": "/Geonames_DE_1-2.csv#elevation",
                             "name": "elevation"
                         }
                     ]
@@ -204,12 +204,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 41,
+                uuid : 41,
                 attribute_path : {
-                    "id": 13,
+                    "uuid": 13,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#admin3 code",
+                            "uuid": "/Geonames_DE_1-2.csv#admin3 code",
                             "name": "admin3 code"
                         }
                     ]
@@ -218,12 +218,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 51,
+                uuid : 51,
                 attribute_path : {
-                    "id": 14,
+                    "uuid": 14,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#admin4 code",
+                            "uuid": "/Geonames_DE_1-2.csv#admin4 code",
                             "name": "admin4 code"
                         }
                     ]
@@ -232,12 +232,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 61,
+                uuid : 61,
                 attribute_path : {
-                    "id": 19,
+                    "uuid": 19,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#modification date",
+                            "uuid": "/Geonames_DE_1-2.csv#modification date",
                             "name": "modification date"
                         }
                     ]
@@ -246,12 +246,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 71,
+                uuid : 71,
                 attribute_path : {
-                    "id": 18,
+                    "uuid": 18,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#timezone",
+                            "uuid": "/Geonames_DE_1-2.csv#timezone",
                             "name": "timezone"
                         }
                     ]
@@ -260,12 +260,12 @@ angular.module('mockedSchema', [])
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 81,
+                uuid : 81,
                 attribute_path : {
-                    "id": 17,
+                    "uuid": 17,
                     "attributes": [
                         {
-                            "id": "/Geonames_DE_1-2.csv#dem",
+                            "uuid": "/Geonames_DE_1-2.csv#dem",
                             "name": "dem"
                         }
                     ]
@@ -273,7 +273,7 @@ angular.module('mockedSchema', [])
             }
         ],
         "record_class": {
-            "id": "/Geonames_DE_1-2.csv#RecordType",
+            "uuid": "/Geonames_DE_1-2.csv#RecordType",
             "name": "record type"
         }
     })

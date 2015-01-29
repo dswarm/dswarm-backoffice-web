@@ -22,7 +22,7 @@
         </ul>
     </div>
 
-    <div class="transformation-container" ng-if="activeMapping.id">
+    <div class="transformation-container" ng-if="activeMapping.uuid">
     <!--<span>Click an input badge to apply a filter</span>
 
     <button class="btn btn-default" ng-click="sendTransformation(activeMapping)">Run this Transformation</button>-->
@@ -38,7 +38,7 @@
                         js-plumb-connector
                         js-plumb-connector-options="jsPlumbOpts"
                         js-plumb-connector-ident-type="transformation-input"
-                        js-plumb-connector-ident-item="iap.id">{{ formatAttributePath(iap.attribute_path) }} <small>{{formatFilters(iap)}}</small></span>
+                        js-plumb-connector-ident-item="iap.uuid">{{ formatAttributePath(iap.attribute_path) }} <small>{{formatFilters(iap)}}</small></span>
                 </li>
             </ul>
         </div>
@@ -50,7 +50,7 @@
                         js-plumb-connector
                         js-plumb-connector-options="jsPlumbOpts"
                         js-plumb-connector-ident-type="transformation-output"
-                        js-plumb-connector-ident-item="oap.attribute_path.id">{{ formatAttributePath(oap.attribute_path) }}</span>
+                        js-plumb-connector-ident-item="oap.attribute_path.uuid">{{ formatAttributePath(oap.attribute_path) }}</span>
                 </li>
             </ul>
         </div>
@@ -70,7 +70,7 @@
                                js-plumb-connector
                                js-plumb-connector-options="jsPlumbOpts"
                                js-plumb-connector-ident-type="component"
-                               js-plumb-connector-ident-item="item.id"></i>
+                               js-plumb-connector-ident-item="item.uuid"></i>
 
                             <span ng-if="isMultiple(item) && hasOpenEndedComponents()">
                                 <i class="glyphicon glyphicon-plus" ng-click="onMultipleComponentInputAdd(item)"></i>

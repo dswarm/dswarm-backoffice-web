@@ -21,10 +21,10 @@ describe('schemaParser tests', function (){
         expect(result['hasChildren']).toBe(true);
         expect(result['children'].length).toBe(2);
         expect(result['children'][0].name).toBe('foo');
-        expect(result['children'][0].id).toBe('csv:foo');
+        expect(result['children'][0].uuid).toBe('csv:foo');
         expect(result['children'][0].hasChildren).toBe(false);
         expect(result['children'][1].name).toBe('bar');
-        expect(result['children'][1].id).toBe('csv:bar');
+        expect(result['children'][1].uuid).toBe('csv:bar');
         expect(result['children'][1].hasChildren).toBe(false);
 
     });
@@ -37,22 +37,22 @@ describe('schemaParser tests', function (){
         expect(result['hasChildren']).toBe(true);
         expect(result['children'].length).toBe(2);
         expect(result['children'][0].name).toBe('foo');
-        expect(result['children'][0].id).toBe('xml:foo');
+        expect(result['children'][0].uuid).toBe('xml:foo');
         expect(result['children'][0].hasChildren).toBe(true);
         expect(result['children'][0].children.length).toBe(2);
         expect(result['children'][0].children[0].name).toBe('foo.bar');
-        expect(result['children'][0].children[0].id).toBe('xml:foo.bar');
+        expect(result['children'][0].children[0].uuid).toBe('xml:foo.bar');
         expect(result['children'][0].children[0].hasChildren).toBeFalsy();
         expect(result['children'][0].children[1].name).toBe('foo.qux');
-        expect(result['children'][0].children[1].id).toBe('xml:foo.qux');
+        expect(result['children'][0].children[1].uuid).toBe('xml:foo.qux');
         expect(result['children'][0].children[1].hasChildren).toBeFalsy();
 
         expect(result['children'][1].name).toBe('bar');
-        expect(result['children'][1].id).toBe('xml:bar');
+        expect(result['children'][1].uuid).toBe('xml:bar');
         expect(result['children'][1].hasChildren).toBe(true);
         expect(result['children'][1].children.length).toBe(1);
         expect(result['children'][1].children[0].name).toBe('bar.baz');
-        expect(result['children'][1].children[0].id).toBe('xml:bar.baz');
+        expect(result['children'][1].children[0].uuid).toBe('xml:bar.baz');
         expect(result['children'][1].children[0].hasChildren).toBeFalsy();
     });
 

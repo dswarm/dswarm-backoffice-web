@@ -52,12 +52,12 @@ describe('Directive: Transformation', function() {
     beforeEach(function() {
 
         configuration = {
-            "id": 11,
+            "uuid": 11,
             "name": "xml",
             "description": "xml with id 13",
             "resources": [
                 {
-                    "id": 13
+                    "uuid": 13
                 }
             ],
             "parameters": {
@@ -66,7 +66,7 @@ describe('Directive: Transformation', function() {
             }
         };
         data_resource = {
-            "id": 13,
+            "uuid": 13,
             "name": "test-mabxml.xml",
             "description": "MABxml",
             "type": "FILE",
@@ -81,12 +81,12 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1,
+                uuid : 1,
                 attribute_path : {
-                    "id": 33,
+                    "uuid": 33,
                     "attributes": [
                         {
-                            "id": 21,
+                            "uuid": 21,
                             "name": "mabVersion",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion"
                         }
@@ -96,12 +96,12 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 2,
+                uuid : 2,
                 attribute_path : {
-                    "id": 34,
+                    "uuid": 34,
                     "attributes": [
                         {
-                            "id": 22,
+                            "uuid": 22,
                             "name": "typ",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ"
                         }
@@ -111,12 +111,12 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 3,
+                uuid : 3,
                 attribute_path : {
-                    "id": 35,
+                    "uuid": 35,
                     "attributes": [
                         {
-                            "id": 23,
+                            "uuid": 23,
                             "name": "status",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status"
                         }
@@ -126,12 +126,12 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 4,
+                uuid : 4,
                 attribute_path : {
-                    "id": 5,
+                    "uuid": 5,
                     "attributes": [
                         {
-                            "id": 5,
+                            "uuid": 5,
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
                         }
@@ -141,17 +141,17 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 13543,
+                uuid : 13543,
                 attribute_path : {
-                    "id": 28,
+                    "uuid": 28,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         },
                         {
-                            "id": 18,
+                            "uuid": 18,
                             "name": "nr",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"
                         }
@@ -161,17 +161,17 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 123554,
+                uuid : 123554,
                 attribute_path : {
-                    "id": 27,
+                    "uuid": 27,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         },
                         {
-                            "id": 5,
+                            "uuid": 5,
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
                         }
@@ -181,12 +181,12 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1234,
+                uuid : 1234,
                 attribute_path : {
-                    "id": 26,
+                    "uuid": 26,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         }
@@ -196,22 +196,22 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 16875,
+                uuid : 16875,
                 attribute_path : {
-                    "id": 32,
+                    "uuid": 32,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         },
                         {
-                            "id": 20,
+                            "uuid": 20,
                             "name": "tf",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
                         },
                         {
-                            "id": 5,
+                            "uuid": 5,
                             "name": "type",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
                         }
@@ -221,17 +221,17 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 17895,
+                uuid : 17895,
                 attribute_path : {
-                    "id": 31,
+                    "uuid": 31,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         },
                         {
-                            "id": 20,
+                            "uuid": 20,
                             "name": "tf",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
                         }
@@ -241,17 +241,17 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 187656,
+                uuid : 187656,
                 attribute_path : {
-                    "id": 30,
+                    "uuid": 30,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         },
                         {
-                            "id": 14,
+                            "uuid": 14,
                             "name": "value",
                             "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
                         }
@@ -261,17 +261,17 @@ describe('Directive: Transformation', function() {
             {
                 type : "SchemaAttributePathInstance",
                 name : null,
-                id : 1875,
+                uuid : 1875,
                 attribute_path : {
-                    "id": 29,
+                    "uuid": 29,
                     "attributes": [
                         {
-                            "id": 17,
+                            "uuid": 17,
                             "name": "feld",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
                         },
                         {
-                            "id": 19,
+                            "uuid": 19,
                             "name": "ind",
                             "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
                         }
@@ -280,21 +280,21 @@ describe('Directive: Transformation', function() {
             }
         ];
         schema = {
-            id: 20,
+            uuid: 20,
             attribute_paths: attributePaths,
             record_class: {
-                id: 3,
+                uuid: 3,
                 name: "datensatzType",
                 uri: "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
             }
         };
         project = {
-            "id": 28,
+            "uuid": 28,
             "name": "Workshop",
             "mappings": [],
             "functions": [],
             "input_data_model": {
-                "id": 28,
+                "uuid": 28,
                 "name": "test-mabxml.xml",
                 "description": "MABxml",
                 "configuration": configuration,
@@ -321,34 +321,34 @@ describe('Directive: Transformation', function() {
 
     var connectionSources = [
         {
-            id: 42,
+            uuid: 42,
             name: 'feld.nr',
             path: [17, 18]
         },
         {
-            id: 43,
+            uuid: 43,
             name: 'feld.type',
             path: [17, 5]
         },
         {
-            id: 43,
+            uuid: 43,
             name: 'feld.type',
             path: [17, 5]
         }
     ];
     var connectionTargets = [
         {
-            id: 1337,
+            uuid: 1337,
             name: 'feld.value',
             path: [17, 14]
         },
         {
-            id: 1338,
+            uuid: 1338,
             name: 'feld.ind',
             path: [17, 19]
         },
         {
-            id: 1338,
+            uuid: 1338,
             name: 'feld.ind',
             path: [17, 19]
         }
@@ -358,7 +358,7 @@ describe('Directive: Transformation', function() {
         [],
         [
             {
-                id: 1339,
+                uuid: 1339,
                 name: 'feld.additional',
                 path: [22]
             }
@@ -371,7 +371,7 @@ describe('Directive: Transformation', function() {
             additionalTargets = sourceTargetAdditional[2];
 
         return {
-            internal_id: source.id + ':' + target.id,
+            internal_id: source.uuid + ':' + target.uuid,
             connection_id: source.path + ':' + target.path,
             mapping_id: 13 + idx,
             name: 'testMapping',
@@ -469,7 +469,7 @@ describe('Directive: Transformation', function() {
         expect(project.mappings.length).toBe(1);
         var mapping = project.mappings[0];
 
-        expect(mapping.id).toBe(13);
+        expect(mapping.uuid).toBe(13);
         expect(mapping._$connection_id).toBe(data.connection_id);
         expect(mapping.name).toBe(data.name);
 
@@ -479,22 +479,23 @@ describe('Directive: Transformation', function() {
         expect(mapping.transformation.function.type).toBe('Transformation');
         expect(mapping.transformation.function.components).toEqual([]);
 
-        var expectedInputMapping = [getMappingWithPath(attributePaths, {id: 28}, {}, true, data.iapId)];
+        var expectedInputMapping = [getMappingWithPath(attributePaths, {uuid: 28}, {}, true, data.iapId)];
         var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
-        var expectedOutputMapping = getMappingWithPath(attributePaths, {id: 30}, {
+        var expectedOutputMapping = getMappingWithPath(attributePaths, {uuid: 30}, {
             name: '__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__1'
         });
         var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath)[0];
 
-        expect(actualInputMapping).toEqual(expectedInputMapping);
-        expect(actualOutputMapping).toEqual(expectedOutputMapping);
+        expect(actualInputMapping.attribute_path).toEqual(expectedInputMapping.attribute_path);
+        expect(actualInputMapping.name).toEqual(expectedInputMapping.name);
+        expect(actualOutputMapping.attribute_path).toEqual(expectedOutputMapping.attribute_path);
 
         expect(elScope.tabs.length).toBe(1);
         expect(elScope.tabs[0]).toEqual({
             title: data.name,
             active: true,
-            id: data.mapping_id,
+            uuid: data.mapping_id,
             mappingId: data.mapping_id
         });
 
@@ -524,8 +525,6 @@ describe('Directive: Transformation', function() {
 
         $rootScope.$broadcast('connectionSelected', data2);
 
-        console.log(project.mappings);
-
         expect(project.mappings.length).toBe(3);
         expect(elScope.tabs.length).toBe(3);
 
@@ -541,7 +540,7 @@ describe('Directive: Transformation', function() {
                 tab = mappingDataTabsPaths[2],
                 paths = mappingDataTabsPaths[3];
 
-            expect(mapping.id).toBe(13 + idx);
+            expect(mapping.uuid).toBe(13 + idx);
             expect(mapping._$connection_id).toBe(data.connection_id);
             expect(mapping.name).toBe(data.name);
 
@@ -552,17 +551,18 @@ describe('Directive: Transformation', function() {
             expect(mapping.transformation.function.components).toEqual([]);
 
             var expectedInputMapping;
-            expectedInputMapping = [getMappingWithPath(attributePaths, {id: paths[0]}, {}, true, data2.iapId)];
+            expectedInputMapping = [getMappingWithPath(attributePaths, {uuid: paths[0]}, {}, true, data2.iapId)];
 
             var actualInputMapping = _.map(mapping.input_attribute_paths, cleanPath);
 
-            var expectedOutputMapping = [getMappingWithPath(attributePaths, {id: paths[1]}, {
+            var expectedOutputMapping = [getMappingWithPath(attributePaths, {uuid: paths[1]}, {
                 name: '__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__' + (idx + 1)
             })];
             var actualOutputMapping = _.map([mapping.output_attribute_path], cleanPath);
 
-            expect(actualInputMapping).toEqual(expectedInputMapping);
-            expect(actualOutputMapping).toEqual(expectedOutputMapping);
+            expect(actualInputMapping.name).toEqual(expectedInputMapping.name);
+            expect(actualInputMapping.attribute_path).toEqual(expectedInputMapping.attribute_path);
+            expect(actualOutputMapping.attribute_path).toEqual(expectedOutputMapping.attribute_path);
 
             var expectedActive = false;
             if (idx === 1) {
@@ -572,7 +572,7 @@ describe('Directive: Transformation', function() {
             expect(tab).toEqual({
                 title: data.name,
                 active: expectedActive,
-                id: data.mapping_id,
+                uuid: data.mapping_id,
                 mappingId: data.mapping_id
             });
 
@@ -597,10 +597,10 @@ describe('Directive: Transformation', function() {
 
     it('should restore the mappings when there was a previous project', function() {
 
-        var inputPaths = [getMappingWithPath(attributePaths, {id: 28}, {
+        var inputPaths = [getMappingWithPath(attributePaths, {uuid: 28}, {
             name: 'input mapping attribute path instance'
         })];
-        var outputPaths = getMappingWithPath(attributePaths, {id: 30}, {
+        var outputPaths = getMappingWithPath(attributePaths, {uuid: 30}, {
             name: 'output mapping attribute path instance'
         });
 
@@ -608,7 +608,7 @@ describe('Directive: Transformation', function() {
         var mappingName = connectionDatas[0].name;
 
         var mapping = {
-            id: mappingId,
+            uuid: mappingId,
             name: mappingName,
             input_attribute_paths: inputPaths,
             output_attribute_path: outputPaths
@@ -624,7 +624,7 @@ describe('Directive: Transformation', function() {
             {
                 title: mappingName,
                 active: false,
-                id: mappingId
+                uuid: mappingId
             }
         ]);
     });
@@ -745,13 +745,13 @@ describe('Directive: Transformation', function() {
 
         $rootScope.$broadcast('connectionSelected', data);
 
-        expect(elScope.activeMapping.input_attribute_paths[0].attribute_path.attributes[1].id).toBe(data.inputAttributePath.path[1]);
+        expect(elScope.activeMapping.input_attribute_paths[0].attribute_path.attributes[1].uuid).toBe(data.inputAttributePath.path[1]);
 
         data = connectionDatas[2];
 
         $rootScope.$broadcast('connectionSelected', data);
 
-        expect(elScope.activeMapping.input_attribute_paths[0].attribute_path.attributes[1].id).toBe(data.inputAttributePath.path[1]);
+        expect(elScope.activeMapping.input_attribute_paths[0].attribute_path.attributes[1].uuid).toBe(data.inputAttributePath.path[1]);
 
     });
 
@@ -837,7 +837,7 @@ describe('Directive: Transformation', function() {
             positionX: 0,
             positionY: 0,
             placeholder: true,
-            id: 1
+            uuid: 1
         };
 
         dropEl = $compile(_dropEl)(elScope);
@@ -860,7 +860,7 @@ describe('Directive: Transformation', function() {
         scope.$digest();
         var elScope = element.scope();
 
-        elScope.onFilterClick({'attribute_path': {id: 'foo'}});
+        elScope.onFilterClick({'attribute_path': {uuid: 'foo'}});
 
         expect($modal.open).toHaveBeenCalled();
         expect($modal.open.calls.argsFor(0)[0].resolve.mapping()).toEqual({});
@@ -878,11 +878,11 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', data);
 
         expect(project.mappings.length).toBe(1);
-        expect(elScope.activeMapping.id).toBe(13);
+        expect(elScope.activeMapping.uuid).toBe(13);
 
         $rootScope.$broadcast('projectDraftDiscarded');
 
-        expect(elScope.activeMapping.id).toBe(undefined);
+        expect(elScope.activeMapping.uuid).toBe(undefined);
 
     });
 
@@ -896,11 +896,11 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', data);
 
         expect(project.mappings.length).toBe(1);
-        expect(elScope.activeMapping.id).toBe(13);
+        expect(elScope.activeMapping.uuid).toBe(13);
 
         $rootScope.$broadcast('projectModelChanged');
 
-        expect(elScope.activeMapping.id).toBe(undefined);
+        expect(elScope.activeMapping.uuid).toBe(undefined);
 
     });
 
@@ -914,11 +914,11 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', data);
 
         expect(project.mappings.length).toBe(1);
-        expect(elScope.activeMapping.id).toBe(13);
+        expect(elScope.activeMapping.uuid).toBe(13);
 
         $rootScope.$broadcast('changeOutputModel');
 
-        expect(elScope.activeMapping.id).toBe(undefined);
+        expect(elScope.activeMapping.uuid).toBe(undefined);
 
     });
 
@@ -941,7 +941,7 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', data);
 
         expect(project.mappings.length).toBe(1);
-        expect(elScope.activeMapping.id).toBe(13);
+        expect(elScope.activeMapping.uuid).toBe(13);
 
         elScope.gridItems = mockedGriditems;
 
@@ -961,14 +961,14 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', data);
 
         expect(project.mappings.length).toBe(1);
-        expect(elScope.activeMapping.id).toBe(13);
+        expect(elScope.activeMapping.uuid).toBe(13);
 
         elScope.removeMapping();
 
         fakeModal.close();
         $rootScope.$digest();
 
-        expect(elScope.activeMapping.id).toBe(undefined);
+        expect(elScope.activeMapping.uuid).toBe(undefined);
 
     });
 
@@ -1007,7 +1007,7 @@ describe('Directive: Transformation', function() {
         expect(elScope.activeMapping.transformation.function.components.length).toBe(1);
         expect(elScope.gridItems.length).toBe(1);
 
-        $rootScope.$broadcast('removeComponent', elScope.gridItems[0].id);
+        $rootScope.$broadcast('removeComponent', elScope.gridItems[0].uuid);
 
         expect(elScope.gridItems.length).toBe(0);
         expect(elScope.activeMapping.transformation.function.components.length).toBe(0);

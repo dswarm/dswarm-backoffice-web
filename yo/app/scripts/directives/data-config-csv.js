@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigCsvCtrl', function($scope, $routeParams, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub) {
+    .controller('DataConfigCsvCtrl', function($scope, $routeParams, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub, GUID) {
 
         var resource = null;
         var dataModel = null;
@@ -69,6 +69,9 @@ angular.module('dmpApp')
                     unsetPath(field, config);
                 }
             });
+            if(!config.uuid) {
+                config.uuid = GUID.uuid4();
+            }
             return config;
         }
 
@@ -77,7 +80,7 @@ angular.module('dmpApp')
             if (reuseIdentifiers) {
                 $scope.config.name = configuration.name;
                 $scope.config.description = configuration.description;
-                $scope.config.id = configuration.id;
+                $scope.config.uuid = configuration.uuid;
             }
 
             angular.forEach(allTickableFields, function(ticker, param) {
@@ -93,31 +96,28 @@ angular.module('dmpApp')
         function extractFromResource(dataResource) {
             if (dataResource.configurations) {
 
-                var latestConfig = loDash.max(dataResource.configurations, 'id');
+                // TODO: Find a way to determine the latest configuration
+                var latestConfig = dataResource.configurations[0];
 
                 if (angular.isObject(latestConfig)) {
-
                     extractFromConfig(latestConfig);
                 }
             }
         }
 
         if ($scope.mode === 'create' && $routeParams.resourceId) {
-            var resourceId = Math.max(1, +$routeParams.resourceId);
-            $scope.resourceId = resourceId;
+            $scope.resourceId = $routeParams.resourceId;
 
-            ResourceResource.get({ id: resourceId }, function(result) {
+            ResourceResource.get({ id: $scope.resourceId }, function(result) {
                 resource = result;
                 extractFromResource(resource);
                 sendDataConfigUpdatedBroadcast();
             });
         } else if ($scope.mode === 'edit' && $routeParams.dataModelId) {
-            var dataModelId = Math.max(1, +$routeParams.dataModelId);
-
-            DataModelResource.get({id: dataModelId }, function(result) {
+            DataModelResource.get({id: $routeParams.dataModelId }, function(result) {
                 dataModel = result;
                 resource = result.data_resource;
-                $scope.resourceId = resource.id;
+                $scope.resourceId = resource.uuid;
 
                 extractFromConfig(result.configuration, true);
                 sendDataConfigUpdatedBroadcast();
@@ -132,7 +132,8 @@ angular.module('dmpApp')
                 if ($scope.mode === 'create' && resource !== null) {
                     var model = {
                         'data_resource': resource,
-                        'configuration': getConfig()
+                        'configuration': getConfig(),
+                        'uuid': GUID.uuid4()
                     };
 
                     DataModelResource.save({}, model, $scope.returnToData, function() {
@@ -141,7 +142,7 @@ angular.module('dmpApp')
                     });
                 } else if ($scope.mode === 'edit' && dataModel !== null) {
                     var configuration = getConfig();
-                    ConfigurationResource.update({id: configuration.id}, configuration, $scope.returnToData, function() {
+                    ConfigurationResource.update({id: configuration.uuid}, configuration, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
                     });
@@ -174,7 +175,7 @@ angular.module('dmpApp')
 
                 PubSub.broadcast('dataConfigUpdated', {
                     config: config,
-                    resourceId: resource.id
+                    resourceId: resource.uuid
                 });
             }
         }

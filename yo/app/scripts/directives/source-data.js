@@ -53,7 +53,7 @@ angular.module('dmpApp')
 
             DataModelResource.data({
 
-                id: dataModel.id,
+                id: dataModel.uuid,
                 atMost: 3
 
             }, function(dataResult) {
@@ -61,7 +61,7 @@ angular.module('dmpApp')
                 $scope.originalRecords = dataResult;
                 $scope.records = loDash.map(dataResult, function(record) {
                     return {
-                        id: record.id,
+                        id: record.uuid,
                         data: getSchema(record.data)
                     };
                 });
