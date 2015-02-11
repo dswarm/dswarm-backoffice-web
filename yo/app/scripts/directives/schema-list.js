@@ -25,7 +25,7 @@ angular.module('dmpApp')
             //noinspection FunctionWithInconsistentReturnsJS
             $scope.files = Util.collect(results, function(dataModel) {
                 var schema = dataModel.schema;
-                if (schema && schema['attribute_paths'] && schema['attribute_paths'].length) {
+                if (schema) {
 
                     dataModel._$name = schema['name'] + ' (' + dataModel['name'] + ')';
                     dataModel._$description = schema['attribute_paths'].length + ' attribute paths, record class: ' + (schema['record_class'] || {}).name;

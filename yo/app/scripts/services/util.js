@@ -244,9 +244,7 @@ angular.module('dmpApp')
                 'description': name + ' Data Model',
                 'schema': {
                     'name': name,
-                    'uuid': GUID.uuid4(),
-                    'attribute_paths': [],
-                    'record_class': {}
+                    'uuid': GUID.uuid4()
                 },
                 'uuid': GUID.uuid4()
             };

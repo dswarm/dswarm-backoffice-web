@@ -60,6 +60,12 @@
                                       ui-tree-node
                                       ng-include="'views/directives/tree_renderer.html'"></li>
                               </ol>
+                              <a class="tree-leaf-plus"
+                                 data-nodrag
+                                 ng-click="newLeaf(data, false)"
+                                 style="margin: 8px 8px 8px 0">
+                                  <i class="icon icon-add"></i>
+                              </a>
                           </perfect-scrollbar>
                       </div>
 
@@ -70,13 +76,6 @@
               </div>
 
           </div>
-
-          <a class="tree-leaf-plus"
-             data-nodrag
-             ng-click="newLeaf(data, false)"
-             style="margin: 8px 8px 8px 0">
-              <i class="icon icon-add"></i>
-          </a>
 
       </div>
 
