@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util) {
+    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util, GUID) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -44,6 +44,15 @@ angular.module('dmpApp')
                 if (typeof providedComponent.function.function_description.parameters !== 'undefined' &&
                     typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
                     providedComponent.function.function_description.parameters[key].data = value;
+
+                    if(providedComponent.function.function_description.parameters[key].type === 'lookuplist') {
+
+                        var name = value.split('_');
+                        providedComponent.function.function_description.parameters[key].name = name[1];
+                        providedComponent.function.function_description.parameters[key].data = angular.fromJson(providedComponent.parameter_mappings.lookupString).join();
+
+                    }
+
                 }
 
             });
@@ -167,9 +176,23 @@ angular.module('dmpApp')
             };
 
             angular.forEach($scope.component.parameters, function(paramDef) {
-                var param = paramDef.key;
-                if (angular.isDefined(paramDef.data)) {
-                    params.parameter_mappings[param] = paramDef.data;
+
+                if(angular.isDefined(paramDef.type))  {
+
+                    var param = paramDef.key;
+                    var data = paramDef.data;
+
+                    if(paramDef.type === 'lookuplist') {
+
+                        params.parameter_mappings['lookupString'] = JSON.stringify(data.split(','));
+                        data = (paramDef.name) ? 'lookuplist_' + paramDef.name : 'lookupList_' + GUID.uuid4();
+
+                    }
+
+                    if (angular.isDefined(data)) {
+                        params.parameter_mappings[param] = data;
+                    }
+
                 }
             });
 
