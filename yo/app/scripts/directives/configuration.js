@@ -45,12 +45,21 @@ angular.module('dmpApp')
                     typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
                     providedComponent.function.function_description.parameters[key].data = value;
 
-                    if(providedComponent.function.function_description.parameters[key].type === 'lookuplist') {
+                    if((providedComponent.function.function_description.parameters[key].type === 'lookuplist')
+                        || (providedComponent.function.function_description.parameters[key].type === 'lookupmap')) {
 
                         var name = value.split('_');
                         providedComponent.function.function_description.parameters[key].name = name[1];
-                        providedComponent.function.function_description.parameters[key].data = angular.fromJson(providedComponent.parameter_mappings.lookupString).join();
 
+                        if(providedComponent.parameter_mappings.lookupString) {
+                            providedComponent.function.function_description.parameters[key].data = angular.fromJson(providedComponent.parameter_mappings.lookupString);
+                        }
+
+                    }
+
+
+                    if(providedComponent.function.function_description.parameters[key].type === 'lookuplist') {
+                        providedComponent.function.function_description.parameters[key].data = providedComponent.function.function_description.parameters[key].data.join();
                     }
 
                 }
@@ -183,8 +192,13 @@ angular.module('dmpApp')
                     var data = paramDef.data;
 
                     if(paramDef.type === 'lookuplist') {
+                       data = data.split(',');
+                    }
 
-                        params.parameter_mappings['lookupString'] = JSON.stringify(data.split(','));
+                    if((paramDef.type === 'lookuplist')
+                        || (paramDef.type === 'lookupmap') ){
+
+                        params.parameter_mappings['lookupString'] = JSON.stringify(data);
                         data = (paramDef.name) ? 'lookuplist_' + paramDef.name : 'lookupList_' + GUID.uuid4();
 
                     }
@@ -267,6 +281,34 @@ angular.module('dmpApp')
                 $scope.component = null;
                 componentId = null;
 
+            });
+
+        };
+
+        $scope.newData = function(parameter) {
+
+            if(!parameter.data) { parameter.data = {}; }
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/ask-data.html'
+            });
+
+            modalInstance.result.then(function(result) {
+
+                parameter.data[result[0]] = result[1];
+
+            });
+
+        };
+
+        $scope.deleteData = function(parameter, key) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/confirm-remove-data.html'
+            });
+
+            modalInstance.result.then(function() {
+                delete parameter.data[key];
             });
 
         };
