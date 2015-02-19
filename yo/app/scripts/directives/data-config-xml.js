@@ -44,6 +44,10 @@ angular.module('dmpApp')
                 $scope.config.parameters.record_tag = 'record';
                 break;
 
+            case 'pnx':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
         }
 
         $scope.saving = false;
