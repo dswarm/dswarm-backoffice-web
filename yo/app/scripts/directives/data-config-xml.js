@@ -21,9 +21,8 @@ angular.module('dmpApp')
         var resource = null;
         var dataModel = null;
 
-        var configType = $scope.mabxml ? 'mabxml' : 'xml';
-
         $scope.resourceId = $routeParams.resourceId;
+        $scope.configType = $routeParams.configType;
 
         $scope.selectedSet = [];
 
@@ -31,9 +30,21 @@ angular.module('dmpApp')
             name: 'xml',
             description: 'xml with id ' + $scope.resourceId,
             parameters: {
-                'storage_type': configType
+                'storage_type': $scope.configType
             }
         };
+
+        switch($scope.configType) {
+
+            case 'mabxml':
+                $scope.config.parameters.record_tag = 'datensatz';
+                break;
+
+            case 'marc21':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
+        }
 
         $scope.saving = false;
 
@@ -56,7 +67,7 @@ angular.module('dmpApp')
         }
 
         function applicableAsPlaceholder(config) {
-            return config !== null && config.parameters['storage_type'] === configType;
+            return config !== null && config.parameters['storage_type'] === $scope.configType;
         }
 
         if ($scope.mode === 'create' && $routeParams.resourceId) {
