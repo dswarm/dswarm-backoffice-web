@@ -40,6 +40,9 @@ angular.module('dmpApp')
                         return data;
                     },
                     cache: true
+                },
+                update: {
+                    method: 'PUT'
                 }
             };
         });
