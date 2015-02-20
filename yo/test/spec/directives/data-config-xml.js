@@ -7,7 +7,8 @@ describe('Directive: DataConfigXml', function () {
     var elementHtml = '<dataconfigxml></dataconfigxml>';
 
     var routeParams = {
-        resourceId: 42
+        resourceId: 42,
+        configType: 'xml'
     };
 
     beforeEach(module('dmpApp', 'mockedDataConfig'));
@@ -61,8 +62,6 @@ describe('Directive: DataConfigXml', function () {
         expect(elScope.resourceId).toBe(1);
         expect(elScope.selectedSet).toEqual([]);
         expect(elScope.config).toEqual({
-            name: 'xml',
-            description: 'xml with id 1',
             parameters: {
                 storage_type: 'xml'
             }

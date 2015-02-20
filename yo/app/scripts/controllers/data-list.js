@@ -30,7 +30,6 @@ angular.module('dmpApp')
         $scope.onUseForNewProjectClick = function(model, newProject) {
 
             var inputDataModel = model[0];
-            delete inputDataModel['storage_type'];
 
             var project = {
                 'input_data_model': inputDataModel,
@@ -114,12 +113,6 @@ angular.module('dmpApp')
 
                 $scope.models = loDash.filter(results, 'data_resource');
 
-                $scope.models = loDash.map($scope.models, function(result) {
-
-                    result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
-
-                    return result;
-                });
             }, function() {
                 $scope.models = '';
             });
@@ -149,9 +142,9 @@ angular.module('dmpApp')
         $scope.modelListOptions = {
             data: 'models',
             columnDefs: [
-                {field: 'name', displayName: 'Name'},
-                {field: 'description', displayName: 'Description '},
-                {field: 'storage_type', displayName: 'Configured Data Storage Type'}
+                {field: 'configuration.name', displayName: 'Name'},
+                {field: 'configuration.description', displayName: 'Description '},
+                {field: 'configuration.parameters.storage_type', displayName: 'Configured Data Storage Type'}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedModel,

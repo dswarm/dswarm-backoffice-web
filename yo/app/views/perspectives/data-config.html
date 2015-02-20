@@ -16,7 +16,14 @@
     </div>
 
     <div ng-switch-when="mabxml">
-        <div ng-init="mabxml=true"></div>
+        <dataconfigxml></dataconfigxml>
+    </div>
+
+    <div ng-switch-when="marc21">
+        <dataconfigxml></dataconfigxml>
+    </div>
+
+    <div ng-switch-when="pnx">
         <dataconfigxml></dataconfigxml>
     </div>
 
