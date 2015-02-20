@@ -12,7 +12,7 @@
     "angular-sanitize": "1.2.13",
     "angular-ui-utils": "~0.1.1",
     "angular-ui-sortable": "~0.12.6",
-    "angular-perfect-scrollbar": "*",
+    "angular-perfect-scrollbar": "chrode/angular-perfect-scrollbar#f90ea606d0805ac61634458e58b5172a0757fc22",
     "bootstrap": "~3.1.1",
     "es5-shim": "~2.1.0",
     "font-awesome": "~4.0.0",
