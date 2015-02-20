@@ -27,8 +27,6 @@ angular.module('dmpApp')
         $scope.selectedSet = [];
 
         $scope.config = {
-            name: 'xml',
-            description: 'xml with id ' + $scope.resourceId,
             parameters: {
                 'storage_type': $scope.configType
             }
