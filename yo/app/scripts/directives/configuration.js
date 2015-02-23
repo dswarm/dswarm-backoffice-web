@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util) {
+    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util, GUID) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -44,6 +44,24 @@ angular.module('dmpApp')
                 if (typeof providedComponent.function.function_description.parameters !== 'undefined' &&
                     typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
                     providedComponent.function.function_description.parameters[key].data = value;
+
+                    if((providedComponent.function.function_description.parameters[key].type === 'lookuplist')
+                        || (providedComponent.function.function_description.parameters[key].type === 'lookupmap')) {
+
+                        var name = value.split('_');
+                        providedComponent.function.function_description.parameters[key].name = name[1];
+
+                        if(providedComponent.parameter_mappings.lookupString) {
+                            providedComponent.function.function_description.parameters[key].data = angular.fromJson(providedComponent.parameter_mappings.lookupString);
+                        }
+
+                    }
+
+
+                    if(providedComponent.function.function_description.parameters[key].type === 'lookuplist') {
+                        providedComponent.function.function_description.parameters[key].data = providedComponent.function.function_description.parameters[key].data.join();
+                    }
+
                 }
 
             });
@@ -167,9 +185,28 @@ angular.module('dmpApp')
             };
 
             angular.forEach($scope.component.parameters, function(paramDef) {
-                var param = paramDef.key;
-                if (angular.isDefined(paramDef.data)) {
-                    params.parameter_mappings[param] = paramDef.data;
+
+                if(angular.isDefined(paramDef.type))  {
+
+                    var param = paramDef.key;
+                    var data = paramDef.data;
+
+                    if(paramDef.type === 'lookuplist') {
+                       data = data.split(',');
+                    }
+
+                    if((paramDef.type === 'lookuplist')
+                        || (paramDef.type === 'lookupmap') ){
+
+                        params.parameter_mappings['lookupString'] = JSON.stringify(data);
+                        data = (paramDef.name) ? 'lookuplist_' + paramDef.name : 'lookupList_' + GUID.uuid4();
+
+                    }
+
+                    if (angular.isDefined(data)) {
+                        params.parameter_mappings[param] = data;
+                    }
+
                 }
             });
 
@@ -244,6 +281,34 @@ angular.module('dmpApp')
                 $scope.component = null;
                 componentId = null;
 
+            });
+
+        };
+
+        $scope.newData = function(parameter) {
+
+            if(!parameter.data) { parameter.data = {}; }
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/ask-data.html'
+            });
+
+            modalInstance.result.then(function(result) {
+
+                parameter.data[result[0]] = result[1];
+
+            });
+
+        };
+
+        $scope.deleteData = function(parameter, key) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/confirm-remove-data.html'
+            });
+
+            modalInstance.result.then(function() {
+                delete parameter.data[key];
             });
 
         };

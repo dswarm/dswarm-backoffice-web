@@ -1285,7 +1285,8 @@ angular.module('dmpApp')
         //** End handling filter
 
         $scope.isMultiple = function(item) {
-            return (item.component.function.name === 'concat');
+            var multis = ['concat', 'combine', 'choose'];
+            return loDash.contains(multis, item.component.function.name);
         };
 
         /**

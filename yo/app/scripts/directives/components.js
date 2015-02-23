@@ -31,20 +31,6 @@ angular.module('dmpApp')
         };
 
         FunctionResource.query(function(funs) {
-            // DD-435
-            var funBlacklist = [
-                'blacklist',
-                'lookup',
-                'setreplace',
-                'whitelist'
-            ];
-            angular.forEach(funs, function(fun) {
-                if (funBlacklist.indexOf(fun.name) > -1) {
-                    fun.type = 'Disabled';
-                }
-            });
-            // End DD-435
-
             funs =  loDash.sortBy(funs, 'name');
 
             $scope.functions.children = funs;
