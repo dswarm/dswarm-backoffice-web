@@ -7,7 +7,8 @@ describe('Directive: DataConfigXml', function () {
     var elementHtml = '<dataconfigxml></dataconfigxml>';
 
     var routeParams = {
-        resourceId: 42
+        resourceId: 42,
+        configType: 'xml'
     };
 
     beforeEach(module('dmpApp', 'mockedDataConfig'));
