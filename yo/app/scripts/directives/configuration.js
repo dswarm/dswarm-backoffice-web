@@ -52,7 +52,7 @@ angular.module('dmpApp')
                         providedComponent.function.function_description.parameters[key].name = name[1];
 
                         if(providedComponent.parameter_mappings.lookupString) {
-                            providedComponent.function.function_description.parameters[key].data = angular.fromJson(providedComponent.parameter_mappings.lookupString);
+                            providedComponent.function.function_description.parameters[key].data = (providedComponent.parameter_mappings.lookupString) ? angular.fromJson(providedComponent.parameter_mappings.lookupString) : {};
                         }
 
                     }
@@ -199,7 +199,7 @@ angular.module('dmpApp')
                         || (paramDef.type === 'lookupmap') ){
 
                         params.parameter_mappings['lookupString'] = JSON.stringify(data);
-                        data = (paramDef.name) ? 'lookuplist_' + paramDef.name : 'lookupList_' + GUID.uuid4();
+                        data = (paramDef.name) ? paramDef.type + '_' + paramDef.name : paramDef.type + '_' + GUID.uuid4();
 
                     }
 
