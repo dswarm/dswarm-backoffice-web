@@ -53,6 +53,8 @@ angular.module('dmpApp')
 
                         if(providedComponent.parameter_mappings.lookupString) {
                             providedComponent.function.function_description.parameters[key].data = (providedComponent.parameter_mappings.lookupString) ? angular.fromJson(providedComponent.parameter_mappings.lookupString) : {};
+                        } else {
+                            providedComponent.function.function_description.parameters[key].data = {};
                         }
 
                     }
