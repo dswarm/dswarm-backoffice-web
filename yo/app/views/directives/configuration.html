@@ -95,17 +95,7 @@
             </ul>
         </div>
 
-         <div ng-switch-when="lookuplist" ng-class="formClasses(compForm.input, parameter.optional)">
-             <label class="control-label">
-                 name
-                 <input type="{{parameter.type}}"
-                        name="input"
-                        class="form-control"
-                        ng-trim="true"
-                        ng-model="parameter.name">
-             </label>
-             <span class="help-block" ng-show="parameter.description">Name that lookup list</span>
-             <br>
+         <div ng-switch-when="lookuplist">
              <label class="control-label">
                  {{ parameter.key }}<span
                      ng-show="compForm.input.$error.required"
@@ -122,17 +112,8 @@
 
          </div>
 
-         <div ng-switch-when="lookupmap" ng-class="formClasses(compForm.input, parameter.optional)">
-              <label class="control-label">
-                  name
-                  <input type="{{parameter.type}}"
-                         name="input"
-                         class="form-control"
-                         ng-trim="true"
-                         ng-model="parameter.name">
-              </label>
-              <span class="help-block" ng-show="parameter.description">Name that lookup map</span>
-              <br>
+         <div ng-switch-when="lookupmap">
+
               <label class="control-label">
                   {{ parameter.key }}<span
                       ng-show="compForm.input.$error.required"
