@@ -129,6 +129,8 @@ angular.module('dmpApp')
 
                 } else if ($scope.mode === 'edit' && $scope.dataModel !== null) {
 
+                    $scope.dataModel.configuration = getConfig();
+
                     DataModelResource.update({id: $scope.dataModel.uuid}, $scope.dataModel, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
