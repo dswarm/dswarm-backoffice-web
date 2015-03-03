@@ -19,7 +19,8 @@ angular.module('dmpApp')
     .controller('DataConfigCsvCtrl', function($scope, $routeParams, ngProgress, loDash, ConfigurationResource, DataModelResource, ResourceResource, PubSub, GUID) {
 
         var resource = null;
-        var dataModel = null;
+
+        $scope.dataModel = {};
 
         var allFields = 'config.parameters',
             allTickableFields = {
@@ -115,7 +116,7 @@ angular.module('dmpApp')
             });
         } else if ($scope.mode === 'edit' && $routeParams.dataModelId) {
             DataModelResource.get({id: $routeParams.dataModelId }, function(result) {
-                dataModel = result;
+                $scope.dataModel = result;
                 resource = result.data_resource;
                 $scope.resourceId = resource.uuid;
 
@@ -140,12 +141,15 @@ angular.module('dmpApp')
                         $scope.saving = false;
                         ngProgress.complete();
                     });
-                } else if ($scope.mode === 'edit' && dataModel !== null) {
-                    var configuration = getConfig();
-                    ConfigurationResource.update({id: configuration.uuid}, configuration, $scope.returnToData, function() {
+                } else if ($scope.mode === 'edit' && $scope.dataModel !== null) {
+
+                    $scope.dataModel.configuration = getConfig();
+
+                    DataModelResource.update({id: $scope.dataModel.uuid}, $scope.dataModel, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
                     });
+
                 }
             }
         };
