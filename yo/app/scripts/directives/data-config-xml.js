@@ -47,6 +47,18 @@ angular.module('dmpApp')
                 $scope.config.parameters.record_tag = 'record';
                 break;
 
+            case 'oai-pmh+dce':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
+            case 'oai-pmh+dct':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
+            case 'oai-pmh+marcxml':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
         }
 
         $scope.saving = false;
