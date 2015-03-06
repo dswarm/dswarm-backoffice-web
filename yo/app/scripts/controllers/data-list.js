@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataListCtrl', function($scope, $routeParams, DataModelResource, ResourceResource, ProjectResource, flashMessage, fileDownload, loDash, Neo4jEndpoint, GUID) {
+    .controller('DataListCtrl', function($scope, $routeParams, $modal, DataModelResource, ResourceResource, ProjectResource, flashMessage, fileDownload, loDash, Neo4jEndpoint, GUID) {
 
         $scope.files = [];
         $scope.models = [];
@@ -30,7 +30,6 @@ angular.module('dmpApp')
         $scope.onUseForNewProjectClick = function(model, newProject) {
 
             var inputDataModel = model[0];
-            delete inputDataModel['storage_type'];
 
             var project = {
                 'input_data_model': inputDataModel,
@@ -65,15 +64,18 @@ angular.module('dmpApp')
         var resources = {
             Resource: {
                 resource: ResourceResource,
-                grid: $scope.selectedSet
+                grid: $scope.selectedSet,
+                templateUrl: 'views/controllers/confirm-remove-resource.html'
             },
             DataModel: {
                 resource: DataModelResource,
-                grid: $scope.selectedModel
+                grid: $scope.selectedModel,
+                templateUrl: 'views/controllers/confirm-remove-resource.html'
             },
             Project: {
                 resource: ProjectResource,
-                grid: $scope.selectedProject
+                grid: $scope.selectedProject,
+                templateUrl: 'views/controllers/confirm-remove-resource.html'
             }
         };
 
@@ -81,12 +83,23 @@ angular.module('dmpApp')
             var resource = resources[item].resource;
             var grid = resources[item].grid;
             var what = item + ' ' + obj.name;
-            resource.remove({id: obj.uuid}, {},
-                successHandler(grid, what), errorHandler(what));
+            var templateUrl = resources[item].templateUrl;
+
+            var modalInstance = $modal.open({
+                templateUrl: templateUrl
+            });
+
+            modalInstance.result.then(function() {
+
+                resource.remove({id: obj.uuid}, {},
+                    successHandler(grid, what), errorHandler(what));
+
+            });
+
         }
 
-        $scope.deleteResource = loDash.partial(deleteItem, 'Resource');
-        $scope.deleteDataModel = loDash.partial(deleteItem, 'DataModel');
+        $scope.onResourceDeleteClick = loDash.partial(deleteItem, 'Resource');
+        $scope.onDataModelDeleteClick = loDash.partial(deleteItem, 'DataModel');
         $scope.onProjectDeleteClick = loDash.partial(deleteItem, 'Project');
 
         $scope.onProjectExportClick = function(project) {
@@ -114,12 +127,6 @@ angular.module('dmpApp')
 
                 $scope.models = loDash.filter(results, 'data_resource');
 
-                $scope.models = loDash.map($scope.models, function(result) {
-
-                    result['storage_type'] = result.configuration && result.configuration.parameters['storage_type'];
-
-                    return result;
-                });
             }, function() {
                 $scope.models = '';
             });
@@ -151,7 +158,7 @@ angular.module('dmpApp')
             columnDefs: [
                 {field: 'name', displayName: 'Name'},
                 {field: 'description', displayName: 'Description '},
-                {field: 'storage_type', displayName: 'Configured Data Storage Type'}
+                {field: 'configuration.parameters.storage_type', displayName: 'Configured Data Storage Type'}
             ],
             enableColumnResize: false,
             selectedItems: $scope.selectedModel,

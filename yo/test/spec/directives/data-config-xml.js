@@ -62,8 +62,6 @@ describe('Directive: DataConfigXml', function () {
         expect(elScope.resourceId).toBe(1);
         expect(elScope.selectedSet).toEqual([]);
         expect(elScope.config).toEqual({
-            name: 'xml',
-            description: 'xml with id 1',
             parameters: {
                 storage_type: 'xml'
             }

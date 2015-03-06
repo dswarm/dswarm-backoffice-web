@@ -32,7 +32,7 @@
 
         </span>
 
-        <button class="btn btn-danger" ng-click="deleteResource(selectedSet.0)">Delete Resource</button>
+        <button class="btn btn-danger" ng-click="onResourceDeleteClick(selectedSet.0)">Delete Resource</button>
     </span>
 
     <h3>Available for projects</h3>
@@ -61,7 +61,7 @@
 
         </span>
 
-        <button class="btn btn-danger" ng-click="deleteDataModel(selectedModel.0)">Delete Datamodel</button>
+        <button class="btn btn-danger" ng-click="onDataModelDeleteClick(selectedModel.0)">Delete Datamodel</button>
 
     </span>
 
@@ -73,7 +73,7 @@
 
         <a href="#/model/{{ selectedProject.0.uuid }}" class="btn btn-primary">Load for modelling</a>
         <!--<a ng-click="onProjectExportClick(selectedProject[0])" class="btn btn-default">Export</a>-->
-        <a ng-click="onProjectDeleteClick(selectedProject[0])" class="btn btn-danger">Delete</a>
+        <a ng-click="onProjectDeleteClick(selectedProject[0])" class="btn btn-danger">Delete Project</a>
     </span>
 
     <hr>

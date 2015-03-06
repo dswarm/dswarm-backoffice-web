@@ -19,7 +19,8 @@ angular.module('dmpApp')
     .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, DataModelResource, ResourceResource, ConfigurationResource, Util, ngProgress, GUID) {
 
         var resource = null;
-        var dataModel = null;
+
+        $scope.dataModel = {};
 
         $scope.resourceId = $routeParams.resourceId;
         $scope.configType = $routeParams.configType;
@@ -27,8 +28,6 @@ angular.module('dmpApp')
         $scope.selectedSet = [];
 
         $scope.config = {
-            name: 'xml',
-            description: 'xml with id ' + $scope.resourceId,
             parameters: {
                 'storage_type': $scope.configType
             }
@@ -91,7 +90,7 @@ angular.module('dmpApp')
 
             DataModelResource.get({id: $routeParams.dataModelId }, function(result) {
 
-                dataModel = result;
+                $scope.dataModel = result;
                 resource = result.data_resource;
                 $scope.resourceId = resource.uuid;
 
@@ -110,8 +109,8 @@ angular.module('dmpApp')
 
                     var model = {
                         'data_resource': resource,
-                        'name': resource.name,
-                        'description': resource.description,
+                        'name': $scope.dataModel.name,
+                        'description': $scope.dataModel.description,
                         'configuration': getConfig(),
                         'uuid': GUID.uuid4()
                     };
@@ -128,9 +127,11 @@ angular.module('dmpApp')
 
                     });
 
-                } else if ($scope.mode === 'edit' && dataModel !== null) {
+                } else if ($scope.mode === 'edit' && $scope.dataModel !== null) {
 
-                    ConfigurationResource.update({id: $scope.config.uuid}, $scope.config, $scope.returnToData, function() {
+                    $scope.dataModel.configuration = getConfig();
+
+                    DataModelResource.update({id: $scope.dataModel.uuid}, $scope.dataModel, $scope.returnToData, function() {
                         $scope.saving = false;
                         ngProgress.complete();
                     });
