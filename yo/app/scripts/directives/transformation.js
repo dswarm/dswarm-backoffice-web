@@ -1121,7 +1121,8 @@ angular.module('dmpApp')
             var finishMessage = createTransformationStatusMessage(task, persist);
 
             ngProgress.start();
-            TaskResource.execute({persist: !!persist}, finalTask).$promise.then(function(result) {
+            // TODO: At some point the atMost parameter should be configurable from frontend. Right now hardcoded.
+            TaskResource.execute({persist: !!persist, atMost: 3}, finalTask).$promise.then(function(result) {
                 ngProgress.complete();
                 showAlert('info', finishMessage('successfully finished.'));
                 PubSub.broadcast('transformationFinished', result);
