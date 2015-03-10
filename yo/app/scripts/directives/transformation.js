@@ -1122,7 +1122,9 @@ angular.module('dmpApp')
 
             ngProgress.start();
             // TODO: At some point the atMost parameter should be configurable from frontend. Right now hardcoded.
-            TaskResource.execute({persist: !!persist, atMost: 3}, finalTask).$promise.then(function(result) {
+            var taskEndpointParameters = {persist: !!persist, atMost: 3};
+            if(persist) { delete taskEndpointParameters['atMost']; }
+            TaskResource.execute(taskEndpointParameters, finalTask).$promise.then(function(result) {
                 ngProgress.complete();
                 showAlert('info', finishMessage('successfully finished.'));
                 PubSub.broadcast('transformationFinished', result);
