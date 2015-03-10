@@ -135,7 +135,7 @@ describe('Controller: DataListCtrl', function () {
 
     });
 
-    it('should remove project on onProjectDeleteClick', inject(function(PubSub) {
+    it('should remove project on onProjectDeleteClick', inject(function() {
 
         var ctrl;
 
@@ -166,7 +166,7 @@ describe('Controller: DataListCtrl', function () {
 
     }));
 
-    it('should remove resource on onProjectDeleteClick', inject(function(PubSub) {
+    it('should remove resource on onProjectDeleteClick', inject(function() {
 
         var ctrl;
 
@@ -197,7 +197,7 @@ describe('Controller: DataListCtrl', function () {
 
     }));
 
-    it('should remove project on onProjectDeleteClick', inject(function(PubSub) {
+    it('should remove project on onProjectDeleteClick', inject(function() {
 
         var ctrl;
 
