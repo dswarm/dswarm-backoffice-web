@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util, GUID) {
+    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -44,8 +44,7 @@ angular.module('dmpApp')
                 if (typeof providedComponent.function.function_description.parameters !== 'undefined' &&
                     typeof providedComponent.function.function_description.parameters[key] !== 'undefined') {
 
-                    if((providedComponent.function.function_description.parameters[key].type === 'lookuplist')
-                        || (providedComponent.function.function_description.parameters[key].type === 'lookupmap')) {
+                    if((providedComponent.function.function_description.parameters[key].type === 'lookuplist') || (providedComponent.function.function_description.parameters[key].type === 'lookupmap')) {
 
                         providedComponent.function.function_description.parameters[key].data = (value) ? angular.fromJson(value) : {};
 
@@ -189,8 +188,7 @@ angular.module('dmpApp')
                        data = data.split(',');
                     }
 
-                    if((paramDef.type === 'lookuplist')
-                        || (paramDef.type === 'lookupmap') ){
+                    if((paramDef.type === 'lookuplist') || (paramDef.type === 'lookupmap') ){
 
                         data = JSON.stringify(data);
 
