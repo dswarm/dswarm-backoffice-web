@@ -133,6 +133,8 @@ angular.module('dmpApp')
                 if ($scope.mode === 'create' && resource !== null) {
                     var model = {
                         'data_resource': resource,
+                        'name': $scope.dataModel.name,
+                        'description': $scope.dataModel.description,
                         'configuration': getConfig(),
                         'uuid': GUID.uuid4()
                     };
