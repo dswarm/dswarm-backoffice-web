@@ -661,7 +661,7 @@ describe('Directive: Transformation', function() {
         elScope.sendTransformation(elScope.tabs[dataIdx]);
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith({ atMost : 3, persist: false }, Util.toJson(payloadExpect));
+        expect(TaskResource.execute).toHaveBeenCalledWith({ atMost: 3, persist: false }, Util.toJson(payloadExpect));
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
 
