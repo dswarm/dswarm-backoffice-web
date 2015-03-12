@@ -926,8 +926,8 @@ describe('Directive: Transformation', function() {
         scope.$digest();
         var elScope = element.scope();
 
-        expect(elScope.isMultiple(mockedGriditems[0])).toBe(false);
-        expect(elScope.isMultiple(mockedGriditems[1])).toBe(true);
+        expect(elScope.isMultiple(mockedGriditems[0].component)).toBe(false);
+        expect(elScope.isMultiple(mockedGriditems[1].component)).toBe(true);
 
     });
 
