@@ -218,6 +218,9 @@ angular.module('dmpApp')
                             inputString[inputStringIndex] = newKey;
 
                             component.parameter_mappings.inputString = inputString.join(',');
+                            if(component.parameter_mappings.value) {
+                                component.parameter_mappings.value = component.parameter_mappings.value.replace(key, newKey);
+                            }
 
                         });
 
