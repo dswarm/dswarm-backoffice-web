@@ -74,6 +74,10 @@ angular.module('dmpApp')
                     };
                 });
 
+                if(!providedComponent.function.function_description.parameters) {
+                    providedComponent.function.function_description.parameters = [];
+                }
+
                 providedComponent.function.function_description.parameters['inputStringSorting'] = {
                     type: 'sortable',
                     data: parameterItems
