@@ -26,7 +26,7 @@
             <span class="glyphicon"
                   ng-class="{'glyphicon-chevron-right': isCollapsed(data), 'glyphicon-chevron-down': !isCollapsed(data)}"></span>
         </a>
-        <div class="tree-leaf-data pull-left">
+        <div class="tree-leaf-data pull-left" ng-dblclick="onDclClickTreeLeaf(data)">
             {{data.name}}
 
 
@@ -37,7 +37,8 @@
                class="data-sample"
                tooltip-popup-delay="1000"
                tooltip-append-to-body="true"
-               tooltip="{{ data.title }}">
+               tooltip="{{ data.title }}"
+               ng-dblclick="onDclClickTreeLeaf(data)">
             &nbsp; {{data.title}}
         </small>
 

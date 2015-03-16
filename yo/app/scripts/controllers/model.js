@@ -93,6 +93,22 @@ angular.module('dmpApp')
             }, 0);
         };
 
+        $scope.onDclClickTreeLeaf = function(data) {
+
+            if(!data) { data = {}; }
+
+            $modal.open({
+                templateUrl: 'views/controllers/show-tree-data.html',
+                controller: 'ShowTreeDataCtrl',
+                resolve: {
+                    data: function () {
+                        return data;
+                    }
+                }
+            });
+
+        };
+
         $scope.panes = {
             left : 0,
             right : 0,
