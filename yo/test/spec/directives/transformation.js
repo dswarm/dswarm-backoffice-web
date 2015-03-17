@@ -851,6 +851,44 @@ describe('Directive: Transformation', function() {
         expect(PubSub.broadcast).toHaveBeenCalledWith('handleEditConfig', { component: undefined, onlyIfAlreadyOpened: false });
     }));
 
+    it('should build textual path from grid row item', function() {
+
+        var dragEl, dropEl;
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        var spyee = jasmine.createSpyObj('spyee', ['cb']);
+        elScope.$on('tabSwitch', function(evt, data) {
+            spyee.cb(data);
+        });
+
+        var data = connectionDatas[0];
+
+        $rootScope.$broadcast('connectionSelected', data);
+
+        var _dragEl = angular.element('<span id="f2f447ff-562f-fe9b-10e4-e3cec2c97b1c">compose</span>');
+        elScope.child = mockedFunctions[0];
+
+        dragEl = $compile(_dragEl)(elScope);
+
+        var _dropEl = angular.element('<span><li style="margin: 0px; top: 20px; left: 444.5px; height: 121.5px; width: 121.5px;" id="ebc3de1c-c677-d393-997f-bda80ddebbd0"></li></span>');
+        elScope.item = {
+            positionX: 0,
+            positionY: 0,
+            placeholder: true
+        };
+
+        dropEl = $compile(_dropEl)(elScope);
+
+        elScope.dropped(dragEl, dropEl);
+
+        expect(elScope.activeMapping.transformation.function.components.length).toBe(1);
+
+        expect(elScope.buildItemName(elScope.gridItems[0])).toBe('feld › nr > blacklist');
+
+    });
+
     it('should open a filter modal when the path component is clicked', inject(function($modal) {
         var fakeModal = { result: { then: function(fn) {
             fn();

@@ -1293,6 +1293,24 @@ angular.module('dmpApp')
         };
 
         /**
+         *
+         * @param item
+         * @returns string
+         */
+        $scope.buildItemName = function(item) {
+
+            var addName = '';
+
+            if(item.positionY > 0) {
+                addName = $scope.buildItemName(findPrevGridItem(item.positionX, item.positionY)) + ' > ';
+            } else {
+                addName = $scope.formatAttributePath($scope.activeMapping.input_attribute_paths[item.positionX].attribute_path) + ' > ';
+            }
+
+            return addName + item.component.function.name;
+        };
+
+        /**
          * Returns all open ends
          * @param excludeRow Row to exclude from open end findings. E.g. current row
          * @returns {Array}
@@ -1352,7 +1370,7 @@ angular.module('dmpApp')
 
                             if(currentRowIndexInGridItemConnection === -1) {
                                 openEndedComponents.push({
-                                    display : currentRowItems.component.function.name,
+                                    display : $scope.buildItemName(currentRowItems),
                                     name : currentRowItems.component.function.name,
                                     type : 'griditem',
                                     data : currentRowItems
