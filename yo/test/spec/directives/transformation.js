@@ -691,6 +691,19 @@ describe('Directive: Transformation', function() {
         expect($window.alert).toHaveBeenCalledWith('foo bar');
     }));
 
+
+    it('collect all mapping names', function() {
+
+        scope.$digest();
+        var elScope = element.scope();
+
+        $rootScope.$broadcast('connectionSelected', connectionDatas[0]);
+        $rootScope.$broadcast('connectionSelected', connectionDatas[1]);
+
+        expect(elScope.returnMappingNames(', ')).toBe('testMapping, testMapping');
+
+    });
+
     it('should send all transformations', inject(function(Util, TaskResource, PubSub) {
         var taskResult = [
             {'foo': 'bar'}
@@ -714,6 +727,10 @@ describe('Directive: Transformation', function() {
         };
 
         var payloadExpect = angular.copy(payload);
+
+        payloadExpect.name = 'Project: ' + project.name + ' (' + project.uuid + ')';
+        payloadExpect.description = 'With mappings: ' + elScope.returnMappingNames(', ');
+
         Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
 
         spyOn(TaskResource, 'execute').and.callThrough();
