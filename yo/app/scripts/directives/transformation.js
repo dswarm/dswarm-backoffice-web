@@ -1155,13 +1155,33 @@ angular.module('dmpApp')
         };
 
         /**
+         * Collects all mapping names and conats them
+         * @param {string} delimiter - A delimiter beetween mapping names
+         * @returns {string}
+         */
+        $scope.returnMappingNames = function(delimiter) {
+
+            var mappingNames = '';
+            angular.forEach($scope.project.mappings, function(value, key) {
+                mappingNames += value.name;
+                if(key !== $scope.project.mappings.length-1) {
+                    mappingNames += delimiter;
+                }
+            });
+
+            return mappingNames;
+
+        };
+
+        /**
          * This actually sends a Transformation
+         * @param {boolean} persist - Should the data be persisted or just previewed
          */
         $scope.sendTransformations = function(persist) {
 
             var payload = {
-                name: 'Transformations',
-                description: 'Transformations',
+                name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
+                description: 'With mappings: ' + $scope.returnMappingNames(', '),
                 job: {
                     mappings: $scope.project.mappings
                 },
