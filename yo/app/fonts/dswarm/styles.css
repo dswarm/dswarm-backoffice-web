@@ -131,3 +131,9 @@
 .icon-refresh:before {
   content: "E";
 }
+.icon-data-filter:before {
+  content: "F";
+}
+.icon-filter:before {
+  content: "G";
+}
