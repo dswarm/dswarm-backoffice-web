@@ -923,8 +923,18 @@ button.close-transformation-selector {
   margin: -1em;
   padding: 1em;
 
+  overflow: hidden;
+
   &.offCanvasShow {
     left: 30%;
   }
+
+  .lookupmap-list {
+    position: relative;
+    max-height: 200px;
+    overflow-x: none;
+    overflow-y: scroll;
+  }
+
 }
 

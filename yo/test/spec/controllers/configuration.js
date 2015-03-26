@@ -11,6 +11,7 @@ describe('Controller: ConfigurationCtrl', function () {
         mockConfigurationBroken,
         mockConfigurationMulti1JSON,
         mockConfigurationMulti2JSON,
+        mockConfigurationMulti3JSON,
         mockedProject,
         fakeModal, $modal;
 
@@ -25,6 +26,7 @@ describe('Controller: ConfigurationCtrl', function () {
         mockConfigurationBroken = $injector.get('mockConfigurationComponentBrokenJSON');
         mockConfigurationMulti1JSON = $injector.get('mockConfigurationMulti1JSON');
         mockConfigurationMulti2JSON = $injector.get('mockConfigurationMulti2JSON');
+        mockConfigurationMulti3JSON = $injector.get('mockConfigurationMulti3JSON');
         mockedProject = $injector.get('mockProjectJSON2');
 
         scope.component = {
@@ -228,6 +230,48 @@ describe('Controller: ConfigurationCtrl', function () {
         });
 
         expect(scope.component.parameters.length).toBe(4);
+
+    }));
+
+    it('should recognize lookupmap availability', inject(function() {
+        configurationCtrl();
+
+        scope.project = mockedProject;
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationMulti3JSON
+        });
+
+        expect(scope.component.parameters.length).toBe(2);
+
+        expect(scope.componentHasLookupMap()).toBe(true);
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationMulti2JSON
+        });
+
+        expect(scope.componentHasLookupMap()).toBe(false);
+
+    }));
+
+    it('should recognize there are tabs with lookupmap', inject(function() {
+        configurationCtrl();
+
+        scope.project = mockedProject;
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationMulti3JSON
+        });
+
+        expect(scope.component.parameters.length).toBe(2);
+
+        expect(scope.componentHasLookupMap()).toBe(true);
+
+        scope.$broadcast('handleEditConfig', {
+            component : mockConfigurationMulti2JSON
+        });
+
+        expect(scope.componentHasTabs()).toBe(false);
 
     }));
 
