@@ -10,157 +10,197 @@
     <span>{{ component.description }}</span>
   </header>
 
-  <hr>
+    <div class="tabbable tabs-below">
+        <ul class="nav nav-tabs" ng-if="componentHasTabs()">
+            <li ng-class="{active: selectedTab == 1}">
+                <a ng-click="selectTab(1);">Parameters</a>
+            </li>
+            <li ng-class="{active: selectedTab == 2}" ng-if="componentHasLookupMap()">
+                <a ng-click="selectTab(2);">Upload data</a>
+            </li>
+        </ul>
 
-  <form role="form" ng-submit="onSaveClick()" name="componentForm">
+        <div class="tab-content" ng-if="selectedTab == 1">
+          <form role="form" ng-submit="onSaveClick()" name="componentForm">
 
-    <div class="form-group" ng-repeat="parameter in component.parameters">
-      <div ng-if="parameter.type">
+            <div class="form-group" ng-repeat="parameter in component.parameters">
+              <div ng-if="parameter.type">
 
-          <ng-form name="compForm" ng-switch on="parameter.type">
+                  <ng-form name="compForm" ng-switch on="parameter.type">
 
-            <div ng-switch-when="repeat">
-              <ng-form name="entForm"
-                       ng-repeat="(key2,parameter2) in parameter.parameters"
-                       ng-class="formClasses(entForm.input, parameter2.optional)">
-                <label class="control-label">
-                  {{ key2 }}<span
-                    ng-show="entForm.input.$error.required"
-                    class="pull-right">required <i
-                    class="glyphicon glyphicon-exclamation-sign"></i></span>
-                  <input type="{{parameter2.type}}"
-                         name="input"
-                         class="form-control"
-                         ng-model="parameter2.data"
-                         ng-required="!parameter2.optional"
-                         ng-pattern="getPattern(parameter2.pattern)">
-                </label>
-                <span class="help-block" ng-show="parameter2.description">{{ parameter2.description }}</span>
-              </ng-form>
-            </div>
+                    <div ng-switch-when="repeat">
+                      <ng-form name="entForm"
+                               ng-repeat="(key2,parameter2) in parameter.parameters"
+                               ng-class="formClasses(entForm.input, parameter2.optional)">
+                        <label class="control-label">
+                          {{ key2 }}<span
+                            ng-show="entForm.input.$error.required"
+                            class="pull-right">required <i
+                            class="glyphicon glyphicon-exclamation-sign"></i></span>
+                          <input type="{{parameter2.type}}"
+                                 name="input"
+                                 class="form-control"
+                                 ng-model="parameter2.data"
+                                 ng-required="!parameter2.optional"
+                                 ng-pattern="getPattern(parameter2.pattern)">
+                        </label>
+                        <span class="help-block" ng-show="parameter2.description">{{ parameter2.description }}</span>
+                      </ng-form>
+                    </div>
 
-            <div ng-switch-when="select"
-                 ng-class="formClasses(compForm.input, parameter.optional)">
-              <label class="control-label">
-                {{ parameter.key }}<span
-                  ng-show="compForm.input.$error.required"
-                  class="pull-right">required <i
-                  class="glyphicon glyphicon-exclamation-sign"></i></span>
-                <select class="form-control" ng-required="!parameter.optional"
-                        name="input"
-                        ng-model="parameter.data"
-                        ng-options="choice for choice in parameter.choices">
-                  <option value="">----</option>
-                </select>
-              </label>
-              <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
-            </div>
+                    <div ng-switch-when="select"
+                         ng-class="formClasses(compForm.input, parameter.optional)">
+                      <label class="control-label">
+                        {{ parameter.key }}<span
+                          ng-show="compForm.input.$error.required"
+                          class="pull-right">required <i
+                          class="glyphicon glyphicon-exclamation-sign"></i></span>
+                        <select class="form-control" ng-required="!parameter.optional"
+                                name="input"
+                                ng-model="parameter.data"
+                                ng-options="choice for choice in parameter.choices">
+                          <option value="">----</option>
+                        </select>
+                      </label>
+                      <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+                    </div>
 
-            <div ng-switch-when="radio">
-              <span>{{ parameter.key }}<span
-                  ng-show="compForm.input.$error.required"
-                  class="pull-right">required <i
-                  class="glyphicon glyphicon-exclamation-sign"></i></span></span>
-              <ng-form name="radioForm" class="radio"
-                       ng-repeat="choice in parameter.choices"
-                       ng-class="formClasses(radioForm.input, parameter.optional)">
-                <label class="control-label">
-                  {{ choice }}
-                  <input type="radio" ng-model="parameter.data" ng-required="!parameter.optional" name="input" ng-value="choice">
-                </label>
-              </ng-form>
-              <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
-            </div>
+                    <div ng-switch-when="radio">
+                      <span>{{ parameter.key }}<span
+                          ng-show="compForm.input.$error.required"
+                          class="pull-right">required <i
+                          class="glyphicon glyphicon-exclamation-sign"></i></span></span>
+                      <ng-form name="radioForm" class="radio"
+                               ng-repeat="choice in parameter.choices"
+                               ng-class="formClasses(radioForm.input, parameter.optional)">
+                        <label class="control-label">
+                          {{ choice }}
+                          <input type="radio" ng-model="parameter.data" ng-required="!parameter.optional" name="input" ng-value="choice">
+                        </label>
+                      </ng-form>
+                      <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+                    </div>
 
-            <div ng-switch-when="checkbox" class="checkbox"
-                 ng-class="formClasses(compForm.input, parameter.optional)">
-              <label class="control-label">
-                {{ parameter.key }}<span
-                  ng-show="compForm.input.$error.required"
-                  class="pull-right">required <i
-                  class="glyphicon glyphicon-exclamation-sign"></i></span>
-                <input type="checkbox" name="input" ng-model="parameter.data">
-              </label>
-              <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
-            </div>
+                    <div ng-switch-when="checkbox" class="checkbox"
+                         ng-class="formClasses(compForm.input, parameter.optional)">
+                      <label class="control-label">
+                        {{ parameter.key }}<span
+                          ng-show="compForm.input.$error.required"
+                          class="pull-right">required <i
+                          class="glyphicon glyphicon-exclamation-sign"></i></span>
+                        <input type="checkbox" name="input" ng-model="parameter.data">
+                      </label>
+                      <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+                    </div>
 
-        <div ng-switch-when="sortable" class="configurationSortable">
-            <label class="control-label">
-                {{ parameter.key }}
-            </label>
-            <ul ui-sortable ng-model="parameter.data" class="list">
-                <li ng-repeat="item in parameter.data" class="item">
-                    {{item.text}}
-                </li>
-            </ul>
-        </div>
+                <div ng-switch-when="sortable" class="configurationSortable">
+                    <label class="control-label">
+                        {{ parameter.key }}
+                    </label>
+                    <ul ui-sortable ng-model="parameter.data" class="list">
+                        <li ng-repeat="item in parameter.data" class="item">
+                            {{item.text}}
+                        </li>
+                    </ul>
+                </div>
 
-         <div ng-switch-when="lookuplist">
-             <label class="control-label">
-                 {{ parameter.key }}<span
-                     ng-show="compForm.input.$error.required"
-                     class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
-                 <input type="{{parameter.type}}"
-                        name="input"
-                        class="form-control"
-                        ng-trim="false"
-                        ng-model="parameter.data"
-                        ng-required="!parameter.optional"
-                        ng-pattern="getPattern(parameter.pattern)">
-             </label>
-             <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+                 <div ng-switch-when="lookuplist">
+                     <label class="control-label">
+                         {{ parameter.key }}<span
+                             ng-show="compForm.input.$error.required"
+                             class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
+                         <input type="{{parameter.type}}"
+                                name="input"
+                                class="form-control"
+                                ng-trim="false"
+                                ng-model="parameter.data"
+                                ng-required="!parameter.optional"
+                                ng-pattern="getPattern(parameter.pattern)">
+                     </label>
+                     <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
 
-         </div>
+                 </div>
 
-         <div ng-switch-when="lookupmap">
+                 <div ng-switch-when="lookupmap">
 
-              <label class="control-label">
-                  {{ parameter.key }}<span
+                    <label class="control-label">
+                      {{ parameter.key }}<span
+                          ng-show="compForm.input.$error.required"
+                          class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
+                    </label>
+
+                     <div class="lookupmap-list">
+                        <div>
+                            <div ng-repeat="(key,val) in parameter.data">
+                              {{key}} : {{val}} <a class="data-dialog-handle" ng-click="deleteData(parameter, key)"><i class="icon icon-remove"></i></a>
+                            </div>
+                        </div>
+                     </div>
+                    <br><a class="data-dialog-handle" ng-click="newData(parameter)"><i class="icon icon-add"></i></a>
+
+                    <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+
+                </div>
+                <div ng-switch-default ng-class="formClasses(compForm.input, parameter.optional)">
+                  <label class="control-label">
+                    {{ parameter.key }}<span
                       ng-show="compForm.input.$error.required"
                       class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
-              </label>
-
-              <div ng-repeat="(key,val) in parameter.data">
-                  {{key}} : {{val}} <a class="data-dialog-handle" ng-click="deleteData(parameter, key)"><i class="icon icon-remove"></i></a>
-              </div>
-              <br><a class="data-dialog-handle" ng-click="newData(parameter)"><i class="icon icon-add"></i></a>
-
-              <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
-
-        </div>
-        <div ng-switch-default ng-class="formClasses(compForm.input, parameter.optional)">
-          <label class="control-label">
-            {{ parameter.key }}<span
-              ng-show="compForm.input.$error.required"
-              class="pull-right">required <i class="glyphicon glyphicon-exclamation-sign"></i></span>
-            <input type="{{parameter.type}}"
-                   name="input"
-                   class="form-control"
-                   ng-trim="false"
-                   ng-model="parameter.data"
-                   ng-required="!parameter.optional"
-                   ng-pattern="getPattern(parameter.pattern)">
-          </label>
-          <span class="help-block" ng-if="isMultiDisplayVars(component)">
-              <strong>Available variables:</strong><br>
-              <span ng-repeat="parameter in component.parameters">
-                  <span ng-if="parameter.type == 'sortable'" ng-repeat="data in parameter.data">
-                      {{data.text}}: $&#123;<span></span>{{data.uuid}}<span></span>&#125;<br>
+                    <input type="{{parameter.type}}"
+                           name="input"
+                           class="form-control"
+                           ng-trim="false"
+                           ng-model="parameter.data"
+                           ng-required="!parameter.optional"
+                           ng-pattern="getPattern(parameter.pattern)">
+                  </label>
+                  <span class="help-block" ng-if="isMultiDisplayVars(component)">
+                      <strong>Available variables:</strong><br>
+                      <span ng-repeat="parameter in component.parameters">
+                          <span ng-if="parameter.type == 'sortable'" ng-repeat="data in parameter.data">
+                              {{data.text}}: $&#123;<span></span>{{data.uuid}}<span></span>&#125;<br>
+                          </span>
+                      </span>
                   </span>
-              </span>
-          </span>
-          <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
-          <span class="help-block" ng-show="compForm.input.$error.pattern">
-            Input doesn't match /{{ parameter.pattern }}/
-          </span>
+                  <span class="help-block" ng-show="parameter.description">{{ parameter.description }}</span>
+                  <span class="help-block" ng-show="compForm.input.$error.pattern">
+                    Input doesn't match /{{ parameter.pattern }}/
+                  </span>
+                </div>
+
+              </ng-form>
+              </div>
+            </div>
+
+              <a class="btn btn-default btn-sm pull-right" ng-click="onCancelClick()">Close</a>
+          </form>
+
         </div>
 
-      </ng-form>
-      </div>
-    </div>
 
-      <a class="btn btn-default btn-sm pull-right" ng-click="onCancelClick()">Close</a>
-  </form>
+        <div class="tab-content" ng-if="selectedTab == 2">
+
+            <form role="form" name="uploadForm" ng-submit="uploadData()">
+                <div class="form-group"
+                     ng-class="{'has-error': uploadForm.file.$invalid, 'has-success': uploadForm.file.$valid}">
+                    <label for="dataUpload">Upload file</label>
+                    <input type="file" id="dataUpload" name="file" required="required"
+                           ng-required="true" dmp-file-upload>
+
+                    <p class="help-block">
+                        <span>Upload a file from your computer &hellip;</span><br>
+                        <span ng-show="meta.type">{{ meta.type }}</span>
+                        <span ng-show="meta.size">{{ meta.size|filesize }}</span>
+                    </p>
+
+                </div>
+                <button type="submit" class="btn btn-default"
+                        ng-disabled="uploadForm.$invalid">Submit</button>
+            </form>
+
+        </div>
+
+    </div>
 
 </div>
 

@@ -207,4 +207,49 @@ angular.module('mockedConfiguration', [])
             "delimiter": ",",
             "inputString": "dataset__-1410185900851,definition__-1410185903886"
         }
+    })
+    .value("mockConfigurationMulti3JSON", {
+        "function": {
+            "uuid": "Function-e4c6c5af-45a5-4530-9a5e-61edf253fb1e",
+            "name": "lookup",
+            "description": "Performs a table lookup",
+            "function_description": {
+                "name": "lookup",
+                "dsl": "metafacture",
+                "reference": "lookup",
+                "description": "Performs a table lookup",
+                "parameters": {
+                    "lookupString": {
+                        "type": "lookupmap"
+                    },
+                    "default": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "Value used if no corresponding key is found."
+                    }
+                }
+            },
+            "parameters": [
+                "lookupString",
+                "default"
+            ],
+            "type": "Function"
+        },
+        "name": "componentd5fc57a7-12bf-819c-9498-18873451e32f",
+        "uuid": "27e7ee46-dd62-a128-0060-c5833d96ec7e",
+        "output_components": [
+            {
+                "uuid": "d592144d-900d-d21f-2e4b-f57b62a22791"
+            }
+        ],
+        "input_components": [
+            {
+                "uuid": "f261188e-20de-8860-0515-95a4cee43ea2"
+            }
+        ],
+        "description": "{\"x\":\"definition__e2f99c1a-85e1-d759-931e-b5dd1b80a792\",\"y\":1}",
+        "parameter_mappings": {
+            "default": "Blabla",
+            "inputString": "componentf6646343-6ad2-c5c9-cbff-86aadebe4a17"
+        }
     });

@@ -16,11 +16,17 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util) {
+    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util, ApiEndpoint, fileUpload) {
 
         $scope.internalName = 'Configuration Widget';
 
         $scope.component = null;
+
+        $scope.selectedTab = 1;
+
+        $scope.data = {
+            file : {}
+        };
 
         var componentId = null,
             waitToSendChange = null,
@@ -74,6 +80,7 @@ angular.module('dmpApp')
                     };
                 });
 
+        $scope.data = {};
                 if(!providedComponent.function.function_description.parameters) {
                     providedComponent.function.function_description.parameters = [];
                 }
@@ -285,6 +292,10 @@ angular.module('dmpApp')
 
         };
 
+        /**
+         * Called when data needs to be added to a lookupmap
+         * @param {object} parameter - The parameter set
+         */
         $scope.newData = function(parameter) {
 
             if(!parameter.data) { parameter.data = {}; }
@@ -301,6 +312,11 @@ angular.module('dmpApp')
 
         };
 
+        /**
+         * Removes data from lookupmap
+         * @param {object} parameter - The parameter set
+         * @param {string} key - Key to be removed
+         */
         $scope.deleteData = function(parameter, key) {
 
             var modalInstance = $modal.open({
@@ -311,6 +327,72 @@ angular.module('dmpApp')
                 delete parameter.data[key];
             });
 
+        };
+
+        /**
+         * Checks if this component should display Tabs
+         * @returns {boolean}
+         */
+        $scope.componentHasTabs = function() {
+
+            var hasTabs = false;
+
+            if($scope.componentHasLookupMap()) { hasTabs = true; }
+
+            return hasTabs;
+
+        };
+
+        /**
+         * Checks if this component has a lookupmap parameter
+         * @returns {boolean}
+         */
+        $scope.componentHasLookupMap = function() {
+
+            var component = null;
+
+            if($scope.component) {
+                component = loDash.find($scope.component.parameters, {'type' : 'lookupmap'});
+            }
+
+            if($scope.component && component && component.type && component.type.length > 0) return true
+            else return false;
+
+        };
+
+        /**
+         * Changes the current used tab
+         * @param {int} tab - Target tab index
+         */
+        $scope.selectTab = function(tab) {
+            $scope.selectedTab = tab;
+        };
+
+
+        /**
+         * Posts a file
+         */
+        $scope.uploadData = function() {
+            var f = $scope.data.file;
+            if (angular.isDefined(f)) {
+                fileUpload({
+                    file: f,
+                    params : {
+                        column_delimiter: ','
+                    },
+                    fileUrl: ApiEndpoint + 'lookup/read'
+                }).then(function(result) {
+
+                    var parameter = loDash.find($scope.component.parameters, {'type' : 'lookupmap'});
+
+                    parameter.data = result;
+
+                    $scope.selectedTab = 1;
+
+                }).catch(function(err) {
+                    console.log('file upload error', err);
+                });
+            }
         };
 
         $scope.$watch('component', function() {
