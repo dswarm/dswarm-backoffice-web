@@ -29,19 +29,21 @@ angular.module('dmpApp')
 
         $scope.onUseForNewProjectClick = function(model, newProject) {
 
-            var inputDataModel = model[0];
+            DataModelResource.get({ id : model[0].uuid }, function(inputDataModel) {
 
-            var project = {
-                'input_data_model': inputDataModel,
-                'name': newProject.name,
-                'description': newProject.description,
-                'uuid': GUID.uuid4()
-            };
+                var project = {
+                    'input_data_model': inputDataModel,
+                    'name': newProject.name,
+                    'description': newProject.description,
+                    'uuid': GUID.uuid4()
+                };
 
-            ProjectResource.save({}, project, function() {
-                $scope.updateGridData();
-                newProject.name = '';
-                newProject.description = '';
+                ProjectResource.save({}, project, function() {
+                    $scope.updateGridData();
+                    newProject.name = '';
+                    newProject.description = '';
+                });
+
             });
 
         };
@@ -115,7 +117,7 @@ angular.module('dmpApp')
 
         $scope.updateGridData = function() {
 
-            ResourceResource.query(function(results) {
+            ResourceResource.query({ format : 'short' }, function(results) {
 
                 $scope.files = results;
 
@@ -123,7 +125,7 @@ angular.module('dmpApp')
                 $scope.files = '';
             });
 
-            DataModelResource.query(function(results) {
+            DataModelResource.query({ format : 'medium' }, function(results) {
 
                 $scope.models = loDash.filter(results, 'data_resource');
 
@@ -131,7 +133,7 @@ angular.module('dmpApp')
                 $scope.models = '';
             });
 
-            ProjectResource.query(function(projects) {
+            ProjectResource.query({ format : 'short' }, function(projects) {
 
                 $scope.projects = projects;
 
