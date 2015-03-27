@@ -21,7 +21,7 @@ describe('Controller: DataListCtrl', function () {
             description: "Bar",
             mappings: [],
             functions: [],
-            input_data_model: { id: 1, name: 'dm01', data_resource: { uuid: 1 }, configuration: { uuid: 1, parameters: {storage_type: 'csv' } } }
+            input_data_model: { uuid: 1, name: 'dm01', data_resource: { uuid: 1 }, configuration: { uuid: 1, parameters: {storage_type: 'csv' } } }
         }
     ];
 
@@ -50,9 +50,10 @@ describe('Controller: DataListCtrl', function () {
 
         scope = $rootScope.$new();
 
-        $httpBackend.when('GET', '/dmp/resources').respond(resources);
-        $httpBackend.when('GET', '/dmp/datamodels').respond(models);
-        $httpBackend.when('GET', '/dmp/projects').respond(projects);
+        $httpBackend.when('GET', '/dmp/resources?format=short').respond(resources);
+        $httpBackend.when('GET', '/dmp/datamodels?format=medium').respond(models);
+        $httpBackend.when('GET', '/dmp/datamodels/1').respond(models[0]);
+        $httpBackend.when('GET', '/dmp/projects?format=short').respond(projects);
 
 
         var $controller = $injector.get('$controller');
@@ -66,8 +67,8 @@ describe('Controller: DataListCtrl', function () {
 
     it('should load the resource data objects', function () {
         var ctrl;
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
         scope.$apply(function () {
             ctrl = dataListCtrl();
         });
@@ -94,8 +95,8 @@ describe('Controller: DataListCtrl', function () {
     it('should generate a correct new project call', inject(function (ProjectResource) {
 
         var ctrl;
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
         scope.$apply(function () {
             ctrl = dataListCtrl();
         });
@@ -104,12 +105,16 @@ describe('Controller: DataListCtrl', function () {
         spyOn(ProjectResource, "save");
 
         scope.onUseForNewProjectClick([
-            { uuid: 2}
+            { uuid: 1}
         ], { name: 'Foo', description: 'Bar'});
+
+        $httpBackend.expectGET('/dmp/datamodels/1');
+
+        $httpBackend.flush();
 
         var callArgs = ProjectResource.save.calls.mostRecent().args;
 
-        expect(callArgs[1].input_data_model.uuid).toBe(2);
+        expect(callArgs[1].input_data_model.uuid).toBe(1);
         expect(callArgs[1].name).toBe('Foo');
         expect(callArgs[1].description).toBe('Bar');
 
@@ -119,8 +124,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
@@ -139,8 +144,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
@@ -170,8 +175,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
@@ -201,8 +206,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
