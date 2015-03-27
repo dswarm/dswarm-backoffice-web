@@ -355,8 +355,8 @@ angular.module('dmpApp')
                 component = loDash.find($scope.component.parameters, {'type' : 'lookupmap'});
             }
 
-            if($scope.component && component && component.type && component.type.length > 0) return true
-            else return false;
+            if($scope.component && component && component.type && component.type.length > 0) { return true; }
+            else { return false; }
 
         };
 

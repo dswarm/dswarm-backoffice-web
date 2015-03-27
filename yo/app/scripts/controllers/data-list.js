@@ -115,7 +115,7 @@ angular.module('dmpApp')
 
         $scope.updateGridData = function() {
 
-            ResourceResource.query(function(results) {
+            ResourceResource.query({ format : 'short' }, function(results) {
 
                 $scope.files = results;
 
@@ -123,15 +123,15 @@ angular.module('dmpApp')
                 $scope.files = '';
             });
 
-            DataModelResource.query(function(results) {
+            DataModelResource.query({ format : 'medium' }, function(results) {
 
-                $scope.models = loDash.filter(results, 'data_resource');
+                $scope.models = loDash.filter(results, 'dataResource');
 
             }, function() {
                 $scope.models = '';
             });
 
-            ProjectResource.query(function(projects) {
+            ProjectResource.query({ format : 'short' }, function(projects) {
 
                 $scope.projects = projects;
 
