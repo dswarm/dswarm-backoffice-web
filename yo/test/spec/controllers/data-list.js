@@ -11,7 +11,7 @@ describe('Controller: DataListCtrl', function () {
     ];
 
     var models = [
-        { uuid: 1, name: 'dm01', data_resource: { uuid: 1 }, configuration: { uuid: 1, parameters: { storage_type: 'csv' } } }
+        { uuid: 1, name: 'dm01', dataResource: { uuid: 1 }, configuration: { uuid: 1, parameters: { storage_type: 'csv' } } }
     ];
 
     var projects = [
@@ -21,7 +21,7 @@ describe('Controller: DataListCtrl', function () {
             description: "Bar",
             mappings: [],
             functions: [],
-            input_data_model: { id: 1, name: 'dm01', data_resource: { uuid: 1 }, configuration: { uuid: 1, parameters: {storage_type: 'csv' } } }
+            input_data_model: { id: 1, name: 'dm01', dataResource: { uuid: 1 }, configuration: { uuid: 1, parameters: {storage_type: 'csv' } } }
         }
     ];
 
@@ -50,9 +50,9 @@ describe('Controller: DataListCtrl', function () {
 
         scope = $rootScope.$new();
 
-        $httpBackend.when('GET', '/dmp/resources').respond(resources);
-        $httpBackend.when('GET', '/dmp/datamodels').respond(models);
-        $httpBackend.when('GET', '/dmp/projects').respond(projects);
+        $httpBackend.when('GET', '/dmp/resources?format=short').respond(resources);
+        $httpBackend.when('GET', '/dmp/datamodels?format=medium').respond(models);
+        $httpBackend.when('GET', '/dmp/projects?format=short').respond(projects);
 
 
         var $controller = $injector.get('$controller');
@@ -66,8 +66,8 @@ describe('Controller: DataListCtrl', function () {
 
     it('should load the resource data objects', function () {
         var ctrl;
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
         scope.$apply(function () {
             ctrl = dataListCtrl();
         });
@@ -94,8 +94,8 @@ describe('Controller: DataListCtrl', function () {
     it('should generate a correct new project call', inject(function (ProjectResource) {
 
         var ctrl;
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
         scope.$apply(function () {
             ctrl = dataListCtrl();
         });
@@ -119,8 +119,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
@@ -139,8 +139,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
@@ -170,8 +170,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
@@ -201,8 +201,8 @@ describe('Controller: DataListCtrl', function () {
 
         var ctrl;
 
-        $httpBackend.expectGET('/dmp/resources');
-        $httpBackend.expectGET('/dmp/projects');
+        $httpBackend.expectGET('/dmp/resources?format=short');
+        $httpBackend.expectGET('/dmp/projects?format=short');
 
         scope.$apply(function () {
             ctrl = dataListCtrl();
