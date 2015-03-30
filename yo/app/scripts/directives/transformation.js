@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID, showAlert) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -1081,22 +1081,6 @@ angular.module('dmpApp')
 
         //** Start of sending transformation to server
 
-        function showAlert(type, message, timeout) {
-            var alter = {
-                type: type,
-                discard: false,
-                save: false,
-                msg: message
-            };
-            $scope.alerts.push(alter);
-            $timeout(function() {
-                var alterIndex = $scope.alerts.indexOf(alter);
-                if (alterIndex !== -1) {
-                    $scope.closeAlert(alterIndex);
-                }
-            }, timeout || 3000);
-        }
-
         function createTransformationStatusMessage(task, persist) {
             var actionMsg = persist ? 'Saving' : 'Running';
             var itemMsg = task.job.mappings.length > 1 ?
@@ -1126,11 +1110,11 @@ angular.module('dmpApp')
             if(persist) { delete taskEndpointParameters['atMost']; }
             TaskResource.execute(taskEndpointParameters, finalTask).$promise.then(function(result) {
                 ngProgress.complete();
-                showAlert('info', finishMessage('successfully finished.'));
+                showAlert.show($scope, 'info', finishMessage('successfully finished.'));
                 PubSub.broadcast('transformationFinished', result);
             }, function(resp) {
                 ngProgress.complete();
-                showAlert('danger', finishMessage('failed.'), 5000);
+                showAlert.show($scope, 'danger', finishMessage('failed.'), 5000);
                 console.log(resp);
                 $window.alert(resp.message || resp.data.error);
             });
