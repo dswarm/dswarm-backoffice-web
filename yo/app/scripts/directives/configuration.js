@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util, ApiEndpoint, fileUpload) {
+    .controller('ConfigurationCtrl', function($scope, $modal, $timeout, PubSub, loDash, Util, ApiEndpoint, fileUpload, showAlert) {
 
         $scope.internalName = 'Configuration Widget';
 
@@ -27,6 +27,8 @@ angular.module('dmpApp')
         $scope.data = {
             file : {}
         };
+
+        $scope.delimiter = ',';
 
         var componentId = null,
             waitToSendChange = null,
@@ -373,12 +375,17 @@ angular.module('dmpApp')
          * Posts a file
          */
         $scope.uploadData = function() {
+
+            // Form scope gets somehow lost.
+            // This is a qnd to retrieve the relevant form value.
+            $scope.delimiter = $('#delimiter').val();
+
             var f = $scope.data.file;
             if (angular.isDefined(f)) {
                 fileUpload({
                     file: f,
                     params : {
-                        column_delimiter: ','
+                        column_delimiter: $scope.delimiter
                     },
                     fileUrl: ApiEndpoint + 'lookup/read'
                 }).then(function(result) {
@@ -389,8 +396,14 @@ angular.module('dmpApp')
 
                     $scope.selectedTab = 1;
 
-                }).catch(function(err) {
-                    console.log('file upload error', err);
+                }).catch(function(resp) {
+
+                    var msg = angular.fromJson(resp.msg);
+
+                    showAlert.show($scope, 'danger',  msg.error, 5000);
+
+                    console.log(resp);
+
                 });
             }
         };
