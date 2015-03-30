@@ -316,4 +316,31 @@ angular.module('dmpApp')
         return {
             'uuid4': guid
         };
+    })
+
+/**
+ * Provide utility to show alerts
+ */
+    .factory('showAlert', function($timeout) {
+
+        function show(scope, type, message, timeout) {
+            var alter = {
+                type: type,
+                discard: false,
+                save: false,
+                msg: message
+            };
+            scope.alerts.push(alter);
+            $timeout(function() {
+                var alterIndex = scope.alerts.indexOf(alter);
+                if (alterIndex !== -1) {
+                    scope.closeAlert(alterIndex);
+                }
+            }, timeout || 3000);
+        }
+
+        return {
+            'show': show
+        };
+
     });

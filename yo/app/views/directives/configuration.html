@@ -181,6 +181,16 @@
         <div class="tab-content" ng-if="selectedTab == 2">
 
             <form role="form" name="uploadForm" ng-submit="uploadData()">
+
+                <div class="form-group"
+                     ng-class="{'has-error': uploadForm.delimiter.$invalid, 'has-success': uploadForm.delimiter.$valid}">
+
+                    <label for="delimiter">File delimiter</label><br>
+                    <input type="text" id="delimiter" name="delimiter" required="required"
+                           ng-required="true" ng-model="delimiter">
+
+                </div>
+
                 <div class="form-group"
                      ng-class="{'has-error': uploadForm.file.$invalid, 'has-success': uploadForm.file.$valid}">
                     <label for="dataUpload">Upload file</label>
