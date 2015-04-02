@@ -633,7 +633,7 @@ describe('Directive: Transformation', function() {
         var taskResult = [
             {'foo': 'bar'}
         ];
-        $httpBackend.expectPOST('foo/tasks?atMost=3&persist=false').respond(taskResult);
+        $httpBackend.expectPOST('foo/tasks').respond(taskResult);
 
         scope.$digest();
         var elScope = element.scope();
@@ -652,16 +652,21 @@ describe('Directive: Transformation', function() {
             output_data_model: project.output_data_model
         };
 
-        var payloadExpect = angular.copy(payload);
-        Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
+        var payloadExpect = {
+            'task' : angular.copy(payload),
+            'at_most' : 3,
+            'persist' : false
+        };
+
+        Util.ensureUniqueParameterMappingVars(payloadExpect.task.job.mappings);
 
         spyOn(TaskResource, 'execute').and.callThrough();
         spyOn(PubSub, 'broadcast');
 
-        elScope.sendTransformation(elScope.tabs[dataIdx]);
+        elScope.sendTransformation();
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith({ atMost: 3, persist: false }, Util.toJson(payloadExpect));
+        expect(TaskResource.execute).toHaveBeenCalledWith({ }, Util.toJson(payloadExpect));
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
 
@@ -673,7 +678,7 @@ describe('Directive: Transformation', function() {
     }));
 
     it('should alert an error on wrong transformations', inject(function(TaskResource, $window) {
-        $httpBackend.expectPOST('foo/tasks?atMost=3&persist=false').respond(500, {error: 'foo bar'});
+        $httpBackend.expectPOST('foo/tasks').respond(500, {error: 'foo bar'});
 
         scope.$digest();
         var elScope = element.scope();
@@ -708,7 +713,7 @@ describe('Directive: Transformation', function() {
         var taskResult = [
             {'foo': 'bar'}
         ];
-        $httpBackend.expectPOST('foo/tasks?atMost=3&persist=false').respond(taskResult);
+        $httpBackend.expectPOST('foo/tasks').respond(taskResult);
 
         scope.$digest();
         var elScope = element.scope();
@@ -717,29 +722,30 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', connectionDatas[1]);
 
         var payload = {
-            name: 'Transformations',
-            description: 'Transformations',
-            job: {
-                mappings: project.mappings
+            'task' : {
+                name: 'Project: ' + project.name + ' (' + project.uuid + ')',
+                description: 'With mappings: ' + elScope.returnMappingNames(', '),
+                job: {
+                    mappings: project.mappings
+                },
+                input_data_model: project.input_data_model,
+                output_data_model: project.output_data_model
             },
-            input_data_model: project.input_data_model,
-            output_data_model: project.output_data_model
+            'at_most' : 3,
+            'persist' : false
         };
 
         var payloadExpect = angular.copy(payload);
 
-        payloadExpect.name = 'Project: ' + project.name + ' (' + project.uuid + ')';
-        payloadExpect.description = 'With mappings: ' + elScope.returnMappingNames(', ');
-
-        Util.ensureUniqueParameterMappingVars(payloadExpect.job.mappings);
+        Util.ensureUniqueParameterMappingVars(payloadExpect.task.job.mappings);
 
         spyOn(TaskResource, 'execute').and.callThrough();
         spyOn(PubSub, 'broadcast');
 
-        elScope.sendTransformations();
+        elScope.sendTransformations(false);
         $httpBackend.flush();
 
-        expect(TaskResource.execute).toHaveBeenCalledWith({ atMost : 3, persist: false }, Util.toJson(payloadExpect));
+        expect(TaskResource.execute).toHaveBeenCalledWith({ }, Util.toJson(payloadExpect));
         // JS, Y U NO WORK?
         // Error: Expected [ { foo : 'bar' } ] to equal [ { foo : 'bar' } ]. ????
         expect(PubSub.broadcast.calls.count()).toBe(1);

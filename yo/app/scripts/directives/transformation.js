@@ -1096,19 +1096,20 @@ angular.module('dmpApp')
          * @param task - Transformations to send
          * @param persist - if true, the transformation result should be persisted by the backend
          */
-        function sendTransformations(task, persist) {
+        function transmitTransformations(payload) {
 
-            var runTask = angular.copy(task);
-            Util.ensureUniqueParameterMappingVars(runTask.job.mappings);
-            var finalTask = Util.toJson(runTask);
+            var runPayload = angular.copy(payload);
+            Util.ensureUniqueParameterMappingVars(runPayload.task.job.mappings);
 
-            var finishMessage = createTransformationStatusMessage(task, persist);
+            var finishMessage = createTransformationStatusMessage(runPayload.task, runPayload.persist);
+
+            var finalPayload = Util.toJson(runPayload);
 
             ngProgress.start();
-            // TODO: At some point the atMost parameter should be configurable from frontend. Right now hardcoded.
-            var taskEndpointParameters = {persist: !!persist, atMost: 3};
-            if(persist) { delete taskEndpointParameters['atMost']; }
-            TaskResource.execute(taskEndpointParameters, finalTask).$promise.then(function(result) {
+
+            if(finalPayload.persist) { delete finalPayload['at_most']; }
+
+            TaskResource.execute({}, finalPayload).$promise.then(function(result) {
                 ngProgress.complete();
                 showAlert.show($scope, 'info', finishMessage('successfully finished.'));
                 PubSub.broadcast('transformationFinished', result);
@@ -1126,16 +1127,20 @@ angular.module('dmpApp')
         $scope.sendTransformation = function() {
 
             var payload = {
-                name: $scope.activeMapping.name,
-                description: 'A Transformation',
-                job: {
-                    mappings: [$scope.activeMapping]
+                'task' : {
+                    name: $scope.activeMapping.name,
+                    description: 'A Transformation',
+                    job: {
+                        mappings: [$scope.activeMapping]
+                    },
+                    input_data_model: $scope.project.input_data_model,
+                    output_data_model: $scope.project.output_data_model
                 },
-                input_data_model: $scope.project.input_data_model,
-                output_data_model: $scope.project.output_data_model
+                'at_most' : 3,
+                'persist' : false
             };
 
-            sendTransformations(payload, false);
+            transmitTransformations(payload);
         };
 
         /**
@@ -1164,16 +1169,20 @@ angular.module('dmpApp')
         $scope.sendTransformations = function(persist) {
 
             var payload = {
-                name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
-                description: 'With mappings: ' + $scope.returnMappingNames(', '),
-                job: {
-                    mappings: $scope.project.mappings
+                'task' : {
+                    name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
+                    description: 'With mappings: ' + $scope.returnMappingNames(', '),
+                    job: {
+                        mappings: $scope.project.mappings
+                    },
+                    input_data_model: $scope.project.input_data_model,
+                    output_data_model: $scope.project.output_data_model
                 },
-                input_data_model: $scope.project.input_data_model,
-                output_data_model: $scope.project.output_data_model
+                'at_most' : 3,
+                'persist' : persist
             };
 
-            sendTransformations(payload, persist);
+            transmitTransformations(payload);
         };
 
         PubSub.subscribe($scope, 'sendTransformations', function(persist) {
