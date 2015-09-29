@@ -96,8 +96,7 @@ angular.module('dmpApp')
             var connectionDefer = $q.defer();
 
             function handleAdditionalKeyDefs(data) {
-
-                if(data.keyDefs.length === 0) {
+                if (!(data && data.keyDefs && data.keyDefs.length)) {
                     return;
                 }
 
