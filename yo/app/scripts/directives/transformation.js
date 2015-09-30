@@ -1274,29 +1274,44 @@ angular.module('dmpApp')
             });
 
 
-            modalInstance.result.then(function() {
-                var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function(filter) {
-                    //noinspection FunctionWithInconsistentReturnsJS
-                    return Util.collect(filter.inputFilters, function(f) {
+            modalInstance.result.then(function(reason) {
 
-                        var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, function(ap) { return ap.attribute_path.uuid === f.apId; });
-                        if (path) {
-                            path = Util.buildUriReference(path.attribute_path.attributes);
-                            // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
-                            return [path, f.title];
-                        }
+                if(reason === 'delete this mapping input') {
+                    var index = loDash.find(mapping.input_attribute_paths, {uuid:IAPInstance.uuid});
+
+                    if(index !== -1) {
+
+                        mapping.input_attribute_paths.splice(index,1);
+
+                        showTransformationPlumbs();
+                    }
+                } else {
+
+                    var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function (filter) {
+                        //noinspection FunctionWithInconsistentReturnsJS
+                        return Util.collect(filter.inputFilters, function (f) {
+
+                            var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, function (ap) {
+                                return ap.attribute_path.uuid === f.apId;
+                            });
+                            if (path) {
+                                path = Util.buildUriReference(path.attribute_path.attributes);
+                                // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
+                                return [path, f.title];
+                            }
+                        });
+                    }), true);
+
+                    var filtersExpression = loDash.map(filters, function (filter) {
+
+                        var filterExpression = {};
+                        filterExpression[filter[0]] = filter[1];
+
+                        return filterExpression;
                     });
-                }), true);
 
-                var filtersExpression = loDash.map(filters, function(filter) {
-
-                    var filterExpression = {};
-                    filterExpression[filter[0]] = filter[1];
-
-                    return filterExpression;
-                });
-
-                setFilterExpression(IAPInstance, filtersExpression);
+                    setFilterExpression(IAPInstance, filtersExpression);
+                }
             });
         }
         //** End handling filter
