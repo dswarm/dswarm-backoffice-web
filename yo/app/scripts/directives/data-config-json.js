@@ -44,12 +44,16 @@ angular.module('dmpApp')
 
         $scope.onSaveClick = function() {
             var savePromise = dataConfigText.save($scope.mode, resource, $scope.dataModel, getConfig());
-            savePromise.then($scope.returnToData, function(error) {
+            savePromise.then(function() {
+                $location.path('/data/');
+            }, function(error) {
                 $scope.$parent.$parent.configError = error.data.error;
             });
         };
 
-        $scope.onCancelClick = $scope.returnToData;
+        $scope.onCancelClick = function() {
+            $location.path('/data/');
+        };
     })
     .directive('dataconfigjson', function() {
         return {
