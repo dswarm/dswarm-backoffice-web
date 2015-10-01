@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigXmlCtrl', function($scope, $location, $routeParams, dataConfigText) {
+    .controller('DataConfigJsonCtrl', function($scope, $location, $routeParams, dataConfigText) {
 
         var resource = null;
         $scope.dataModel = {};
@@ -28,52 +28,8 @@ angular.module('dmpApp')
             }
         };
 
-        $scope.selectedSet = [];
-
-        switch($routeParams.configType) {
-
-            case 'mabxml':
-                $scope.config.parameters.record_tag = 'datensatz';
-                break;
-
-            case 'marc21':
-                $scope.config.parameters.record_tag = 'record';
-                break;
-
-            case 'pnx':
-                $scope.config.parameters.record_tag = 'record';
-                break;
-
-            case 'oai-pmh+dce':
-                $scope.config.parameters.record_tag = 'record';
-                break;
-
-            case 'oai-pmh+dct':
-                $scope.config.parameters.record_tag = 'record';
-                break;
-
-            case 'oai-pmh+marcxml':
-                $scope.config.parameters.record_tag = 'record';
-                break;
-
-            case 'oai-pmh+dce+edm':
-                $scope.config.parameters.record_tag = 'record';
-                break;
-
-        }
-
         function getConfig() {
-            var config = angular.copy($scope.config);
-
-            if ($scope.selectedSet[0]) {
-                config.parameters['schema_file'] = {
-                    uuid: $scope.selectedSet[0].uuid,
-                    name: $scope.selectedSet[0].name,
-                    description: $scope.selectedSet[0].description
-                };
-            }
-
-            return config;
+            return angular.copy($scope.config);
         }
 
         var configPromise = dataConfigText.newTextConfig($scope.mode, $routeParams.resourceId, $routeParams.dataModelId, $routeParams.configType);
@@ -84,16 +40,13 @@ angular.module('dmpApp')
             if (data.resourceId && data.resourceId !== $scope.resourceId) {
                 $scope.resourceId = data.resourceId;
             }
-            if (data.config && data.config.parameters && data.config.parameters['schema_file']) {
-                $scope.selectedSet.push(data.config.parameters['schema_file']);
-            }
         });
 
         $scope.onSaveClick = function() {
             var savePromise = dataConfigText.save($scope.mode, resource, $scope.dataModel, getConfig());
             savePromise.then(function() {
                 $location.path('/data/');
-            } , function(error) {
+            }, function(error) {
                 $scope.$parent.$parent.configError = error.data.error;
             });
         };
@@ -101,14 +54,13 @@ angular.module('dmpApp')
         $scope.onCancelClick = function() {
             $location.path('/data/');
         };
-
     })
-    .directive('dataconfigxml', function() {
+    .directive('dataconfigjson', function() {
         return {
             restrict: 'E',
             replace: false,
             scope: true,
-            templateUrl: 'views/directives/data-config-xml.html',
-            controller: 'DataConfigXmlCtrl'
+            templateUrl: 'views/directives/data-config-json.html',
+            controller: 'DataConfigJsonCtrl'
         };
     });

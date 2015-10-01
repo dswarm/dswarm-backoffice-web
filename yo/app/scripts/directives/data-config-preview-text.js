@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('DataConfigPreviewXmlCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, FileResource) {
+    .controller('DataConfigPreviewTextCtrl', function($scope, $routeParams, $timeout, loDash, PubSub, FileResource) {
 
         $scope.previewResult = '';
         $scope.previewOptions = {
@@ -43,12 +43,12 @@ angular.module('dmpApp')
         $scope.$watch('previewOptions', loadLines, true);
 
     })
-    .directive('dataconfigpreviewxml', function() {
+    .directive('dataconfigpreviewtext', function() {
         return {
             restrict: 'E',
             replace: true,
             scope : false,
-            templateUrl: 'views/directives/data-config-preview-xml.html',
-            controller: 'DataConfigPreviewXmlCtrl'
+            templateUrl: 'views/directives/data-config-preview-text.html',
+            controller: 'DataConfigPreviewTextCtrl'
         };
     });

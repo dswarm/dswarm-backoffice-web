@@ -1,0 +1,48 @@
+<div>
+
+    <div class="row" style="margin:0;">
+        <div class="col-md-12 box">
+            <dataconfigpreviewtext ></dataconfigpreviewtext>
+        </div>
+    </div>
+
+    <div class="row" style="margin:0;">
+        <div class="col-md-12 box">
+
+            <form role="form" style="margin-top: 2em; margin-bottom: 2em" name="dataConfigJsonForm">
+                <div class="form-group" ng-class="{'has-error':dataConfigJsonForm.jsonRecordKeyInput.$error.required}">
+                    <label class="control-label" for="jsonRecordKeyInput">JSON Record Key</label>
+                        <input type="text" class="form-control"
+                               name="jsonRecordKeyInput"
+                               id="jsonRecordKeyInput"
+                               placeholder="JSON Record Key"
+                               ng-required="true"
+                               ng-model="config.parameters.record_tag">
+
+                    <p class="help-block">The name of the key that denotes a record.</p>
+                </div>
+
+                <div class="form-group" ng-class="{'has-error':dataConfigJsonForm.name.$error.required}">
+                    <label class="control-label" for="name">Name</label>
+                    <input type="text" class="form-control"
+                           name="name"
+                           id="name"
+                           ng-required="true"
+                           ng-model="dataModel.name">
+                    <p class="help-block">The name of this configuration for the DataModel.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" ng-model="dataModel.description" class="form-control"></textarea>
+                </div>
+                <span class="selected-set-options">
+                    <button type="button" ng-click="onSaveClick()" ng-disabled="dataConfigJsonForm.$invalid" class="btn btn-default">Save</button>
+                    <button type="button" ng-click="onCancelClick()" class="btn btn-default">Cancel</button>
+                </span>
+            </form>
+
+        </div>
+    </div>
+
+</div>
