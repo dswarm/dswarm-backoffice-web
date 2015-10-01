@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', function($rootScope, $log, $modal, $q, $timeout, $window, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub) {
+    .directive('dmpEndpoint', function($rootScope, $log, $modal, $q, $timeout, $window, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub, Util) {
         var sourceScope = null,
             elements = {},
             sourceMap = {},
@@ -60,18 +60,27 @@ angular.module('dmpApp')
                 targetId: scope.guid
             };
 
-            if (scope.projectIsMabXml()) {
+            var inputContentSchema = scope.projectHasContentSchemaForFilterShortCut();
+            if (inputContentSchema) {
                 var iap = getData(elements[sourceScope.guid], sourceScope).path;
 
-                component.sourceIsMabValue =
+                component.filterShortCutCanBeApplied =
                     loDash(scope.project.input_data_model.schema.attribute_paths)
-                        .filter(function(ap) {
-                            return angular.equals(iap, loDash.map(ap.attribute_path.attributes, 'uuid'));
-                        })
-                        .filter(function(iap) {
-                            return loDash.last(iap.attribute_path.attributes).uri === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
-                        })
-                        .first();
+                            .filter(function(ap) {
+                                return angular.equals(iap, loDash.map(ap.attribute_path.attributes, 'uuid'));
+                            })
+                            .filter(function(iap) {
+
+                                var iapAttributes = iap.attribute_path.attributes;
+
+                                var valueAttributePath = inputContentSchema.value_attribute_path;
+                                var valueAPAttributes = valueAttributePath.attributes;
+
+                                return (loDash.every(iapAttributes, function(iapAttribute, index) {
+                                        return iapAttribute.uri === valueAPAttributes[index].uri;
+                                    }));
+                            })
+                            .first() && inputContentSchema;
             }
 
             connectionParamPromise(component, scope).then(connectComponent, mergeComponent).then(function() {
@@ -213,16 +222,19 @@ angular.module('dmpApp')
 
             if (label === true) {
                 var labelPromise;
-                if (component.sourceIsMabValue) {
-                    labelPromise = endpointLabel.askWithKeys([{
-                        attribute: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr',
-                        display: 'nr',
-                        value: ''
-                    }, {
-                        attribute: 'http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld\u001ehttp://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind',
-                        display: 'ind',
-                        value: ''
-                    }]);
+                var inputContentSchema = component.filterShortCutCanBeApplied;
+
+                if (inputContentSchema) {
+                    labelPromise = endpointLabel.askWithKeys(loDash.map(inputContentSchema.key_attribute_paths, function(keyAttributePath){
+                        var keyAPAttributes = keyAttributePath.attributes;
+                        var attribute = Util.buildUriReference(keyAPAttributes);
+                        var display = loDash.last(keyAPAttributes).name;
+                        return {
+                            attribute: attribute,
+                            display: display,
+                            value: ''
+                        };
+                    }));
                 } else {
                     labelPromise = endpointLabel.ask();
                 }

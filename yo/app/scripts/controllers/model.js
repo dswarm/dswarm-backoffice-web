@@ -245,12 +245,20 @@ angular.module('dmpApp')
             return schemaParser.fromDomainSchema(dataModel.schema);
         };
 
-        $scope.projectIsMabXml = function() {
+        $scope.projectHasContentSchemaForFilterShortCut = function() {
+
             try {
-                return $scope.project.input_data_model.configuration.parameters.storage_type === 'mabxml';
+                var contentSchema = $scope.project.input_data_model.schema.content_schema;
+
+                if(contentSchema && contentSchema.key_attribute_paths && contentSchema.key_attribute_paths.length && contentSchema.value_attribute_path) {
+
+                    return contentSchema;
+                }
             } catch(e) {
-                return false;
+
             }
+
+            return false;
         };
 
         //====================================

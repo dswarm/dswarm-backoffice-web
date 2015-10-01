@@ -34,14 +34,14 @@ describe('Directive: DmpEndpoint', function() {
         sourceScope.opts = {
             'foo': 'bar'
         };
-        sourceScope.projectIsMabXml = function() {
+        sourceScope.projectHasContentSchemaForFilterShortCut = function() {
             return false;
         };
         targetScope = parentScope.$new();
         targetScope.opts = {
             'foo': 'bar'
         };
-        targetScope.projectIsMabXml = function() {
+        targetScope.projectHasContentSchemaForFilterShortCut = function() {
             return false;
         };
 
