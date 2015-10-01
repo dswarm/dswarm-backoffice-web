@@ -2,6 +2,7 @@
     <div class="modal-header">
         <h3>filters for {{component.payload.name}}</h3>
         <button class="btn btn-warning cancel" ng-if="filters.length == 0" ng-click="addFilter()">add filter</button>
+        <button class="btn btn-danger pull-right" ng-if="activeMapping.input_attribute_paths.length > 1" ng-click="removeMappingInput()"><i class="icon icon-remove"></i></button>
     </div>
     <div class="modal-body">
         <div class="row row-2">
