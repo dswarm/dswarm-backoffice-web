@@ -30,7 +30,7 @@ angular.module('dmpApp')
                             'storage_type': configType
                         }
                     };
-                    if (applicableAsPlaceholder(configFromResource)) {
+                    if (applicableAsPlaceholder(configFromResource, configType)) {
                         config.name = configFromResource.name;
                         config.description = configFromResource.description;
                         config.parameters = configFromResource.parameters;
