@@ -37,7 +37,7 @@ angular.module('dmpApp')
             resource = data.resource;
             $scope.config = angular.extend($scope.config, data.config);
             $scope.dataModel = data.dataModel || {};
-            if (data.resourceId !== $scope.resourceId) {
+            if (data.resourceId && data.resourceId !== $scope.resourceId) {
                 $scope.resourceId = data.resourceId;
             }
         });
