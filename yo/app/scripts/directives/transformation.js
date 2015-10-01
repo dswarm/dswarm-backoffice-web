@@ -108,7 +108,7 @@ angular.module('dmpApp')
 
         //** Start of directive init
         function getSchema() {
-            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true);
+            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true, true);
             s.name = s.name || '';
 
             return s;
@@ -953,7 +953,7 @@ angular.module('dmpApp')
 
         /**
          * Formats the filter names
-         * @param {object} iap - Input attibute path instance structure
+         * @param {object} iap - Input attribute path instance structure
          * @returns {string}
          */
         $scope.formatFilters = function(iap) {
@@ -1309,7 +1309,7 @@ angular.module('dmpApp')
                             if (path) {
                                 path = Util.buildUriReference(path.attribute_path.attributes);
                                 // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
-                                return [path, f.title];
+                                return [path, f.title, f.filterType];
                             }
                         });
                     }), true);
@@ -1317,7 +1317,14 @@ angular.module('dmpApp')
                     var filtersExpression = loDash.map(filters, function (filter) {
 
                         var filterExpression = {};
-                        filterExpression[filter[0]] = filter[1];
+                        var filterExpressionBody = {
+                            type: filter[2] || 'REGEX',
+                            expression: filter[1]
+                        };
+
+                        var filterAttributePath = filter[0];
+
+                        filterExpression[filterAttributePath] = filterExpressionBody;
 
                         return filterExpression;
                     });

@@ -668,7 +668,7 @@ describe('ralfsMabSchema', function (){
         rmxResult = {
             "name": "",
             "$show": false, "$wasRendered" : false,
-            "editableTitle": false,
+            "editableTitle": false, isInFilterTree: false,
             "hasChildren": true,
             "children": [
                 {
@@ -678,7 +678,7 @@ describe('ralfsMabSchema', function (){
                     "_$path_id": 20,
                     "_$isSubSchema" : false,
                     "$show": false, "$wasRendered" : false,
-                    "editableTitle": false,
+                    "editableTitle": false, isInFilterTree: false,
                     "hasChildren": false
                 },
                 {
@@ -688,7 +688,7 @@ describe('ralfsMabSchema', function (){
                     "_$path_id": 220,
                     "_$isSubSchema" : false,
                     "$show": false, "$wasRendered" : false,
-                    "editableTitle": false,
+                    "editableTitle": false, isInFilterTree: false,
                     "hasChildren": true,
                     "children": [
                         {
@@ -698,7 +698,7 @@ describe('ralfsMabSchema', function (){
                             "_$path_id": 221,
                             "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
-                            "editableTitle": false,
+                            "editableTitle": false, isInFilterTree: false,
                             "hasChildren": false
                         },
                         {
@@ -708,7 +708,7 @@ describe('ralfsMabSchema', function (){
                             "_$path_id": 222,
                             "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
-                            "editableTitle": false,
+                            "editableTitle": false, isInFilterTree: false,
                             "hasChildren": true,
                             "children": [
                                 {
@@ -718,7 +718,7 @@ describe('ralfsMabSchema', function (){
                                     "_$path_id": 223,
                                     "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
-                                    "editableTitle": false,
+                                    "editableTitle": false, isInFilterTree: false,
                                     "hasChildren": false
                                 },
                                 {
@@ -728,7 +728,7 @@ describe('ralfsMabSchema', function (){
                                     "_$path_id": 227,
                                     "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
-                                    "editableTitle": false,
+                                    "editableTitle": false, isInFilterTree: false,
                                     "hasChildren": true,
                                     "children": [
                                         {
@@ -738,7 +738,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 228,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         },
                                         {
@@ -748,7 +748,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 229,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         },
                                         {
@@ -758,7 +758,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 230,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         }
                                     ]
@@ -770,7 +770,7 @@ describe('ralfsMabSchema', function (){
                                     "_$path_id": 224,
                                     "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
-                                    "editableTitle": false,
+                                    "editableTitle": false, isInFilterTree: false,
                                     "hasChildren": true,
                                     "children": [
                                         {
@@ -780,7 +780,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 225,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         },
                                         {
@@ -790,7 +790,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 226,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         }
                                     ]
@@ -802,7 +802,7 @@ describe('ralfsMabSchema', function (){
                                     "_$path_id": 231,
                                     "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
-                                    "editableTitle": false,
+                                    "editableTitle": false, isInFilterTree: false,
                                     "hasChildren": true,
                                     "children": [
                                         {
@@ -812,7 +812,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 232,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         },
                                         {
@@ -822,7 +822,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 233,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         },
                                         {
@@ -832,7 +832,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 238,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": false
                                         },
                                         {
@@ -842,7 +842,7 @@ describe('ralfsMabSchema', function (){
                                             "_$path_id": 234,
                                             "_$isSubSchema" : false,
                                             "$show": false, "$wasRendered" : false,
-                                            "editableTitle": false,
+                                            "editableTitle": false, isInFilterTree: false,
                                             "hasChildren": true,
                                             "children": [
                                                 {
@@ -852,7 +852,7 @@ describe('ralfsMabSchema', function (){
                                                     "_$path_id": 235,
                                                     "_$isSubSchema" : false,
                                                     "$show": false, "$wasRendered" : false,
-                                                    "editableTitle": false,
+                                                    "editableTitle": false, isInFilterTree: false,
                                                     "hasChildren": false
                                                 },
                                                 {
@@ -862,7 +862,7 @@ describe('ralfsMabSchema', function (){
                                                     "_$path_id": 236,
                                                     "_$isSubSchema" : false,
                                                     "$show": false, "$wasRendered" : false,
-                                                    "editableTitle": false,
+                                                    "editableTitle": false, isInFilterTree: false,
                                                     "hasChildren": false
                                                 },
                                                 {
@@ -872,7 +872,7 @@ describe('ralfsMabSchema', function (){
                                                     "_$path_id": 237,
                                                     "_$isSubSchema" : false,
                                                     "$show": false, "$wasRendered" : false,
-                                                    "editableTitle": false,
+                                                    "editableTitle": false, isInFilterTree: false,
                                                     "hasChildren": false
                                                 }
                                             ]
@@ -890,7 +890,7 @@ describe('ralfsMabSchema', function (){
                     "_$path_id": 215,
                     "_$isSubSchema" : false,
                     "$show": false, "$wasRendered" : false,
-                    "editableTitle": false,
+                    "editableTitle": false, isInFilterTree: false,
                     "hasChildren": true,
                     "children": [
                         {
@@ -900,7 +900,7 @@ describe('ralfsMabSchema', function (){
                             "_$path_id": 216,
                             "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
-                            "editableTitle": false,
+                            "editableTitle": false, isInFilterTree: false,
                             "hasChildren": false
                         },
                         {
@@ -910,7 +910,7 @@ describe('ralfsMabSchema', function (){
                             "_$path_id": 217,
                             "_$isSubSchema" : false,
                             "$show": false, "$wasRendered" : false,
-                            "editableTitle": false,
+                            "editableTitle": false, isInFilterTree: false,
                             "hasChildren": true,
                             "children": [
                                 {
@@ -920,7 +920,7 @@ describe('ralfsMabSchema', function (){
                                     "_$path_id": 219,
                                     "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
-                                    "editableTitle": false,
+                                    "editableTitle": false, isInFilterTree: false,
                                     "hasChildren": false
                                 },
                                 {
@@ -930,7 +930,7 @@ describe('ralfsMabSchema', function (){
                                     "_$path_id": 218,
                                     "_$isSubSchema" : false,
                                     "$show": false, "$wasRendered" : false,
-                                    "editableTitle": false,
+                                    "editableTitle": false, isInFilterTree: false,
                                     "hasChildren": false
                                 }
                             ]
