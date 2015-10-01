@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('dmpEndpoint', function($rootScope, $modal, $q, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub) {
+    .directive('dmpEndpoint', function($rootScope, $log, $modal, $q, $timeout, $window, endpointLabel, endpointSelector, GUID, jsP, loDash, PubSub) {
         var sourceScope = null,
             elements = {},
             sourceMap = {},
@@ -96,8 +96,7 @@ angular.module('dmpApp')
             var connectionDefer = $q.defer();
 
             function handleAdditionalKeyDefs(data) {
-
-                if(data.keyDefs.length === 0) {
+                if (!(data && data.keyDefs && data.keyDefs.length)) {
                     return;
                 }
 
@@ -178,6 +177,7 @@ angular.module('dmpApp')
                 newConnection = jsP.connect(sourceEndpoint, targetEndpoint);
 
                 jsP.on('click', onClick);
+                jsP.on('dblclick', onDoubleClick);
 
                 if (component.mappingId) {
                     newConnection.mappingId = component.mappingId;
@@ -343,15 +343,51 @@ angular.module('dmpApp')
 
         // === Callbacks ===
 
+        var waitForDoubleClick = true;
+        var doubleClickSpeed = 300;
+        var delayedClick;
+
+        function cancelDelayedClick(event) {
+            $timeout.cancel(delayedClick);
+            waitForDoubleClick = true;
+            delayedClick = null;
+            event.target.style.cursor = 'pointer';
+        }
+
         function onClick(component, event) {
             if (component.scope === 'schema') {
-                switch (event.target.tagName) {
-
-                    case 'DIV':
-                    case 'path': // fall through
-                        activate(component, false, true);
-                        break;
+                if (waitForDoubleClick) {
+                    waitForDoubleClick = false;
+                    event.target.style.cursor = 'progress';
+                    delayedClick = $timeout(function() {
+                        if (!waitForDoubleClick) {
+                            cancelDelayedClick(event);
+                            executeOnClick(component, event);
+                        }
+                    }, doubleClickSpeed);
                 }
+            }
+        }
+
+        function executeOnClick(component, event) {
+            switch (event.target.tagName) {
+                case 'DIV':
+                case 'path': // fall through
+                    activate(component, false, true);
+                    break;
+            }
+        }
+
+        function onDoubleClick(component, event) {
+            if (component.scope === 'schema' && event.target.tagName === 'DIV') {
+                cancelDelayedClick(event);
+                var labelPromise = endpointLabel.ask('Rename this mapping', undefined, undefined, undefined, {label: endpointLabel.get(component)});
+                labelPromise.then(function(label) {
+                    $log.info('new label', label);
+                    if (label.label) {
+                        endpointLabel.set(component, label.label);
+                    }
+                });
             }
         }
 

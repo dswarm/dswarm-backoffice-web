@@ -475,6 +475,13 @@ angular.module('dmpApp')
 
         }
 
+        function updateTabTitle() {
+            var tabIndex = loDash.findIndex($scope.tabs, { 'uuid': $scope.activeMapping.uuid });
+            if (tabIndex >= 0) {
+                $scope.tabs[tabIndex].title = $scope.activeMapping.name;
+            }
+        }
+
         /**
          * Updates the input and output objects for a given grid position
          * @param positionX int
@@ -920,6 +927,7 @@ angular.module('dmpApp')
 
             if (tabIndex >= 0) {
                 $scope.tabs[tabIndex].active = true;
+                $scope.tabs[tabIndex].title = $scope.activeMapping.name;
             }
         }
 
@@ -973,6 +981,7 @@ angular.module('dmpApp')
                     var midx = loDash.findIndex($scope.project.mappings, {uuid: data.mapping_id});
 
                     $scope.project.mappings[midx]._$connection_id = data.connection_id;
+                    $scope.project.mappings[midx].name = data.name;
 
                     activate(data.mapping_id, true);
 
@@ -1026,6 +1035,7 @@ angular.module('dmpApp')
                 }
             } else {
                 $scope.activeMapping._$connection_id = data.connection_id;
+                $scope.activeMapping.name = data.name;
             }
 
             if ($scope.activeMapping.input_attribute_paths.length !== data.additionalInput.length + 1) {
@@ -1074,6 +1084,8 @@ angular.module('dmpApp')
             showTransformationPlumbsInit();
 
             updateInputOutputMappings();
+
+            updateTabTitle();
 
             if ($scope.$$phase !== '$digest') {
                 $scope.$digest();

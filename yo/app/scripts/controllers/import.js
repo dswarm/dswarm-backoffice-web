@@ -33,7 +33,7 @@ angular.module('dmpApp')
                     file: f,
                     params: {
                         name: $scope.data.name,
-                        description: $scope.data.description
+                        description: $scope.data.description || ''
                     },
                     fileUrl: ApiEndpoint + 'resources'
                 }).then(function() {
