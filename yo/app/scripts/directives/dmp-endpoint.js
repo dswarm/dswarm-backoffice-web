@@ -386,7 +386,6 @@ angular.module('dmpApp')
                     $log.info('new label', label);
                     if (label.label) {
                         endpointLabel.set(component, label.label);
-                        activate(component, false, true);
                     }
                 });
             }
