@@ -1,7 +1,7 @@
 'use strict';
 
-describe('Controller: DataConfigPreviewCsvCtrl', function () {
-    var $httpBackend, $rootScope, scope, dataConfigPreviewXmlCtrl, $timeout, $jsonResponse10, $jsonResponse20;
+describe('Controller: DataConfigPreviewTextCtrl', function () {
+    var $httpBackend, $rootScope, scope, dataConfigPreviewTextCtrl, $timeout, $jsonResponse10, $jsonResponse20;
 
     var win = {
         _: {
@@ -36,8 +36,8 @@ describe('Controller: DataConfigPreviewCsvCtrl', function () {
         scope = $rootScope.$new();
 
         var $controller = $injector.get('$controller');
-        dataConfigPreviewXmlCtrl = function () {
-            return $controller('DataConfigPreviewXmlCtrl', {
+        dataConfigPreviewTextCtrl = function () {
+            return $controller('DataConfigPreviewTextCtrl', {
                 $scope: scope
             });
         };
@@ -45,9 +45,9 @@ describe('Controller: DataConfigPreviewCsvCtrl', function () {
     }));
 
 
-    it('should have a DataConfigPreviewXmlCtrl controller', function() {
-        var DataConfigPreviewXmlCtrl = dataConfigPreviewXmlCtrl();
-        expect(DataConfigPreviewXmlCtrl).not.toBe(null);
+    it('should have a DataConfigPreviewTextCtrl controller', function() {
+        var DataConfigPreviewTextCtrl = dataConfigPreviewTextCtrl();
+        expect(DataConfigPreviewTextCtrl).not.toBe(null);
     });
 
     it('should push preview response to scope', function() {
@@ -59,7 +59,7 @@ describe('Controller: DataConfigPreviewCsvCtrl', function () {
             at_most_rows : 10
         };
 
-        dataConfigPreviewXmlCtrl();
+        dataConfigPreviewTextCtrl();
 
         $rootScope.$digest();
         $httpBackend.flush();
@@ -75,7 +75,7 @@ describe('Controller: DataConfigPreviewCsvCtrl', function () {
 
         scope.resourceId = 1;
 
-        dataConfigPreviewXmlCtrl();
+        dataConfigPreviewTextCtrl();
 
         $rootScope.$digest();
         $httpBackend.flush();
