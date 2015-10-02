@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, SchemaResource, SchemaAttributepathsResource, schemaParser, PubSub, loDash, Util, jsP, endpointLabel) {
+    .controller('ModelCtrl', function($scope, $routeParams, $timeout, $modal, localStorageService, ProjectResource, SchemaResource, SchemaAttributepathsResource, schemaParser, PubSub, loDash, Util, jsP, endpointLabel, filterHelper) {
 
         var latestSave = {};
 
@@ -390,6 +390,62 @@ angular.module('dmpApp')
 
                 restoreProject(project);
             });
+        };
+
+        function setSkipFilterExpression(project, expr) {
+
+            if(!loDash.isArray(expr)) {
+                expr = [expr];
+            }
+
+            var expression = JSON.stringify(expr);
+            if (project.skip_filter) {
+                project.skip_filter.expression = expression;
+            } else {
+                project.skip_filter = {
+                    uuid: Util.getId(),
+                    expression: expression
+                };
+            }
+        }
+
+        function openSkipFilter(project) {
+
+            if (!project._$filters) {
+                project._$filters = [];
+            }
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/skip-filter.html',
+                controller: 'FilterCtrl',
+                windowClass: 'wide',
+                resolve: {
+                    filterObject: function() {
+                        return project;
+                    },
+                    attributePathId: function() {
+                        return '';
+                    },
+                    filters: function() {
+                        return project._$filters;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(reason) {
+
+                // TODO: check reason (if necessary, e.g., onSkipFilterDelete)
+
+                var filters = filterHelper.prepareFilters(project._$filters, project);
+                var filtersExpression = filterHelper.buildFilterExpression(filters);
+
+                setSkipFilterExpression(project, filtersExpression);
+            });
+        }
+
+        $scope.onDefineSkipFilterClick = function(idx) {
+
+            openSkipFilter($scope.project);
         };
 
         $scope.onDiscardDraftClick = function(idx) {

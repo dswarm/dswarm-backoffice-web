@@ -95,17 +95,6 @@ angular.module('dmpApp')
         var getOutputVariable = angular.noop;
         var getOutputMAPIName = angular.noop;
 
-
-        /**
-         * returns eigther id or generates a new one
-         * @param {string=} optId The id to return
-         * @returns {*}
-         */
-        function getId(optId) {
-            return angular.isDefined(optId) ? optId
-                : GUID.uuid4();
-        }
-
         //** Start of directive init
         function getSchema() {
             var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true, true);
@@ -562,7 +551,7 @@ angular.module('dmpApp')
             var componentData = {
                 function: angular.copy(functionDataOriginal),
                 name : 'component' + GUID.uuid4(),
-                uuid: getId(),
+                uuid: Util.getId(),
                 output_components : [],
                 input_components : [],
                 description: angular.toJson({
@@ -1186,7 +1175,8 @@ angular.module('dmpApp')
                     name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
                     description: 'With mappings: ' + $scope.returnMappingNames(', '),
                     job: {
-                        mappings: $scope.project.mappings
+                        mappings: $scope.project.mappings,
+                        skip_filter: $scope.project.skip_filter
                     },
                     input_data_model: $scope.project.input_data_model,
                     output_data_model: $scope.project.output_data_model
@@ -1257,7 +1247,7 @@ angular.module('dmpApp')
                 iap.filter.expression = expression;
             } else {
                 iap.filter = {
-                    uuid: getId(),
+                    uuid: Util.getId(),
                     expression: expression
                 };
             }
@@ -1273,7 +1263,7 @@ angular.module('dmpApp')
                 controller: 'FilterCtrl',
                 windowClass: 'wide',
                 resolve: {
-                    mapping: function() {
+                    filterObject: function() {
                         return mapping;
                     },
                     attributePathId: function() {
@@ -1299,35 +1289,8 @@ angular.module('dmpApp')
                     }
                 } else {
 
-                    var filters = loDash.flatten(loDash.map(IAPInstance._$filters, function (filter) {
-                        //noinspection FunctionWithInconsistentReturnsJS
-                        return Util.collect(filter.inputFilters, function (f) {
-
-                            var path = loDash.find($scope.project.input_data_model.schema.attribute_paths, function (ap) {
-                                return ap.attribute_path.uuid === f.apId;
-                            });
-                            if (path) {
-                                path = Util.buildUriReference(path.attribute_path.attributes);
-                                // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
-                                return [path, f.title, f.filterType];
-                            }
-                        });
-                    }), true);
-
-                    var filtersExpression = loDash.map(filters, function (filter) {
-
-                        var filterExpression = {};
-                        var filterExpressionBody = {
-                            type: filter[2] || 'REGEX',
-                            expression: filter[1]
-                        };
-
-                        var filterAttributePath = filter[0];
-
-                        filterExpression[filterAttributePath] = filterExpressionBody;
-
-                        return filterExpression;
-                    });
+                    var filters = filterHelper.prepareFilters(IAPInstance._$filters, $scope.project);
+                    var filtersExpression = filterHelper.buildFilterExpression(filters);
 
                     setFilterExpression(IAPInstance, filtersExpression);
                 }

@@ -132,7 +132,7 @@ angular.module('dmpApp').
                     }
                 } else if (d.title) {
 
-                    var filterType = 'REGEX';
+                    var filterType = 'REGEXP';
 
                     if (d.asNumberFilter) {
                         filterType = 'NUMERIC';
@@ -231,9 +231,47 @@ angular.module('dmpApp').
             return matches;
         }
 
+        function prepareFilters(filters, project) {
+
+            return loDash.flatten(loDash.map(filters, function (filter) {
+                //noinspection FunctionWithInconsistentReturnsJS
+                return Util.collect(filter.inputFilters, function (f) {
+
+                    var path = loDash.find(project.input_data_model.schema.attribute_paths, function (ap) {
+                        return ap.attribute_path.uuid === f.apId;
+                    });
+                    if (path) {
+                        path = Util.buildUriReference(path.attribute_path.attributes);
+                        // path = loDash.pluck(path.attributes, 'uri').join('&amp;#30;');
+                        return [path, f.title, f.filterType];
+                    }
+                });
+            }), true);
+        }
+
+        function buildFilterExpression(filters) {
+
+            return loDash.map(filters, function (filter) {
+
+                var filterExpression = {};
+                var filterExpressionBody = {
+                    type: filter[2] || 'REGEXP',
+                    expression: filter[1]
+                };
+
+                var filterAttributePath = filter[0];
+
+                filterExpression[filterAttributePath] = filterExpressionBody;
+
+                return filterExpression;
+            });
+        }
+
         return {
             annotateMatches: annotateMatches,
             applyFilter: applyFilter,
-            buildFilterInputs: buildFilterInputs
+            buildFilterInputs: buildFilterInputs,
+            prepareFilters: prepareFilters,
+            buildFilterExpression: buildFilterExpression
         };
     });
