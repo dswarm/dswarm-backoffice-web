@@ -43,7 +43,7 @@
         </small>
 
         <small ng-if="data.editableTitle && !data.hasChildren"
-               class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()">
+               class="data-sample"> &nbsp; <input type="text" ng-model="data.title" ng-change="update()"><div ng-if="data.isInFilterTree" class="tree-filter-container"> &nbsp; <label class="tree-filter-label"><input class="tree-filter-input" ng-model="data.asNumberFilter" type="checkbox" ng-change="update()">as number filter</label></div>
         </small>
 
         <span ng-if='(!data.hasChildren || isCollapsed(data)) && config.type == "as-source"' class="pull-right mapping-selector-btn mapping-selector-btn-source target-selector jsPanchorIcon">
