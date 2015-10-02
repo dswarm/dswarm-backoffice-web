@@ -31,7 +31,7 @@ describe('Directive: DataConfigXml', function () {
 
         $httpBackend.whenGET('/dmp/resources/42').respond($jsonResponseGet);
         $httpBackend.whenGET('/dmp/resources/1').respond({});
-        $httpBackend.whenPOST('/dmp/datamodels').respond($jsonResponse);
+        $httpBackend.whenPOST('/dmp/datamodels?enhanceDataResource=true').respond($jsonResponse);
 
 
         routeParams.resourceId = 42;
