@@ -66,7 +66,7 @@ angular.module('dmpApp')
 
         var savingPromise;
 
-        function save(mode, resource, dataModel, config) {
+        function save(mode, resource, dataModel, config, enhanceDataResource) {
             if (savingPromise) {
                 return savingPromise.promise;
             }
@@ -87,7 +87,15 @@ angular.module('dmpApp')
                     'uuid': GUID.uuid4()
                 };
 
-                DataModelResource.save({}, model, function() {
+                var queryParams;
+
+                if(enhanceDataResource) {
+                    queryParams = {enhanceDataResource: enhanceDataResource};
+                } else {
+                    queryParams = {};
+                }
+
+                DataModelResource.save(queryParams, model, function() {
                     ngProgress.complete();
                     savingPromise.resolve({});
                     savingPromise = null;

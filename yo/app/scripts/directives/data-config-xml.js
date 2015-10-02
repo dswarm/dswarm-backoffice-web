@@ -90,7 +90,8 @@ angular.module('dmpApp')
         });
 
         $scope.onSaveClick = function() {
-            var savePromise = dataConfigText.save($scope.mode, resource, $scope.dataModel, getConfig());
+            var enhanceDataResource = true;
+            var savePromise = dataConfigText.save($scope.mode, resource, $scope.dataModel, getConfig(), enhanceDataResource);
             savePromise.then(function() {
                 $location.path('/data/');
             } , function(error) {
