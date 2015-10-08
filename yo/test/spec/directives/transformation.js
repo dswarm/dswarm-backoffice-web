@@ -924,7 +924,7 @@ describe('Directive: Transformation', function() {
         elScope.onFilterClick({'attribute_path': {uuid: 'foo'}});
 
         expect($modal.open).toHaveBeenCalled();
-        expect($modal.open.calls.argsFor(0)[0].resolve.mapping()).toEqual({});
+        expect($modal.open.calls.argsFor(0)[0].resolve.filterObject()).toEqual({});
         expect($modal.open.calls.argsFor(0)[0].resolve.attributePathId()).toBe('foo');
         expect($modal.open.calls.argsFor(0)[0].resolve.filters()).toEqual([]);
     }));

@@ -16,11 +16,11 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('FilterCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, mapping, attributePathId, filters) {
+    .controller('FilterCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, filterObject, attributePathId, filters) {
 
         $scope.internalName = 'Filter Widget';
 
-        $scope.activeMapping = mapping;
+        $scope.activeFilterObject = filterObject;
         $scope.filters = filters;
 
         $scope.dataSource = {};
