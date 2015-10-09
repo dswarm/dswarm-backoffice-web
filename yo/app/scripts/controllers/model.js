@@ -131,6 +131,13 @@ angular.module('dmpApp')
             _$output_data_model_schema: {}
         };
 
+        function getSchema() {
+            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true, true);
+            s.name = s.name || '';
+
+            return s;
+        }
+
         $scope.$project_saved_state = {};
 
         $scope.isOutputDataModelLoaded = false;
@@ -394,6 +401,11 @@ angular.module('dmpApp')
 
         function setSkipFilterExpression(project, expr) {
 
+            if(loDash.isEmpty(expr)) {
+
+                return;
+            }
+
             if(!loDash.isArray(expr)) {
                 expr = [expr];
             }
@@ -415,6 +427,21 @@ angular.module('dmpApp')
                 project._$filters = [];
             }
 
+            if(project.skip_filter) {
+
+                // load skip filter
+
+                var filterName = 'my skip filter';
+
+                if(project.skip_filter.name) {
+                    filterName = project.skip_filter.name;
+                }
+
+                var expression = angular.fromJson(project.skip_filter.expression),
+                    schema = getSchema();
+                project._$filters = filterHelper.parseFilterDefinitions(expression, filterName, schema);
+            }
+
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/skip-filter.html',
                 controller: 'FilterCtrl',
@@ -434,12 +461,17 @@ angular.module('dmpApp')
 
             modalInstance.result.then(function(reason) {
 
-                // TODO: check reason (if necessary, e.g., onSkipFilterDelete)
+                if(reason && reason.removeFilter) {
 
-                var filters = filterHelper.prepareFilters(project._$filters, project);
-                var filtersExpression = filterHelper.buildFilterExpression(filters);
+                    project._$filters = [];
+                    project.skip_filter = null;
+                } else {
 
-                setSkipFilterExpression(project, filtersExpression);
+                    var filters = filterHelper.prepareFilters(project._$filters, project);
+                    var filtersExpression = filterHelper.buildFilterExpression(filters);
+
+                    setSkipFilterExpression(project, filtersExpression);
+                }
             });
         }
 
