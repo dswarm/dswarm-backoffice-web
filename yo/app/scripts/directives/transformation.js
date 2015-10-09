@@ -1253,6 +1253,13 @@ angular.module('dmpApp')
 
         function setFilterExpression(iap, expr) {
 
+            if(!expr || !expr.length) {
+
+                // only create filter, when expression is really available
+
+                return;
+            }
+
             if(!loDash.isArray(expr)) {
                 expr = [expr];
             }
@@ -1293,14 +1300,24 @@ angular.module('dmpApp')
 
             modalInstance.result.then(function(reason) {
 
-                if(reason === 'delete this mapping input') {
+                if(reason && (reason.removeMappingInput || reason.removeFilter)) {
+
                     var index = loDash.find(mapping.input_attribute_paths, {uuid:IAPInstance.uuid});
 
                     if(index !== -1) {
 
-                        mapping.input_attribute_paths.splice(index,1);
+                        if(reason.removeMappingInput) {
 
-                        showTransformationPlumbs();
+                            mapping.input_attribute_paths.splice(index,1);
+
+                            showTransformationPlumbs();
+                        } else if (reason.removeFilter) {
+
+                            index.filter = null;
+                            index._$filters = [];
+                            IAPInstance._$filters = [];
+                            IAPInstance.filter = null;
+                        }
                     }
                 } else {
 
