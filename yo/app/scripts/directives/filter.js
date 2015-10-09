@@ -74,10 +74,21 @@ angular.module('dmpApp')
             return true;
         };
 
+        $scope.filterTypes = [
+            {id: 'NUMERIC', name: 'numeric filter'},
+            {id: 'REGEXP', name: 'regular expression'},
+            {id: 'EQUALS', name: 'equals'},
+            {id: 'NOTEQUALS', name: 'not-equals'}
+        ];
+
+        $scope.defaultFilterType = $scope.filterTypes[1];
+
         $scope.addFilter = function() {
 
+            var filter = schemaParser.fromDomainSchema($scope.dataSchema, true, true, $scope.filterTypes, $scope.defaultFilterType);
+
             filters.push({
-                filter: schemaParser.fromDomainSchema($scope.dataSchema, true, true),
+                filter: filter,
                 inputFilters: [],
                 name: 'new filter'
             });

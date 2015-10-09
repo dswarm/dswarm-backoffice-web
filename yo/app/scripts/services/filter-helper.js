@@ -134,8 +134,8 @@ angular.module('dmpApp').
 
                     var filterType = 'REGEXP';
 
-                    if (d.asNumberFilter) {
-                        filterType = 'NUMERIC';
+                    if (d.filterType && d.filterType.id) {
+                        filterType = d.filterType.id;
                     }
 
                     return {
