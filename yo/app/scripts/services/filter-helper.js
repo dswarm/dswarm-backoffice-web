@@ -72,11 +72,21 @@ angular.module('dmpApp').
             }
 
             function apply(value, key) {
-                var pathUris = key.split('\u001E');
+                var pathUris = key.split(pathDelimiter);
 
                 loop(schema.children || [], pathUris, function(child) {
                     child.title = value.expression || '';
-                    child.asNumberFilter = value.type === 'NUMERIC';
+
+                    child.filterTypes = [
+                        {id: 'NUMERIC', name: 'numeric filter'},
+                        {id: 'REGEXP', name: 'regular expression'},
+                        {id: 'EQUALS', name: 'equals'},
+                        {id: 'NOTEQUALS', name: 'not-equals'}
+                    ];
+
+                    child.filterType = value.type ? loDash.select(child.filterTypes, function(filterType) {
+                            return filterType.id === value.type;
+                        }) : child.filterTypes[1];
                 });
             }
 

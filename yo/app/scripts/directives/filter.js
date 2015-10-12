@@ -90,7 +90,10 @@ angular.module('dmpApp')
                 defaultFilterType: defaultFilterType
             };
 
-            var filter = schemaParser.fromDomainSchema($scope.dataSchema, true, true, filterTypeObj);
+            var inFilterTree = true;
+            var editableTitle = true;
+
+            var filter = schemaParser.fromDomainSchema($scope.dataSchema, editableTitle, inFilterTree, filterTypeObj);
 
             filters.push({
                 filter: filter,
