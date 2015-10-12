@@ -414,6 +414,20 @@ angular.module('dmpApp')
             });
         };
 
+        function setSelectedRecordsExpression(project, expr) {
+
+            if(loDash.isEmpty(expr)) {
+
+                return;
+            }
+
+            if(!loDash.isArray(expr)) {
+                expr = [expr];
+            }
+
+            // TODO: do record search with given filter expression and store the resulted records uris
+        }
+
         function setSkipFilterExpression(project, expr) {
 
             if(loDash.isEmpty(expr)) {
@@ -434,6 +448,53 @@ angular.module('dmpApp')
                     expression: expression
                 };
             }
+        }
+
+        function openSelectRecords(project) {
+
+            if (!project._$selectedRecords) {
+                project._$selectedRecords = [];
+            }
+
+            if(project.selected_records) {
+
+                // TODO: load selected records
+            }
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/select-records.html',
+                controller: 'SelectedRecordsCtrl',
+                windowClass: 'wide',
+                resolve: {
+                    filterObject: function() {
+                        return project;
+                    },
+                    attributePathId: function() {
+                        return '';
+                    },
+                    filters: function() {
+                        return project._$selectedRecords;
+                    },
+                    inputDataModel: function() {
+                        return project.input_data_model;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(reason) {
+
+                if(reason && reason.removeFilter) {
+
+                    project._$selectedRecords = [];
+                    project.selected_records = null;
+                } else {
+
+                    var filters = filterHelper.prepareFilters(project._$selectedRecords, project);
+                    var filtersExpression = filterHelper.buildFilterExpression(filters);
+
+                    setSelectedRecordsExpression(project, filtersExpression);
+                }
+            });
         }
 
         function openSkipFilter(project) {
@@ -489,6 +550,11 @@ angular.module('dmpApp')
                 }
             });
         }
+
+        $scope.onSelectRecordsClick = function(idx) {
+
+            openSelectRecords($scope.project);
+        };
 
         $scope.onDefineSkipFilterClick = function(idx) {
 

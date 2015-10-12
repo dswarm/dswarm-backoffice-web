@@ -16,9 +16,9 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SourceDataCtrl', function($scope, gdmParser, DataModelResource, PubSub, loDash) {
+    .controller('SelectedRecordsDataCtrl', function($scope, gdmParser, DataModelResource, PubSub, loDash) {
 
-        $scope.internalName = 'Source Data Widget';
+        $scope.internalName = 'Selected Records Data Widget';
 
         $scope.data = {};
         $scope.records = [];
@@ -35,7 +35,7 @@ angular.module('dmpApp')
         };
 
         $scope.dataInclude = function() {
-            return $scope.showData ? 'sourcedata' : '';
+            return $scope.showData ? 'selectedrecorddata' : '';
         };
 
         $scope.loadData = function(dataModel) {
@@ -59,7 +59,7 @@ angular.module('dmpApp')
             }, function(dataResult) {
 
                 $scope.originalRecords = dataResult;
-                $scope.records = loDash.map(dataResult, function(record) {
+                $scope.selectedRecords = loDash.map(dataResult, function(record) {
                     return {
                         id: record.uuid,
                         data: getSchema(record.data)
@@ -71,31 +71,30 @@ angular.module('dmpApp')
         };
 
         function init() {
-            $scope.loadData($scope.project.input_data_model);
+
+            $scope.loadData($scope.model);
         }
 
         init();
-        PubSub.subscribe($scope, ['inputDataSelected', 'projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel', 'restoreCurrentProject'], init);
+        PubSub.subscribe($scope, ['selectedRecordsDataSelected', 'projectDraftDiscarded', 'projectModelChanged', 'restoreCurrentProject'], init);
 
         PubSub.subscribe($scope, 'getLoadData', function() {
-
-            PubSub.broadcast('returnLoadData', {
-                record: $scope.originalRecords[0],
-                schema: $scope.schema
-            });
 
             PubSub.broadcast('returnFullLoadData', {
                 records: $scope.originalRecords,
                 schema: $scope.schema
             });
+
         });
     })
-    .directive('sourceData', function() {
+    .directive('selectedRecordsData', function() {
         return {
-            scope: true,
+            scope: {
+                model: '='
+            },
             restrict: 'E',
             replace: true,
-            templateUrl: 'views/directives/source-data.html',
-            controller: 'SourceDataCtrl'
+            templateUrl: 'views/directives/selected-records-data.html',
+            controller: 'SelectedRecordsDataCtrl'
         };
     });

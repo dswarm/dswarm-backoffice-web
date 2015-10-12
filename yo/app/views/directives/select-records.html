@@ -1,12 +1,12 @@
 <div ng-if="dataLoaded">
     <div class="modal-header">
-        <h3>skip filters for {{activeFilterObject.name}}</h3>
-        <button class="btn btn-warning cancel" ng-if="filters.length == 0" ng-click="addFilter()">add skip filter</button>
+        <h3>Record selection for {{activeFilterObject.name}}</h3>
+        <button class="btn btn-warning cancel" ng-if="filters.length == 0" ng-click="addFilter()">add record selection</button>
     </div>
     <div class="modal-body">
         <div class="row row-2">
 
-            <div class="tabbable col-md-6">
+            <div class="tabbable col-md-3">
 
                 <ul class="nav nav-tabs">
                     <li class="active">
@@ -14,7 +14,7 @@
                     </li>
                 </ul>
 
-                <filter-data data="dataSource"></filter-data>
+                <selected-records-data model="inputDataModel"></selected-records-data>
 
             </div>
 
