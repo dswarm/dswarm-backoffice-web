@@ -77,16 +77,13 @@ angular.module('dmpApp').
                 loop(schema.children || [], pathUris, function(child) {
                     child.title = value.expression || '';
 
-                    child.filterTypes = [
-                        {id: 'NUMERIC', name: 'numeric filter'},
-                        {id: 'REGEXP', name: 'regular expression'},
-                        {id: 'EQUALS', name: 'equals'},
-                        {id: 'NOTEQUALS', name: 'not-equals'}
-                    ];
-
-                    child.filterType = value.type ? loDash.select(child.filterTypes, function(filterType) {
+                    var filterType;
+                    if (value.type) {
+                         filterType = loDash.find(child.filterTypes, function(filterType) {
                             return filterType.id === value.type;
-                        }) : child.filterTypes[1];
+                        });
+                    }
+                    child.filterType = filterType || child.filterTypes[1];
                 });
             }
 
