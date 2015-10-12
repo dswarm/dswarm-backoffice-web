@@ -72,11 +72,18 @@ angular.module('dmpApp').
             }
 
             function apply(value, key) {
-                var pathUris = key.split('\u001E');
+                var pathUris = key.split(pathDelimiter);
 
                 loop(schema.children || [], pathUris, function(child) {
                     child.title = value.expression || '';
-                    child.asNumberFilter = value.type === 'NUMERIC';
+
+                    var filterType;
+                    if (value.type) {
+                         filterType = loDash.find(child.filterTypes, function(filterType) {
+                            return filterType.id === value.type;
+                        });
+                    }
+                    child.filterType = filterType || child.filterTypes[1];
                 });
             }
 
@@ -134,8 +141,8 @@ angular.module('dmpApp').
 
                     var filterType = 'REGEXP';
 
-                    if (d.asNumberFilter) {
-                        filterType = 'NUMERIC';
+                    if (d.filterType && d.filterType.id) {
+                        filterType = d.filterType.id;
                     }
 
                     return {

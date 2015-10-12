@@ -76,8 +76,27 @@ angular.module('dmpApp')
 
         $scope.addFilter = function() {
 
+            var filterTypes = [
+                {id: 'NUMERIC', name: 'numeric filter'},
+                {id: 'REGEXP', name: 'regular expression'},
+                {id: 'EQUALS', name: 'equals'},
+                {id: 'NOTEQUALS', name: 'not-equals'}
+            ];
+
+            var defaultFilterType = filterTypes[1];
+
+            var filterTypeObj = {
+                filterTypes: filterTypes,
+                defaultFilterType: defaultFilterType
+            };
+
+            var inFilterTree = true;
+            var editableTitle = true;
+
+            var filter = schemaParser.fromDomainSchema($scope.dataSchema, editableTitle, inFilterTree, filterTypeObj);
+
             filters.push({
-                filter: schemaParser.fromDomainSchema($scope.dataSchema, true, true),
+                filter: filter,
                 inputFilters: [],
                 name: 'new filter'
             });

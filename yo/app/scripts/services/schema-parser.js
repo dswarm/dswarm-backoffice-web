@@ -46,10 +46,17 @@ angular.module('dmpApp').
          * @param editableTitle {Boolean=}
          * @returns {*}
          */
-        function fromDomainSchema(domainSchema, editableTitle, isInFilterTree) {
+        function fromDomainSchema(domainSchema, editableTitle, isInFilterTree, filterTypeObj) {
+
+            var extra = {$show: false, editableTitle: !!editableTitle, '$wasRendered': false, isInFilterTree: !!isInFilterTree};
+
+            if(filterTypeObj) {
+
+                extra.filterTypes = filterTypeObj.filterTypes;
+                extra.filterType = filterTypeObj.defaultFilterType;
+            }
 
             var base = {name: domainSchema.name || ''},
-                extra = {$show: false, editableTitle: !!editableTitle, '$wasRendered': false, isInFilterTree: !!isInFilterTree},
                 paths = prepare(domainSchema),
                 cache = generateTreeCache(paths);
 
