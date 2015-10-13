@@ -132,7 +132,22 @@ angular.module('dmpApp')
         };
 
         function getSchema() {
-            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true, true);
+
+            var filterTypes = [
+                {id: 'NUMERIC', name: 'numeric filter'},
+                {id: 'REGEXP', name: 'regular expression'},
+                {id: 'EQUALS', name: 'equals'},
+                {id: 'NOTEQUALS', name: 'not-equals'}
+            ];
+
+            var defaultFilterType = filterTypes[1];
+
+            var filterTypeObj = {
+                filterTypes: filterTypes,
+                defaultFilterType: defaultFilterType
+            };
+
+            var s = schemaParser.fromDomainSchema($scope.project.input_data_model.schema, true, true, filterTypeObj);
             s.name = s.name || '';
 
             return s;
