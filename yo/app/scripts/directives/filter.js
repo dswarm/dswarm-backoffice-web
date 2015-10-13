@@ -26,6 +26,7 @@ angular.module('dmpApp')
         $scope.dataSource = {};
         $scope.dataSchema = {};
         $scope.dataLoaded = false;
+        $scope.isRemoveFilter = false;
 
         var originalSource = {};
 
@@ -108,7 +109,12 @@ angular.module('dmpApp')
         };
 
         $scope.save = function() {
-            $modalInstance.close();
+
+            var result = {
+                removeFilter: $scope.isRemoveFilter
+            };
+
+            $modalInstance.close(result);
         };
 
         $scope.removeMappingInput = function() {
@@ -119,7 +125,27 @@ angular.module('dmpApp')
 
             modalInstance.result.then(function() {
 
-                $modalInstance.close('delete this mapping input');
+                var result = {
+                    removeMappingInput: true
+                };
+
+                $modalInstance.close(result);
+            });
+        };
+
+        $scope.removeFilter = function() {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/controllers/confirm-remove-filter.html'
+            });
+
+            modalInstance.result.then(function() {
+
+                filters = [];
+                $scope.filters = [];
+                $scope.isRemoveFilter = true;
+
+                $scope.update();
             });
         };
 
