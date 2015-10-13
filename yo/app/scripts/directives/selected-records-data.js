@@ -44,11 +44,9 @@ angular.module('dmpApp')
 
         function processRecordsData(message) {
 
-            var dataResult = message.records;
+            $scope.originalRecords  = message.records;
             var dataModel = message.dataModel;
-
-            $scope.originalRecords = dataResult;
-            $scope.selectedRecords = loDash.map(dataResult, function (record) {
+            $scope.selectedRecords = loDash.map($scope.originalRecords, function (record) {
                 return {
                     id: record.id,
                     data: getSchema(record.data, dataModel)
@@ -85,8 +83,23 @@ angular.module('dmpApp')
 
         function init() {
 
-            $scope.loadData($scope.inputDataModel);
+            if($scope.model.selectedRecords) {
+
+                var message = {
+                    records: $scope.model.selectedRecords,
+                    dataModel: $scope.model.inputDataModel
+                };
+
+                processRecordsData(message);
+            }
+
+            if(!$scope.originalRecords) {
+
+                $scope.loadData($scope.model.inputDataModel);
+            }
         }
+
+        PubSub.subscribe($scope, 'updateRecordsData', processRecordsData);
 
         init();
         PubSub.subscribe($scope, ['selectedRecordsDataSelected', 'projectDraftDiscarded', 'projectModelChanged', 'restoreCurrentProject'], init);
@@ -99,8 +112,6 @@ angular.module('dmpApp')
             });
 
         });
-
-        PubSub.subscribe($scope, 'updateRecordsData', processRecordsData);
 
     })
     .directive('selectedRecordsData', function() {

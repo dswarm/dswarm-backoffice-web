@@ -16,20 +16,25 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SelectRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, filterObject, rawDataSources, inputDataModel) {
+    .controller('SelectRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, project) {
 
         $scope.internalName = 'Selected Records Widget';
 
-        $scope.activeFilterObject = filterObject;
+        $scope.activeFilterObject = project;
         $scope.filters = [];
-        $scope.inputDataModel = inputDataModel;
 
         $scope.dataSources = [];
-        $scope.dataSchema = {};
+        $scope.dataSchema = angular.copy(project.input_data_model.schema);
         $scope.dataLoaded = false;
         $scope.isRemoveFilter = false;
         $scope.filterSelectorShown = false;
 
+        var rawDataSources = project._$selectedRecords;
+        var inputDataModel = project.input_data_model;
+        $scope.model = {
+            selectedRecords: rawDataSources,
+            inputDataModel: inputDataModel
+        };
         var inputFilterCollection = [];
 
         // deactivated until further notice
@@ -91,7 +96,13 @@ angular.module('dmpApp')
         var processRecords = function(args) {
 
             if (args.records) {
-                var schema = angular.copy(args.schema);
+
+                var schema = $scope.dataSchema;
+
+                if (args.schema) {
+
+                    schema = angular.copy(args.schema);
+                }
                 // deactivated until further notice
 //                if (attributePathId) {
 //                    restrictSchema(schema, attributePathId);
@@ -116,7 +127,7 @@ angular.module('dmpApp')
 
         $scope.searchRecords = function() {
 
-            var filters2 = filterHelper.prepareFilters($scope.filters, filterObject);
+            var filters2 = filterHelper.prepareFilters($scope.filters, $scope.activeFilterObject);
 
             if(!filters2) {
 
@@ -133,7 +144,7 @@ angular.module('dmpApp')
                 search_value: filterValue
             };
 
-            DataModelResource.recordSearch({
+            DataModelResource.searchRecords({
                 id: inputDataModel.uuid,
                 atMost: 3
                 },
@@ -181,6 +192,7 @@ angular.module('dmpApp')
 
                 rawDataSources = [];
                 $scope.filters = [];
+                $scope.model = {};
                 $scope.isRemoveFilter = true;
                 $scope.filterSelectorShown = false;
 

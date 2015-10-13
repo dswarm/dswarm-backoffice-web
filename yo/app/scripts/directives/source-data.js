@@ -44,6 +44,8 @@ angular.module('dmpApp')
 
         function processRecords(dataResult, dataModel) {
 
+            $scope.schema = dataModel.schema;
+            $scope.resourceName = dataModel.name;
             $scope.originalRecords = dataResult;
             $scope.records = loDash.map(dataResult, function (record) {
                 return {
@@ -60,9 +62,6 @@ angular.module('dmpApp')
                 return;
             }
 
-            $scope.schema = dataModel.schema;
-            $scope.resourceName = dataModel.name;
-
             DataModelResource.data({
 
                 id: dataModel.uuid,
@@ -74,8 +73,30 @@ angular.module('dmpApp')
             });
         };
 
+        function loadSelectedRecords(selectedRecordURIs, dataModelUuid, project) {
+
+            DataModelResource.selectRecords({
+                    id: dataModelUuid
+                },
+                selectedRecordURIs,
+                function(dataResult) {
+
+                    project._$selectedRecords = dataResult;
+
+                    processRecords(dataResult, project.input_data_model);
+
+                });
+        }
+
         function init() {
-            $scope.loadData($scope.project.input_data_model);
+
+            if($scope.project.selected_records) {
+
+                loadSelectedRecords($scope.project.selected_records, $scope.project.input_data_model.uuid, $scope.project);
+            } else {
+
+                $scope.loadData($scope.project.input_data_model);
+            }
         }
 
         function updateRecords(message) {
@@ -84,6 +105,8 @@ angular.module('dmpApp')
 
                 var records = message.records;
                 var dataModel = message.dataModel;
+
+                $scope.project._$selectedRecords = records;
 
                 processRecords(records, dataModel);
             } else {

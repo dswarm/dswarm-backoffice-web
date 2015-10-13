@@ -44,7 +44,7 @@ angular.module('dmpApp')
                 update: {
                     method: 'PUT'
                 },
-                recordSearch: {
+                searchRecords: {
                     method: 'POST',
                     url: baseUrl + '/records/search',
                     isArray: true,
@@ -64,7 +64,26 @@ angular.module('dmpApp')
                         return data;
                     },
                     cache: true
+                },
+                selectRecords: {
+                    method: 'POST',
+                    url: baseUrl + '/records/select',
+                    isArray: true,
+                    transformResponse: function(data, headers) {
+                        if (angular.lowercase(headers('content-type')) === 'application/json') {
+                            var parsedData = JSON.parse(data);
+                            data = loDash.map(parsedData, function(blob, recordId) {
+                                return {
+                                    id: recordId,
+                                    data: blob
+                                };
+                            });
+                        }
+                        return data;
+                    },
+                    cache: true
                 }
+
             };
         });
     });

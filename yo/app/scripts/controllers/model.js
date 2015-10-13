@@ -456,27 +456,13 @@ angular.module('dmpApp')
                 project._$selectedRecords = [];
             }
 
-            if(project.selected_records) {
-
-                // TODO: load selected records
-            }
-
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/select-records.html',
                 controller: 'SelectRecordsCtrl',
                 windowClass: 'wide',
                 resolve: {
-                    filterObject: function() {
+                    project: function() {
                         return project;
-                    },
-                    attributePathId: function() {
-                        return '';
-                    },
-                    rawDataSources: function() {
-                        return project._$selectedRecords;
-                    },
-                    inputDataModel: function() {
-                        return project.input_data_model;
                     }
                 }
             });
