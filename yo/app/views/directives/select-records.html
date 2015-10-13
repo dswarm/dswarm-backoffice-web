@@ -1,7 +1,7 @@
 <div ng-if="dataLoaded">
     <div class="modal-header">
-        <h3>Record selection for {{activeFilterObject.name}}</h3>
-        <button class="btn btn-warning cancel" ng-if="filters.length == 0" ng-click="addFilter()">add record selection</button>
+        <h3>Record search for {{activeFilterObject.name}}</h3>
+        <button class="btn btn-warning cancel" ng-if="filters.length == 0" ng-click="addFilter()">add record search</button>
     </div>
     <div class="modal-body">
         <div class="row row-2">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-warning cancel" ng-click="selectRecords()" ng-if="filterSelectorShown">Select Records</button>
+        <button class="btn btn-warning cancel" ng-click="searchRecords()" ng-if="filterSelectorShown">Search Records</button>
         <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
     </div>
 

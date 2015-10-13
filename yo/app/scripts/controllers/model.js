@@ -414,18 +414,18 @@ angular.module('dmpApp')
             });
         };
 
-        function setSelectedRecordsExpression(project, expr) {
+        function setSelectedRecords(project, selectedRecordURIs) {
 
-            if(loDash.isEmpty(expr)) {
+            if(loDash.isEmpty(selectedRecordURIs)) {
 
                 return;
             }
 
-            if(!loDash.isArray(expr)) {
-                expr = [expr];
+            if(!loDash.isArray(selectedRecordURIs)) {
+                selectedRecordURIs = [selectedRecordURIs];
             }
 
-            // TODO: do record search with given filter expression and store the resulted records uris
+            project.selected_records = selectedRecordURIs;
         }
 
         function setSkipFilterExpression(project, expr) {
@@ -463,7 +463,7 @@ angular.module('dmpApp')
 
             var modalInstance = $modal.open({
                 templateUrl: 'views/directives/select-records.html',
-                controller: 'SelectedRecordsCtrl',
+                controller: 'SelectRecordsCtrl',
                 windowClass: 'wide',
                 resolve: {
                     filterObject: function() {
@@ -472,7 +472,7 @@ angular.module('dmpApp')
                     attributePathId: function() {
                         return '';
                     },
-                    filters: function() {
+                    rawDataSources: function() {
                         return project._$selectedRecords;
                     },
                     inputDataModel: function() {
@@ -487,12 +487,20 @@ angular.module('dmpApp')
 
                     project._$selectedRecords = [];
                     project.selected_records = null;
-                } else {
+                } else if(reason && reason.selectedRecords) {
 
-                    var filters = filterHelper.prepareFilters(project._$selectedRecords, project);
-                    var filtersExpression = filterHelper.buildFilterExpression(filters);
+                    var selectedRecordURIs = loDash.map(reason.selectedRecords, function(selectedRecord) {
+                        return selectedRecord.id;
+                    });
 
-                    setSelectedRecordsExpression(project, filtersExpression);
+                    setSelectedRecords(project, selectedRecordURIs);
+
+                    var message = {
+                        records: reason.selectedRecords,
+                        dataModel: project.input_data_model
+                    };
+
+                    PubSub.broadcast('inputDataChanged', message);
                 }
             });
         }

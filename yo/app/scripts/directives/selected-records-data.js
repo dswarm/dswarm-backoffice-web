@@ -47,18 +47,15 @@ angular.module('dmpApp')
             var dataResult = message.records;
             var dataModel = message.dataModel;
 
-            if(!loDash.isArray(dataResult)) {
-                dataResult = [dataResult];
-            }
-
             $scope.originalRecords = dataResult;
             $scope.selectedRecords = loDash.map(dataResult, function (record) {
                 return {
-                    id: record.uuid,
+                    id: record.id,
                     data: getSchema(record.data, dataModel)
                 };
             });
             $scope.showData = true;
+            $scope.selectedTab = 0;
         }
 
         $scope.loadData = function(dataModel) {

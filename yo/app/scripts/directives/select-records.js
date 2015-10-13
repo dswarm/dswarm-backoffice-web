@@ -16,21 +16,20 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SelectedRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, filterObject, attributePathId, filters, inputDataModel) {
+    .controller('SelectRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, filterObject, rawDataSources, inputDataModel) {
 
         $scope.internalName = 'Selected Records Widget';
 
         $scope.activeFilterObject = filterObject;
-        $scope.filters = filters;
+        $scope.filters = [];
         $scope.inputDataModel = inputDataModel;
 
-        $scope.dataSource = {};
+        $scope.dataSources = [];
         $scope.dataSchema = {};
         $scope.dataLoaded = false;
         $scope.isRemoveFilter = false;
         $scope.filterSelectorShown = false;
 
-        var originalSources = [];
         var inputFilterCollection = [];
 
         // deactivated until further notice
@@ -69,7 +68,7 @@ angular.module('dmpApp')
         $scope.update = function() {
 
             // just update input filter collection here (that can be utilised for search later)
-            inputFilterCollection = filterHelper.buildFilterInputs(filters);
+            inputFilterCollection = filterHelper.buildFilterInputs($scope.filters);
 
             return true;
         };
@@ -82,12 +81,11 @@ angular.module('dmpApp')
 
             $scope.filterSelectorShown = true;
 
-            filters.push({
+            $scope.filters.push({
                 filter: filter,
                 inputFilters: [],
                 name: 'new filter'
             });
-
         };
 
         var processRecords = function(args) {
@@ -101,13 +99,13 @@ angular.module('dmpApp')
 
                 schema.name = schema.name || '';
 
-                originalSources = loDash.map(args.records, function(record) {
+                rawDataSources = args.records;
+                $scope.dataSources = loDash.map(args.records, function(record) {
 
                         return gdmParser.parse(record.data, schema);
                     }
                 );
 
-                $scope.dataSources = originalSources;
                 $scope.dataSchema = schema;
 
                 $scope.update();
@@ -116,9 +114,9 @@ angular.module('dmpApp')
             }
         };
 
-        $scope.selectRecords = function() {
+        $scope.searchRecords = function() {
 
-            var filters2 = filterHelper.prepareFilters(filters, filterObject);
+            var filters2 = filterHelper.prepareFilters($scope.filters, filterObject);
 
             if(!filters2) {
 
@@ -166,7 +164,8 @@ angular.module('dmpApp')
         $scope.save = function() {
 
             var result = {
-                removeFilter: $scope.isRemoveFilter
+                removeFilter: $scope.isRemoveFilter,
+                selectedRecords: rawDataSources
             };
 
             $modalInstance.close(result);
@@ -180,7 +179,7 @@ angular.module('dmpApp')
 
             modalInstance.result.then(function() {
 
-                filters = [];
+                rawDataSources = [];
                 $scope.filters = [];
                 $scope.isRemoveFilter = true;
                 $scope.filterSelectorShown = false;
