@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SelectedRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, filterObject, attributePathId, filters, inputDataModel) {
+    .controller('SelectedRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, filterObject, attributePathId, filters, inputDataModel) {
 
         $scope.internalName = 'Selected Records Widget';
 
@@ -28,8 +28,10 @@ angular.module('dmpApp')
         $scope.dataSchema = {};
         $scope.dataLoaded = false;
         $scope.isRemoveFilter = false;
+        $scope.filterSelectorShown = false;
 
         var originalSources = [];
+        var inputFilterCollection = [];
 
         // deactivated until further notice
         /* jshint ignore:start */
@@ -66,25 +68,19 @@ angular.module('dmpApp')
 
         $scope.update = function() {
 
-            // TODO: execute records search and update selected records widget with the result
+            // just update input filter collection here (that can be utilised for search later)
+            inputFilterCollection = filterHelper.buildFilterInputs(filters);
 
             return true;
         };
 
         $scope.addFilter = function() {
 
-            var filterTypes = [
-                {id: 'EQUALS', name: 'equals'}
-            ];
+            var inFilterTree = false;
+            var editableTitle = true;
+            var filter = schemaParser.fromDomainSchema($scope.dataSchema, editableTitle, inFilterTree);
 
-            var defaultFilterType = filterTypes[0];
-
-            var filterTypeObj = {
-                filterTypes: filterTypes,
-                defaultFilterType: defaultFilterType
-            };
-
-            var filter = schemaParser.fromDomainSchema($scope.dataSchema, true, true, filterTypeObj);
+            $scope.filterSelectorShown = true;
 
             filters.push({
                 filter: filter,
@@ -94,6 +90,75 @@ angular.module('dmpApp')
 
         };
 
+        var processRecords = function(args) {
+
+            if (args.records) {
+                var schema = angular.copy(args.schema);
+                // deactivated until further notice
+//                if (attributePathId) {
+//                    restrictSchema(schema, attributePathId);
+//                }
+
+                schema.name = schema.name || '';
+
+                originalSources = loDash.map(args.records, function(record) {
+
+                        return gdmParser.parse(record.data, schema);
+                    }
+                );
+
+                $scope.dataSources = originalSources;
+                $scope.dataSchema = schema;
+
+                $scope.update();
+
+                $scope.dataLoaded = true;
+            }
+        };
+
+        $scope.selectRecords = function() {
+
+            var filters2 = filterHelper.prepareFilters(filters, filterObject);
+
+            if(!filters2) {
+
+                // TODO: maybe give user a hint, that the filter couldn't match anything (which should be never the case ;) )
+
+                return false;
+            }
+
+            var filterAP = filters2[0][0];
+            var filterValue = filters2[0][1];
+
+            var payload = {
+                key_attribute_path: filterAP,
+                search_value: filterValue
+            };
+
+            DataModelResource.recordSearch({
+                id: inputDataModel.uuid,
+                atMost: 3
+                },
+                payload,
+                function(dataResult) {
+
+                    var request = {
+                        records: dataResult,
+                        schema: inputDataModel.schema
+                    };
+
+                    var message = {
+                        records: dataResult,
+                        dataModel: inputDataModel
+                    };
+
+                    PubSub.broadcast('updateRecordsData', message);
+
+                    processRecords(request);
+                });
+        };
+
+        // TODO: enable in UI?
         $scope.close = function() {
             $modalInstance.dismiss('cancel');
         };
@@ -110,7 +175,7 @@ angular.module('dmpApp')
         $scope.removeFilter = function() {
 
             var modalInstance = $modal.open({
-                templateUrl: 'views/controllers/confirm-remove-filter.html'
+                templateUrl: 'views/controllers/confirm-remove-record-selection.html'
             });
 
             modalInstance.result.then(function() {
@@ -118,36 +183,11 @@ angular.module('dmpApp')
                 filters = [];
                 $scope.filters = [];
                 $scope.isRemoveFilter = true;
+                $scope.filterSelectorShown = false;
 
                 $scope.update();
             });
         };
 
-        PubSub.ask($scope, 'getLoadData', {}, 'returnFullLoadData', function(args) {
-
-            if (args.records) {
-                var schema = angular.copy(args.schema);
-                // deactivated until further notice
-//                if (attributePathId) {
-//                    restrictSchema(schema, attributePathId);
-//                }
-
-                schema.name = schema.name || '';
-
-                originalSources = loDash.map(args.records, function(record) {
-
-                        return gdmParser.parse(record.data, schema);
-                    }
-                );
-                // originalSources = gdmParser.parse(args.records.data, schema);
-
-                $scope.dataSources = originalSources;
-                $scope.dataSchema = schema;
-
-                $scope.update();
-
-                $scope.dataLoaded = true;
-            }
-        });
-
+        PubSub.ask($scope, 'getLoadData', {}, 'returnFullLoadData', processRecords);
     });

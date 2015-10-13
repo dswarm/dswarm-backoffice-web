@@ -38,14 +38,33 @@ angular.module('dmpApp')
             return $scope.showData ? 'selectedrecorddata' : '';
         };
 
+        function getSchema(record, dataModel) {
+            return gdmParser.parse(record, dataModel.schema);
+        }
+
+        function processRecordsData(message) {
+
+            var dataResult = message.records;
+            var dataModel = message.dataModel;
+
+            if(!loDash.isArray(dataResult)) {
+                dataResult = [dataResult];
+            }
+
+            $scope.originalRecords = dataResult;
+            $scope.selectedRecords = loDash.map(dataResult, function (record) {
+                return {
+                    id: record.uuid,
+                    data: getSchema(record.data, dataModel)
+                };
+            });
+            $scope.showData = true;
+        }
+
         $scope.loadData = function(dataModel) {
 
             if (loDash.isEmpty(dataModel) || loDash.isEmpty(dataModel.schema)) {
                 return;
-            }
-
-            function getSchema(record) {
-                return gdmParser.parse(record, dataModel.schema);
             }
 
             $scope.schema = dataModel.schema;
@@ -58,21 +77,18 @@ angular.module('dmpApp')
 
             }, function(dataResult) {
 
-                $scope.originalRecords = dataResult;
-                $scope.selectedRecords = loDash.map(dataResult, function(record) {
-                    return {
-                        id: record.uuid,
-                        data: getSchema(record.data)
-                    };
-                });
+                var message = {
+                    records: dataResult,
+                    dataModel: dataModel
+                };
 
-                $scope.showData = true;
+                processRecordsData(message);
             });
         };
 
         function init() {
 
-            $scope.loadData($scope.model);
+            $scope.loadData($scope.inputDataModel);
         }
 
         init();
@@ -86,12 +102,13 @@ angular.module('dmpApp')
             });
 
         });
+
+        PubSub.subscribe($scope, 'updateRecordsData', processRecordsData);
+
     })
     .directive('selectedRecordsData', function() {
         return {
-            scope: {
-                model: '='
-            },
+            scope: true,
             restrict: 'E',
             replace: true,
             templateUrl: 'views/directives/selected-records-data.html',
