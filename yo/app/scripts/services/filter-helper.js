@@ -274,11 +274,26 @@ angular.module('dmpApp').
             });
         }
 
+        function parseFilterDefinitions(expression, name, schema) {
+
+            var filter = applyFilter(schema, expression),
+                workFilter = {
+                    filter: filter,
+                    name: name
+                };
+
+            buildFilterInputs([workFilter]);
+
+            // all existing are merged into one filter now, this might be good or not?
+            return [workFilter];
+        }
+
         return {
             annotateMatches: annotateMatches,
             applyFilter: applyFilter,
             buildFilterInputs: buildFilterInputs,
             prepareFilters: prepareFilters,
-            buildFilterExpression: buildFilterExpression
+            buildFilterExpression: buildFilterExpression,
+            parseFilterDefinitions: parseFilterDefinitions
         };
     });

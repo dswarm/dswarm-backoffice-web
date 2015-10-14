@@ -119,17 +119,10 @@ angular.module('dmpApp')
         }
 
         function parseFilterDefinitions(expression, name) {
-            var schema = getSchema(),
-                filter = filterHelper.applyFilter(schema, expression),
-                iapFilter = {
-                    filter: filter,
-                    name: name
-                };
 
-            filterHelper.buildFilterInputs([iapFilter]);
+            var schema = getSchema();
 
-            // all existing are merged into one filter now, this might be good or not?
-            return [iapFilter];
+            return filterHelper.parseFilterDefinitions(expression, name, schema);
         }
 
         /**
@@ -1253,9 +1246,7 @@ angular.module('dmpApp')
 
         function setFilterExpression(iap, expr) {
 
-            if(!expr || !expr.length) {
-
-                // only create filter, when expression is really available
+            if(loDash.isEmpty(expr)) {
 
                 return;
             }
