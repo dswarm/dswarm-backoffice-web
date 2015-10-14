@@ -1132,25 +1132,44 @@ angular.module('dmpApp')
         }
 
         /**
-         * Send a single transformation to the server
+         * This actually sends a Transformation
+         * @param {boolean} persist - Should the data be persisted or just previewed
          */
-        $scope.sendTransformation = function() {
+        function sendTransformationsInternal(persist) {
 
             var payload = {
                 'task' : {
-                    name: $scope.activeMapping.name,
-                    description: 'A Transformation',
+                    name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
+                    description: 'With mappings: ' + $scope.returnMappingNames(', '),
                     job: {
-                        mappings: [$scope.activeMapping]
+                        mappings: $scope.project.mappings,
+                        skip_filter: $scope.project.skip_filter
                     },
                     input_data_model: $scope.project.input_data_model,
                     output_data_model: $scope.project.output_data_model
                 },
                 'at_most' : 3,
-                'persist' : false
+                'persist' : persist
             };
 
+            if(!loDash.isEmpty($scope.project.selected_records)) {
+
+                console.log(JSON.stringify($scope.project.selected_records));
+
+                payload.selected_records = $scope.project.selected_records;
+            }
+
             transmitTransformations(payload);
+        }
+
+        $scope.sendTransformations = sendTransformationsInternal;
+
+        /**
+         * Send a single transformation to the server
+         */
+        $scope.sendTransformation = function() {
+
+            sendTransformationsInternal(false);
         };
 
         /**
@@ -1170,30 +1189,6 @@ angular.module('dmpApp')
 
             return mappingNames;
 
-        };
-
-        /**
-         * This actually sends a Transformation
-         * @param {boolean} persist - Should the data be persisted or just previewed
-         */
-        $scope.sendTransformations = function(persist) {
-
-            var payload = {
-                'task' : {
-                    name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
-                    description: 'With mappings: ' + $scope.returnMappingNames(', '),
-                    job: {
-                        mappings: $scope.project.mappings,
-                        skip_filter: $scope.project.skip_filter
-                    },
-                    input_data_model: $scope.project.input_data_model,
-                    output_data_model: $scope.project.output_data_model
-                },
-                'at_most' : 3,
-                'persist' : persist
-            };
-
-            transmitTransformations(payload);
         };
 
         PubSub.subscribe($scope, 'sendTransformations', function(persist) {
