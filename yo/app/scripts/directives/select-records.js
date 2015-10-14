@@ -40,25 +40,6 @@ angular.module('dmpApp')
         };
         var inputFilterCollection = [];
 
-        // deactivated until further notice
-        /* jshint ignore:start */
-        function restrictSchema(schema, pathId) {
-            var exactPath = loDash.find(schema.attribute_paths, { uuid: pathId });
-
-            if (angular.isDefined(exactPath)) {
-                var exactAttributes = exactPath.attributes;
-
-                schema.attribute_paths = loDash.filter(schema.attribute_paths, function(ap) {
-
-                    return loDash.every(exactAttributes, function(a, i) {
-
-                        return ap.attributes[i] && ap.attributes[i].uuid === a.uuid;
-                    });
-                });
-            }
-        }
-        /* jshint ignore:end */
-
         $scope.expandCollapse = function(that, data) {
 
             data.$wasRendered = true;
@@ -106,10 +87,6 @@ angular.module('dmpApp')
 
                     schema = angular.copy(args.schema);
                 }
-                // deactivated until further notice
-//                if (attributePathId) {
-//                    restrictSchema(schema, attributePathId);
-//                }
 
                 schema.name = schema.name || '';
 
@@ -136,7 +113,7 @@ angular.module('dmpApp')
 
             if(!filters2) {
 
-                // TODO: maybe give user a hint, that the filter couldn't match anything (which should be never the case ;) )
+                // TODO: maybe give user a hint, that the filter couldn't match anything (which should never be the case ;) )
 
                 return false;
             }
