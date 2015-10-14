@@ -99,7 +99,7 @@ angular.module('dmpApp')
 
                 var schema = $scope.dataSchema;
 
-                if (args.schema) {
+                if (loDash.isEmpty(args.schema) && args.schema.uuid) {
 
                     schema = angular.copy(args.schema);
                 }
