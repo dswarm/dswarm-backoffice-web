@@ -452,8 +452,11 @@ angular.module('dmpApp')
 
         function openSelectRecords(project) {
 
+            var recordsSelected = true;
+
             if (!project._$selectedRecords) {
                 project._$selectedRecords = [];
+                recordsSelected = false;
             }
 
             var modalInstance = $modal.open({
@@ -463,17 +466,26 @@ angular.module('dmpApp')
                 resolve: {
                     project: function() {
                         return project;
+                    },
+                    recordsSelected: function() {
+                        return recordsSelected;
                     }
                 }
             });
 
             modalInstance.result.then(function(reason) {
 
-                if(reason && reason.removeFilter) {
+                if(reason && (reason.removeFilter || reason.resetRecordSelection)) {
 
-                    project._$selectedRecords = [];
+                    project._$selectedRecords = null;
                     project.selected_records = null;
-                } else if(reason && reason.selectedRecords) {
+
+                    var message2 = {};
+
+                    PubSub.broadcast('inputDataChanged', message2);
+                } else if(reason && reason.selectedRecords && reason.recordsHaveBeenSearched) {
+
+                    // update, if record selection was successful
 
                     var selectedRecordURIs = loDash.map(reason.selectedRecords, function(selectedRecord) {
                         return selectedRecord.id;

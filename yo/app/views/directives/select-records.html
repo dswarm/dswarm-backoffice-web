@@ -23,6 +23,7 @@
         </div>
     </div>
     <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="doResetRecordSelection()" ng-if="recordsSelected">Reset Record Selection</button>
         <button class="btn btn-warning cancel" ng-click="searchRecords()" ng-if="filterSelectorShown">Search Records</button>
         <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
     </div>

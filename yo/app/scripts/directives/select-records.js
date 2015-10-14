@@ -16,17 +16,20 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('SelectRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, project) {
+    .controller('SelectRecordsCtrl', function($scope, $http, $q, $modal, $modalInstance, loDash, gdmParser, schemaParser, filterHelper, PubSub, DataModelResource, project, recordsSelected) {
 
         $scope.internalName = 'Selected Records Widget';
 
         $scope.activeFilterObject = project;
+        $scope.recordsSelected = recordsSelected;
         $scope.filters = [];
 
         $scope.dataSources = [];
         $scope.dataSchema = angular.copy(project.input_data_model.schema);
         $scope.dataLoaded = false;
-        $scope.isRemoveFilter = false;
+        var isRemoveFilter = false;
+        var isResetRecordSelection = false;
+        var isRecordsHaveBeenSearched = true;
         $scope.filterSelectorShown = false;
 
         var rawDataSources = project._$selectedRecords;
@@ -122,6 +125,8 @@ angular.module('dmpApp')
                 $scope.update();
 
                 $scope.dataLoaded = true;
+
+                $scope.model.selectedRecords = rawDataSources;
             }
         };
 
@@ -164,7 +169,32 @@ angular.module('dmpApp')
                     PubSub.broadcast('updateRecordsData', message);
 
                     processRecords(request);
+
+                    isRecordsHaveBeenSearched = true;
                 });
+        };
+
+        var returnToParent = function() {
+
+            var result = {
+                removeFilter: isRemoveFilter,
+                resetRecordSelection: isResetRecordSelection,
+                recordsHaveBeenSearched: isRecordsHaveBeenSearched,
+                selectedRecords: rawDataSources
+            };
+
+            $modalInstance.close(result);
+        };
+
+        $scope.doResetRecordSelection = function() {
+
+            isResetRecordSelection = true;
+            isRecordsHaveBeenSearched = false;
+
+            project._$selectedRecords = null;
+            project.selected_records = null;
+
+            returnToParent();
         };
 
         // TODO: enable in UI?
@@ -172,15 +202,7 @@ angular.module('dmpApp')
             $modalInstance.dismiss('cancel');
         };
 
-        $scope.save = function() {
-
-            var result = {
-                removeFilter: $scope.isRemoveFilter,
-                selectedRecords: rawDataSources
-            };
-
-            $modalInstance.close(result);
-        };
+        $scope.save = returnToParent;
 
         $scope.removeFilter = function() {
 
@@ -193,7 +215,7 @@ angular.module('dmpApp')
                 rawDataSources = [];
                 $scope.filters = [];
                 $scope.model = {};
-                $scope.isRemoveFilter = true;
+                isRemoveFilter = true;
                 $scope.filterSelectorShown = false;
 
                 $scope.update();
