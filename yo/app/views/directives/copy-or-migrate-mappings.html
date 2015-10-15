@@ -1,0 +1,28 @@
+<div>
+    <div class="modal-header">
+        <h3>Copy or Migrate Mappings</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row row-2">
+
+            <flash-messages></flash-messages>
+
+            <div class="content">
+
+                <h3>Data Models</h3>
+
+                <div class="gridStyle" ng-grid="modelListOptions"></div>
+
+                <h3>Projects</h3>
+
+                <div class="gridStyle" ng-grid="projectListOptions"></div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
+    </div>
+
+</div>
