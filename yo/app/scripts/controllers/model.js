@@ -555,12 +555,12 @@ angular.module('dmpApp')
             });
         }
 
-        $scope.onSelectRecordsClick = function(idx) {
+        $scope.onSelectRecordsClick = function() {
 
             openSelectRecords($scope.project);
         };
 
-        $scope.onDefineSkipFilterClick = function(idx) {
+        $scope.onDefineSkipFilterClick = function() {
 
             openSkipFilter($scope.project);
         };

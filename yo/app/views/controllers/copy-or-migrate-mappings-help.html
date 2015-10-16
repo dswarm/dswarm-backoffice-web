@@ -1,0 +1,28 @@
+<div id="copy-or-migrate-mappings-help-modal">
+    <div class="modal-header">
+        <button type="button" ng-click="$dismiss()" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">How To Copy or Migrate Mappings</h4>
+    </div>
+    <div class="modal-body">
+        <ul>
+            <li>Select a data model (that should act as input data model) and a project (that should act as reference project, i.e., where the
+                mappings and the output data model are taken from) and apply "Copy Mappings" or "Migrate Mappings"
+            </li>
+            <li>note: the mapping inputs of the mappings (of the reference project) must be contained in the schema of the selected (input) data model
+                for "Copy Mappings"
+            </li>
+            <li>note: the mapping inputs of the mappings (of the reference project) must be contained somehow similar in the schema of the selected
+                (input) data model "Copy Mappings"
+            </li>
+            <li>note: the input data model is optional for "Copy Mappings"</li>
+            <li>both actions should result in a new project with copied or migrated mappings</li>
+            <li>please also have a look at the <a
+                href="https://github.com/dswarm/dswarm-documentation/wiki/Maintenance-Endpoints" target="_blank">documentation</a> for further details about these
+                actions
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="$close()" class="btn btn-warning cancel">Ok</button>
+    </div>
+</div>

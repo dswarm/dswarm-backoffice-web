@@ -186,12 +186,22 @@ angular.module('dmpApp')
                 templateUrl: 'views/directives/copy-or-migrate-mappings.html',
                 controller: 'CopyOrMigrateMappingsCtrl',
                 windowClass: 'wide',
-                resolve: {}
+                resolve: {
+                    dataModels: function() {
+                        return $scope.models;
+                    },
+                    projects: function() {
+                        return $scope.projects;
+                    }
+                }
             });
 
             modalInstance.result.then(function(reason) {
 
-                // TODO
+                if (reason && reason.newProjectsHasBeenCreated) {
+
+                    $scope.updateGridData();
+                }
             });
         }
 
