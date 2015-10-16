@@ -27,8 +27,9 @@ angular.module('dmpApp')
                     method: 'POST',
                     url: baseUrl + '/createprojectwithhelpofexistingentities'
                 },
-                'migrateprojecttonewinputschema': {
-                    method: 'POST'
+                migrateProjectToNewInputSchema: {
+                    method: 'POST',
+                    url: baseUrl + '/migrateprojecttonewinputschema'
                 }
             };
         });
