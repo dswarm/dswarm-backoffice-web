@@ -191,9 +191,6 @@ angular.module('dmpApp')
             isResetRecordSelection = true;
             isRecordsHaveBeenSearched = false;
 
-            project._$selectedRecords = null;
-            project.selected_records = null;
-
             returnToParent();
         };
 

@@ -477,8 +477,8 @@ angular.module('dmpApp')
 
                 if(reason && (reason.removeFilter || reason.resetRecordSelection)) {
 
-                    project._$selectedRecords = null;
-                    project.selected_records = null;
+                    delete project._$selectedRecords;
+                    delete project.selected_records;
 
                     var message2 = {};
 
