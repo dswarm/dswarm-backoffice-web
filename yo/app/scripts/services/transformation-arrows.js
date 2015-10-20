@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .factory('mappingArrows', function(jsPlumb, loDash, GUID, PubSub, convertUnits) {
+    .factory('transformationArrows', function(jsPlumb, loDash, GUID, PubSub, convertUnits) {
 
         var connectionMapping = [],
             createdConnections = [],

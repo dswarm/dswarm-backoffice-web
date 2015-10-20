@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .directive('jsPlumbConnector', function ($rootScope, jsP, mappingArrows) {
+    .directive('jsPlumbConnector', function ($rootScope, jsP, transformationArrows) {
 
         $rootScope.$on('$locationChangeStart', function() {
             jsP.detachEveryConnection({});
@@ -32,13 +32,13 @@ angular.module('dmpApp')
                         return scope.$eval(jsPlumbConnectorIdentItem);
                     };
 
-                mappingArrows.clear();
+                transformationArrows.clear();
 
                 return function(scope, iElement) {
                     var identItem = jsPlumbConnectorIdentItemWatch(scope),
                         identType = tAttrs['jsPlumbConnectorIdentType'];
 
-                    scope.guid = mappingArrows.register(identItem, identType);
+                    scope.guid = transformationArrows.register(identItem, identType);
                     iElement.attr('id', scope.guid);
                 };
             }
