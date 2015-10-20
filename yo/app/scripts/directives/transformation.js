@@ -1135,14 +1135,14 @@ angular.module('dmpApp')
          * This actually sends a Transformation
          * @param {boolean} persist - Should the data be persisted or just previewed
          */
-        function sendTransformationsInternal(persist) {
+        function sendTransformationsInternal(persist, mappings) {
 
             var payload = {
                 'task' : {
                     name: 'Project: ' + $scope.project.name + ' (' + $scope.project.uuid + ')',
                     description: 'With mappings: ' + $scope.returnMappingNames(', '),
                     job: {
-                        mappings: $scope.project.mappings,
+                        mappings: mappings,
                         skip_filter: $scope.project.skip_filter
                     },
                     input_data_model: $scope.project.input_data_model,
@@ -1153,8 +1153,6 @@ angular.module('dmpApp')
             };
 
             if(!loDash.isEmpty($scope.project.selected_records)) {
-
-                console.log(JSON.stringify($scope.project.selected_records));
 
                 payload.selected_records = $scope.project.selected_records;
             }
@@ -1169,7 +1167,7 @@ angular.module('dmpApp')
          */
         $scope.sendTransformation = function() {
 
-            sendTransformationsInternal(false);
+            sendTransformationsInternal(false, [$scope.activeMapping]);
         };
 
         /**
@@ -1192,7 +1190,7 @@ angular.module('dmpApp')
         };
 
         PubSub.subscribe($scope, 'sendTransformations', function(persist) {
-            $scope.sendTransformations(persist);
+            $scope.sendTransformations(persist, $scope.project.mappings);
         });
 
         //** End of sending transformation to server
