@@ -400,15 +400,49 @@ button.close-transformation-selector {
 
 }
 
+.mapping-component {
+  width: 5em;
+  height: 5em;
+  padding: 0;
+
+  z-index: 42;
+  color: #004756;
+  background-color: white;
+  border: 1px solid #346789;
+  position: absolute;
+  cursor: pointer;
+  .box-shadow(0px 0px 1.5em #aaa);
+
+  &:hover {
+    .box-shadow(0px 0px 0.5em 0.3em hsla(184, 7%, 40%, 0.6)); // ##5E6C6D
+    opacity: 0.9;
+  }
+
+  .mapping-component-name {
+    margin-top: 1.4em;
+    display: inline-block;
+  }
+}
+
+
+.gridster-wrapper {
+  margin-left: 8em;
+  background: rgba(0, 0, 0, .1);
+
+  &::before {
+    content: "";
+    background: rgba(0, 0, 0, .1);
+    left: 0px;
+    height: 100%;
+    width: 8em;
+    position: absolute;
+  }
+}
+
 .gridster {
   position: relative;
   margin: auto;
-  background: rgba(0, 0, 0, .1);
   height: 0;
-}
-
-}
-
 }
 
 .gridster ul {
@@ -461,22 +495,6 @@ button.close-transformation-selector {
   z-index: 3;
 }
 
-.gridster .gridster-item {
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
-
-.gridster .gridster-item {
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  color: #004756;
-}
-
-.gridster .gridster-item {
-  background: #ffffff;
-  padding: 10px;
-}
-
-
 .input-attribute-path-badge {
   cursor: pointer;
 }
@@ -488,11 +506,11 @@ button.close-transformation-selector {
 }
 
 .transformation-inputs {
-  left: 10px;
+  left: -2em;
 }
 
 .transformation-output {
-  right: 10px;
+  right: -1em;
 }
 
 .transformation-inputs li,
@@ -573,8 +591,12 @@ button.close-transformation-selector {
 }
 
 
-.transformation-inputs, .transformation-output, ._jsPlumb_connector, ._jsPlumb_endpoint {
+.transformation-inputs, .transformation-output {
   z-index: 1000;
+
+  & > ._jsPlumb_connector, ._jsPlumb_endpoint {
+    z-index: 1000;
+  }
 }
 
 .configurationSortable .list {
