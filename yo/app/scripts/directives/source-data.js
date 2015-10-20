@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,18 +38,29 @@ angular.module('dmpApp')
             return $scope.showData ? 'sourcedata' : '';
         };
 
+        function getSchema(record, dataModel) {
+            return gdmParser.parse(record, dataModel.schema);
+        }
+
+        function processRecords(dataResult, dataModel) {
+
+            $scope.schema = dataModel.schema;
+            $scope.resourceName = dataModel.name;
+            $scope.originalRecords = dataResult;
+            $scope.records = loDash.map(dataResult, function (record) {
+                return {
+                    id: record.id,
+                    data: getSchema(record.data, dataModel)
+                };
+            });
+            $scope.showData = true;
+        }
+
         $scope.loadData = function(dataModel) {
 
             if (loDash.isEmpty(dataModel) || loDash.isEmpty(dataModel.schema)) {
                 return;
             }
-
-            function getSchema(record) {
-                return gdmParser.parse(record, dataModel.schema);
-            }
-
-            $scope.schema = dataModel.schema;
-            $scope.resourceName = dataModel.name;
 
             DataModelResource.data({
 
@@ -58,24 +69,58 @@ angular.module('dmpApp')
 
             }, function(dataResult) {
 
-                $scope.originalRecords = dataResult;
-                $scope.records = loDash.map(dataResult, function(record) {
-                    return {
-                        id: record.uuid,
-                        data: getSchema(record.data)
-                    };
-                });
-
-                $scope.showData = true;
+                processRecords(dataResult, dataModel);
             });
         };
 
+        function loadSelectedRecords(selectedRecordURIs, dataModelUuid, project) {
+
+            DataModelResource.selectRecords({
+                    id: dataModelUuid
+                },
+                selectedRecordURIs,
+                function(dataResult) {
+
+                    project._$selectedRecords = dataResult;
+
+                    processRecords(dataResult, project.input_data_model);
+
+                });
+        }
+
         function init() {
-            $scope.loadData($scope.project.input_data_model);
+
+            if($scope.project.selected_records) {
+
+                loadSelectedRecords($scope.project.selected_records, $scope.project.input_data_model.uuid, $scope.project);
+            } else {
+
+                $scope.loadData($scope.project.input_data_model);
+            }
+        }
+
+        function updateRecords(message) {
+
+            if (message && message.records) {
+
+                var records = message.records;
+                var dataModel = message.dataModel;
+
+                $scope.project._$selectedRecords = records;
+
+                processRecords(records, dataModel);
+            } else {
+
+                // load default records (first 3 from input data model)
+
+                $scope.loadData($scope.project.input_data_model);
+            }
         }
 
         init();
         PubSub.subscribe($scope, ['inputDataSelected', 'projectDraftDiscarded', 'projectModelChanged', 'changeOutputModel', 'restoreCurrentProject'], init);
+
+        PubSub.subscribe($scope, 'inputDataChanged', updateRecords);
 
         PubSub.subscribe($scope, 'getLoadData', function() {
 
@@ -84,6 +129,10 @@ angular.module('dmpApp')
                 schema: $scope.schema
             });
 
+            PubSub.broadcast('returnFullLoadData', {
+                records: $scope.originalRecords,
+                schema: $scope.schema
+            });
         });
     })
     .directive('sourceData', function() {

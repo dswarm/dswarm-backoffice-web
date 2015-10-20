@@ -1,0 +1,31 @@
+<div ng-if="dataLoaded">
+    <div class="modal-header">
+        <h3>Record search for {{activeFilterObject.name}}</h3>
+        <button class="btn btn-warning cancel" ng-if="filters.length == 0" ng-click="addFilter()">add record search</button>
+    </div>
+    <div class="modal-body">
+        <div class="row row-2">
+
+            <div class="tabbable col-md-3">
+
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a>data</a>
+                    </li>
+                </ul>
+
+                <selected-records-data data="inputDataModel"></selected-records-data>
+
+            </div>
+
+            <filter-selector filters="filters" update="update" ></filter-selector>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="doResetRecordSelection()" ng-if="recordsSelected">Reset Record Selection</button>
+        <button class="btn btn-warning cancel" ng-click="searchRecords()" ng-if="filterSelectorShown">Search Records</button>
+        <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
+    </div>
+
+</div>

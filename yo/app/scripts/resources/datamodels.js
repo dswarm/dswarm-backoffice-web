@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,47 @@ angular.module('dmpApp')
                 },
                 update: {
                     method: 'PUT'
+                },
+                searchRecords: {
+                    method: 'POST',
+                    url: baseUrl + '/records/search',
+                    isArray: true,
+                    params: {
+                        atMost: '@atMost'
+                    },
+                    transformResponse: function(data, headers) {
+                        if (angular.lowercase(headers('content-type')) === 'application/json') {
+                            var parsedData = JSON.parse(data);
+                            data = loDash.map(parsedData, function(blob, recordId) {
+                                return {
+                                    id: recordId,
+                                    data: blob
+                                };
+                            });
+                        }
+                        return data;
+                    },
+                    cache: true
+                },
+                selectRecords: {
+                    method: 'POST',
+                    url: baseUrl + '/records/select',
+                    isArray: true,
+                    transformResponse: function(data, headers) {
+                        if (angular.lowercase(headers('content-type')) === 'application/json') {
+                            var parsedData = JSON.parse(data);
+                            data = loDash.map(parsedData, function(blob, recordId) {
+                                return {
+                                    id: recordId,
+                                    data: blob
+                                };
+                            });
+                        }
+                        return data;
+                    },
+                    cache: true
                 }
+
             };
         });
     });

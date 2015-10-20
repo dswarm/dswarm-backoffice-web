@@ -414,6 +414,20 @@ angular.module('dmpApp')
             });
         };
 
+        function setSelectedRecords(project, selectedRecordURIs) {
+
+            if(loDash.isEmpty(selectedRecordURIs)) {
+
+                return;
+            }
+
+            if(!loDash.isArray(selectedRecordURIs)) {
+                selectedRecordURIs = [selectedRecordURIs];
+            }
+
+            project.selected_records = selectedRecordURIs;
+        }
+
         function setSkipFilterExpression(project, expr) {
 
             if(loDash.isEmpty(expr)) {
@@ -434,6 +448,59 @@ angular.module('dmpApp')
                     expression: expression
                 };
             }
+        }
+
+        function openSelectRecords(project) {
+
+            var recordsSelected = true;
+
+            if (!project._$selectedRecords) {
+                project._$selectedRecords = [];
+                recordsSelected = false;
+            }
+
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/select-records.html',
+                controller: 'SelectRecordsCtrl',
+                windowClass: 'wide',
+                resolve: {
+                    project: function() {
+                        return project;
+                    },
+                    recordsSelected: function() {
+                        return recordsSelected;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(reason) {
+
+                if(reason && (reason.removeFilter || reason.resetRecordSelection)) {
+
+                    delete project._$selectedRecords;
+                    delete project.selected_records;
+
+                    var message2 = {};
+
+                    PubSub.broadcast('inputDataChanged', message2);
+                } else if(reason && reason.selectedRecords && reason.recordsHaveBeenSearched) {
+
+                    // update, if record selection was successful
+
+                    var selectedRecordURIs = loDash.map(reason.selectedRecords, function(selectedRecord) {
+                        return selectedRecord.id;
+                    });
+
+                    setSelectedRecords(project, selectedRecordURIs);
+
+                    var message = {
+                        records: reason.selectedRecords,
+                        dataModel: project.input_data_model
+                    };
+
+                    PubSub.broadcast('inputDataChanged', message);
+                }
+            });
         }
 
         function openSkipFilter(project) {
@@ -489,6 +556,11 @@ angular.module('dmpApp')
                 }
             });
         }
+
+        $scope.onSelectRecordsClick = function(idx) {
+
+            openSelectRecords($scope.project);
+        };
 
         $scope.onDefineSkipFilterClick = function(idx) {
 

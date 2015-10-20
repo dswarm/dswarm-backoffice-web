@@ -1,0 +1,24 @@
+<div class="box">
+    <div class="tabbable tabs-below">
+        <ul class="nav nav-tabs">
+            <li ng-repeat="selectedRecord in selectedRecords track by $index" ng-class="{active: selectedTab == $index}">
+                <a ng-click="selectTab($index);" tooltip-trigger="dblclick" tooltip-placement="right" tooltip-append-to-body="true" tooltip="{{ selectedRecord.id }}">{{ $index +1 }}</a>
+            </li>
+        </ul>
+
+        <div ng-repeat="selectedRecord in selectedRecords"  class="tab-content">
+            <div ng-show="selectedTab == $index">
+
+                <perfect-scrollbar ui-tree data-drag-enabled="false" class="scroller" wheel-propagation="true" wheel-speed="50" id="selectedRecordsData">
+
+                    <ol ui-tree-nodes ng-model="selectedRecord.data.children">
+                        <li ng-repeat="data in selectedRecord.data.children"
+                            ui-tree-node
+                            ng-include="'views/directives/tree_renderer.html'"></li>
+                    </ol>
+                </perfect-scrollbar>
+
+            </div>
+        </div>
+    </div>
+</div>
