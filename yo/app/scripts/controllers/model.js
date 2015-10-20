@@ -480,9 +480,7 @@ angular.module('dmpApp')
                     delete project._$selectedRecords;
                     delete project.selected_records;
 
-                    var message2 = {};
-
-                    PubSub.broadcast('inputDataChanged', message2);
+                    PubSub.broadcast('inputDataChanged', {});
                 } else if(reason && reason.selectedRecords && reason.recordsHaveBeenSearched) {
 
                     // update, if record selection was successful

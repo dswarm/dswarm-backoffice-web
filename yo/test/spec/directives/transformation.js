@@ -643,8 +643,8 @@ describe('Directive: Transformation', function() {
         $rootScope.$broadcast('connectionSelected', data);
 
         var payload = {
-            name: data.name,
-            description: 'A Transformation',
+            name: 'Project: ' + project.name + ' (' + project.uuid + ')',
+            description: 'With mappings: testMapping',
             job: {
                 mappings: [project.mappings[dataIdx]]
             },
@@ -742,7 +742,7 @@ describe('Directive: Transformation', function() {
         spyOn(TaskResource, 'execute').and.callThrough();
         spyOn(PubSub, 'broadcast');
 
-        elScope.sendTransformations(false);
+        elScope.sendTransformations(false, project.mappings);
         $httpBackend.flush();
 
         expect(TaskResource.execute).toHaveBeenCalledWith({ }, Util.toJson(payloadExpect));
