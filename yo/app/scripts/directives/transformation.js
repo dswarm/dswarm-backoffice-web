@@ -16,19 +16,27 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID, showAlert) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, convertUnits, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID, showAlert) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
             availableIds = [],
         // TODO: Find better solution instead of hard limiting to 6 items per row
-            gridMaxItemsPerRow = 6;
+            gridMaxItemsPerRow = 6,
+            sixEmsInPx = convertUnits.em2px(6),
+            threeEmsInPx = convertUnits.em2px(3);
 
         /** Gridster config goes here */
         $scope.gridsterOpts = {
-            margins: [20, 20],
+            margins: [threeEmsInPx, threeEmsInPx],
             draggable: {
-                enabled: true
+                enabled: true,
+                start: function() {
+                    onDragStart();
+                },
+                stop: function() {
+                    onDragStop();
+                }
             },
             resizable: {
                 enabled: false
@@ -39,7 +47,6 @@ angular.module('dmpApp')
             maxGridRows: 0,
             maxColumns: gridMaxItemsPerRow,
             noFloatingUp: true,
-            containment: '.gridster'
         };
 
         $scope.jsPlumbOpts = {
@@ -67,6 +74,9 @@ angular.module('dmpApp')
                 fillStyle: 'black',
                 lineWidth: 3
             }
+            containment: '.gridster',
+            width: 'auto',
+            colWidth: sixEmsInPx + threeEmsInPx
         };
 
         /** Gridster item access map */
@@ -178,6 +188,20 @@ angular.module('dmpApp')
         }
 
         //** Init directive end
+
+        function onDragStart() {
+            $scope.$apply(function() {
+                _createDropPlaceholder();
+                _hideTransformationPlumbs();
+            });
+        }
+
+        function onDragStop() {
+            $scope.$apply(function() {
+                removeDropPlaceholder();
+                updateGridConnections();
+            });
+        }
 
         //** Start functions to create plumbs
 
@@ -300,8 +324,9 @@ angular.module('dmpApp')
 
         /**
          * Generates placeholders inside the grid to show possible drop positions.
+         * This runs outside of angular realm, you have to $apply it.
          */
-        function createDropPlaceholder() {
+        function _createDropPlaceholder() {
 
             for (var j = 0; j < $scope.gridsterOpts.maxRows; j++) {
 
@@ -318,8 +343,11 @@ angular.module('dmpApp')
                 }
 
             }
-            $scope.$digest();
         }
+
+        //var createDropPlaceholder = loDash.debounce(function() {
+        //    $scope.$apply(_createDropPlaceholder);
+        //}, 50);
 
         /**
          * Removes placeholders from grid
@@ -330,7 +358,6 @@ angular.module('dmpApp')
                     return !item.placeholder;
                 }
             );
-            $scope.$digest();
         }
 
         /**
@@ -684,24 +711,11 @@ angular.module('dmpApp')
             showTransformationPlumbs();
         }
 
-        PubSub.subscribe($rootScope, ['DRAG-START'], function() {
-            createDropPlaceholder();
-
-            hideTransformationPlumbs();
-        });
-
-        PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
-
-        PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
-
-            removeDropPlaceholder();
-            updateGridConnections();
-
-        });
+        PubSub.subscribe($rootScope, ['DRAG-START'], onDragStart);
+        PubSub.subscribe($rootScope, ['DRAG-END'], onDragStop);
 
         function unsubscribePlumbEvents() {
-            PubSub.unsubscribe($rootScope, ['GRIDSTER-DRAG-START']);
-            PubSub.unsubscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END']);
+            PubSub.unsubscribe($rootScope, ['DRAG-START', 'DRAG-END']);
         }
 
         $rootScope.$on('$locationChangeStart', function() {
