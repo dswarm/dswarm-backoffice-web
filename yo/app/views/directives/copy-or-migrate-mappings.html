@@ -1,0 +1,37 @@
+<div>
+    <div class="modal-header">
+        <h3>Copy or Migrate Mappings</h3>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right modal-dswarm-tools-navbar">
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-click="showHelp()">Help</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-body">
+
+        <div class="alert alert-dismissable" ng-repeat="alert in alerts" ng-class="'alert-'+alert.type">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
+            {{alert.msg}}
+        </div>
+
+        <div class="modal-content">
+
+            <h3>Data Models</h3>
+
+            <div class="gridStyle" ng-grid="dataModelGridContent" id="modal-data-model-grid"></div>
+
+            <h3>Projects</h3>
+
+            <div class="gridStyle" ng-grid="projectGridContent" id="modal-project-grid"></div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="copyMappings()" ng-if="selectedProject && selectedProject.length">Copy Mappings</button>
+        <button class="btn btn-warning cancel" ng-click="migrateMappings()" ng-if="selectedDataModel && selectedDataModel.length && selectedProject && selectedProject.length">Migrate Mappings</button>
+        <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
+    </div>
+
+</div>

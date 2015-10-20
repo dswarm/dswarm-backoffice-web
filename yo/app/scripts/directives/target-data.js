@@ -56,7 +56,7 @@ angular.module('dmpApp')
             $scope.data = null;
         }
 
-        PubSub.subscribe($scope, 'inputDataChanged', function(message) {
+        PubSub.subscribe($scope, 'inputDataChanged', function() {
 
             reset();
         });

@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -122,7 +122,7 @@ angular.module('dmpApp')
                 $scope.files = results;
 
             }, function() {
-                $scope.files = '';
+                $scope.files = [];
             });
 
             DataModelResource.query({ format : 'medium' }, function(results) {
@@ -130,7 +130,7 @@ angular.module('dmpApp')
                 $scope.models = loDash.filter(results, 'data_resource');
 
             }, function() {
-                $scope.models = '';
+                $scope.models = [];
             });
 
             ProjectResource.query({ format : 'short' }, function(projects) {
@@ -138,7 +138,7 @@ angular.module('dmpApp')
                 $scope.projects = projects;
 
             }, function() {
-                $scope.projects = '';
+                $scope.projects = [];
             });
 
         };
@@ -180,5 +180,33 @@ angular.module('dmpApp')
 
         $scope.updateGridData();
 
+        function openCopyOrMigrateMappings() {
 
+            var modalInstance = $modal.open({
+                templateUrl: 'views/directives/copy-or-migrate-mappings.html',
+                controller: 'CopyOrMigrateMappingsCtrl',
+                windowClass: 'wide',
+                resolve: {
+                    dataModels: function() {
+                        return $scope.models;
+                    },
+                    projects: function() {
+                        return $scope.projects;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(reason) {
+
+                if (reason && reason.newProjectsHasBeenCreated) {
+
+                    $scope.updateGridData();
+                }
+            });
+        }
+
+        $scope.onCopyOrMigrateMappingsClick = function() {
+
+            openCopyOrMigrateMappings();
+        };
     });
