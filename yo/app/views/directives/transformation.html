@@ -36,7 +36,6 @@
                         class="input-attribute-path-badge"
                         ng-click="onFilterClick(iap)"
                         js-plumb-connector
-                        js-plumb-connector-options="jsPlumbOpts"
                         js-plumb-connector-ident-type="transformation-input"
                         js-plumb-connector-ident-item="iap.uuid">{{ formatAttributePath(iap.attribute_path) }} <small>{{formatFilters(iap)}}</small></span>
                 </li>
@@ -48,37 +47,37 @@
                 <li ng-repeat="oap in output_attribute_paths">
                     <span
                         js-plumb-connector
-                        js-plumb-connector-options="jsPlumbOpts"
                         js-plumb-connector-ident-type="transformation-output"
                         js-plumb-connector-ident-item="oap.attribute_path.uuid">{{ formatAttributePath(oap.attribute_path) }}</span>
                 </li>
             </ul>
         </div>
 
-        <div gridster="gridsterOpts">
-            <ul>
+        <div class="gridster-wrapper">
+            <div gridster="gridsterOpts">
+                <ul>
                 <span ng-repeat="item in gridItems">
                     <span ng-if="item.placeholder">
                         <li gridster-item="customItemMap" class='gridster-preview' ng-click="onFunctionClick(item)" x-drop-target="true" x-on-drop="dropped(dragEl, dropEl)"></li>
                     </span>
                     <span ng-if="!item.placeholder">
-                        <li gridster-item="customItemMap" ng-class="{'gridster-preview': item.placeholder}" ng-click="onFunctionClick(item)">
-                            {{item.component.function.name}}
-
-                            <i class="glyphicon glyphicon-unchecked"
-                               ng-click="onMultipleComponentInputAdd(item)"
-                               js-plumb-connector
-                               js-plumb-connector-options="jsPlumbOpts"
-                               js-plumb-connector-ident-type="component"
-                               js-plumb-connector-ident-item="item.uuid"></i>
-
+                        <li class="mapping-component"
+                            gridster-item="customItemMap"
+                            ng-class="{'gridster-preview': item.placeholder}"
+                            ng-click="onFunctionClick(item)"
+                            js-plumb-connector
+                            js-plumb-connector-ident-type="component"
+                            js-plumb-connector-ident-item="item.uuid"
+                            >
+                            <span class="mapping-component-name">{{item.component.function.name}}</span>
                             <span ng-if="isMultiple(item.component) && hasOpenEndedComponents()">
                                 <i class="glyphicon glyphicon-plus" ng-click="onMultipleComponentInputAdd(item)"></i>
                             </span>
                         </li>
                     </span>
                 </span>
-            </ul>
+                </ul>
+            </div>
         </div>
 
     </div>

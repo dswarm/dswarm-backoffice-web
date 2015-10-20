@@ -47,33 +47,6 @@ angular.module('dmpApp')
             maxGridRows: 0,
             maxColumns: gridMaxItemsPerRow,
             noFloatingUp: true,
-        };
-
-        $scope.jsPlumbOpts = {
-            scope: 'schema',
-            container: 'transformation',
-            anchor: 'Continuous',
-            endpoint: ['Dot', {
-                radius: 5,
-                cssClass: 'source-endpoint'
-            }],
-            connectorOverlays: [
-                ['Arrow', {
-                    location: 1,
-                    width: 10,
-                    length: 12,
-                    foldback: 0.75
-                }]
-            ],
-            connector: 'Straight',
-            connectorStyle: {
-                strokeStyle: 'black',
-                lineWidth: 3
-            },
-            paintStyle: {
-                fillStyle: 'black',
-                lineWidth: 3
-            }
             containment: '.gridster',
             width: 'auto',
             colWidth: sixEmsInPx + threeEmsInPx
@@ -223,29 +196,28 @@ angular.module('dmpApp')
          */
         function _showTransformationPlumbs() {
 
+            var updates = [];
             var connectOptions = { type : 'transformation' };
 
             $scope.transformationStateError = '';
 
-            loDash.map($scope.gridItems, function(griditem) {
+            loDash.forEach($scope.gridItems, function(griditem) {
 
                 var inputStrings = (!loDash.isNull(griditem.component.parameter_mappings.inputString) && !loDash.isUndefined(griditem.component.parameter_mappings.inputString)) ? griditem.component.parameter_mappings.inputString.split(',') : [];
 
-                loDash.map(inputStrings, function(inputString) {
+                loDash.forEach(inputStrings, function(inputString) {
+                    if (inputString.length) {
 
-                    connectOptions.target = {
-                        type : 'component',
-                        uuid : griditem.uuid
-                    };
-
-                    if (inputString.length > 0) {
+                        connectOptions.target = {
+                            type : 'component',
+                            uuid : griditem.uuid
+                        };
 
                         if (inputString.indexOf('component') === -1) {
 
                             var iap = loDash.find($scope.activeMapping.input_attribute_paths, function (iap) {
                                 return iap.name === inputString;
                             });
-
                             connectOptions.source = {
                                 type: 'transformation-input',
                                 uuid: iap.uuid
@@ -255,7 +227,6 @@ angular.module('dmpApp')
                             var component = loDash.find($scope.gridItems, function (griditem) {
                                 return griditem.name === inputString;
                             });
-
                             connectOptions.source = {
                                 type: 'component',
                                 uuid: component.uuid
@@ -263,10 +234,8 @@ angular.module('dmpApp')
                         }
 
                         var newConnectOptions = angular.copy(connectOptions);
-                        PubSub.broadcast('jsp-connector-connect', newConnectOptions);
-
+                        updates.push(newConnectOptions);
                     }
-
                 });
 
             });
@@ -305,13 +274,14 @@ angular.module('dmpApp')
                         uuid : $scope.activeMapping.output_attribute_path.attribute_path.uuid
                     };
 
-                    PubSub.broadcast('jsp-connector-connect', connectOptions);
-
+                    updates.push(connectOptions);
                 }
 
             }
 
-
+            if (!loDash.isEmpty(updates)) {
+                PubSub.broadcast('jsp-connector-connect', updates);
+            }
         }
 
         var showTransformationPlumbs = loDash.debounce(function() {
