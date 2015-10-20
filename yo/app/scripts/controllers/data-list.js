@@ -122,7 +122,7 @@ angular.module('dmpApp')
                 $scope.files = results;
 
             }, function() {
-                $scope.files = '';
+                $scope.files = [];
             });
 
             DataModelResource.query({ format : 'medium' }, function(results) {
@@ -130,7 +130,7 @@ angular.module('dmpApp')
                 $scope.models = loDash.filter(results, 'data_resource');
 
             }, function() {
-                $scope.models = '';
+                $scope.models = [];
             });
 
             ProjectResource.query({ format : 'short' }, function(projects) {
@@ -138,7 +138,7 @@ angular.module('dmpApp')
                 $scope.projects = projects;
 
             }, function() {
-                $scope.projects = '';
+                $scope.projects = [];
             });
 
         };

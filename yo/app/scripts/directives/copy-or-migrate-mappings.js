@@ -43,7 +43,7 @@ angular.module('dmpApp')
                 $scope.dataModels = loDash.filter(results, 'data_resource');
 
             }, function() {
-                $scope.dataModels = '';
+                $scope.dataModels = [];
             });
 
             ProjectResource.query({ format : 'short' }, function(projects) {
@@ -51,7 +51,7 @@ angular.module('dmpApp')
                 $scope.projects = projects;
 
             }, function() {
-                $scope.projects = '';
+                $scope.projects = [];
             });
 
         };

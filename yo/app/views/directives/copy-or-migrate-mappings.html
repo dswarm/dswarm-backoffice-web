@@ -29,8 +29,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-warning cancel" ng-click="copyMappings()" ng-if="selectedProject && selectedProject.length > 0">Copy Mappings</button>
-        <button class="btn btn-warning cancel" ng-click="migrateMappings()" ng-if="selectedDataModel && selectedDataModel.length > 0 && selectedProject && selectedProject.length > 0">Migrate Mappings</button>
+        <button class="btn btn-warning cancel" ng-click="copyMappings()" ng-if="selectedProject && selectedProject.length">Copy Mappings</button>
+        <button class="btn btn-warning cancel" ng-click="migrateMappings()" ng-if="selectedDataModel && selectedDataModel.length && selectedProject && selectedProject.length">Migrate Mappings</button>
         <button class="btn btn-warning cancel" ng-click="save()">Ok</button>
     </div>
 
