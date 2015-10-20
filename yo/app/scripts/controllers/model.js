@@ -694,6 +694,7 @@ angular.module('dmpApp')
         $scope.onCloseTransformationSelectorClick = function() {
             hideFunctionConfiguration();
             hideOverlayData();
+            PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
 
             $timeout(function() {
                 PubSub.broadcast('projectModelChanged', {});
