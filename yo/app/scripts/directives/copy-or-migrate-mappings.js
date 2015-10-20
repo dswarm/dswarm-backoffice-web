@@ -96,6 +96,26 @@ angular.module('dmpApp')
             };
         }
 
+        function processResult(finishMessage) {
+
+            ngProgress.complete();
+            showAlert.show($scope, 'info', finishMessage('successfully finished.'));
+
+            $scope.updateGridData();
+
+            isNewProjectsHasBeenCreated = true;
+        }
+
+        function processError(resp, finishMessage) {
+
+            ngProgress.complete();
+            showAlert.show($scope, 'danger', finishMessage('failed.'), 5000);
+
+            console.log(resp);
+
+            $window.alert(resp.message || resp.data.error);
+        }
+
         $scope.copyMappings = function() {
 
             var selectedProject = $scope.selectedProject[0];
@@ -110,8 +130,6 @@ angular.module('dmpApp')
             ngProgress.start();
 
             var dataModelIdPromise = $q.defer();
-
-
 
             if($scope.selectedDataModel.length > 0) {
 
@@ -134,27 +152,34 @@ angular.module('dmpApp')
                 return ProjectResource.createProjectWithHelpOfExistingEntities({}, payload).$promise;
             }).then(function() {
 
-
-                ngProgress.complete();
-                showAlert.show($scope, 'info', finishMessage('successfully finished.'));
-
-                $scope.updateGridData();
-
-                isNewProjectsHasBeenCreated = true;
+                processResult(finishMessage);
             }, function(resp) {
 
-                ngProgress.complete();
-                showAlert.show($scope, 'danger', finishMessage('failed.'), 5000);
-
-                console.log(resp);
-
-                $window.alert(resp.message || resp.data.error);
+                processError(resp, finishMessage);
             });
         };
 
         $scope.migrateMappings = function() {
 
+            var referenceProjectId = $scope.selectedProject[0].uuid;
+            var inputDataModelId = $scope.selectedDataModel[0].uuid;
 
+            var payload = {
+                input_data_model: inputDataModelId,
+                reference_project: referenceProjectId
+            };
+
+            var finishMessage = createMigrationStatusMessage(inputDataModelId, referenceProjectId, 'Migrating');
+
+            ngProgress.start();
+
+            ProjectResource.migrateProjectToNewInputSchema({}, payload).$promise.then(function() {
+
+                processResult(finishMessage);
+            }, function(resp) {
+
+                processError(resp, finishMessage);
+            });
         };
 
         $scope.showHelp = function() {
