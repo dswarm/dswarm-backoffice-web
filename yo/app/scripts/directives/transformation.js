@@ -1134,6 +1134,7 @@ angular.module('dmpApp')
         /**
          * This actually sends a Transformation
          * @param {boolean} persist - Should the data be persisted or just previewed
+         * @param mappings - the mappings of the job of the task
          */
         function sendTransformationsInternal(persist, mappings) {
 

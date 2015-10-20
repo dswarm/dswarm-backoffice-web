@@ -742,7 +742,7 @@ describe('Directive: Transformation', function() {
         spyOn(TaskResource, 'execute').and.callThrough();
         spyOn(PubSub, 'broadcast');
 
-        elScope.sendTransformations(false);
+        elScope.sendTransformations(false, project.mappings);
         $httpBackend.flush();
 
         expect(TaskResource.execute).toHaveBeenCalledWith({ }, Util.toJson(payloadExpect));
