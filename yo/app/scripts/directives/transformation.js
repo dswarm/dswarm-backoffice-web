@@ -190,31 +190,11 @@ angular.module('dmpApp')
             PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
         }
 
-        var showTransformationPlumbsTimeout = null;
-
-        /**
-         * Initializes show of all transformations. Saves timeout to prevent multiple
-         * events running into each other
-         * @param {number} [time] - Timeout time to show plumbs
-         */
-        function showTransformationPlumbsInit(time) {
-
-            time = typeof time !== 'undefined' ? time : 100;
-
-            if(showTransformationPlumbsTimeout && showTransformationPlumbsTimeout.then) {
-                $timeout.cancel(showTransformationPlumbsTimeout);
-            }
-
-            showTransformationPlumbsTimeout = $timeout(function() {
-                showTransformationPlumbs();
-            }, time);
-
-        }
 
         /**
          * The real function to show transformations. Use only via init function
          */
-        function showTransformationPlumbs() {
+        function _showTransformationPlumbs() {
 
             var connectOptions = { type : 'transformation' };
 
@@ -306,6 +286,10 @@ angular.module('dmpApp')
 
 
         }
+
+        var showTransformationPlumbs = loDash.debounce(function() {
+            $scope.$apply(_showTransformationPlumbs);
+        }, 500);
 
         //** End functions to create plumbs
 
@@ -694,7 +678,7 @@ angular.module('dmpApp')
 
             });
 
-            showTransformationPlumbsInit();
+            showTransformationPlumbs();
         }
 
         PubSub.subscribe($rootScope, ['DRAG-START'], function() {
@@ -814,7 +798,7 @@ angular.module('dmpApp')
 
             }
 
-            showTransformationPlumbsInit();
+            showTransformationPlumbs();
 
         }
 
@@ -1078,7 +1062,7 @@ angular.module('dmpApp')
 
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
 
-            showTransformationPlumbsInit();
+            showTransformationPlumbs();
 
             updateInputOutputMappings();
 
@@ -1474,7 +1458,7 @@ angular.module('dmpApp')
 
                 $scope.onFunctionClick(currentItem, true);
 
-                showTransformationPlumbsInit();
+                showTransformationPlumbs();
 
             });
 
