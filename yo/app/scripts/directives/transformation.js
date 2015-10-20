@@ -184,12 +184,15 @@ angular.module('dmpApp')
         /**
          * Hides all transformations
          */
-        function hideTransformationPlumbs() {
+        function _hideTransformationPlumbs() {
             $scope.transformationStateError = '';
 
             PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
         }
 
+        var hideTransformationPlumbs = loDash.debounce(function() {
+            $scope.$apply(_hideTransformationPlumbs);
+        }, 100);
 
         /**
          * The real function to show transformations. Use only via init function
