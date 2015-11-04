@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015  SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -122,7 +122,6 @@ angular.module('dmpApp')
 
         };
 
-
         /**
          * Create a new connection between two nodes, that is, it draws an arrow
          * unless configured otherwise. connection is directed from source to target
@@ -132,16 +131,23 @@ angular.module('dmpApp')
          * @returns {jsPlumb.Connection}
          */
         function connect(source, target, opts) {
-            var connection = jsPlumb.connect(angular.extend({
-                source: source,
-                target: target
-            }, jsPlumbOptions, opts || {}));
+            var connection;
+            try {
+                connection = jsPlumb.connect(angular.extend({
+                    source: source,
+                    target: target
+                }, jsPlumbOptions, opts || {}));
 
-            if (!source.data) {
-                source = $(source);
+                if (!source.data) {
+                    source = $(source);
+                }
+
+                source.data('_outbound', connection);
+            } catch (ignore) {
+                // when the UI is particularly slow, connect calls can happen before
+                // the element exists in the DOM.
+                // TODO: what to do in this case?
             }
-
-            source.data('_outbound', connection);
 
             return connection;
         }

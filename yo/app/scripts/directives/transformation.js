@@ -16,19 +16,27 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID, showAlert) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, convertUnits, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID, showAlert) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
             availableIds = [],
         // TODO: Find better solution instead of hard limiting to 6 items per row
-            gridMaxItemsPerRow = 6;
+            gridMaxItemsPerRow = 6,
+            sixEmsInPx = convertUnits.em2px(6),
+            threeEmsInPx = convertUnits.em2px(3);
 
         /** Gridster config goes here */
         $scope.gridsterOpts = {
-            margins: [20, 20],
+            margins: [threeEmsInPx, threeEmsInPx],
             draggable: {
-                enabled: true
+                enabled: true,
+                start: function() {
+                    onDragStart();
+                },
+                stop: function() {
+                    onDragStop();
+                }
             },
             resizable: {
                 enabled: false
@@ -39,34 +47,9 @@ angular.module('dmpApp')
             maxGridRows: 0,
             maxColumns: gridMaxItemsPerRow,
             noFloatingUp: true,
-            containment: '.gridster'
-        };
-
-        $scope.jsPlumbOpts = {
-            scope: 'schema',
-            container: 'transformation',
-            anchor: 'Continuous',
-            endpoint: ['Dot', {
-                radius: 5,
-                cssClass: 'source-endpoint'
-            }],
-            connectorOverlays: [
-                ['Arrow', {
-                    location: 1,
-                    width: 10,
-                    length: 12,
-                    foldback: 0.75
-                }]
-            ],
-            connector: 'Straight',
-            connectorStyle: {
-                strokeStyle: 'black',
-                lineWidth: 3
-            },
-            paintStyle: {
-                fillStyle: 'black',
-                lineWidth: 3
-            }
+            containment: '.gridster',
+            width: 'auto',
+            colWidth: sixEmsInPx + threeEmsInPx
         };
 
         /** Gridster item access map */
@@ -179,66 +162,62 @@ angular.module('dmpApp')
 
         //** Init directive end
 
+        function onDragStart() {
+            $scope.$apply(function() {
+                _createDropPlaceholder();
+                _hideTransformationPlumbs();
+            });
+        }
+
+        function onDragStop() {
+            $scope.$apply(function() {
+                removeDropPlaceholder();
+                updateGridConnections();
+            });
+        }
+
         //** Start functions to create plumbs
 
         /**
          * Hides all transformations
          */
-        function hideTransformationPlumbs() {
+        function _hideTransformationPlumbs() {
             $scope.transformationStateError = '';
 
             PubSub.broadcast('jsp-connector-disconnect', { type: [ 'transformation', 'component' ]  });
         }
 
-        var showTransformationPlumbsTimeout = null;
-
-        /**
-         * Initializes show of all transformations. Saves timeout to prevent multiple
-         * events running into each other
-         * @param {number} [time] - Timeout time to show plumbs
-         */
-        function showTransformationPlumbsInit(time) {
-
-            time = typeof time !== 'undefined' ? time : 100;
-
-            if(showTransformationPlumbsTimeout && showTransformationPlumbsTimeout.then) {
-                $timeout.cancel(showTransformationPlumbsTimeout);
-            }
-
-            showTransformationPlumbsTimeout = $timeout(function() {
-                showTransformationPlumbs();
-            }, time);
-
-        }
+        var hideTransformationPlumbs = loDash.debounce(function() {
+            $scope.$apply(_hideTransformationPlumbs);
+        }, 100);
 
         /**
          * The real function to show transformations. Use only via init function
          */
-        function showTransformationPlumbs() {
+        function _showTransformationPlumbs() {
 
+            var updates = [];
             var connectOptions = { type : 'transformation' };
 
             $scope.transformationStateError = '';
 
-            loDash.map($scope.gridItems, function(griditem) {
+            loDash.forEach($scope.gridItems, function(griditem) {
 
                 var inputStrings = (!loDash.isNull(griditem.component.parameter_mappings.inputString) && !loDash.isUndefined(griditem.component.parameter_mappings.inputString)) ? griditem.component.parameter_mappings.inputString.split(',') : [];
 
-                loDash.map(inputStrings, function(inputString) {
+                loDash.forEach(inputStrings, function(inputString) {
+                    if (inputString.length) {
 
-                    connectOptions.target = {
-                        type : 'component',
-                        uuid : griditem.uuid
-                    };
-
-                    if (inputString.length > 0) {
+                        connectOptions.target = {
+                            type : 'component',
+                            uuid : griditem.uuid
+                        };
 
                         if (inputString.indexOf('component') === -1) {
 
                             var iap = loDash.find($scope.activeMapping.input_attribute_paths, function (iap) {
                                 return iap.name === inputString;
                             });
-
                             connectOptions.source = {
                                 type: 'transformation-input',
                                 uuid: iap.uuid
@@ -248,7 +227,6 @@ angular.module('dmpApp')
                             var component = loDash.find($scope.gridItems, function (griditem) {
                                 return griditem.name === inputString;
                             });
-
                             connectOptions.source = {
                                 type: 'component',
                                 uuid: component.uuid
@@ -256,10 +234,8 @@ angular.module('dmpApp')
                         }
 
                         var newConnectOptions = angular.copy(connectOptions);
-                        PubSub.broadcast('jsp-connector-connect', newConnectOptions);
-
+                        updates.push(newConnectOptions);
                     }
-
                 });
 
             });
@@ -298,14 +274,19 @@ angular.module('dmpApp')
                         uuid : $scope.activeMapping.output_attribute_path.attribute_path.uuid
                     };
 
-                    PubSub.broadcast('jsp-connector-connect', connectOptions);
-
+                    updates.push(connectOptions);
                 }
 
             }
 
-
+            if (!loDash.isEmpty(updates)) {
+                PubSub.broadcast('jsp-connector-connect', updates);
+            }
         }
+
+        var showTransformationPlumbs = loDash.debounce(function() {
+            $scope.$apply(_showTransformationPlumbs);
+        }, 500);
 
         //** End functions to create plumbs
 
@@ -313,8 +294,9 @@ angular.module('dmpApp')
 
         /**
          * Generates placeholders inside the grid to show possible drop positions.
+         * This runs outside of angular realm, you have to $apply it.
          */
-        function createDropPlaceholder() {
+        function _createDropPlaceholder() {
 
             for (var j = 0; j < $scope.gridsterOpts.maxRows; j++) {
 
@@ -331,8 +313,11 @@ angular.module('dmpApp')
                 }
 
             }
-            $scope.$digest();
         }
+
+        //var createDropPlaceholder = loDash.debounce(function() {
+        //    $scope.$apply(_createDropPlaceholder);
+        //}, 50);
 
         /**
          * Removes placeholders from grid
@@ -343,7 +328,6 @@ angular.module('dmpApp')
                     return !item.placeholder;
                 }
             );
-            $scope.$digest();
         }
 
         /**
@@ -694,27 +678,14 @@ angular.module('dmpApp')
 
             });
 
-            showTransformationPlumbsInit();
+            showTransformationPlumbs();
         }
 
-        PubSub.subscribe($rootScope, ['DRAG-START'], function() {
-            createDropPlaceholder();
-
-            hideTransformationPlumbs();
-        });
-
-        PubSub.subscribe($rootScope, ['GRIDSTER-DRAG-START'], hideTransformationPlumbs);
-
-        PubSub.subscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END'], function() {
-
-            removeDropPlaceholder();
-            updateGridConnections();
-
-        });
+        PubSub.subscribe($rootScope, ['DRAG-START'], onDragStart);
+        PubSub.subscribe($rootScope, ['DRAG-END'], onDragStop);
 
         function unsubscribePlumbEvents() {
-            PubSub.unsubscribe($rootScope, ['GRIDSTER-DRAG-START']);
-            PubSub.unsubscribe($rootScope, ['DRAG-END', 'GRIDSTER-DRAG-END']);
+            PubSub.unsubscribe($rootScope, ['DRAG-START', 'DRAG-END']);
         }
 
         $rootScope.$on('$locationChangeStart', function() {
@@ -814,7 +785,7 @@ angular.module('dmpApp')
 
             }
 
-            showTransformationPlumbsInit();
+            showTransformationPlumbs();
 
         }
 
@@ -1078,7 +1049,7 @@ angular.module('dmpApp')
 
             setGridHeight($scope.activeMapping.input_attribute_paths.length);
 
-            showTransformationPlumbsInit();
+            showTransformationPlumbs();
 
             updateInputOutputMappings();
 
@@ -1474,7 +1445,7 @@ angular.module('dmpApp')
 
                 $scope.onFunctionClick(currentItem, true);
 
-                showTransformationPlumbsInit();
+                showTransformationPlumbs();
 
             });
 
