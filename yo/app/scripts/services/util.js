@@ -201,6 +201,11 @@ angular.module('dmpApp')
 
             loDash.map(mappings, function(mapping, idx) {
 
+                if(loDash.isUndefined(mapping.transformation)) {
+
+                    return;
+                }
+
                 loDash.forEach(mapping.transformation.parameter_mappings, function(parameter_mapping, key) {
 
                     if(key.indexOf('TRANSFORMATION_OUTPUT_VARIABLE') === -1) {
