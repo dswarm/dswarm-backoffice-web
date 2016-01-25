@@ -4,6 +4,10 @@ var _ = require('lodash');
 
 module.exports = function(grunt) {
 
+    var CHECK_OK = 1,
+        CHECK_NO = 0,
+        CHECK_WRONG = -1;
+
     var commentWrappers = {
         js: {
             first: '/**',
@@ -27,9 +31,13 @@ module.exports = function(grunt) {
         }
     };
 
+    function copyrightHolderLine(holder, email, year) {
+        return 'Copyright (C) ' + year + '  ' + holder + ' (<' + email + '>)'
+    }
+
     function copyrightLines(holder, email, year) {
         return [
-            'Copyright (C) ' + year + '  ' + holder + ' (<' + email + '>)',
+            copyrightHolderLine(holder, email, year),
             ' ',
             'Licensed under the Apache License, Version 2.0 (the "License");',
             'you may not use this file except in compliance with the License.',
@@ -52,7 +60,7 @@ module.exports = function(grunt) {
     }
 
     function getFileContents(separator, file) {
-        return [file, grunt.file.read(file).split(separator)];
+        return grunt.file.read(file).split(separator);
     }
 
     function writeFileContents(separator, file, content) {
@@ -63,30 +71,109 @@ module.exports = function(grunt) {
         return str.lastIndexOf(sub, 0) === 0;
     }
 
-    function isComment(wrapper, line) {
-        var wrapperStarts = [wrapper.first, wrapper.middle, wrapper.last];
-        return _.any(wrapperStarts, _.partial(startsWith, line));
+    function endsWith(str, sub) {
+        var position = str.length - sub.length;
+        if (position < 0) {
+          return false;
+        }
+        if (position === 0) {
+          return str === sub;
+        }
+        var lastIndex = str.indexOf(sub, position);
+        return lastIndex !== -1 && lastIndex === position;
     }
 
-    function getBanner(file, lines) {
+    function getBannerOf(file, separator) {
         var wrapper = getWrapperFor(file);
-        return [file, _.take(lines, _.partial(isComment, wrapper))];
+        var fileLines = getFileContents(separator, file);
+        return findBanner(fileLines, wrapper);
     }
 
-    function tupled(f, thisObj) {
-        return function(tuple) {
-            return f.apply(thisObj, tuple);
+    function findBanner(lines, wrapper) {
+        var state = 0;
+        var i = 0;
+        var targets = [wrapper.first, wrapper.middle, rightTrim(wrapper.middle), wrapper.last];
+        for (var l = lines.length; i < l; i++) {
+            var line = lines[i];
+            var matches = startsWith(line, targets[state]);
+            if (matches) {
+                switch (state) {
+                    case 0:        // matched beginning line, goto next state
+                        state = 1;
+                        break;
+                    case 1:        // matched middle line, continue
+                        break;
+                    case 2:        // matched trimmed middle line, continue but revert to untrimmed
+                        state = 1;
+                        break;
+                    case 3:        // matched last line, return result
+                        return lines.slice(0, i + 1);
+                }
+            } else {
+                switch (state) {
+                    case 0:        // beginning not found, abort
+                        return [];
+                    case 1:        // no more middle, check for trimmed variant
+                        // the end might start with the same content as the trimmed
+                        // middle check, so we need to guard against that case first
+                        if (startsWith(line, targets[3])) {
+                            return lines.slice(0, i + 1)
+                        }
+                        state = 2;
+                        i--;
+                        break;
+                    case 2:       // trimmed version nout found as well, last resort to the end
+                        state = 3;
+                        i--;
+                        break;
+                    case 3:        // end not found
+                        // technically, we should return `lines`, since everything
+                        // seems to be a comment. Returning the empty array means
+                        // the file doesn't have banner and gets a completely new copy
+                        // at the top. Return `lines` would mean that `ensure `would
+                        // delete the complete content and between those two things,
+                        // the first is slightly less annoying.
+                        return [];
+                }
+            }
+        }
+        // reason for returning `[]` is the same as above when we would
+        // not find any end line marker
+        return [];
+    }
+
+    function runTask(options, files, task) {
+        var failures = 0;
+        for (var file, i = 0; file = files[i++];) {
+            var banner = getBannerOf(file, options.separator);
+            if (!task(file, banner)) {
+                failures += 1;
+            }
         };
+        if (failures) {
+            var filesWord = failures === 1 ? ' file.' : ' files.';
+            grunt.fail.warn('The task has failed for ' + failures + filesWord);
+        }
     }
 
-    function runTask(banners, task) {
-        banners.forEach(tupled(task));
+    function rightTrim(text) {
+        var i = text.length - 1;
+        for (; i >= 0; i--) {
+            var ch = text.charAt(i);
+            if (ch !== ' ') {
+              break;
+            }
+        };
+        if (++i < text.length) {
+            return text.substring(0, i);
+        }
+        return text;
     }
 
     function formatCopyright(wrapper, copy) {
         var copyLines = copyrightLines(copy.holder, copy.email, copy.year);
         var lines = _.map(copyLines, function(line) {
-            return wrapper.middle + line;
+            return rightTrim(wrapper.middle + line);
         });
         var wrapped = [wrapper.first];
         wrapped.push.apply(wrapped, lines);
@@ -94,12 +181,18 @@ module.exports = function(grunt) {
         return wrapped;
     }
 
-    function containsCopyright(b) {
-        return _.contains(b.toLocaleLowerCase(), 'copyright');
+    function containsCopyright(copyLine) {
+        return function(line) {
+            return endsWith(line.toLocaleLowerCase(), copyLine);
+        }
     }
 
-    function check(banner) {
-        return !_.isEmpty(banner) && _.any(banner, containsCopyright);
+    function check(banner, checker) {
+        return _.isEmpty(banner)
+            ? CHECK_NO
+            : _.any(banner, checker)
+                ? CHECK_OK
+                : CHECK_WRONG;
     }
 
     function getWrapperFor(file) {
@@ -107,34 +200,53 @@ module.exports = function(grunt) {
         return commentWrappers[fileExtension];
     }
 
-    function update(file, copy, separator) {
+    function update(file, banner, options, separator) {
         var wrapper = getWrapperFor(file);
         if (wrapper) {
-            var copyright = formatCopyright(wrapper, copy);
-            var content = getFileContents(separator, file)[1];
-            content.unshift.apply(content, copyright);
+            var copyright = formatCopyright(wrapper, options);
+            var content = getFileContents(separator, file);
+            // start from 0 and delete `banner.length` elements before
+            // adding all elements of copyright.
+            copyright.unshift(0, banner.length);
+            content.splice.apply(content, copyright);
             writeFileContents(separator, file, content);
         }
         return !!wrapper;
     }
 
-    function ensure(file, banner, copy, separator) {
-        var hasCopyright = check(banner);
-        if (!hasCopyright) {
-            return update(file, copy, separator);
+    function ensure(file, banner, options, separator) {
+        var copyLine = copyrightHolderLine(options.holder, options.email, options.year).toLocaleLowerCase();
+        var copyChecker = containsCopyright(copyLine);
+        var hasCopyright = check(banner, copyChecker);
+        if (hasCopyright !== CHECK_OK) {
+            if (hasCopyright === CHECK_NO) {
+                grunt.verbose.error();
+            } else {
+                grunt.verbose.error('OUTDATED');
+            }
+            var msg = hasCopyright === CHECK_NO ? 'missing.' : 'outdated.';
+            var updated = update(file, banner, options, separator);
+            grunt.verbose.write('Updating copyright banner in ' + file + '...');
+            return updated;
         }
         return hasCopyright;
     }
 
     function mkTask(verb, task) {
         return function(file, banner) {
-            grunt.verbose.write(verb + ' copyright banner in ' + file + '… ');
-            if (!task(file, banner)) {
+            grunt.verbose.write(verb + ' copyright banner in ' + file + '...');
+            var result = task(file, banner);
+            if (result === CHECK_WRONG) {
+                grunt.verbose.error('OUTDATED');
+                grunt.log.error(file + ' has an outdated copyright banner');
+                return false;
+            } else if (result === CHECK_NO || !result) {
                 grunt.verbose.error();
-                grunt.fail.warn(file + ' has no copyright banner');
-            } else {
-                grunt.verbose.ok();
+                grunt.log.error(file + ' has no copyright banner');
+                return false;
             }
+            grunt.verbose.ok();
+            return true;
         };
     }
 
@@ -148,36 +260,27 @@ module.exports = function(grunt) {
         var options = this.options(defaults);
         var files = this.filesSrc;
 
-        function relevantBanners() {
-            return _(files).
-                map(_.partial(getFileContents, options.separator)).
-                map(tupled(getBanner));
-        }
+        var checkTask = (function(){
+            var copyLine = copyrightHolderLine(options.holder, options.email, options.year).toLocaleLowerCase();
+            var copyChecker = containsCopyright(copyLine);
+            return mkTask('Checking for', function(file, banner) {
+                return check(banner, copyChecker);
+            });
+        })();
 
-        var checkTask = mkTask('Checking for', function(file, banner) {
-            return check(banner);
-        });
-
-        var ensureTask = mkTask('Ensuring', function(file, banner) {
+        var ensureTask = mkTask('Checking', function(file, banner) {
             return ensure(file, banner, options, options.separator);
-        });
-
-        var updateTask = mkTask('Updating', function(file) {
-            return update(file, options, options.separator);
         });
 
         switch (this.target) {
             case 'ensure':
-                runTask(relevantBanners(options.cwd), ensureTask);
+                runTask(options, files, ensureTask);
                 break;
             case 'check':
-                runTask(relevantBanners(options.cwd), checkTask);
-                break;
-            case 'update':
-                runTask(relevantBanners(options.cwd), updateTask);
+                runTask(options, files, checkTask);
                 break;
             default:
-                grunt.fail.warn('Unkown task [' + this.target + '], use one of {check,update,ensure}');
+                grunt.fail.warn('Unkown task [' + this.target + '], use one of {check,ensure}');
         }
     };
 
