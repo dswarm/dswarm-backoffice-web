@@ -46,7 +46,7 @@ angular.module('dmpApp')
         };
 
         $scope.isMultiDisplayVars = function(component) {
-            var multiDisplayVars = ['combine'];
+            var multiDisplayVars = ['combine', 'all'];
             return loDash.contains(multiDisplayVars, component.name);
         };
 
