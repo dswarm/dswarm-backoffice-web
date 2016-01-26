@@ -243,7 +243,7 @@ angular.module('dmpApp')
             if($scope.activeMapping.input_attribute_paths) {
 
                 if( ( $scope.activeMapping.input_attribute_paths.length > 1 ) && ( getOpenEndedComponents(-1).length > 1 ) ) {
-                    $scope.transformationStateError = 'More than one possible output way. Please reduce via concat';
+                    $scope.transformationStateError = 'More than one possible output way. Please reduce via a collector function, e.g., concat, choose or combine.';
 
                 } else {
 
