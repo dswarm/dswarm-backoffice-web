@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('dmpApp')
-    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, convertUnits, schemaParser, filterHelper, TaskResource, Util, idIncrementer, GUID, showAlert) {
+    .controller('TransformationCtrl', function($scope, $window, $modal, $q, $rootScope, $timeout, PubSub, loDash, ngProgress, convertUnits, schemaParser, filterHelper, TaskResource, Util, variableNameCreator, GUID, showAlert) {
         $scope.internalName = 'Transformation Logic Widget';
 
         var activeComponentId = null,
@@ -126,9 +126,8 @@ angular.module('dmpApp')
                 maxGridRows: 0
             });
 
-            var projectId = $scope.project.uuid;
-            getOutputVariable = idIncrementer('__TRANSFORMATION_OUTPUT_VARIABLE__' + projectId + '__').map('id');
-            getOutputMAPIName = idIncrementer('__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__' + projectId + '__').map('id');
+            getOutputVariable = variableNameCreator('__TRANSFORMATION_OUTPUT_VARIABLE__');
+            getOutputMAPIName = variableNameCreator('__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__');
 
             // restore mappings if a previous project was loaded from a draft
             loDash.reduce($scope.project.mappings, function(previous, mapping) {
@@ -435,13 +434,14 @@ angular.module('dmpApp')
 
             var transformation = $scope.activeMapping.transformation;
 
-            var transformationOutputVariable = getOutputVariable($scope.activeMapping);
-            var outputMAPIName = getOutputMAPIName($scope.activeMapping);
+            var transformationOutputVariable = getOutputVariable($scope.activeMapping.output_attribute_path.uuid);
+            var outputMAPIName = $scope.activeMapping.output_attribute_path.name;
 
+            // TODO: [@zazi] is this really needed anymore?
             transformation.parameter_mappings = loDash.omit(transformation.parameter_mappings, function(value, key) {
                 return key.indexOf('TRANSFORMATION_OUTPUT_VARIABLE') > -1;
             });
-            transformation.parameter_mappings[transformationOutputVariable] = $scope.activeMapping.output_attribute_path.name = outputMAPIName;
+            transformation.parameter_mappings[transformationOutputVariable] = outputMAPIName;
 
             loDash.times($scope.gridsterOpts.maxRows, function(i) {
                 // var inputAttributes = $scope.activeMapping.input_attribute_paths[i].attribute_path.attributes;
@@ -972,6 +972,8 @@ angular.module('dmpApp')
                             attribute_path: inputAttributePaths[0].attribute_path
                         },
 
+                        oapIp = GUID.uuid4(),
+
                         mapping = {
                             uuid: data.mapping_id,
                             _$connection_id: data.connection_id,
@@ -980,8 +982,8 @@ angular.module('dmpApp')
                             input_attribute_paths: [thisIap],
                             output_attribute_path: {
                                 type: 'MappingAttributePathInstance',
-                                name: getOutputMAPIName({uuid: data.mapping_id}),
-                                uuid: GUID.uuid4(),
+                                name: getOutputMAPIName(oapIp),
+                                uuid: oapIp,
                                 attribute_path: outputAttributePaths[0].attribute_path
                             }
                         };
