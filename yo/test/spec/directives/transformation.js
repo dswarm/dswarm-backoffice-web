@@ -323,34 +323,40 @@ describe('Directive: Transformation', function() {
         {
             uuid: 42,
             name: 'feld.nr',
-            path: [17, 18]
+            path: [17, 18],
+            ap_uuid: 28
         },
         {
             uuid: 43,
             name: 'feld.type',
-            path: [17, 5]
+            path: [17, 5],
+            ap_uuid: 27
         },
         {
             uuid: 43,
             name: 'feld.type',
-            path: [17, 5]
+            path: [17, 5],
+            ap_uuid: 27
         }
     ];
     var connectionTargets = [
         {
             uuid: 1337,
             name: 'feld.value',
-            path: [17, 14]
+            path: [17, 14],
+            ap_uuid: 30
         },
         {
             uuid: 1338,
             name: 'feld.ind',
-            path: [17, 19]
+            path: [17, 19],
+            ap_uuid: 29
         },
         {
             uuid: 1338,
             name: 'feld.ind',
-            path: [17, 19]
+            path: [17, 19],
+            ap_uuid: 29
         }
     ];
     var additionalTargets = [
