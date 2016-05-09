@@ -36,7 +36,15 @@ angular.module('dmpApp')
                 $scope.config.parameters.record_tag = 'datensatz';
                 break;
 
-            case 'marc21':
+            case 'marcxml':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
+            case 'picaplusxml':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+
+            case 'picaplusxml-global':
                 $scope.config.parameters.record_tag = 'record';
                 break;
 
@@ -53,6 +61,10 @@ angular.module('dmpApp')
                 break;
 
             case 'oai-pmh+marcxml':
+                $scope.config.parameters.record_tag = 'record';
+                break;
+            
+            case 'sru11+picaplusxml-global':
                 $scope.config.parameters.record_tag = 'record';
                 break;
 
