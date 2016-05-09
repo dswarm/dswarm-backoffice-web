@@ -318,7 +318,9 @@ angular.module('dmpApp')
                 data = {
                     uuid: scp.data.uuid,
                     name: scp.data.name,
-                    path: realPath([], scp)
+                    // TODO: [@zazi] 'path' could maybe be deprecated/removed, if it is not utilised somewhere else anymore
+                    path: realPath([], scp),
+                    ap_uuid: scp.data._$path_id
                 };
             } else {
                 data = c;

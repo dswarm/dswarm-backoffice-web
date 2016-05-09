@@ -954,44 +954,67 @@ angular.module('dmpApp')
                     activate(data.mapping_id, true);
 
                 } else {
-                    var inputPath = data.inputAttributePath.path,
-                        inputAttributePaths = loDash.filter($scope.project.input_data_model.schema.attribute_paths, function(ap) {
-                            return angular.equals(inputPath, loDash.map(ap.attribute_path.attributes, 'uuid'));
-                        }),
-                        outputPath = data.outputAttributePath.path,
-                        outputAttributePaths = loDash.filter($scope.project.output_data_model.schema.attribute_paths, function(ap) {
-                            return angular.equals(outputPath, loDash.map(ap.attribute_path.attributes, 'uuid'));
-                        }),
+                    var inputAttributePathId = data.inputAttributePath.ap_uuid;
 
-                        iapId = GUID.uuid4(),
+                    if(angular.isUndefined(inputAttributePathId)) {
 
-                        thisIap = {
+                        showAlert.show($scope, 'info', "could not address the selected mapping input properly");
+                    }
+
+                    var inputSchemaAttributePaths = loDash.filter($scope.project.input_data_model.schema.attribute_paths, function(sapi) {
+                            return angular.equals(inputAttributePathId, sapi.attribute_path.uuid);
+                        });
+
+                    if(angular.isUndefined(inputSchemaAttributePaths)) {
+
+                        showAlert.show($scope, 'info', "couldn't find this mapping input in the schema of the input data model");
+                    }
+
+                    var outputAttributePathId = data.outputAttributePath.ap_uuid;
+
+                    if(angular.isUndefined(outputAttributePathId)) {
+
+                        showAlert.show($scope, 'info', "could not address the selected mapping output properly");
+                    }
+
+                    var outputSchemaAttributePaths = loDash.filter($scope.project.output_data_model.schema.attribute_paths, function(sapi) {
+                            return angular.equals(outputAttributePathId, sapi.attribute_path.uuid);
+                        });
+
+                    if(angular.isUndefined(outputSchemaAttributePaths)) {
+
+                        showAlert.show($scope, 'info', "couldn't find this mapping output in the schema of the output data model");
+                    }
+
+                    var imapiId = GUID.uuid4(),
+
+                        thisImapi = {
                             type: 'MappingAttributePathInstance',
-                            name: Util.buildAttributeName(inputAttributePaths[0].attribute_path.attributes, 'name', '_') + '__' + ( (data.iapId > 0) ? data.iapId : iapId ),
-                            uuid: iapId,
-                            attribute_path: inputAttributePaths[0].attribute_path
+                            name: Util.buildAttributeName(inputSchemaAttributePaths[0].attribute_path.attributes, 'name', '_') + '__' + ( (data.iapId > 0) ? data.iapId : imapiId ),
+                            uuid: imapiId,
+                            attribute_path: inputSchemaAttributePaths[0].attribute_path
                         },
 
-                        oapIp = GUID.uuid4(),
+                        omapiId = GUID.uuid4(),
 
                         mapping = {
                             uuid: data.mapping_id,
                             _$connection_id: data.connection_id,
                             name: data.name,
                             transformation: createNewTransformation(),
-                            input_attribute_paths: [thisIap],
+                            input_attribute_paths: [thisImapi],
                             output_attribute_path: {
                                 type: 'MappingAttributePathInstance',
-                                name: getOutputMAPIName(oapIp),
-                                uuid: oapIp,
-                                attribute_path: outputAttributePaths[0].attribute_path
+                                name: getOutputMAPIName(omapiId),
+                                uuid: omapiId,
+                                attribute_path: outputSchemaAttributePaths[0].attribute_path
                             }
                         };
 
 
                     if (data.keyDefs && data.keyDefs.length) {
-                        thisIap._$filters = loDash.flatten(loDash.map(data.keyDefs, function(keyDef) {
-                            setFilterExpression(thisIap, keyDef);
+                        thisImapi._$filters = loDash.flatten(loDash.map(data.keyDefs, function(keyDef) {
+                            setFilterExpression(thisImapi, keyDef);
                             return parseFilterDefinitions(keyDef, '');
                         }), true);
                     }
