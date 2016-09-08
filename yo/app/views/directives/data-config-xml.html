@@ -25,6 +25,15 @@
                     <p class="help-block">The name of the tag that denotes a record.</p>
                 </div>
 
+                <div class="form-group">
+                    <input type="checkbox"
+                           name="enhanceDataResource"
+                           id="enhanceDataResource"
+                           ng-model="enhanceDataResource" >
+                    Try to enhance data resource
+                    <p class="help-block">If the default XML parsing does not work, then you can try the XML enhancer, which tries to modify the XML data resource slightly to be (hopefully) processable.</p>
+                </div>
+
                 <div class="form-group" ng-class="{'has-error':dataConfigXmlForm.name.$error.required}">
                     <label class="control-label" for="name">Name</label>
                     <input type="text" class="form-control"

@@ -28,6 +28,8 @@ angular.module('dmpApp')
             }
         };
 
+        $scope.enhanceDataResource = false;
+
         $scope.selectedSet = [];
 
         switch($routeParams.configType) {
@@ -102,7 +104,7 @@ angular.module('dmpApp')
         });
 
         $scope.onSaveClick = function() {
-            var enhanceDataResource = true;
+            var enhanceDataResource = $scope.enhanceDataResource;
             var savePromise = dataConfigText.save($scope.mode, resource, $scope.dataModel, getConfig(), enhanceDataResource);
             savePromise.then(function() {
                 $location.path('/data/');
