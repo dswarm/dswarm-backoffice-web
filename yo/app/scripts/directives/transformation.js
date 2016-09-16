@@ -22,7 +22,7 @@ angular.module('dmpApp')
         var activeComponentId = null,
             availableIds = [],
         // TODO: Find better solution instead of hard limiting to 6 items per row
-            gridMaxItemsPerRow = 6,
+            gridMaxItemsPerRow = 10,
             sixEmsInPx = convertUnits.em2px(6),
             threeEmsInPx = convertUnits.em2px(3);
 
@@ -45,7 +45,7 @@ angular.module('dmpApp')
             minRows: 0,
             maxRows: 0,
             maxGridRows: 0,
-            maxColumns: gridMaxItemsPerRow,
+            columns: gridMaxItemsPerRow,
             noFloatingUp: true,
             containment: '.gridster',
             width: 'auto',
