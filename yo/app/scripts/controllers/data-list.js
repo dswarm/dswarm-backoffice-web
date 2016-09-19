@@ -167,10 +167,12 @@ angular.module('dmpApp')
             multiSelect: false
         };
 
+        var templateWithTooltip = '<div tooltip="Project UUID = {{row.getProperty(\'uuid\')}}" tooltip-trigger="dblclick" tooltip-append-to-body="true" tooltip-placement="top" >{{row.getProperty(col.field)}}</div>';
+
         $scope.projectListOptions = {
             data: 'projects',
             columnDefs: [
-                {field: 'name', displayName: 'Name'},
+                {field: 'name', displayName: 'Name', cellTemplate: templateWithTooltip},
                 {field: 'description', displayName: 'Description '}
             ],
             enableColumnResize: false,
