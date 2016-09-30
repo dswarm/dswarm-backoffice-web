@@ -22,6 +22,9 @@ angular.module('dmpApp')
             return {
                 'execute': {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/gdm+compact+fe+json'
+                    },
                     isArray: true
                 }
             };
