@@ -1145,9 +1145,14 @@ angular.module('dmpApp')
                     input_data_model: $scope.project.input_data_model,
                     output_data_model: $scope.project.output_data_model
                 },
-                'at_most' : 3,
+                'return_at_most' : 3,
                 'persist' : persist
             };
+
+            if(!persist) {
+
+                payload.at_most = 3;
+            }
 
             if(!loDash.isEmpty($scope.project.selected_records)) {
 
