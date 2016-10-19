@@ -143,11 +143,12 @@ angular.module('dmpApp')
 
         };
 
+        var dataResourceTemplateWithTooltip = '<div tooltip="Data Resource UUID is {{row.getProperty(\'uuid\')}}" tooltip-trigger="dblclick" tooltip-append-to-body="true" tooltip-placement="top" >{{row.getProperty(col.field)}}</div>';
 
         $scope.dataListOptions = {
             data: 'files',
             'columnDefs': [
-                { field: 'name', displayName: 'Name' },
+                { field: 'name', displayName: 'Name', cellTemplate: dataResourceTemplateWithTooltip},
                 { field: 'description', displayName: 'Description ' }
             ],
             enableColumnResize: false,
@@ -155,10 +156,12 @@ angular.module('dmpApp')
             multiSelect: false
         };
 
+        var dataModelTemplateWithTooltip = '<div tooltip="Data Model UUID is {{row.getProperty(\'uuid\')}}" tooltip-trigger="dblclick" tooltip-append-to-body="true" tooltip-placement="top" >{{row.getProperty(col.field)}}</div>';
+
         $scope.modelListOptions = {
             data: 'models',
             columnDefs: [
-                {field: 'name', displayName: 'Name'},
+                {field: 'name', displayName: 'Name', cellTemplate: dataModelTemplateWithTooltip},
                 {field: 'description', displayName: 'Description '},
                 {field: 'configuration.parameters.storage_type', displayName: 'Configured Data Storage Type'}
             ],
@@ -167,10 +170,12 @@ angular.module('dmpApp')
             multiSelect: false
         };
 
+        var projectTemplateWithTooltip = '<div tooltip="Project UUID is {{row.getProperty(\'uuid\')}}" tooltip-trigger="dblclick" tooltip-append-to-body="true" tooltip-placement="top" >{{row.getProperty(col.field)}}</div>';
+
         $scope.projectListOptions = {
             data: 'projects',
             columnDefs: [
-                {field: 'name', displayName: 'Name'},
+                {field: 'name', displayName: 'Name', cellTemplate: projectTemplateWithTooltip},
                 {field: 'description', displayName: 'Description '}
             ],
             enableColumnResize: false,

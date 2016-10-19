@@ -32,7 +32,7 @@ describe('file download service tests', function () {
                     iFrameUrlChanged = window['fileDownloadFrame'].location.href.indexOf(_Neo4jEndpoint + 'rdf/getall?format=application%2Fn-quads') > -1;
                     callback();
 
-                }, 10);
+                }, 20);
 
             };
 
@@ -61,7 +61,9 @@ describe('file download service tests', function () {
 
     });
 
-    describe('for android', function () {
+    // disabled tests, since they are not really necessary right now
+
+   /* describe('for android', function () {
 
         beforeEach(inject(function ($window) {
 
@@ -128,7 +130,7 @@ describe('file download service tests', function () {
 
         }));
 
-    });
+    }); */
 
 
 
