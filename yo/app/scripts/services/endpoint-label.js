@@ -19,7 +19,7 @@ angular.module('dmpApp')
     .factory('endpointLabel', function($modal, $q) {
 
         function valid(label) {
-            return angular.isString(label) && label.length >= 3;
+            return angular.isString(label) && label.length >= 2;
         }
 
         function get(connection) {
@@ -49,7 +49,7 @@ angular.module('dmpApp')
 
         function ask(promptText, helpText, buttonText, extraLabel, prefill, error) {
             var text = promptText || 'Name this mapping',
-                help = helpText || 'The name has to be at least 3 characters long';
+                help = helpText || 'The name has to be at least 2 characters long';
 
             buttonText = buttonText || 'Ok';
 
@@ -111,7 +111,7 @@ angular.module('dmpApp')
 
         function askWithKeys(keys) {
             var text = 'Name this mapping',
-                help = 'The name has to be at least 3 characters long',
+                help = 'The name has to be at least 2 characters long',
                 buttonText = 'Ok',
                 keyDef = (keys && keys.length) ? keys : [],
                 hasKeyDef = !!keyDef.length;
