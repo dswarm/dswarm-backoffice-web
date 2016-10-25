@@ -660,8 +660,9 @@ describe('Directive: Transformation', function() {
 
         var payloadExpect = {
             'task' : angular.copy(payload),
-            'at_most' : 3,
-            'persist' : false
+            'return_at_most' : 3,
+            'persist' : false,
+            'at_most' : 3
         };
 
         Util.ensureUniqueParameterMappingVars(payloadExpect.task.job.mappings);
@@ -737,8 +738,9 @@ describe('Directive: Transformation', function() {
                 input_data_model: project.input_data_model,
                 output_data_model: project.output_data_model
             },
-            'at_most' : 3,
-            'persist' : false
+            'return_at_most' : 3,
+            'persist' : false,
+            'at_most' : 3
         };
 
         var payloadExpect = angular.copy(payload);
