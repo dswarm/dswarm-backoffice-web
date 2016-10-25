@@ -240,11 +240,11 @@ describe('Service: endpointLabel', function () {
         $rootScope.$digest();
 
         expect($document.find('#test-text').text()).toBe('Name this mapping');
-        expect($document.find('#test-help').text()).toBe('The name has to be at least 3 characters long');
+        expect($document.find('#test-help').text()).toBe('The name has to be at least 2 characters long');
     }));
 
     it('should be able to use label validation', inject(function ($document, $templateCache) {
-        $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="label=\'abcde\'" id="test-valid">{{ isValid(label) }}</span><span ng-init="label2=\'ab\'" id="test-invalid">{{ isValid(label2) }}</span></div>');
+        $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="label=\'abcde\'" id="test-valid">{{ isValid(label) }}</span><span ng-init="label2=\'a\'" id="test-invalid">{{ isValid(label2) }}</span></div>');
         spyOn($modal, 'open').and.callThrough();
 
         endpointLabel.ask();
@@ -262,7 +262,7 @@ describe('Service: endpointLabel', function () {
     }));
 
     it('should not close with an invalid label', inject(function ($document, $templateCache) {
-        $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="close(\'ab\')" id="test-invalid-close"></span></div>');
+        $templateCache.put('views/modals/re-label-connection.html', '<div><span ng-init="close(\'a\')" id="test-invalid-close"></span></div>');
         spyOn($modal, 'open').and.callThrough();
 
         expect(endpointLabel.ask()).not.toBeCompleted();
