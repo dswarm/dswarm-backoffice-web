@@ -74,6 +74,10 @@ angular.module('dmpApp')
                 $scope.config.parameters.record_tag = 'record';
                 break;
 
+            case 'springer-journals':
+                $scope.config.parameters.record_tag = 'Publisher';
+                break;
+
         }
 
         function getConfig() {
