@@ -5,7 +5,7 @@ all: install
 .PHONY: all
 
 env-install:
-	cd yo && npm install && npm audit fix
+	cd yo && npm install && npm audit fix && npm audit fix --force
 	cd yo && bower install
 .PHONY: env-install
 
