@@ -5,7 +5,7 @@ all: install
 .PHONY: all
 
 env-install:
-	cd yo && npm install
+	cd yo && npm install && npm audit fix
 	cd yo && bower install
 .PHONY: env-install
 
@@ -54,7 +54,7 @@ yo/publish:
 
 
 dist: yo/Gruntfile.js clean install | yo/publish
-	cd yo && STAGE=${STAGE} grunt build
+	cd yo && STAGE=${STAGE} grunt build --force
 	rsync --delete --verbose --recursive yo/dist/ yo/publish
 .PHONY: dist
 
